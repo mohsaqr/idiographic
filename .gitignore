@@ -1,0 +1,28 @@
+# Session artifacts (local-only)
+HANDOFF.md
+LEARNINGS.md
+CHANGES.md
+audit.md
+audit.zip
+AGENTS.md
+AGENT-NOTE-*.md
+cran-comments.md
+
+# Scratch / working dirs
+tmp/
+local_testing_and_equivalence/
+codex_docs/
+
+# R build artifacts
+*.tar.gz
+*.Rcheck/
+..Rcheck/
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+Rplots.pdf
+
+# Rendered docs (regenerable, large)
+*.html
+README.html

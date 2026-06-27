@@ -1,0 +1,35 @@
+Package: idionet
+Type: Package
+Title: Idiographic Network Estimation from Intensive Longitudinal Data
+Version: 0.1.0
+Authors@R: person("Mohammed", "Saqr", role = c("aut", "cre"),
+    email = "mohammed.saqr@uef.fi")
+Description: Person-specific and within-person network estimation from
+    intensive longitudinal and panel data. Provides graphical vector
+    autoregression (graphical VAR), multilevel vector autoregression
+    (mlVAR), and Group Iterative Multiple Model Estimation (GIMME) as
+    clean-room implementations. Split out of the 'Nestimate' package so the
+    idiographic time-series methods carry their own dependencies. Results are
+    'cograph_network' objects rendered by 'cograph::splot()'.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    stats,
+    utils,
+    data.table,
+    corpcor,
+    lme4,
+    lavaan
+Suggests:
+    testthat (>= 3.0.0),
+    cograph,
+    mlVAR,
+    gimme,
+    graphicalVAR,
+    glasso,
+    qgraph,
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3

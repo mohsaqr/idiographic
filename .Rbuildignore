@@ -1,0 +1,15 @@
+^beck-procrastination-tutorial\.Rmd$
+^beck-procrastination-tutorial\.html$
+^gimme-vs-idionet\.Rmd$
+^gimme-vs-idionet\.html$
+^Rplots\.pdf$
+^\.\.Rcheck$
+^.*\.Rcheck$
+^audit\.md$
+^HANDOFF\.md$
+^LEARNINGS\.md$
+^CHANGES\.md$
+^LICENSE\.md$
+^\.github$
+^local_testing_and_equivalence$
+^tmp$
