@@ -3,14 +3,33 @@
 # estimators need: a netobject/cograph_network constructor and the as_netobject
 # generic, so results plot via cograph::splot() exactly as they did in Nestimate.
 
+#' Edge index for a weight matrix -- the single source of truth for "which
+#' cells are edges", so every accessor shares one diagonal/triangle/NA rule.
+#'
+#' Directed: every non-zero off-diagonal cell, plus the diagonal when
+#' `include_self`. Undirected: each pair once (upper triangle), including the
+#' diagonal only when `include_self`. NA cells are never edges. `keep_zeros`
+#' lists every structural cell (the full coefficient table) regardless of value.
+#' @return A two-column (row, col) integer matrix, as `which(arr.ind = TRUE)`.
+#' @keywords internal
+#' @noRd
+.net_edge_idx <- function(W, directed, include_self = FALSE,
+                          keep_zeros = FALSE) {
+  present <- if (keep_zeros) matrix(TRUE, nrow(W), ncol(W)) else
+    (!is.na(W) & W != 0)
+  if (directed) {
+    mask <- if (include_self) present else present & (row(W) != col(W))
+  } else {
+    tri  <- if (include_self) row(W) <= col(W) else row(W) < col(W)
+    mask <- present & tri
+  }
+  which(mask, arr.ind = TRUE)
+}
+
 #' @keywords internal
 #' @noRd
 .ido_edges <- function(mat, directed = FALSE) {
-  idx <- if (directed) {
-    which(mat != 0, arr.ind = TRUE)
-  } else {
-    which(mat != 0 & row(mat) <= col(mat), arr.ind = TRUE)
-  }
+  idx <- .net_edge_idx(mat, directed, include_self = TRUE)
   if (nrow(idx) == 0L) {
     return(data.frame(from = integer(0), to = integer(0),
                       weight = numeric(0), stringsAsFactors = FALSE))
@@ -411,12 +430,7 @@ extract_edges <- function(model, sort_by = "weight", include_self = FALSE) {
   m <- net$weights
   directed <- net$directed %||% TRUE
   labs <- net$nodes$label %||% as.character(seq_len(nrow(m)))
-  idx <- if (directed) {
-    which(m != 0, arr.ind = TRUE)
-  } else {
-    which(m != 0 & row(m) <= col(m), arr.ind = TRUE)
-  }
-  if (!include_self) idx <- idx[idx[, 1] != idx[, 2], , drop = FALSE]
+  idx <- .net_edge_idx(m, directed, include_self = include_self)
   if (nrow(idx) == 0L) {
     return(data.frame(from = character(), to = character(),
                       weight = numeric(), stringsAsFactors = FALSE))
@@ -564,13 +578,10 @@ as.data.frame.netobject_group <- function(x, row.names = NULL,
   W <- net$weights
   labs <- net$nodes$label %||% rownames(W) %||% as.character(seq_len(nrow(W)))
   directed <- isTRUE(net$directed)
-  if (directed) {
-    mask <- if (keep_zeros) matrix(TRUE, nrow(W), ncol(W)) else W != 0
-  } else {
-    upper <- row(W) < col(W)                     # each pair once, no self-loops
-    mask <- if (keep_zeros) upper else (W != 0 & upper)
-  }
-  sel <- which(mask, arr.ind = TRUE)
+  # Directed coefficient tables keep the AR diagonal; undirected ones list each
+  # pair once without the self-variance diagonal -- i.e. include_self = directed.
+  sel <- .net_edge_idx(W, directed, include_self = directed,
+                       keep_zeros = keep_zeros)
   if (nrow(sel) == 0L) {
     return(data.frame(network = character(), from = character(),
                       to = character(), weight = numeric(),
@@ -587,15 +598,11 @@ as.data.frame.netobject_group <- function(x, row.names = NULL,
   W <- net$weights
   directed <- isTRUE(net$directed)
   n <- nrow(W)
-  A <- W; diag(A) <- 0                            # ignore AR self-loops here
-  if (directed) {
-    nz <- A != 0
-  } else {
-    nz <- A != 0 & row(W) < col(W)
-  }
-  n_edges <- sum(nz)
+  # Same edge rule as edges()/coefs() (self-loops excluded for metrics).
+  idx <- .net_edge_idx(W, directed, include_self = FALSE)
+  w <- W[idx]
+  n_edges <- length(w)
   n_poss  <- if (directed) n * (n - 1) else n * (n - 1) / 2
-  w <- A[nz]
   data.frame(
     network         = network,
     n_nodes         = n,
@@ -668,8 +675,10 @@ coefs.net_gimme <- function(x, ...) {
     M <- x$coefs[[s]]
     tl <- M[, lag_names, drop = FALSE]            # temporal (lagged)
     cl <- M[, vars, drop = FALSE]                 # contemporaneous
-    ti <- which(tl != 0, arr.ind = TRUE)
-    ci <- which(cl != 0, arr.ind = TRUE)
+    # NA-safe (a non-converged subject's matrix may hold NA): treat NA as "no
+    # edge" explicitly, matching the path_counts guard in .gimme_extract_results.
+    ti <- which(!is.na(tl) & tl != 0, arr.ind = TRUE)
+    ci <- which(!is.na(cl) & cl != 0, arr.ind = TRUE)
     parts <- list()
     if (nrow(ti) > 0L) parts$t <- data.frame(
       subject = s, network = "temporal",

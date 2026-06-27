@@ -14,6 +14,12 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
                       fig.align = "center", dpi = 110)
 library(idionet)
 library(cograph)
+
+# Tiny helpers so every bracket index / order() stays inside a function body,
+# never on the vignette's public surface (the tidy-code convention). Aligning
+# two packages' raw matrices is the one place indexing is unavoidable.
+order_panel <- function(df, by) df[do.call(order, df[by]), , drop = FALSE]
+align_to    <- function(m, ref) m[rownames(ref), colnames(ref)]
 ```
 
 This compares `idionet::build_gimme()` with the `gimme` package on the **bundled
@@ -40,13 +46,13 @@ vars <- c("goal_directed", "purposeful", "attentive",
 
 # Use the densely sampled students so gimme has enough time points per person.
 counts  <- table(raw$id)
-keep_id <- as.integer(names(counts)[counts >= 48])
-sub     <- raw[raw$id %in% keep_id, , drop = FALSE]
+keep_id <- as.integer(names(which(counts >= 48)))
+sub     <- subset(raw, id %in% keep_id)
 
 # Order within each student and build a continuous within-person time index so
 # idionet and gimme form identical lag pairs.
-sub <- sub[do.call(order, sub[c("id", "day", "beep")]), , drop = FALSE]
-sub$.t <- stats::ave(seq_len(nrow(sub)), sub$id, FUN = seq_along)
+sub     <- order_panel(sub, c("id", "day", "beep"))
+sub$.t  <- stats::ave(seq_len(nrow(sub)), sub$id, FUN = seq_along)
 
 cat(sprintf("%d students (>= 48 obs), %d observations\n",
             length(keep_id), nrow(sub)))
@@ -61,10 +67,10 @@ writes back its path counts, per-person betas, and a PNG of its native plot.
 
 ```{r run, results="hide", fig.show="hide"}
 indir <- file.path(tempdir(), "esm_csv"); dir.create(indir, showWarnings = FALSE)
-for (s in keep_id) {
-  d <- sub[sub$id == s, vars, drop = FALSE]
-  write.csv(d, file.path(indir, paste0("s", s, ".csv")), row.names = FALSE)
-}
+invisible(lapply(keep_id, function(s) {
+  write.csv(subset(sub, id == s, select = vars),
+            file.path(indir, paste0("s", s, ".csv")), row.names = FALSE)
+}))
 
 gout     <- file.path(tempdir(), "esm_gimme_out"); dir.create(gout, showWarnings = FALSE)
 art_rds  <- file.path(tempdir(), "esm_gimme_art.rds")
@@ -95,7 +101,7 @@ ido <- build_gimme(sub, vars = vars, id = "id", time = ".t",
 
 ```{r counts}
 gc <- gref$path_counts
-ic <- ido$path_counts[rownames(gc), colnames(gc)]
+ic <- align_to(ido$path_counts, gc)
 knitr::kable(gc, caption = "gimme: path counts")
 knitr::kable(ic, caption = "idionet: path counts")
 # Compare values (gimme stores counts as double, idionet as integer, so a strict
@@ -109,7 +115,7 @@ common <- intersect(names(gref$path_est_mats), paste0("s", keep_id))
 max_abs_diff <- vapply(common, function(nm) {
   G <- as.matrix(gref$path_est_mats[[nm]])
   sid <- sub("^s", "", nm)
-  I <- ido$coefs[[sid]][rownames(G), colnames(G)]
+  I <- align_to(ido$coefs[[sid]], G)
   max(abs(G - I))
 }, numeric(1))
 knitr::kable(data.frame(subject = common,

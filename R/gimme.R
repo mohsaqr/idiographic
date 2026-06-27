@@ -229,7 +229,7 @@ build_gimme <- function(data,
     lasso_model_crit = !is.null(lasso_model_crit),
     ms_allow         = isTRUE(ms_allow),
     ordered          = !is.null(ordered),
-    dir_prop_cutoff  = !identical(dir_prop_cutoff, 0)
+    dir_prop_cutoff  = !isTRUE(dir_prop_cutoff == 0)   # 0L and 0.0 both default
   )
   if (any(unsupported)) {
     stop("build_gimme() does not support: ",
@@ -237,6 +237,30 @@ build_gimme <- function(data,
          ". These gimme features (latent-variable / fMRI-convolution / ",
          "multiplied terms / LASSO / ordinal / multiple-solutions / ",
          "directionality) require gimme::gimme().", call. = FALSE)
+  }
+  # Sub-options of the unsupported features (and gimme's standalone `diagnos`)
+  # are accepted for API parity but inert. Warn rather than silently ignore them
+  # so a caller who sets one expecting an effect is told it had none.
+  chg <- function(v, d) if (is.null(d)) !is.null(v) else !isTRUE(all(v == d))
+  inert <- c(
+    sub_feature        = chg(sub_feature, "lag & contemp"),
+    sub_method         = chg(sub_method, "Walktrap"),
+    sub_sim_thresh     = chg(sub_sim_thresh, "lowest"),
+    confirm_subgroup   = chg(confirm_subgroup, NULL),
+    conv_length        = chg(conv_length, 16),
+    conv_interval      = chg(conv_interval, 1),
+    mean_center_mult   = chg(mean_center_mult, FALSE),
+    diagnos            = chg(diagnos, FALSE),
+    ms_tol             = chg(ms_tol, 1e-5),
+    lv_estimator       = chg(lv_estimator, "miiv"),
+    lv_scores          = chg(lv_scores, "regression"),
+    lv_miiv_scaling    = chg(lv_miiv_scaling, "first.indicator"),
+    lv_final_estimator = chg(lv_final_estimator, "miiv")
+  )
+  if (any(inert)) {
+    warning("build_gimme() ignores these gimme sub-options (the parent feature ",
+            "is not implemented): ", paste(names(inert)[inert], collapse = ", "),
+            ". Use gimme::gimme() for them.", call. = FALSE)
   }
   if (!identical(as.character(group_correct), "Bonferoni Group")) {
     stop("build_gimme() implements group_correct = \"Bonferoni Group\" only.",

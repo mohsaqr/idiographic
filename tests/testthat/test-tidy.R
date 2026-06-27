@@ -53,6 +53,19 @@ test_that("summary() returns a tidy per-network metrics data.frame", {
   expect_true(all(s$density >= 0 & s$density <= 1))
 })
 
+test_that("edges() (no self-loops) and summary() agree on edge counts", {
+  # Both route through the single .net_edge_idx() mask, so the per-network edge
+  # count from edges() must equal summary()$n_edges (no <= vs < drift).
+  d <- synth_single(n_t = 120)
+  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+                      lambda_beta = 0.1, n_lambda = 8)
+  s <- summary(gv)
+  e <- edges(gv)
+  per_net <- vapply(s$network, function(nw) nrow(subset(e, network == nw)),
+                    integer(1))
+  expect_equal(unname(per_net), s$n_edges)
+})
+
 test_that("nodes() is a tidy per-node strength table", {
   d <- synth_single(n_t = 120)
   gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
