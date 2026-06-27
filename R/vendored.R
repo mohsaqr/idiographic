@@ -212,23 +212,32 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   weight <- match.arg(weight)
   vars <- x$labels; p <- length(vars); n <- x$n_subjects
 
+  # Under VAR / hybrid the contemporaneous component is an undirected residual-
+  # covariance network (stored in $contemp_cov / $contemp_cov_avg), not the
+  # directed lag-0 block (which is all-zero there).
+  cov_mode <- isTRUE(x$contemp_is_cov)
   if (weight == "prop") {
     temp <- x$path_counts[, paste0(vars, "lag"), drop = FALSE] / n
-    cont <- x$path_counts[, vars, drop = FALSE] / n
+    cont <- if (cov_mode) x$contemp_cov / n else
+      x$path_counts[, vars, drop = FALSE] / n
   } else {
     temp <- x$temporal_avg
-    cont <- x$contemporaneous_avg
+    cont <- if (cov_mode) x$contemp_cov_avg else x$contemporaneous_avg
   }
   dimnames(temp) <- dimnames(cont) <- list(vars, vars)  # [outcome, predictor]
 
   if (style == "pnode") {
-    # Two p-node directed networks. Transpose so edge weight A[from, to] runs
-    # predictor -> outcome (autoregression lands on the diagonal as a self-loop).
+    # Two p-node networks. Temporal is directed (transpose so edge weight
+    # A[from, to] runs predictor -> outcome, autoregression on the diagonal).
+    # Contemporaneous is directed for lag-0 regressions but UNDIRECTED when it
+    # is a residual-covariance network (VAR / hybrid).
     return(structure(
       list(temporal        = .ido_wrap(t(temp), method = "relative",
                                        directed = TRUE),
-           contemporaneous = .ido_wrap(t(cont), method = "relative",
-                                       directed = TRUE)),
+           contemporaneous = .ido_wrap(t(cont),
+                                       method = if (cov_mode) "co_occurrence"
+                                                else "relative",
+                                       directed = !cov_mode)),
       class = "netobject_group"))
   }
 
@@ -269,8 +278,22 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   }
   lagged  <- block(function(v) paste0(v, "lag"), x$temporal_avg,
                    "lagged",  drop_self = FALSE)
-  contemp <- block(function(v) v,                x$contemporaneous_avg,
-                   "contemp", drop_self = TRUE)
+  if (isTRUE(x$contemp_is_cov)) {
+    # VAR / hybrid: contemporaneous is an undirected residual-covariance network
+    # ($contemp_cov / $contemp_cov_avg), so emit each pair once (~~), counts and
+    # coefs from the covariance matrices rather than the all-zero directed block.
+    cc <- x$contemp_cov; ca <- x$contemp_cov_avg
+    g <- expand.grid(to = vars, from = vars, stringsAsFactors = FALSE)
+    g <- g[as.character(g$from) < as.character(g$to), , drop = FALSE]
+    g$count <- cc[cbind(g$to, g$from)]
+    g$coef  <- ca[cbind(g$to, g$from)]
+    g$kind  <- "contemp"
+    g$path  <- paste0(g$to, "~~", g$from)
+    contemp <- g
+  } else {
+    contemp <- block(function(v) v,              x$contemporaneous_avg,
+                     "contemp", drop_self = TRUE)
+  }
 
   all <- rbind(lagged, contemp)
   all <- all[all$count > 0, , drop = FALSE]
@@ -282,15 +305,25 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   # and any user-forced `paths`). Everything else is individual-level (grey).
   # This matches gimme, where AR/fixed paths are group-level.
   group_set <- unique(c(x$group_paths, x$config$fixed_paths))
+  # Covariance paths (`a~~b`) are symmetric, so match group membership with the
+  # two sides sorted -- otherwise `B~~A` stored in group_paths would miss `A~~B`.
+  canon <- function(p) {
+    sym <- grepl("~~", p, fixed = TRUE)
+    p[sym] <- vapply(strsplit(p[sym], "~~", fixed = TRUE), function(s) {
+      s <- sort(trimws(s)); paste0(s[1L], "~~", s[2L])
+    }, character(1))
+    p
+  }
+  in_group <- canon(all$path) %in% canon(group_set)
   data.frame(
     from   = all$from,
     to     = all$to,
     weight = if (weight == "prop") all$count / n else all$coef,
     style  = ifelse(all$kind == "lagged", "dashed", "solid"),
-    color  = ifelse(all$path %in% group_set, group_color, individual_color),
+    color  = ifelse(in_group, group_color, individual_color),
     kind   = all$kind,
     path   = all$path,
-    level  = ifelse(all$path %in% group_set, "group", "individual"),
+    level  = ifelse(in_group, "group", "individual"),
     stringsAsFactors = FALSE
   )
 }
@@ -576,21 +609,27 @@ as.data.frame.netobject_group <- function(x, row.names = NULL,
 }
 
 #' Per-node strength table for a netobject.
+#'
+#' `strength` excludes self-loops (network-analysis convention), but the
+#' autoregressive / self-loop weight is reported separately in `self` so it is
+#' not silently lost -- `edges()` keeps GIMME's AR self-loops, and this column
+#' lets `nodes()` reconcile with them instead of reporting 0 for an AR-only node.
 #' @noRd
 .net_nodes <- function(net, network) {
   W <- net$weights
   directed <- isTRUE(net$directed)
   labs <- net$nodes$label %||% rownames(W) %||% as.character(seq_len(nrow(W)))
+  self <- as.numeric(diag(W))                    # autoregression / self-loop
   A <- abs(W); diag(A) <- 0
   if (directed) {
     out_s <- rowSums(A); in_s <- colSums(A)
     data.frame(network = network, node = labs, strength = out_s + in_s,
-               out_strength = out_s, in_strength = in_s,
+               out_strength = out_s, in_strength = in_s, self = self,
                stringsAsFactors = FALSE)
   } else {
     s <- rowSums(A)
     data.frame(network = network, node = labs, strength = s,
-               out_strength = NA_real_, in_strength = NA_real_,
+               out_strength = NA_real_, in_strength = NA_real_, self = self,
                stringsAsFactors = FALSE)
   }
 }

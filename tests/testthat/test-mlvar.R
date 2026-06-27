@@ -58,6 +58,20 @@ test_that("unsupported mlVAR modes error clearly; aliases work", {
   expect_equal(a$temporal$weights, b$temporal$weights)
 })
 
+test_that("conflicting scale/standardize warns and honours the canonical name", {
+  d <- synth_panel(n_id = 8, days = 3, beeps = 12, seed = 4)
+  vars <- c("A", "B", "C")
+  # standardize is a deprecated alias of scale; if both are set and disagree,
+  # the canonical `scale` wins and a warning is emitted (not silently dropped).
+  expect_warning(
+    a <- build_mlvar(d, vars = vars, id = "id", scale = TRUE,
+                     standardize = FALSE),
+    "disagree"
+  )
+  b <- suppressWarnings(build_mlvar(d, vars = vars, id = "id", scale = TRUE))
+  expect_equal(a$temporal$weights, b$temporal$weights)
+})
+
 test_that("AR = TRUE gives a diagonal temporal matrix matching mlVAR", {
   skip_if_not_installed("mlVAR")
   d <- synth_panel(n_id = 18, days = 5, beeps = 11, seed = 31)

@@ -163,9 +163,27 @@ build_mlvar <- function(data, vars, id,
   }
 
   # `lag` (idionet) and `standardize` (idionet) are deprecated aliases of the
-  # mlVAR-API names `lags` / `scale`.
-  if (!is.null(lag)) lags <- lag
-  if (!is.null(standardize)) scale <- standardize
+  # mlVAR-API names `lags` / `scale`. If the caller sets BOTH the canonical name
+  # and the deprecated alias to conflicting values, honour the canonical name
+  # and warn rather than silently letting the alias win.
+  if (!is.null(lag)) {
+    if (!missing(lags) && !identical(lags, lag)) {
+      warning("Both `lags` and the deprecated `lag` were set and disagree; ",
+              "using lags = ", lags, " and ignoring lag = ", lag, ".",
+              call. = FALSE)
+    } else {
+      lags <- lag
+    }
+  }
+  if (!is.null(standardize)) {
+    if (!missing(scale) && !identical(scale, standardize)) {
+      warning("Both `scale` and the deprecated `standardize` were set and ",
+              "disagree; using scale = ", scale, " and ignoring standardize = ",
+              standardize, ".", call. = FALSE)
+    } else {
+      scale <- standardize
+    }
+  }
 
   # ---- Input validation ----
   stopifnot(

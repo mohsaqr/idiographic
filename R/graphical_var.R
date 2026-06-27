@@ -240,9 +240,10 @@ graphical_var <- function(data,
   grid$ebic <- vapply(est, function(e) e$EBIC, numeric(1))
 
   # ---- 4. EBIC selection with graphicalVAR's tie-break ----
-  ids <- seq_len(nrow(grid))
+  # which() drops cells whose EBIC is NA/NaN (a degenerate (lambda) pairing),
+  # so one bad cell can't inject an NA index into the candidate set.
   min_ebic <- min(grid$ebic, na.rm = TRUE)
-  cand <- ids[abs(grid$ebic - min_ebic) < ebic_tol]
+  cand <- which(abs(grid$ebic - min_ebic) < ebic_tol)
   cand <- cand[grid$kappa[cand] == min(grid$kappa[cand])]
   sel <- cand[grid$beta[cand] == min(grid$beta[cand])][1L]
   R <- est[[sel]]
@@ -455,7 +456,11 @@ graphical_var <- function(data,
   } else {
     lambda_mat <- lambda_beta * t(regularize_mat_beta)
     if (nrow(lambda_mat) == nX - 1L) {
-      lambda_mat <- rbind(lambda_mat, 0)        # add unpenalised intercept row
+      # Intercept is beta's FIRST row (data_l = cbind(1, lag...)), so the
+      # unpenalised intercept row must be PREPENDED, not appended -- matching
+      # graphicalVAR's Rothmana (rbind(0, t(M))). Appending it instead shifts
+      # every predictor penalty down one row.
+      lambda_mat <- rbind(0, lambda_mat)
     }
     if (nrow(lambda_mat) != nX || ncol(lambda_mat) != nY) {
       stop("`regularize_mat_beta` has the wrong dimensions (expected ",

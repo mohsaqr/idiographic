@@ -79,6 +79,21 @@ test_that("VAR = TRUE searches lagged paths only (no directed contemporaneous)",
   expect_true(all(gm$contemporaneous == 0))
   # Lagged AR self-paths still present (every subject).
   expect_true(all(diag(gm$temporal) == gm$n_subjects))
+
+  # ...but the residual-covariance contemporaneous network IS surfaced: the
+  # accessors route through $contemp_cov, marked undirected, not the zero block.
+  expect_true(isTRUE(gm$contemp_is_cov))
+  expect_equal(dim(gm$contemp_cov), c(3L, 3L))
+  g <- as_netobject(gm)
+  expect_false(isTRUE(g$contemporaneous$directed))   # covariance = undirected
+  expect_true(isTRUE(g$temporal$directed))
+  # If any residual covariance was estimated, it appears as a contemporaneous
+  # edge (it no longer silently vanishes from the tidy views).
+  if (any(gm$contemp_cov > 0)) {
+    ce <- subset(edges(gm), network == "contemporaneous")
+    expect_gt(nrow(ce), 0L)
+    expect_gt(subset(summary(gm), network == "contemporaneous")$n_edges, 0L)
+  }
 })
 
 test_that("build_gimme covers the full gimme::gimme() argument surface", {

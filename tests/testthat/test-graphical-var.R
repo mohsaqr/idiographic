@@ -122,3 +122,20 @@ test_that("graphical_var matches graphicalVAR to ~machine precision", {
   expect_equal(gv$beta, ref$beta, tolerance = 1e-4, ignore_attr = TRUE)
   expect_equal(gv$kappa, ref$kappa, tolerance = 1e-4, ignore_attr = TRUE)
 })
+
+test_that("regularize_mat_beta penalty rows align (intercept prepended)", {
+  # Direct test of .gvar_lambda_mat: the unpenalised intercept must be row 1,
+  # and each predictor's custom penalty must land on its own row (rows 2..p+1),
+  # not be shifted by appending the intercept at the bottom.
+  p <- 3L
+  M <- matrix(c(0, 1, 1,
+                1, 0, 1,
+                1, 1, 0), p, p, byrow = TRUE)   # penalise off-diagonal only
+  lm <- idionet:::.gvar_lambda_mat(
+    lambda_beta = 0.1, nX = p + 1L, nY = p,
+    penalize_diagonal = TRUE, regularize_mat_beta = M
+  )
+  expect_equal(dim(lm), c(p + 1L, p))
+  expect_true(all(lm[1L, ] == 0))                # intercept row unpenalised
+  expect_equal(lm[-1L, ], 0.1 * t(M), ignore_attr = TRUE)  # predictors aligned
+})

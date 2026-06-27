@@ -368,7 +368,7 @@ build_gimme <- function(data,
   # --- Extract results ---
   result <- .gimme_extract_results(ind_results, varnames, lag_names,
                                     group_paths, base_syntax, fixed_paths,
-                                    n_subj, ts_list, hybrid)
+                                    n_subj, ts_list, hybrid, VAR = VAR)
 
   result$labels <- varnames
   result$n_subjects <- n_subj
@@ -1052,7 +1052,7 @@ build_gimme <- function(data,
 #' @noRd
 .gimme_extract_results <- function(ind_results, varnames, lag_names,
                                     group_paths, base_syntax, fixed_paths,
-                                    n_subj, ts_list, hybrid) {
+                                    n_subj, ts_list, hybrid, VAR = FALSE) {
   p <- length(varnames)
   all_names <- c(lag_names, varnames)
   subj_names <- names(ind_results)
@@ -1119,11 +1119,32 @@ build_gimme <- function(data,
   colnames(temporal_avg) <- varnames
   contemp_avg <- Reduce("+", lapply(coefs_list, function(m) m[, varnames, drop = FALSE])) / n_subj
 
+  # Contemporaneous residual-covariance network. Under VAR (and hybrid) gimme
+  # expresses contemporaneous relations as freely-estimated residual covariances
+  # -- the current-variable block of psi -- NOT as directed lag-0 regressions, so
+  # the directed `contemp_counts` above is all-zero there. Derive the undirected
+  # covariance network (count of subjects with a non-zero off-diagonal, and the
+  # group-average covariance) so the tidy accessors can surface it.
+  psi_cur <- lapply(psi_list, function(P) {
+    M <- P[varnames, varnames, drop = FALSE]
+    diag(M) <- 0
+    M
+  })
+  contemp_cov <- Reduce("+", lapply(psi_cur,
+                                    function(M) (!is.na(M) & M != 0) * 1L))
+  contemp_cov_avg <- Reduce("+", lapply(psi_cur, function(M) {
+    M[is.na(M)] <- 0; M
+  })) / n_subj
+  contemp_is_cov <- isTRUE(hybrid) || isTRUE(VAR)
+
   list(
     temporal = temporal_counts,
     temporal_avg = temporal_avg,
     contemporaneous = contemp_counts,
     contemporaneous_avg = contemp_avg,
+    contemp_cov = contemp_cov,
+    contemp_cov_avg = contemp_cov_avg,
+    contemp_is_cov = contemp_is_cov,
     coefs = coefs_list,
     psi = psi_list,
     fit = fit_df,

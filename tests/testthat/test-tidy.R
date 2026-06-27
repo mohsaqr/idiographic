@@ -59,11 +59,13 @@ test_that("nodes() is a tidy per-node strength table", {
                       lambda_beta = 0.1, n_lambda = 8)
   nd <- nodes(gv)
   expect_named(nd, c("network", "node", "strength", "out_strength",
-                     "in_strength"))
+                     "in_strength", "self"))
   expect_true(all(nd$strength >= 0))
   # undirected (contemporaneous) has NA in/out strength
   expect_true(all(is.na(nd$out_strength[nd$network == "contemporaneous"])))
   expect_false(any(is.na(nd$out_strength[nd$network == "temporal"])))
+  # `self` (autoregression) is reported separately from strength, never NA
+  expect_false(any(is.na(nd$self)))
 })
 
 test_that("coefs() is tidy: full table for gvar, per-person for gimme", {
