@@ -128,7 +128,7 @@ The original `mlVAR`/Mplus object is available as `attr(x, "mplus")`.
 
 ## See also
 
-[`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md)
+[`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)
 
 ## Examples
 

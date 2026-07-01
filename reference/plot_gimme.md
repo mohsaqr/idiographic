@@ -30,7 +30,7 @@ plot_gimme(
 - x:
 
   A `net_gimme` object from
-  [`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md).
+  [`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
 
 - weight:
 
@@ -67,7 +67,7 @@ Invisibly, the mixed `cograph_network` object that was plotted.
 
 ## See also
 
-[`as_netobject()`](https://saqr.me/idiographic/reference/as_netobject.md)
+[`as_netobject()`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md)
 for the matrix view.
 
 ## Examples

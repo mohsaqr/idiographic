@@ -8,7 +8,7 @@ vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
+[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
 estimates **sparse** temporal and contemporaneous networks with lasso
 regularization and EBIC model selection. It is the closest analogue to
 the chapter’s graphical VAR section, and the regularized counterpart to

@@ -8,7 +8,7 @@ vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-[`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md)
+[`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md)
 searches individual models and **promotes paths shared by enough
 people** to the group level. As with uSEM, pass the shipped `day` column
 as `time`. We fit a handful of students so the example runs quickly.
@@ -65,11 +65,11 @@ carrying each path — the quantity GIMME displays.
 
 ## Tidy tables
 
-[`edges()`](https://saqr.me/idiographic/reference/edges.md) returns one
-tidy row per path with a `level` column marking group-level versus
-individual-level paths;
-[`coefs()`](https://saqr.me/idiographic/reference/coefs.md) gives the
-per-subject estimates.
+[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
+returns one tidy row per path with a `level` column marking group-level
+versus individual-level paths;
+[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
+gives the per-subject estimates.
 
 ``` r
 

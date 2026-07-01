@@ -20,7 +20,7 @@ grace <- subset(srl, name == "Grace")
 
 ## Edge stability
 
-[`estimate_stability()`](https://saqr.me/idiographic/reference/estimate_stability.md)
+[`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
 resamples consecutive blocks of the series and re-estimates, quantifying
 how reproducible each edge is.
 
@@ -80,7 +80,7 @@ plot(stab, layer = "temporal")
 
 ## Forecast validation
 
-[`validate_forecast()`](https://saqr.me/idiographic/reference/validate_forecast.md)
+[`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md)
 checks one-step-ahead predictive performance with a rolling origin.
 Reusing the same single-person series, the validator splits it into
 consecutive blocks of `block_size` occasions.

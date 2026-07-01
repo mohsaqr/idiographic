@@ -132,6 +132,6 @@ and tidy coefficients.
 
 ## See also
 
-[`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md),
-[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
-[`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md)
+[`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md),
+[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
+[`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)

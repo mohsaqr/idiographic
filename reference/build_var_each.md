@@ -1,10 +1,10 @@
 # Fit an ordinary least-squares VAR for every subject
 
 Applies
-[`build_var()`](https://saqr.me/idiographic/reference/build_var.md) to
-each subject separately, returning one transparent person-specific OLS
-VAR result per individual. This is the unregularized companion to
-[`graphical_var_each()`](https://saqr.me/idiographic/reference/graphical_var_each.md)
+[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
+to each subject separately, returning one transparent person-specific
+OLS VAR result per individual. This is the unregularized companion to
+[`graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/graphical_var_each.md)
 and is useful as an equivalence baseline for checking lag construction,
 scaling, and temporal coefficient direction.
 
@@ -53,7 +53,7 @@ build_var_each(
 - ...:
 
   Further arguments passed to
-  [`build_var()`](https://saqr.me/idiographic/reference/build_var.md).
+  [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md).
 
 ## Value
 
@@ -63,8 +63,8 @@ with a warning.
 
 ## See also
 
-[`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
-[`graphical_var_each()`](https://saqr.me/idiographic/reference/graphical_var_each.md)
+[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
+[`graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/graphical_var_each.md)
 
 ## Examples
 

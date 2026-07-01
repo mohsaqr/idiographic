@@ -12,10 +12,10 @@ SEM, and GIMME — plus the supporting workflow (preprocessing audits,
 edge-stability diagnostics, rolling windows, forecast validation, and
 model comparison). Every result is a tidy object you access with the
 same handful of verbs:
-[`edges()`](https://saqr.me/idiographic/reference/edges.md),
-[`nodes()`](https://saqr.me/idiographic/reference/nodes.md),
-[`coefs()`](https://saqr.me/idiographic/reference/coefs.md),
-[`matrices()`](https://saqr.me/idiographic/reference/matrices.md),
+[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md),
+[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),
+[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
+[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md),
 [`summary()`](https://rdrr.io/r/base/summary.html), and
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
@@ -27,10 +27,10 @@ is validated for numerical equivalence against its reference:
 
 | Estimator | Method | Validated against | Agreement |
 |----|----|----|----|
-| [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md) | Regularized graphical VAR (graphical lasso + EBIC) | `graphicalVAR` | ~1e-10 |
-| [`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md) | Two-step multilevel VAR (`lmer`, fixed effects) | `mlVAR` (`estimator = "lmer"`) | ~1e-10 (machine precision) |
-| [`build_mlvar_bayes()`](https://saqr.me/idiographic/reference/build_mlvar_bayes.md) | Native Bayesian multilevel VAR / **DSEM** | real **Mplus DSEM** + Stan/JAGS | Monte-Carlo error |
-| [`build_var_bayes()`](https://saqr.me/idiographic/reference/build_var_bayes.md) | Native Bayesian VAR(1) | real **Mplus** `ESTIMATOR = BAYES` | ~1e-3 |
+| [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md) | Regularized graphical VAR (graphical lasso + EBIC) | `graphicalVAR` | ~1e-10 |
+| [`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md) | Two-step multilevel VAR (`lmer`, fixed effects) | `mlVAR` (`estimator = "lmer"`) | ~1e-10 (machine precision) |
+| [`build_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_bayes.md) | Native Bayesian multilevel VAR / **DSEM** | real **Mplus DSEM** + Stan/JAGS | Monte-Carlo error |
+| [`build_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_var_bayes.md) | Native Bayesian VAR(1) | real **Mplus** `ESTIMATOR = BAYES` | ~1e-3 |
 | `.glasso_fit()` (internal) | Graphical lasso | `glasso` (KKT-checked) | ~1e-11 |
 
 Because the algorithms are native, the package’s runtime footprint is
@@ -40,7 +40,7 @@ solely to regenerate the validation fixtures; they are **not needed to
 run any estimator**.
 
 The Bayesian DSEM sampler is a particular highlight:
-[`build_mlvar_bayes()`](https://saqr.me/idiographic/reference/build_mlvar_bayes.md)
+[`build_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_bayes.md)
 reproduces the output of `mlVAR::mlVAR(estimator = "Mplus")` — Mplus’s
 two-level Bayesian VAR with latent mean centering — **without Mplus
 installed**, using a pure-R conjugate Gibbs sampler with hand-rolled
@@ -122,53 +122,55 @@ build_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
 
 **Estimators**
 
-- [`build_var()`](https://saqr.me/idiographic/reference/build_var.md) /
-  [`build_var_each()`](https://saqr.me/idiographic/reference/build_var_each.md)
-  — ordinary VAR(1) (OLS), pooled or per subject
-- [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
+- [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
   /
-  [`graphical_var_each()`](https://saqr.me/idiographic/reference/graphical_var_each.md)
+  [`build_var_each()`](https://mohsaqr.github.io/idiographic/reference/build_var_each.md)
+  — ordinary VAR(1) (OLS), pooled or per subject
+- [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+  /
+  [`graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/graphical_var_each.md)
   — regularized graphical VAR (GLASSO + EBIC)
-- [`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md)
+- [`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)
   — two-step multilevel VAR (temporal, contemporaneous, between)
-- [`build_mlvar_bayes()`](https://saqr.me/idiographic/reference/build_mlvar_bayes.md)
+- [`build_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_bayes.md)
   — native Bayesian multilevel VAR / DSEM (fixed or random slopes, fixed
   or random residual covariance, optional within-model imputation)
-- [`build_var_bayes()`](https://saqr.me/idiographic/reference/build_var_bayes.md)
+- [`build_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_var_bayes.md)
   — native Bayesian VAR(1)
-- [`build_mlvar_mplus()`](https://saqr.me/idiographic/reference/build_mlvar_mplus.md)
+- [`build_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_mplus.md)
   — true-Mplus backend (wraps `mlVAR(estimator = "Mplus")`)
-- [`build_usem()`](https://saqr.me/idiographic/reference/build_usem.md)
+- [`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md)
   — unified Structural Equation Modeling (lavaan)
-- [`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md)
+- [`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md)
   — Group Iterative Multiple Model Estimation
 
 **Workflow & diagnostics**
 
-- [`audit_preprocess()`](https://saqr.me/idiographic/reference/audit_preprocess.md)
+- [`audit_preprocess()`](https://mohsaqr.github.io/idiographic/reference/audit_preprocess.md)
   — preprocessing audit for ILD (compliance, variance, stationarity)
-- [`estimate_stability()`](https://saqr.me/idiographic/reference/estimate_stability.md)
+- [`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
   — bootstrap edge-stability diagnostics
-- [`rolling_var()`](https://saqr.me/idiographic/reference/rolling_var.md)
+- [`rolling_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_var.md)
   /
-  [`rolling_graphical_var()`](https://saqr.me/idiographic/reference/rolling_graphical_var.md)
+  [`rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_graphical_var.md)
   — rolling-window (time-varying) networks
-- [`validate_forecast()`](https://saqr.me/idiographic/reference/validate_forecast.md)
+- [`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md)
   — rolling out-of-sample forecast validation
-- [`compare_idiographic()`](https://saqr.me/idiographic/reference/compare_idiographic.md)
+- [`compare_idiographic()`](https://mohsaqr.github.io/idiographic/reference/compare_idiographic.md)
   — model-comparison reports
 
 **Tidy accessors (work on every result)**
 
-[`edges()`](https://saqr.me/idiographic/reference/edges.md) ·
-[`nodes()`](https://saqr.me/idiographic/reference/nodes.md) ·
-[`coefs()`](https://saqr.me/idiographic/reference/coefs.md) ·
-[`matrices()`](https://saqr.me/idiographic/reference/matrices.md) ·
-[`summary()`](https://rdrr.io/r/base/summary.html) ·
+[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md) ·
+[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md) ·
+[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md) ·
+[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+· [`summary()`](https://rdrr.io/r/base/summary.html) ·
 [`print()`](https://rdrr.io/r/base/print.html) ·
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
-[`plot_gimme()`](https://saqr.me/idiographic/reference/plot_gimme.md) ·
-[`as_netobject()`](https://saqr.me/idiographic/reference/as_netobject.md)
+[`plot_gimme()`](https://mohsaqr.github.io/idiographic/reference/plot_gimme.md)
+·
+[`as_netobject()`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md)
 
 ## Bundled data
 

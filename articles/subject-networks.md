@@ -10,9 +10,9 @@ has_cograph <- requireNamespace("cograph", quietly = TRUE)
 
 When the analysis target is the **idiographic map for every
 individual**, fit one model per person with
-[`build_var_each()`](https://saqr.me/idiographic/reference/build_var_each.md)
+[`build_var_each()`](https://mohsaqr.github.io/idiographic/reference/build_var_each.md)
 (OLS) or
-[`graphical_var_each()`](https://saqr.me/idiographic/reference/graphical_var_each.md)
+[`graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/graphical_var_each.md)
 (regularized). Each returns a named collection of per-subject results.
 
 ## One OLS VAR per person
@@ -110,7 +110,7 @@ plot(var_each, subject = "Grace")
 
 ## One graphical VAR per person
 
-[`graphical_var_each()`](https://saqr.me/idiographic/reference/graphical_var_each.md)
+[`graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/graphical_var_each.md)
 does the same with sparse estimation. Here we fit a handful of students
 so the example runs quickly; drop the
 [`subset()`](https://rdrr.io/r/base/subset.html) to fit everyone.

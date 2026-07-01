@@ -1,10 +1,10 @@
 # Estimate rolling-window graphical VAR networks
 
 Fits
-[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
+[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
 over ordered, overlapping windows within each subject. This is the
 time-varying graphical VAR companion to
-[`rolling_var()`](https://saqr.me/idiographic/reference/rolling_var.md):
+[`rolling_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_var.md):
 every window uses graphical VAR's lag construction, EBIC/penalty
 settings, and tidy coefficient access, then returns one coefficient
 table per window.
@@ -90,7 +90,7 @@ rolling_graphical_var(
 - ...:
 
   Further arguments passed to
-  [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
+  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
   such as `n_lambda`, `gamma`, `lambda_beta`, or `lambda_kappa`.
 
 ## Value
@@ -101,8 +101,8 @@ subject/window metadata plus `network`, `from`, `to`, and `weight`.
 
 ## See also
 
-[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
-[`rolling_var()`](https://saqr.me/idiographic/reference/rolling_var.md)
+[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
+[`rolling_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_var.md)
 
 ## Examples
 

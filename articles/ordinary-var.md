@@ -8,11 +8,11 @@ vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-[`build_var()`](https://saqr.me/idiographic/reference/build_var.md) is
-the transparent OLS baseline: current variables are regressed on an
+[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
+is the transparent OLS baseline: current variables are regressed on an
 intercept and their lag-1 values. It uses the same lag preparation,
 scaling, and within-person centering as
-[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
+[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
 but applies no regularization or EBIC selection — making it the natural
 reference point for the regularized methods.
 
@@ -96,10 +96,10 @@ summary(var_fit)
 #> 2 contemporaneous       5      10       1      0.16039547          6          4
 ```
 
-[`coefs()`](https://saqr.me/idiographic/reference/coefs.md) returns the
-full coefficient table (every cell, including zeros), and
-[`matrices()`](https://saqr.me/idiographic/reference/matrices.md) prints
-the raw estimator matrices compactly:
+[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
+returns the full coefficient table (every cell, including zeros), and
+[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+prints the raw estimator matrices compactly:
 
 ``` r
 

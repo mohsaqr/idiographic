@@ -1,7 +1,7 @@
 # Tidy coefficients from a fitted mlvar model
 
 Generic accessor for the tidy coefficient table stored on a
-[`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md)
+[`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)
 result. Returns a `data.frame` with one row per `(outcome, predictor)`
 pair and columns `outcome`, `predictor`, `beta`, `se`, `t`, `p`,
 `ci_lower`, `ci_upper`, `significant`.

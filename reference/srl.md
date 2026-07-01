@@ -72,9 +72,9 @@ data: <https://github.com/lamethods/data2/raw/main/srl/srl.RDS>.
 The columns have already been tidied for modelling: rows are ordered by
 `name` then `day`, and `day` is a within-person occasion index (1-156)
 you can pass as the `time` argument to
-[`build_usem()`](https://saqr.me/idiographic/reference/build_usem.md)
+[`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md)
 and
-[`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md).
+[`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
 No further ordering, indexing, or column selection is needed before
 fitting a model.
 
