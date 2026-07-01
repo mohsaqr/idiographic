@@ -60,8 +60,191 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Person-specific and within-person network estimation from intensive longitudinal and panel data. Provides preprocessing audits, edge-stability diagnostics, model-comparison reports, rolling forecast validation, rolling ordinary and graphical vector autoregression, ordinary vector autoregression (VAR), graphical vector autoregression (graphical VAR), multilevel vector autoregression (mlVAR), native Bayesian VAR and multilevel VAR that statistically reproduce 'Mplus' Dynamic Structural Equation Modeling (DSEM) output without requiring 'Mplus', unified Structural Equation Modeling (uSEM), and Group Iterative Multiple Model Estimation (GIMME) as clean-room implementations. Split out of the 'Nestimate' package so the idiographic time-series methods carry their own dependencies. Results have tidy accessors and 'cograph_network' plotting support.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="idiographic">idiographic<a class="anchor" aria-label="anchor" href="#idiographic"></a>
+</h1></div>
+<!-- badges: start -->
+
+<blockquote>
+<p><strong>Network estimation from intensive longitudinal data</strong> — person-specific and within-person temporal, contemporaneous, and between-subject networks from ESM / EMA / diary panels, through one tidy verb per method.</p>
+</blockquote>
+<p><code>idiographic</code> estimates dynamic networks from intensive longitudinal data (ILD): ordinary and regularized vector autoregression, multilevel VAR, native Bayesian multilevel VAR that matches Mplus DSEM, unified SEM, and GIMME — plus the supporting workflow (preprocessing audits, edge-stability diagnostics, rolling windows, forecast validation, and model comparison). Every result is a tidy object you access with the same handful of verbs: <code><a href="reference/edges.html">edges()</a></code>, <code><a href="reference/nodes.html">nodes()</a></code>, <code><a href="reference/coefs.html">coefs()</a></code>, <code><a href="reference/matrices.html">matrices()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p>
+<div class="section level2">
+<h2 id="clean-room-by-design">Clean-room by design<a class="anchor" aria-label="anchor" href="#clean-room-by-design"></a>
+</h2>
+<p><strong>Every estimator is a clean-room reimplementation</strong>, written from the published algorithms rather than by wrapping another package — and each is validated for numerical equivalence against its reference:</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr>
+<th>Estimator</th>
+<th>Method</th>
+<th>Validated against</th>
+<th>Agreement</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code><a href="reference/graphical_var.html">graphical_var()</a></code></td>
+<td>Regularized graphical VAR (graphical lasso + EBIC)</td>
+<td><code>graphicalVAR</code></td>
+<td>~1e-10</td>
+</tr>
+<tr>
+<td><code><a href="reference/build_mlvar.html">build_mlvar()</a></code></td>
+<td>Two-step multilevel VAR (<code>lmer</code>, fixed effects)</td>
+<td>
+<code>mlVAR</code> (<code>estimator = "lmer"</code>)</td>
+<td>~1e-10 (machine precision)</td>
+</tr>
+<tr>
+<td><code><a href="reference/build_mlvar_bayes.html">build_mlvar_bayes()</a></code></td>
+<td>Native Bayesian multilevel VAR / <strong>DSEM</strong>
+</td>
+<td>real <strong>Mplus DSEM</strong> + Stan/JAGS</td>
+<td>Monte-Carlo error</td>
+</tr>
+<tr>
+<td><code><a href="reference/build_var_bayes.html">build_var_bayes()</a></code></td>
+<td>Native Bayesian VAR(1)</td>
+<td>real <strong>Mplus</strong> <code>ESTIMATOR = BAYES</code>
+</td>
+<td>~1e-3</td>
+</tr>
+<tr>
+<td>
+<code>.glasso_fit()</code> (internal)</td>
+<td>Graphical lasso</td>
+<td>
+<code>glasso</code> (KKT-checked)</td>
+<td>~1e-11</td>
+</tr>
+</tbody>
+</table>
+<p>Because the algorithms are native, the package’s runtime footprint is minimal — <strong>Imports: <code>stats</code>, <code>utils</code>, <code>lme4</code>, <code>lavaan</code></strong> only. <code>mlVAR</code>, <code>graphicalVAR</code>, <code>glasso</code>, and <code>MplusAutomation</code> are <em>Suggests</em> used solely to regenerate the validation fixtures; they are <strong>not needed to run any estimator</strong>.</p>
+<p>The Bayesian DSEM sampler is a particular highlight: <code><a href="reference/build_mlvar_bayes.html">build_mlvar_bayes()</a></code> reproduces the output of <code>mlVAR::mlVAR(estimator = "Mplus")</code> — Mplus’s two-level Bayesian VAR with latent mean centering — <strong>without Mplus installed</strong>, using a pure-R conjugate Gibbs sampler with hand-rolled inverse-Wishart draws (no <code>MCMCpack</code>/<code>rstan</code>). It was validated against real Mplus 9 output, an independent Stan/JAGS implementation (Li et al., 2022), real openESM datasets, and the published network findings of Bringmann et al. (2013).</p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>From the author’s r-universe (recommended — no compilation, binaries included):</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"idiographic"</span>,</span>
+<span>                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://mohsaqr.r-universe.dev"</span>,</span>
+<span>                           <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Or from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"mohsaqr/idiographic"</span><span class="op">)</span></span></code></pre></div>
+<p>Plotting uses the <a href="https://github.com/mohsaqr/snajs" class="external-link"><code>cograph</code></a> package; it stays optional and is offered for on-demand install the first time you call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">idiographic</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## simulate an ESM panel: 30 people, 40 beeps, 3 items</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">40</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span> <span class="va">y</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.35</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span><span class="op">)</span> <span class="op">*</span> <span class="va">y</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span>, <span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span>, beep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, A <span class="op">=</span> <span class="va">y</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, B <span class="op">=</span> <span class="va">y</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, C <span class="op">=</span> <span class="va">y</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## multilevel VAR: temporal, contemporaneous, and between networks</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/build_mlvar.html">build_mlvar</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit</span>                 <span class="co"># tidy printout of all three networks</span></span>
+<span><span class="fu"><a href="reference/edges.html">edges</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>          <span class="co"># one row per edge (network, from, to, weight)</span></span>
+<span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>          <span class="co"># fixed-effect estimates with SE / p / CI</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>           <span class="co"># draw all layers with cograph</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, layer <span class="op">=</span> <span class="st">"temporal"</span><span class="op">)</span></span></code></pre></div>
+<p>Everything is a <strong>tidy verb with named arguments returning a tidy <code>data.frame</code></strong> — you never index into a result object to reach a sub-network or a coefficient.</p>
+<div class="section level3">
+<h3 id="native-bayesian-dsem-no-mplus-needed">Native Bayesian DSEM (no Mplus needed)<a class="anchor" aria-label="anchor" href="#native-bayesian-dsem-no-mplus-needed"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bayes</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/build_mlvar_bayes.html">build_mlvar_bayes</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
+<span>                           id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span>,</span>
+<span>                           n_iter <span class="op">=</span> <span class="fl">4000</span>, n_chains <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">bayes</span>               <span class="co"># posterior medians, SDs, 95% CIs, convergence (max PSR)</span></span>
+<span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">bayes</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## full DSEM with person-specific slopes, random residuals, and</span></span>
+<span><span class="co">## within-model imputation of missing observations (needs enough subjects to</span></span>
+<span><span class="co">## identify the random-effect covariance: at least 2 * (p + p^2) + 1):</span></span>
+<span><span class="fu"><a href="reference/build_mlvar_bayes.html">build_mlvar_bayes</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span>,</span>
+<span>                  temporal <span class="op">=</span> <span class="st">"random"</span>, residual <span class="op">=</span> <span class="st">"random"</span>, impute <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="whats-included">What’s included<a class="anchor" aria-label="anchor" href="#whats-included"></a>
+</h2>
+<p><strong>Estimators</strong></p>
+<ul>
+<li>
+<code><a href="reference/build_var.html">build_var()</a></code> / <code><a href="reference/build_var_each.html">build_var_each()</a></code> — ordinary VAR(1) (OLS), pooled or per subject</li>
+<li>
+<code><a href="reference/graphical_var.html">graphical_var()</a></code> / <code><a href="reference/graphical_var_each.html">graphical_var_each()</a></code> — regularized graphical VAR (GLASSO + EBIC)</li>
+<li>
+<code><a href="reference/build_mlvar.html">build_mlvar()</a></code> — two-step multilevel VAR (temporal, contemporaneous, between)</li>
+<li>
+<code><a href="reference/build_mlvar_bayes.html">build_mlvar_bayes()</a></code> — native Bayesian multilevel VAR / DSEM (fixed or random slopes, fixed or random residual covariance, optional within-model imputation)</li>
+<li>
+<code><a href="reference/build_var_bayes.html">build_var_bayes()</a></code> — native Bayesian VAR(1)</li>
+<li>
+<code><a href="reference/build_mlvar_mplus.html">build_mlvar_mplus()</a></code> — true-Mplus backend (wraps <code>mlVAR(estimator = "Mplus")</code>)</li>
+<li>
+<code><a href="reference/build_usem.html">build_usem()</a></code> — unified Structural Equation Modeling (lavaan)</li>
+<li>
+<code><a href="reference/build_gimme.html">build_gimme()</a></code> — Group Iterative Multiple Model Estimation</li>
+</ul>
+<p><strong>Workflow &amp; diagnostics</strong></p>
+<ul>
+<li>
+<code><a href="reference/audit_preprocess.html">audit_preprocess()</a></code> — preprocessing audit for ILD (compliance, variance, stationarity)</li>
+<li>
+<code><a href="reference/estimate_stability.html">estimate_stability()</a></code> — bootstrap edge-stability diagnostics</li>
+<li>
+<code><a href="reference/rolling_var.html">rolling_var()</a></code> / <code><a href="reference/rolling_graphical_var.html">rolling_graphical_var()</a></code> — rolling-window (time-varying) networks</li>
+<li>
+<code><a href="reference/validate_forecast.html">validate_forecast()</a></code> — rolling out-of-sample forecast validation</li>
+<li>
+<code><a href="reference/compare_idiographic.html">compare_idiographic()</a></code> — model-comparison reports</li>
+</ul>
+<p><strong>Tidy accessors (work on every result)</strong></p>
+<p><code><a href="reference/edges.html">edges()</a></code> · <code><a href="reference/nodes.html">nodes()</a></code> · <code><a href="reference/coefs.html">coefs()</a></code> · <code><a href="reference/matrices.html">matrices()</a></code> · <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> · <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> · <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="reference/plot_gimme.html">plot_gimme()</a></code> · <code><a href="reference/as_netobject.html">as_netobject()</a></code></p>
+</div>
+<div class="section level2">
+<h2 id="bundled-data">Bundled data<a class="anchor" aria-label="anchor" href="#bundled-data"></a>
+</h2>
+<ul>
+<li>
+<code>srl</code> — a self-regulated-learning ESM dataset (<code>data(srl)</code>)</li>
+<li>
+<code>inst/extdata/esm_demo.tsv</code> — a small synthetic demo panel</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<p>Full function reference and articles: <strong><a href="https://saqr.me/idiographic/" class="uri">https://saqr.me/idiographic/</a></strong>.</p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>Saqr, M. (2026). <em>idiographic: Network Estimation from Intensive Longitudinal Data</em>. R package. <a href="https://github.com/mohsaqr/idiographic" class="external-link uri">https://github.com/mohsaqr/idiographic</a></p>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>GPL-3.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
@@ -84,7 +267,14 @@ Person-specific and within-person network estimation from intensive longitudinal
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://mohsaqr.r-universe.dev/idiographic" class="external-link"><img src="https://mohsaqr.r-universe.dev/badges/idiographic" alt="r-universe"></a></li>
+<li><a href="https://saqr.me/idiographic/"><img src="https://img.shields.io/badge/docs-pkgdown-blue.svg" alt="pkgdown"></a></li>
+<li><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
