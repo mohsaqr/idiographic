@@ -19,3 +19,6 @@
 ^local_testing_and_equivalence$
 ^tmp$
 ^vignettes/.*\.html$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
