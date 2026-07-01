@@ -124,9 +124,9 @@ build_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
 **Workflow & diagnostics**
 
 - `audit_preprocess()` — preprocessing audit for ILD (compliance, variance, stationarity)
-- `estimate_stability()` — bootstrap edge-stability diagnostics
+- `estimate_stability()` — bootstrap edge-stability diagnostics (*experimental*)
 - `rolling_var()` / `rolling_graphical_var()` — rolling-window (time-varying) networks
-- `validate_forecast()` — rolling out-of-sample forecast validation
+- `validate_forecast()` — rolling out-of-sample forecast validation (*experimental*)
 - `compare_idiographic()` — model-comparison reports
 
 **Tidy accessors (work on every result)**

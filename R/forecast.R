@@ -1,8 +1,13 @@
 # ---- Rolling one-step forecast validation ----
 
-#' Validate one-step forecasts from idiographic VAR models
+#' Validate one-step forecasts from idiographic VAR models (experimental)
 #'
 #' @description
+#' **Experimental.** The rolling-origin design follows standard time-series
+#' cross-validation practice, but unlike the estimators in this package it has
+#' no external reference implementation to validate against, and its
+#' interface, defaults, and reported metrics may change in a future release.
+#'
 #' Performs rolling-origin one-step prediction from [build_var()] or
 #' [graphical_var()]. Each split fits the estimator on earlier blocks and
 #' predicts current variables in the next block from their lag-1 values. Scaling
