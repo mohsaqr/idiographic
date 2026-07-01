@@ -39,6 +39,7 @@ Suggests:
     graphicalVAR,
     glasso,
     qgraph,
+    rio,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
