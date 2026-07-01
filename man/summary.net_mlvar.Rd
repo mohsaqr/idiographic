@@ -21,7 +21,7 @@ fixed-effect coefficient table, \code{edges(object)} for the edge list, and
 Summary method for net_mlvar
 }
 \examples{
-\dontshow{if (requireNamespace("lme4", quietly = TRUE) && requireNamespace("corpcor", quietly = TRUE) && requireNamespace("data.table", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+\dontshow{if (requireNamespace("lme4", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \donttest{
 set.seed(1)
 n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")

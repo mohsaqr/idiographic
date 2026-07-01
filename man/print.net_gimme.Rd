@@ -4,10 +4,12 @@
 \alias{print.net_gimme}
 \title{Print Method for net_gimme}
 \usage{
-\method{print}{net_gimme}(x, ...)
+\method{print}{net_gimme}(x, digits = 2, ...)
 }
 \arguments{
 \item{x}{A \code{net_gimme} object.}
+
+\item{digits}{Number of digits used for printed network matrices.}
 
 \item{...}{Additional arguments (ignored).}
 }

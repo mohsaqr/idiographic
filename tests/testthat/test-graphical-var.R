@@ -16,7 +16,16 @@ test_that("degenerate (constant) variables are rejected with a clear message", {
   d$C <- 1                                  # zero variance
   expect_error(
     graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 5),
-    "zero variance"
+    "zero/non-finite variance"
+  )
+})
+
+test_that("graphical_var rejects non-numeric variables before scaling", {
+  d <- synth_single(n_t = 60)
+  d$A <- factor(rep(1:5, length.out = nrow(d)))
+  expect_error(
+    graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 5),
+    "must be numeric"
   )
 })
 
@@ -74,9 +83,9 @@ test_that(".glasso_fit accepts a matrix penalty (regularize_mat_kappa path)", {
   X <- matrix(stats::rnorm(200 * 4), ncol = 4)
   S <- stats::cov(X)
   Rho <- matrix(0.1, 4, 4); diag(Rho) <- 0
-  fit <- idionet:::.glasso_fit(S, Rho)
+  fit <- idiographic:::.glasso_fit(S, Rho)
   # equals the scalar path when the matrix is constant off-diagonal, 0 on diag
-  fit_scalar <- idionet:::.glasso_fit(S, 0.1, penalize.diagonal = FALSE)
+  fit_scalar <- idiographic:::.glasso_fit(S, 0.1, penalize.diagonal = FALSE)
   expect_equal(fit$wi, fit_scalar$wi, tolerance = 1e-8)
 })
 
@@ -131,7 +140,7 @@ test_that("regularize_mat_beta penalty rows align (intercept prepended)", {
   M <- matrix(c(0, 1, 1,
                 1, 0, 1,
                 1, 1, 0), p, p, byrow = TRUE)   # penalise off-diagonal only
-  lm <- idionet:::.gvar_lambda_mat(
+  lm <- idiographic:::.gvar_lambda_mat(
     lambda_beta = 0.1, nX = p + 1L, nY = p,
     penalize_diagonal = TRUE, regularize_mat_beta = M
   )

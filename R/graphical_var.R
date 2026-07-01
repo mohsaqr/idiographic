@@ -190,14 +190,7 @@ graphical_var <- function(data,
   # Keep only well-sampled subjects (counts taken from the data frame).
   data <- .ido_keep(data, id, min_obs, subject)
 
-  const_vars <- vars[vapply(vars, function(v) {
-    s <- stats::sd(suppressWarnings(as.numeric(data[[v]])), na.rm = TRUE)
-    !is.finite(s) || s == 0
-  }, logical(1))]
-  if (length(const_vars) > 0L) {
-    stop("Variable(s) with zero variance (or non-numeric) cannot be modelled: ",
-         paste(const_vars, collapse = ", "), ".", call. = FALSE)
-  }
+  .ido_check_numeric_vars(data, vars)
 
   # ---- 1. Data preparation (matches graphicalVAR::tsData, lags = 1) ----
   if (verbose) message("Preparing lagged data ...")
@@ -262,7 +255,7 @@ graphical_var <- function(data,
   pdc <- .gvar_compute_pdc(beta, kappa)
   dimnames(pcc) <- dimnames(pdc) <- list(vars, vars)
 
-  result <- list(
+  model <- list(
     beta            = beta,
     temporal        = temporal,
     kappa           = kappa,
@@ -277,8 +270,15 @@ graphical_var <- function(data,
     EBIC            = grid$ebic[sel],
     likelihood      = likelihood
   )
-  class(result) <- "gvar_result"
-  result
+  .ido_group_result(
+    "gvar_result",
+    list(
+      temporal = .ido_wrap(t(temporal), method = "relative", directed = TRUE),
+      contemporaneous = .ido_wrap(pcc, method = "co_occurrence",
+                                  directed = FALSE)
+    ),
+    model
+  )
 }
 
 
@@ -554,12 +554,13 @@ graphical_var <- function(data,
 #' Print Method for gvar_result
 #'
 #' @param x A \code{gvar_result} object.
+#' @param digits Number of digits used for printed network matrices.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return The input object, invisibly.
 #'
 #' @export
-print.gvar_result <- function(x, ...) {
+print.gvar_result <- function(x, digits = 2, ...) {
   d <- length(x$labels)
   n_temp <- sum(x$temporal != 0)
   n_contemp <- sum(x$PCC[upper.tri(x$PCC)] != 0)
@@ -572,7 +573,9 @@ print.gvar_result <- function(x, ...) {
   cat(sprintf("  EBIC:           %.2f (gamma=%.2f)\n", x$EBIC, x$gamma))
   cat(sprintf("  Lambda:         beta=%.4f, kappa=%.4f\n",
               x$lambda_beta, x$lambda_kappa))
-  cat("  Tidy edges:     edges(x)   |  plot: splot(as_netobject(x)$temporal)\n")
+  .ido_print_networks(x, digits = digits)
+  cat("\n  plot(x) | plot(x, layer = \"temporal\")",
+      "\n  edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)\n")
   invisible(x)
 }
 
@@ -589,17 +592,7 @@ print.gvar_result <- function(x, ...) {
 #'   (directed) and \code{$contemporaneous} (undirected) netobjects.
 #' @export
 as_netobject.gvar_result <- function(x, ...) {
-  # Build full netobjects directly through the shared constructor so the
-  # plotting method name ("relative" -> directed, "co_occurrence" -> undirected)
-  # is carried at the top level. Round-tripping a bare cograph_network here used
-  # to drop the method to "idionet", which broke temporal directedness.
-  structure(
-    list(temporal        = .ido_wrap(t(x$temporal), method = "relative",
-                                      directed = TRUE),
-         contemporaneous = .ido_wrap(x$PCC, method = "co_occurrence",
-                                     directed = FALSE)),
-    class = "netobject_group"
-  )
+  .ido_network_group(x)
 }
 
 #' Summary Method for gvar_result

@@ -73,7 +73,7 @@
 #'   multiple-solutions / directionality features). A non-default value raises an
 #'   error pointing to \code{gimme::gimme()}.
 #' @param out,sep,header,plot Accepted for \code{gimme::gimme()} API parity and
-#'   ignored: idionet reads a \code{data.frame} (not a CSV directory) and returns
+#'   ignored: idiographic reads a \code{data.frame} (not a CSV directory) and returns
 #'   an object you plot with [plot_gimme()]. \code{plot = TRUE} emits a message.
 #' @param sub_feature,sub_method,sub_sim_thresh,confirm_subgroup,conv_length,conv_interval,mean_center_mult,diagnos,ms_tol,lv_estimator,lv_scores,lv_miiv_scaling,lv_final_estimator
 #'   Accepted for \code{gimme::gimme()} API parity. These configure the
@@ -157,7 +157,7 @@ build_gimme <- function(data,
                         ordered = NULL,
                         dir_prop_cutoff = 0,
                         # ---- accepted for gimme::gimme() API parity ----
-                        # I/O arguments: idionet takes a data.frame and returns
+                        # I/O arguments: idiographic takes a data.frame and returns
                         # an object (plot with plot_gimme()), so these are no-ops.
                         out = NULL,
                         sep = NULL,
@@ -214,7 +214,7 @@ build_gimme <- function(data,
   stopifnot(is.numeric(n_excellent), length(n_excellent) == 1L,
             n_excellent >= 1L)
 
-  # idionet implements the standard (and hybrid / VAR) GIMME search. The other
+  # idiographic implements the standard (and hybrid / VAR) GIMME search. The other
   # gimme::gimme() modes are different algorithms; accept the arguments for API
   # parity but error clearly rather than silently ignore them.
   if (isTRUE(subgroup)) {
@@ -297,7 +297,6 @@ build_gimme <- function(data,
                                  day = day)
   n_subj <- length(ts_list)
   varnames <- vars
-  p <- length(varnames)
 
   if (n_subj < 2L) {
     stop("build_gimme() requires at least 2 individuals.", call. = FALSE)
@@ -362,7 +361,7 @@ build_gimme <- function(data,
 
   # --- Individual-level search ---
   # Bonferroni across eligible paths for individual level. (Empirically this
-  # matches gimme's effective individual threshold: idionet reproduces gimme's
+  # matches gimme's effective individual threshold: idiographic reproduces gimme's
   # per-person models exactly on the canonical `ts` example and on 24/25 of the
   # `simData` example; the bare cutoffind = qchisq(0.99, 1) in gimme's setup is
   # further corrected before use.)
@@ -405,8 +404,7 @@ build_gimme <- function(data,
     fixed_paths = fixed_paths, seed = seed
   )
 
-  class(result) <- "net_gimme"
-  result
+  .gimme_cograph_network(result)
 }
 
 
@@ -1157,7 +1155,8 @@ build_gimme <- function(data,
   contemp_cov <- Reduce("+", lapply(psi_cur,
                                     function(M) (!is.na(M) & M != 0) * 1L))
   contemp_cov_avg <- Reduce("+", lapply(psi_cur, function(M) {
-    M[is.na(M)] <- 0; M
+    M[is.na(M)] <- 0
+    M
   })) / n_subj
   contemp_is_cov <- isTRUE(hybrid) || isTRUE(VAR)
 
@@ -1188,6 +1187,7 @@ build_gimme <- function(data,
 #' Print Method for net_gimme
 #'
 #' @param x A \code{net_gimme} object.
+#' @param digits Number of digits used for printed network matrices.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return The input object, invisibly.
@@ -1205,7 +1205,7 @@ build_gimme <- function(data,
 #' }
 #'
 #' @export
-print.net_gimme <- function(x, ...) {
+print.net_gimme <- function(x, digits = 2, ...) {
   cat("GIMME Network Analysis\n")
   cat(strrep("-", 30), "\n")
   cat("Subjects:  ", x$n_subjects, "\n")
@@ -1223,13 +1223,11 @@ print.net_gimme <- function(x, ...) {
   cat("\nIndividual-level paths: ",
       sprintf("mean %.1f, range %d-%d\n", mean(n_ind), min(n_ind), max(n_ind)))
 
-  cat("\nTemporal path counts (lagged):\n")
-  print(x$temporal)
+  cat("\nProportion of subjects with each path:\n")
+  .ido_print_networks(x, digits = digits)
 
-  cat("\nContemporaneous path counts:\n")
-  print(x$contemporaneous)
-
-  cat("\nTidy edges: edges(x)  |  plot: plot_gimme(x)\n")
+  cat("\n  plot(x)  (faithful gimme-style mixed network) | plot(x, layer = \"temporal\")",
+      "\n  edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)\n")
   invisible(x)
 }
 
@@ -1261,4 +1259,3 @@ print.net_gimme <- function(x, ...) {
 summary.net_gimme <- function(object, ...) {
   .tidy_over_group(as_netobject(object), .net_metrics)
 }
-

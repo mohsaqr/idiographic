@@ -1,6 +1,6 @@
 # Pure-R graphical lasso (Friedman, Hastie & Tibshirani 2008, Biostatistics).
 #
-# Replaces glasso::glasso() and glasso::glassopath() so idionet's regularised
+# Replaces glasso::glasso() and glasso::glassopath() so idiographic's regularised
 # (EBICglasso) network estimation carries no compiled dependency. The graphical
 # lasso objective
 #     min_{Theta > 0}  -log det Theta + tr(S Theta) + rho * sum_{i != j}|Theta_ij|

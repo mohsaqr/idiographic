@@ -1,0 +1,86 @@
+---
+title: "6. Unified SEM (uSEM)"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{6. Unified SEM (uSEM)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
+)
+```
+
+```{r libraries}
+library(idiographic)
+set.seed(42)
+vars <- c("A", "B")
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
+```
+
+`build_usem()` fits a **unified SEM** over lagged and contemporaneous paths for
+each person. Supply `id` plus either a `time` column or `day`/`beep` columns so
+lagged rows are formed in the correct within-person order.
+
+The vignette uses a small simulated panel so it builds quickly and deterministi-
+cally on every machine. The first pass is a stable fixed autoregressive model
+plus residual covariances; broader contemporaneous search models should be
+checked against convergence diagnostics before interpretation.
+
+```{r usem}
+panel <- do.call(rbind, lapply(seq_len(4), function(i) {
+  n <- 30
+  ri <- stats::rnorm(length(vars), 0, 0.5)
+  e <- matrix(stats::rnorm(n * length(vars)), ncol = length(vars))
+  for (t in 2:n) {
+    e[t, ] <- 0.35 * e[t - 1L, ] + e[t, ]
+  }
+  values <- as.data.frame(sweep(e, 2, ri, "+"))
+  names(values) <- vars
+  data.frame(
+    id = i,
+    day = rep(1:3, each = 10),
+    beep = rep(1:10, 3),
+    values
+  )
+}))
+
+usem_fit <- tryCatch(
+  build_usem(panel, vars = vars, id = "id", day = "day", beep = "beep",
+             temporal = "ar", contemporaneous = "none", residual_cov = TRUE),
+  error = function(e) {
+    message("uSEM model did not converge in this R/lavaan build: ",
+            conditionMessage(e))
+    NULL
+  }
+)
+
+if (!is.null(usem_fit)) usem_fit
+```
+
+# Tidy tables
+
+```{r usem-tables, eval=!is.null(usem_fit)}
+head(edges(usem_fit))
+
+summary(usem_fit)
+```
+
+```{r usem-matrices, eval=!is.null(usem_fit)}
+matrices(usem_fit)
+```
+
+# Plot
+
+```{r plot-usem, eval=has_cograph && !is.null(usem_fit)}
+plot(usem_fit, layer = "temporal")
+```
+
+```{r plot-usem-contemp, eval=has_cograph && !is.null(usem_fit)}
+plot(usem_fit, layer = "contemporaneous")
+```

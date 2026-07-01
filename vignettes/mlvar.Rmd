@@ -1,0 +1,69 @@
+---
+title: "5. Multilevel VAR (mlVAR)"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{5. Multilevel VAR (mlVAR)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
+)
+```
+
+```{r libraries}
+library(idiographic)
+data(srl)
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
+```
+
+`build_mlvar()` estimates **group-level** temporal, contemporaneous, and
+between-person networks in one multilevel model. Use it when the question moves
+from one person's dynamics to the *average within-person process* and the
+*between-person* differences across the whole sample.
+
+# Fit
+
+```{r mlvar}
+mlvar_fit <- build_mlvar(srl, vars = vars, id = "name", standardize = TRUE)
+
+mlvar_fit
+```
+
+Three networks are estimated and shown: the directed temporal network (average
+within-person lag-1 effects), the undirected contemporaneous network, and the
+undirected between-person network.
+
+# Tidy tables
+
+`edges()` stacks all three networks into one tidy table with a `network`
+column; filter or summarise it with ordinary verbs.
+
+```{r mlvar-tables}
+head(edges(mlvar_fit))
+
+summary(mlvar_fit)
+```
+
+```{r mlvar-matrices}
+matrices(mlvar_fit)
+```
+
+# Plot
+
+Draw the whole result, or any single layer by name — including the
+between-person network.
+
+```{r plot-mlvar, eval=has_cograph}
+plot(mlvar_fit, layer = "temporal")
+```
+
+```{r plot-mlvar-between, eval=has_cograph}
+plot(mlvar_fit, layer = "between")
+```

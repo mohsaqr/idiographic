@@ -1,11 +1,13 @@
-test_that("build_mlvar returns three named netobjects + tidy coefs", {
+test_that("build_mlvar returns three named cograph networks + tidy coefs", {
   d <- synth_panel(n_id = 12, days = 4, beeps = 12, seed = 3)
   fit <- suppressWarnings(
     build_mlvar(d, vars = c("A", "B", "C"), id = "id",
                 day = "day", beep = "beep")
   )
   expect_s3_class(fit, "net_mlvar")
+  expect_s3_class(fit, "cograph_group")
   expect_named(fit, c("temporal", "contemporaneous", "between"))
+  expect_true(all(vapply(fit, inherits, logical(1), "cograph_network")))
   expect_true(all(vapply(fit, inherits, logical(1), "netobject")))
 
   co <- coefs(fit)
@@ -95,13 +97,13 @@ test_that("AR = TRUE gives a diagonal temporal matrix matching mlVAR", {
 })
 
 test_that("singular between-network returns zeros with a warning (convention)", {
-  # A zero random-intercept SD makes the between network non-estimable; idionet
+  # A zero random-intercept SD makes the between network non-estimable; idiographic
   # returns zeros (with a warning) by convention rather than NA like mlVAR.
   vars <- c("A", "B")
   Gamma <- matrix(c(0, 0.2, 0.1, 0), 2, 2, dimnames = list(vars, vars))
   mu_SD <- c(A = 1, B = 0)                  # B has no between-person variance
   expect_warning(
-    bt <- idionet:::.mlvar_compute_between_from_gamma(Gamma, mu_SD, vars),
+    bt <- idiographic:::.mlvar_compute_between_from_gamma(Gamma, mu_SD, vars),
     "not estimable"
   )
   expect_true(all(bt == 0))
@@ -110,10 +112,10 @@ test_that("singular between-network returns zeros with a warning (convention)", 
 
 test_that("defensive coefficient matchers fill missing names with NA", {
   fe <- c(L1_A = 0.3, L1_B = -0.1)
-  expect_equal(idionet:::.mlvar_vec(fe, c("L1_A", "L1_B", "L1_C")),
+  expect_equal(idiographic:::.mlvar_vec(fe, c("L1_A", "L1_B", "L1_C")),
                c(0.3, -0.1, NA))
   m <- matrix(c(0.2, 0.05), 1, 2,
               dimnames = list("L1_A", c("Std. Error", "t value")))
-  expect_equal(idionet:::.mlvar_row(m, c("L1_A", "L1_B"), "Std. Error"),
+  expect_equal(idiographic:::.mlvar_row(m, c("L1_A", "L1_B"), "Std. Error"),
                c(0.2, NA))
 })

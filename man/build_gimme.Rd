@@ -138,7 +138,7 @@ multiple-solutions / directionality features). A non-default value raises an
 error pointing to \code{gimme::gimme()}.}
 
 \item{out, sep, header, plot}{Accepted for \code{gimme::gimme()} API parity and
-ignored: idionet reads a \code{data.frame} (not a CSV directory) and returns
+ignored: idiographic reads a \code{data.frame} (not a CSV directory) and returns
 an object you plot with \code{\link[=plot_gimme]{plot_gimme()}}. \code{plot = TRUE} emits a message.}
 
 \item{sub_feature, sub_method, sub_sim_thresh, confirm_subgroup, conv_length, conv_interval, mean_center_mult, diagnos, ms_tol, lv_estimator, lv_scores, lv_miiv_scaling, lv_final_estimator}{Accepted for \code{gimme::gimme()} API parity. These configure the

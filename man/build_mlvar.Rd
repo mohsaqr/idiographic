@@ -44,7 +44,7 @@ When provided, lag pairs are only formed within the same day.}
 \code{"lm"} / \code{"Mplus"} raise an error (use \code{mlVAR::mlVAR()}).}
 
 \item{temporal, contemporaneous}{Character. Only \code{"fixed"} is implemented
-(idionet is a clean-room of mlVAR's fixed-effects path). The random-effects
+(idiographic is a clean-room of mlVAR's fixed-effects path). The random-effects
 modes (\code{"correlated"}, \code{"orthogonal"}, \code{"unique"}) raise an error pointing
 to \code{mlVAR::mlVAR()}.}
 
@@ -95,7 +95,7 @@ partial-correlation network of within-person lmer residuals.
 partial-correlation network of person means, derived from
 \code{D (I - Gamma)}. \code{method = "mlvar_between"}, \code{directed = FALSE}.
 \strong{Convention:} when a random-intercept SD is 0 the between
-network is not estimable; idionet returns an all-zero matrix (with a
+network is not estimable; idiographic returns an all-zero matrix (with a
 warning) as a plotting-oriented convention, whereas \code{mlVAR} returns
 an all-\code{NA} matrix. The contemporaneous network follows the same
 zero-on-degeneracy convention. This is a deliberate departure from
@@ -148,7 +148,7 @@ configurations (seeds 201-220). See \code{tmp/mlvar_equivalence_real20.R} and
 \code{tmp/mlvar_equivalence_20seeds.R}.
 }
 \examples{
-\dontshow{if (requireNamespace("lme4", quietly = TRUE) && requireNamespace("corpcor", quietly = TRUE) && requireNamespace("data.table", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+\dontshow{if (requireNamespace("lme4", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \donttest{
 set.seed(1)
 n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")

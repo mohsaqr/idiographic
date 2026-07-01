@@ -1,0 +1,116 @@
+---
+title: "1. Getting started with idiographic"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{1. Getting started with idiographic}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 7,
+  fig.height = 5.5
+)
+```
+
+`idiographic` estimates **person-specific** and **within-person** networks from
+intensive longitudinal data. It implements ordinary VAR, graphical VAR,
+subject-by-subject VARs, mlVAR, uSEM, and GIMME as clean-room estimators, plus
+rolling networks, edge stability, forecast validation, and model comparison.
+
+Every estimator returns an object that
+
+* **prints** a compact, readable summary that *shows the estimated networks*,
+* exposes **one tidy verb per question** — `edges()`, `nodes()`, `summary()`,
+  `coefs()`, `matrices()` — each returning a plain `data.frame` you print
+  directly, and
+* **plots** with a single `plot()` call.
+
+This vignette covers the shared data and the preprocessing audit. Each method
+has its own vignette:
+
+| Method | Vignette |
+|---|---|
+| Ordinary VAR | *Ordinary VAR* |
+| Graphical VAR | *Graphical VAR* |
+| One network per person | *Subject-by-subject networks* |
+| mlVAR | *Multilevel VAR (mlVAR)* |
+| uSEM | *Unified SEM (uSEM)* |
+| GIMME | *GIMME* |
+| Rolling / time-varying | *Rolling networks* |
+| Stability & forecasting | *Stability and forecast validation* |
+| Comparing estimators | *Comparing methods* |
+
+```{r libraries}
+library(idiographic)
+```
+
+# The data
+
+The package ships the self-regulated-learning (SRL) experience-sampling data
+from Chapter 20 of the *Learning Analytics Methods* book as a ready-to-model
+dataset. Loading it needs no ordering, indexing, or column selection — the rows
+are already ordered by `name` then `day`, and `day` is a within-person occasion
+index you can hand straight to `build_usem()` or `build_gimme()`.
+
+```{r data}
+data(srl)
+
+summary(srl)
+```
+
+Thirty-six students each contributed 156 occasions on nine SRL indicators:
+
+```{r data-shape}
+nrow(srl)
+length(unique(srl$name))
+head(srl)
+```
+
+Throughout the method vignettes we use a focused set of five indicators so the
+printed networks stay readable; all nine are available.
+
+```{r vars}
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+```
+
+The chapter uses `Grace` for the single-person examples, and we keep that
+convention. Where a method needs a single series, pass `subject = "Grace"` to
+the estimator rather than slicing the data frame yourself.
+
+# Preprocessing audit
+
+Before fitting dynamic models, `audit_preprocess()` builds the same lag-1 design
+the estimators use and reports missingness, day-boundary drops, trends, AR(1)
+persistence, split-half drift, and a unit-root screen. It does not fit a
+network; it makes the modelling input explicit.
+
+```{r audit}
+audit <- audit_preprocess(srl, vars = vars, id = "name", min_obs = 100)
+
+audit
+```
+
+The audit's tidy tables are accessible directly — one row per
+subject-by-variable for the diagnostics, one row per subject-by-day for the
+counts:
+
+```{r audit-tables}
+head(as.data.frame(audit))
+
+head(audit$counts)
+```
+
+# Where to go next
+
+Pick the method vignette that matches your question. A good first stop is
+*Ordinary VAR*: it is the transparent OLS baseline that every other temporal
+estimator can be read against.

@@ -1,5 +1,5 @@
 ---
-title: "idionet `build_gimme()` vs the `gimme` package"
+title: "idiographic `build_gimme()` vs the `gimme` package"
 subtitle: "Numerical equivalence and a faithful side-by-side, on the bundled ESM data"
 output:
   html_document:
@@ -12,7 +12,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
                       fig.align = "center", dpi = 110)
-library(idionet)
+library(idiographic)
 library(cograph)
 
 # Tiny helpers so every bracket index / order() stays inside a function body,
@@ -22,23 +22,23 @@ order_panel <- function(df, by) df[do.call(order, df[by]), , drop = FALSE]
 align_to    <- function(m, ref) m[rownames(ref), colnames(ref)]
 ```
 
-This compares `idionet::build_gimme()` with the `gimme` package on the **bundled
+This compares `idiographic::build_gimme()` with the `gimme` package on the **bundled
 demonstration dataset** (`inst/extdata/esm_demo.tsv`), and shows the corrected
-plot: idionet now renders GIMME the way gimme does — a single `p`-node network
+plot: idiographic now renders GIMME the way gimme does — a single `p`-node network
 with **dashed = lag-1, solid = lag-0, width = proportion of subjects, black =
 group / grey = individual** — drawn by `cograph`.
 
 > **One alignment detail.** `gimme` lags *consecutive rows* and has no notion of
-> day/session boundaries. idionet can lag *within day* (so a lag never crosses
+> day/session boundaries. idiographic can lag *within day* (so a lag never crosses
 > the overnight gap), which is more correct for ESM — but to compare the two
 > engines like-for-like we turn that off here and let both lag consecutively
-> (idionet via a continuous `time` index, no `day`).
+> (idiographic via a continuous `time` index, no `day`).
 
 # The data
 
 ```{r data}
 raw <- read.delim(
-  system.file("extdata", "esm_demo.tsv", package = "idionet"),
+  system.file("extdata", "esm_demo.tsv", package = "idiographic"),
   stringsAsFactors = FALSE
 )
 vars <- c("goal_directed", "purposeful", "attentive",
@@ -50,7 +50,7 @@ keep_id <- as.integer(names(which(counts >= 48)))
 sub     <- subset(raw, id %in% keep_id)
 
 # Order within each student and build a continuous within-person time index so
-# idionet and gimme form identical lag pairs.
+# idiographic and gimme form identical lag pairs.
 sub     <- order_panel(sub, c("id", "day", "beep"))
 sub$.t  <- stats::ave(seq_len(nrow(sub)), sub$id, FUN = seq_along)
 
@@ -63,7 +63,7 @@ cat(sprintf("%d students (>= 48 obs), %d observations\n",
 `gimme::gimme()` only runs in a top-level R session (it fails inside a `knitr`
 chunk), so we run it in a **subprocess** that reads one CSV per student and
 writes back its path counts, per-person betas, and a PNG of its native plot.
-`idionet::build_gimme()` runs in the chunk.
+`idiographic::build_gimme()` runs in the chunk.
 
 ```{r run, results="hide", fig.show="hide"}
 indir <- file.path(tempdir(), "esm_csv"); dir.create(indir, showWarnings = FALSE)
@@ -92,7 +92,7 @@ status <- system2("Rscript", c(shQuote(runner), shQuote(indir), shQuote(gout),
 stopifnot(status == 0L)
 gref <- readRDS(art_rds)
 
-# idionet: continuous time index, no `day`, so lags match gimme exactly.
+# idiographic: continuous time index, no `day`, so lags match gimme exactly.
 ido <- build_gimme(sub, vars = vars, id = "id", time = ".t",
                    ar = TRUE, groupcutoff = 0.75, seed = 1)
 ```
@@ -103,8 +103,8 @@ ido <- build_gimme(sub, vars = vars, id = "id", time = ".t",
 gc <- gref$path_counts
 ic <- align_to(ido$path_counts, gc)
 knitr::kable(gc, caption = "gimme: path counts")
-knitr::kable(ic, caption = "idionet: path counts")
-# Compare values (gimme stores counts as double, idionet as integer, so a strict
+knitr::kable(ic, caption = "idiographic: path counts")
+# Compare values (gimme stores counts as double, idiographic as integer, so a strict
 # identical() would trip on type alone — every cell value is what matters).
 cat("All path-count cells equal: ", all(gc == ic),
     " | max cell difference: ", max(abs(gc - ic)), "\n")
@@ -120,7 +120,7 @@ max_abs_diff <- vapply(common, function(nm) {
 }, numeric(1))
 knitr::kable(data.frame(subject = common,
                         max_abs_diff = signif(max_abs_diff, 3)),
-             caption = "Max |idionet - gimme| per-subject standardized coefficient")
+             caption = "Max |idiographic - gimme| per-subject standardized coefficient")
 cat("Overall max |difference|: ", signif(max(max_abs_diff), 3), "\n")
 ```
 
@@ -132,7 +132,7 @@ cat("Overall max |difference|: ", signif(max(max_abs_diff), 3), "\n")
 knitr::include_graphics(plot_png)
 ```
 
-## idionet, rendered by cograph (the corrected, faithful view)
+## idiographic, rendered by cograph (the corrected, faithful view)
 
 Same conventions as gimme: dashed = lag-1, solid = lag-0, width = proportion of
 students with the path, black = group / grey = individual, autoregression as a
@@ -152,10 +152,10 @@ knitr::kable(edges(ido), digits = 3, row.names = FALSE,
 
 # Takeaway
 
-- **Numerically**, `idionet::build_gimme()` reproduces the `gimme` package on the
+- **Numerically**, `idiographic::build_gimme()` reproduces the `gimme` package on the
   bundled data: identical group path counts and per-person standardized
   coefficients (max difference above).
-- **Visually**, idionet's GIMME plot now matches gimme's convention — one
+- **Visually**, idiographic's GIMME plot now matches gimme's convention — one
   `p`-node network, dashed lag / solid contemporaneous, width = prevalence,
   group/individual colouring — rendered entirely by `cograph` via
   [plot_gimme()]. The earlier `2p`-node, averaged-coefficient picture is gone.

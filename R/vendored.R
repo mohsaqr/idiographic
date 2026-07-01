@@ -1,7 +1,7 @@
-# Self-contained helpers so idionet depends on NO other package of this
-# ecosystem (no Nestimate import). These vendor the small pieces the three
-# estimators need: a netobject/cograph_network constructor and the as_netobject
-# generic, so results plot via cograph::splot() exactly as they did in Nestimate.
+# Self-contained helpers so idiographic depends on NO other package of this
+# ecosystem (no Nestimate import). These vendor the small pieces the estimators
+# need: cograph_network constructors, grouped cograph objects, and netobject
+# compatibility classes where cograph still uses them for plotting dispatch.
 
 #' Edge index for a weight matrix -- the single source of truth for "which
 #' cells are edges", so every accessor shares one diagonal/triangle/NA rule.
@@ -38,14 +38,14 @@
              weight = mat[idx], stringsAsFactors = FALSE)
 }
 
-#' Wrap a square weight matrix as a netobject / cograph_network
+#' Wrap a square weight matrix as a cograph_network / netobject
 #'
 #' Minimal, dependency-free constructor. Produces the fields that
-#' `cograph::splot()` dispatches on, identical in shape to the constructor
-#' idionet's estimators relied on inside Nestimate.
+#' `cograph::splot()` consumes for a standard cograph network, with `netobject`
+#' retained as a compatibility class.
 #' @keywords internal
 #' @noRd
-.ido_wrap <- function(mat, method = "idionet", directed = TRUE) {
+.ido_wrap <- function(mat, method = "idiographic", directed = TRUE) {
   if (!is.matrix(mat) || !is.numeric(mat)) {
     stop("'mat' must be a numeric matrix.", call. = FALSE)
   }
@@ -67,9 +67,9 @@
     directed = directed, method = method, params = list(), scaling = NULL,
     threshold = 0, n_nodes = length(states), n_edges = nrow(edges),
     level = NULL,
-    meta = list(source = "idionet", layout = NULL, tna = list(method = method)),
+    meta = list(source = "idiographic", layout = NULL, tna = list(method = method)),
     node_groups = NULL
-  ), class = c("netobject", "cograph_network"))
+  ), class = c("cograph_network", "netobject", "list"))
 }
 
 #' Coerce to a netobject
@@ -89,9 +89,9 @@ as_netobject.cograph_network <- function(x, ...) {
   if (inherits(x, "netobject")) return(x)
   # Preserve the plotting method whether it sits at the top level or nested in
   # meta$tna$method (some constructors only fill the nested slot); falling back
-  # to "idionet" would silently drop directedness cues in cograph.
+  # to "idiographic" would silently drop directedness cues in cograph.
   .ido_wrap(as.matrix(x$weights),
-            method   = x$method %||% x$meta$tna$method %||% "idionet",
+            method   = x$method %||% x$meta$tna$method %||% "idiographic",
             directed = x$directed %||% TRUE)
 }
 
@@ -104,6 +104,66 @@ as_netobject.default <- function(x, ...) {
 #' @keywords internal
 #' @noRd
 `%||%` <- function(a, b) if (is.null(a)) b else a
+
+#' Moore-Penrose pseudoinverse via SVD -- a base-R replica of
+#' `corpcor::pseudoinverse()` (which routes square matrices through
+#' `positive.svd`): same singular-value tolerance and trimming, so the mlVAR /
+#' VAR network derivations stay numerically identical without the dependency.
+#' @keywords internal
+#' @noRd
+.ido_pseudoinverse <- function(m, tol) {
+  s <- svd(m)
+  if (missing(tol)) tol <- max(dim(m)) * max(s$d) * .Machine$double.eps
+  pos <- s$d > tol
+  if (!any(pos)) return(array(0, dim(m)[2:1]))
+  s$v[, pos, drop = FALSE] %*% (1 / s$d[pos] * t(s$u[, pos, drop = FALSE]))
+}
+
+#' Partial correlations from a covariance/correlation matrix -- base-R replica
+#' of `corpcor::cor2pcor()` (`-pseudoinverse`, flip the diagonal sign, then
+#' `cov2cor`), bit-for-bit on the square inputs used here.
+#' @keywords internal
+#' @noRd
+.ido_cor2pcor <- function(m, tol) {
+  m <- -.ido_pseudoinverse(m, tol)
+  diag(m) <- -diag(m)
+  stats::cov2cor(m)
+}
+
+#' Build an estimator result that is also a cograph group
+#' @keywords internal
+#' @noRd
+.ido_group_result <- function(class, networks, model) {
+  attr(networks, "model") <- model
+  attr(networks, "group_col") <- "network_type"
+  class(networks) <- c(class, "cograph_group", "netobject_group")
+  networks
+}
+
+#' Return the network-only group view of an idiographic group result
+#' @keywords internal
+#' @noRd
+.ido_network_group <- function(x) {
+  structure(unclass(x), class = "netobject_group")
+}
+
+#' `$` compatibility for estimator metadata stored on cograph group results
+#' @keywords internal
+#' @noRd
+.ido_result_dollar <- function(x, name) {
+  model <- attr(x, "model", exact = TRUE)
+  if (!is.null(model) && name %in% names(model)) return(model[[name]])
+  unclass(x)[[name]]
+}
+
+#' @export
+`$.gvar_result` <- function(x, name) .ido_result_dollar(x, name)
+
+#' @export
+`$.var_result` <- function(x, name) .ido_result_dollar(x, name)
+
+#' @export
+`$.net_usem` <- function(x, name) .ido_result_dollar(x, name)
 
 #' Validate an optional column-name argument (NULL, or a single name in `data`)
 #' @keywords internal
@@ -125,6 +185,27 @@ as_netobject.default <- function(x, ...) {
 .ido_check_flag <- function(value, arg) {
   if (!(is.logical(value) && length(value) == 1L && !is.na(value))) {
     stop("`", arg, "` must be a single TRUE/FALSE value.", call. = FALSE)
+  }
+  invisible(NULL)
+}
+
+#' Validate model variables before numeric scaling / lag construction
+#' @keywords internal
+#' @noRd
+.ido_check_numeric_vars <- function(data, vars, check_variance = TRUE) {
+  bad_type <- vars[!vapply(data[vars], is.numeric, logical(1))]
+  if (length(bad_type) > 0L) {
+    stop("Variable(s) must be numeric to be modelled: ",
+         paste(bad_type, collapse = ", "), ".", call. = FALSE)
+  }
+  if (!isTRUE(check_variance)) return(invisible(NULL))
+  bad_var <- vars[vapply(vars, function(v) {
+    s <- stats::sd(data[[v]], na.rm = TRUE)
+    !is.finite(s) || s == 0
+  }, logical(1))]
+  if (length(bad_var) > 0L) {
+    stop("Variable(s) with zero/non-finite variance cannot be modelled: ",
+         paste(bad_var, collapse = ", "), ".", call. = FALSE)
   }
   invisible(NULL)
 }
@@ -268,6 +349,80 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   .ido_wrap(A, method = "relative", directed = TRUE)
 }
 
+#' GIMME matrices in plotting orientation (from/source in rows, to/target in cols)
+#' @keywords internal
+#' @noRd
+.gimme_layer_matrices <- function(x, weight = c("prop", "coef")) {
+  weight <- match.arg(weight)
+  vars <- x$labels
+  n <- x$n_subjects
+  cov_mode <- isTRUE(x$contemp_is_cov)
+  if (weight == "prop") {
+    temp <- x$path_counts[, paste0(vars, "lag"), drop = FALSE] / n
+    cont <- if (cov_mode) x$contemp_cov / n else
+      x$path_counts[, vars, drop = FALSE] / n
+  } else {
+    temp <- x$temporal_avg
+    cont <- if (cov_mode) x$contemp_cov_avg else x$contemporaneous_avg
+  }
+  dimnames(temp) <- dimnames(cont) <- list(vars, vars)
+  list(temporal = t(temp), contemporaneous = t(cont), cov_mode = cov_mode)
+}
+
+#' Build a mixed cograph_network GIMME object
+#' @keywords internal
+#' @noRd
+.gimme_cograph_network <- function(x, weight = c("prop", "coef"),
+                                   group_color = "black",
+                                   individual_color = "grey60") {
+  weight <- match.arg(weight)
+  edf <- .gimme_mixed_edges(x, weight = weight, group_color = group_color,
+                            individual_color = individual_color)
+  vars <- x$labels
+  nodes_df <- data.frame(
+    id = seq_along(vars), label = vars, name = vars,
+    x = NA_real_, y = NA_real_, stringsAsFactors = FALSE
+  )
+  node_id <- stats::setNames(nodes_df$id, nodes_df$label)
+  cedges <- data.frame(
+    from = as.integer(node_id[edf$from]),
+    to = as.integer(node_id[edf$to]),
+    weight = edf$weight,
+    type = ifelse(edf$kind == "contemp" & isTRUE(x$contemp_is_cov),
+                  "undirected", "directed"),
+    kind = edf$kind,
+    style = edf$style,
+    color = edf$color,
+    level = edf$level,
+    path = edf$path,
+    from_label = edf$from,
+    to_label = edf$to,
+    show_arrows = !(edf$kind == "contemp" & isTRUE(x$contemp_is_cov)),
+    stringsAsFactors = FALSE
+  )
+  out <- c(
+    list(
+      nodes = nodes_df,
+      edges = cedges,
+      directed = TRUE,
+      weights = NULL,
+      data = edf,
+      meta = list(
+        source = "idiographic",
+        estimator = "gimme",
+        type = "mixed",
+        layout = NULL,
+        tna = NULL,
+        weight = weight
+      ),
+      node_groups = NULL
+    ),
+    x
+  )
+  class(out) <- c("net_gimme", "cograph_network", "list")
+  out
+}
+
 #' Build the GIMME mixed-network edge list (gimme plotting semantics)
 #'
 #' One row per estimated path across both lag-1 (temporal) and lag-0
@@ -316,9 +471,10 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
 
   all <- rbind(lagged, contemp)
   all <- all[all$count > 0, , drop = FALSE]
-  if (nrow(all) == 0L) {
-    stop("GIMME model has no estimated paths to plot.", call. = FALSE)
-  }
+  # A zero-edge fit (e.g. ar = FALSE with no group/individual paths selected) is
+  # a legitimate result, so return an empty edge list here rather than erroring:
+  # build_gimme() must still return its (all-zero) matrices, and it is the
+  # plotting layer -- not estimation -- that special-cases the empty graph.
   # Group-level (black) = paths in the group model: the group-search additions
   # (`group_paths`) PLUS the fixed paths every subject carries (autoregression
   # and any user-forced `paths`). Everything else is individual-level (grey).
@@ -368,7 +524,7 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
 #'   Default `0.25`.
 #' @param edge_scale Multiplier mapping weight to drawn line width. Default `5`.
 #' @param ... Further arguments forwarded to [cograph::splot()].
-#' @return Invisibly, the `cograph` network that was plotted.
+#' @return Invisibly, the mixed `cograph_network` object that was plotted.
 #' @seealso [as_netobject()] for the matrix view.
 #' @examplesIf requireNamespace("lavaan", quietly = TRUE) && requireNamespace("cograph", quietly = TRUE)
 #' \donttest{
@@ -390,19 +546,29 @@ plot_gimme <- function(x, weight = c("prop", "coef"),
     stop("plot_gimme() needs a 'net_gimme' object from build_gimme().",
          call. = FALSE)
   }
-  if (!requireNamespace("cograph", quietly = TRUE)) {
-    stop("plot_gimme() requires the 'cograph' package for rendering. ",
-         "Install it with install.packages('cograph').", call. = FALSE)
-  }
+  .ido_require_cograph("plot_gimme")
   weight <- match.arg(weight)
-  edf <- .gimme_mixed_edges(x, weight = weight,
-                            group_color = group_color,
-                            individual_color = individual_color)
-  net <- cograph::cograph(edf[, c("from", "to", "weight")], directed = TRUE)
+  net <- if (identical(weight, x$meta$weight %||% "prop") &&
+             identical(group_color, "black") &&
+             identical(individual_color, "grey60") &&
+             inherits(x, "cograph_network")) {
+    x
+  } else {
+    .gimme_cograph_network(x, weight = weight, group_color = group_color,
+                           individual_color = individual_color)
+  }
+  edf <- net$edges
+  if (is.null(edf) || nrow(edf) == 0L) {
+    # Zero-edge fit: draw the nodes only rather than passing empty per-edge
+    # styling vectors to cograph (the estimation step no longer errors here).
+    message("GIMME model has no estimated paths; drawing nodes only.")
+    cograph::splot(net, layout = layout, directed = TRUE, ...)
+    return(invisible(net))
+  }
   cograph::splot(net, layout = layout, directed = TRUE,
                  edge_style = edf$style, edge_color = edf$color,
                  edge_width = abs(edf$weight) * edge_scale,
-                 curvature = curvature, show_arrows = TRUE, ...)
+                 curvature = curvature, show_arrows = edf$show_arrows, ...)
   invisible(net)
 }
 
@@ -446,16 +612,16 @@ extract_edges <- function(model, sort_by = "weight", include_self = FALSE) {
 # ============================================================================
 # Tidy output layer
 #
-# One verb, one tidy data.frame. `edges()` turns ANY idionet result -- a single
+# One verb, one tidy data.frame. `edges()` turns ANY idiographic result -- a single
 # network, a multi-network group, or a fitted estimator -- into a single
 # one-row-per-edge data.frame with a `network` column, so you print it directly
 # instead of digging into matrices. `as.data.frame()` delegates to it.
 # Orientation is always from = predictor/source, to = outcome/target.
 # ============================================================================
 
-#' Tidy edge table for any idionet result
+#' Tidy edge table for any idiographic result
 #'
-#' A single tidy verb for every network idionet produces. Returns one row per
+#' A single tidy verb for every network idiographic produces. Returns one row per
 #' edge with columns `network` (e.g. `"temporal"`, `"contemporaneous"`,
 #' `"between"`), `from`, `to`, `weight` -- and, for GIMME, `level`
 #' (`"group"`/`"individual"`). Directed networks (temporal) keep every edge;
@@ -701,7 +867,7 @@ coefs.net_gimme <- function(x, ...) {
 
 # ---- nodes(): tidy per-node strength ---------------------------------------
 
-#' Tidy per-node strength table for any idionet result
+#' Tidy per-node strength table for any idiographic result
 #'
 #' One row per node per network with `strength` (sum of absolute incident edge
 #' weights) and, for directed networks, `out_strength` / `in_strength`
@@ -733,3 +899,225 @@ nodes.net_mlvar <- function(x, ...) nodes(as_netobject(x), ...)
 #' @rdname nodes
 #' @export
 nodes.net_gimme <- function(x, ...) nodes(as_netobject(x), ...)
+
+
+# ---- matrices(): compact matrix inspection ---------------------------------
+
+#' Print model matrices for idiographic results
+#'
+#' `matrices()` is the matrix-oriented companion to [summary()] and [edges()].
+#' It returns the core estimated matrices invisibly and prints each matrix
+#' compactly with rounding, so users can inspect coefficients without digging
+#' through object internals.
+#'
+#' @param x An idiographic result or cograph network/group.
+#' @param digits Number of digits used for printing. Default `3`.
+#' @param fit Stored fit name or index for result containers that optionally keep
+#'   fitted models, such as rolling results and model comparisons.
+#' @param ... Passed to methods.
+#' @return Invisibly, a named list of matrices.
+#' @export
+matrices <- function(x, ...) UseMethod("matrices")
+
+#' @rdname matrices
+#' @export
+matrices.default <- function(x, digits = 3, ...) {
+  stop("No matrices() method for <",
+       paste(class(x), collapse = "/"), ">.", call. = FALSE)
+}
+
+#' @rdname matrices
+#' @export
+matrices.cograph_network <- function(x, digits = 3, ...) {
+  out <- if (!is.null(x$weights) && is.matrix(x$weights)) {
+    list(weights = x$weights)
+  } else {
+    list()
+  }
+  .ido_print_matrices(out, digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.netobject <- function(x, digits = 3, ...) {
+  matrices.cograph_network(x, digits = digits, ...)
+}
+
+#' @rdname matrices
+#' @export
+matrices.netobject_group <- function(x, digits = 3, ...) {
+  out <- lapply(unclass(x), function(net) {
+    if (!is.null(net$weights) && is.matrix(net$weights)) net$weights else NULL
+  })
+  out <- out[!vapply(out, is.null, logical(1))]
+  .ido_print_matrices(out, digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.gvar_result <- function(x, digits = 3, ...) {
+  .ido_print_matrices(list(
+    beta = x$beta,
+    temporal = x$temporal,
+    kappa = x$kappa,
+    PCC = x$PCC,
+    PDC = x$PDC
+  ), digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.var_result <- function(x, digits = 3, ...) {
+  .ido_print_matrices(list(
+    beta = x$beta,
+    temporal = x$temporal,
+    residual_cov = x$residual_cov,
+    kappa = x$kappa,
+    PCC = x$PCC,
+    PDC = x$PDC
+  ), digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.net_mlvar <- function(x, digits = 3, ...) {
+  .ido_print_matrices(list(
+    temporal = x$temporal$weights,
+    contemporaneous = x$contemporaneous$weights,
+    between = x$between$weights
+  ), digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.net_usem <- function(x, digits = 3, ...) {
+  .ido_print_matrices(list(
+    temporal = x$temporal,
+    contemporaneous = x$contemporaneous,
+    residual_cov = x$residual_cov
+  ), digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.net_gimme <- function(x, digits = 3, ...) {
+  mats <- list(
+    temporal_counts = x$temporal,
+    temporal_avg = x$temporal_avg,
+    contemporaneous_counts = x$contemporaneous,
+    contemporaneous_avg = x$contemporaneous_avg,
+    path_counts = x$path_counts
+  )
+  if (!is.null(x$contemp_cov)) mats$contemp_cov <- x$contemp_cov
+  if (!is.null(x$contemp_cov_avg)) mats$contemp_cov_avg <- x$contemp_cov_avg
+  .ido_print_matrices(mats, digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.preprocess_audit <- function(x, digits = 3, ...) {
+  .ido_print_matrices(x$matrices, digits = digits)
+}
+
+#' @rdname matrices
+#' @export
+matrices.rolling_var_result <- function(x, fit = 1L, digits = 3, ...) {
+  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
+}
+
+#' @rdname matrices
+#' @export
+matrices.rolling_gvar_result <- function(x, fit = 1L, digits = 3, ...) {
+  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
+}
+
+#' @rdname matrices
+#' @export
+matrices.stability_result <- function(x, digits = 3, ...) {
+  matrices(x$original, digits = digits, ...)
+}
+
+#' @rdname matrices
+#' @export
+matrices.model_comparison <- function(x, fit = 1L, digits = 3, ...) {
+  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
+}
+
+#' @keywords internal
+#' @noRd
+.ido_pick_fit <- function(fits, fit, arg) {
+  if (is.null(fits) || length(fits) == 0L) {
+    stop("No fitted models are stored. Rerun with `keep_fits = TRUE`.",
+         call. = FALSE)
+  }
+  if (is.character(fit) && length(fit) == 1L) {
+    if (!fit %in% names(fits)) {
+      stop("Unknown ", arg, " '", fit, "'. Available values: ",
+           paste(names(fits), collapse = ", "), call. = FALSE)
+    }
+    return(fits[[fit]])
+  }
+  if (is.numeric(fit) && length(fit) == 1L && is.finite(fit) &&
+      fit == as.integer(fit) && fit >= 1L && fit <= length(fits)) {
+    return(fits[[as.integer(fit)]])
+  }
+  stop("`", arg, "` must be a stored fit name or index.", call. = FALSE)
+}
+
+#' Print one network block Nestimate-style: a one-line weight summary followed
+#' by the labelled, rounded weight matrix. `directed` controls which cells count
+#' as edges for the summary (all non-zero for directed, upper triangle for
+#' undirected) and how the block is tagged.
+#' @keywords internal
+#' @noRd
+.ido_print_net_block <- function(mat, title, directed, digits = 2) {
+  finite_nz <- if (directed) {
+    mat[is.finite(mat) & mat != 0]
+  } else {
+    sel <- row(mat) < col(mat) & is.finite(mat) & mat != 0
+    mat[sel]
+  }
+  cat(sprintf("\n  %s [%s]\n", title, if (directed) "directed" else "undirected"))
+  if (length(finite_nz) > 0L) {
+    cat(sprintf("    weights [%.3f, %.3f]  |  +%d / -%d edges\n",
+                min(finite_nz), max(finite_nz),
+                sum(finite_nz > 0), sum(finite_nz < 0)))
+  } else {
+    cat("    no non-zero edges\n")
+  }
+  formatted <- utils::capture.output(print(round(mat, digits)))
+  cat(paste0("    ", formatted, collapse = "\n"), "\n", sep = "")
+  invisible(NULL)
+}
+
+#' Print every network of a result the way it is plotted/returned by edges():
+#' delegates to as_netobject() so orientation (rows = from/predictor) and
+#' directedness always match plot() and edges(). Title-cases the layer names.
+#' @keywords internal
+#' @noRd
+.ido_print_networks <- function(x, digits = 2) {
+  g <- as_netobject(x)
+  nms <- names(g)
+  if (is.null(nms)) nms <- paste0("network", seq_along(g))
+  pretty <- vapply(nms, function(s)
+    paste0(toupper(substring(s, 1, 1)), substring(s, 2)), character(1))
+  for (i in seq_along(g)) {
+    net <- g[[i]]
+    .ido_print_net_block(net$weights, pretty[i], isTRUE(net$directed), digits)
+  }
+  invisible(NULL)
+}
+
+#' @keywords internal
+#' @noRd
+.ido_print_matrices <- function(x, digits = 3) {
+  if (length(x) == 0L) {
+    cat("No matrix payload available.\n")
+    return(invisible(x))
+  }
+  for (nm in names(x)) {
+    cat("\n$", nm, "\n", sep = "")
+    print(round(x[[nm]], digits))
+  }
+  invisible(x)
+}

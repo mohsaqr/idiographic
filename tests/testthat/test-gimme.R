@@ -22,7 +22,7 @@ test_that("GIMME lags never cross day boundaries", {
   df <- df[do.call(order, df[c("id", "day", "beep")]), ]
   df$.time <- stats::ave(seq_len(nrow(df)), df$id, FUN = seq_along)
 
-  with_day <- idionet:::.gimme_prepare_data(
+  with_day <- idiographic:::.gimme_prepare_data(
     df, vars = c("A", "B"), id = "id", time = ".time",
     standardize = FALSE, exogenous = NULL, day = "day"
   )[[1]]
@@ -31,7 +31,7 @@ test_that("GIMME lags never cross day boundaries", {
   # Exactly (beeps-1) * days = 3 * 2 = 6 within-day pairs.
   expect_equal(nrow(with_day), 6L)
 
-  legacy <- idionet:::.gimme_prepare_data(
+  legacy <- idiographic:::.gimme_prepare_data(
     df, vars = c("A", "B"), id = "id", time = ".time",
     standardize = FALSE, exogenous = NULL, day = NULL
   )[[1]]
@@ -47,7 +47,7 @@ test_that("a missing day value does not inject NA rows into the lag design", {
   )
   df <- df[do.call(order, df[c("id", "day", "beep")]), ]
   df$.time <- stats::ave(seq_len(nrow(df)), df$id, FUN = seq_along)
-  pr <- idionet:::.gimme_prepare_data(df, vars = c("A", "B"), id = "id",
+  pr <- idiographic:::.gimme_prepare_data(df, vars = c("A", "B"), id = "id",
           time = ".time", standardize = FALSE, exogenous = NULL, day = "day")[[1]]
   expect_false(any(is.na(pr)))
 })

@@ -1,4 +1,4 @@
 library(testthat)
-library(idionet)
+library(idiographic)
 
-test_check("idionet")
+test_check("idiographic")

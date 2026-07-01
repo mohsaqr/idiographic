@@ -4,10 +4,12 @@
 \alias{print.net_mlvar}
 \title{Print method for net_mlvar}
 \usage{
-\method{print}{net_mlvar}(x, ...)
+\method{print}{net_mlvar}(x, digits = 2, ...)
 }
 \arguments{
 \item{x}{A \code{net_mlvar} object returned by \code{\link[=build_mlvar]{build_mlvar()}}.}
+
+\item{digits}{Number of digits used for printed network matrices.}
 
 \item{...}{Unused; present for S3 consistency.}
 }
@@ -18,7 +20,7 @@ Invisibly returns \code{x}.
 Print method for net_mlvar
 }
 \examples{
-\dontshow{if (requireNamespace("lme4", quietly = TRUE) && requireNamespace("corpcor", quietly = TRUE) && requireNamespace("data.table", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+\dontshow{if (requireNamespace("lme4", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \donttest{
 set.seed(1)
 n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")

@@ -58,6 +58,7 @@ print.gvar_list <- function(x, ...) {
   cat(sprintf("  Variables:              %d\n", length(x[[1]]$labels)))
   cat(sprintf("  Contemporaneous edges:  median %g (range %d-%d)\n",
               stats::median(edges), min(edges), max(edges)))
-  cat(sprintf("  Access a subject with x[[\"%s\"]]\n", names(x)[1]))
+  cat(sprintf("  Access:                 x[[\"%s\"]] | cograph::splot(x[[\"%s\"]])\n",
+              names(x)[1], names(x)[1]))
   invisible(x)
 }

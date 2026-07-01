@@ -1,0 +1,83 @@
+---
+title: "2. Ordinary VAR"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{2. Ordinary VAR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
+)
+```
+
+```{r libraries}
+library(idiographic)
+data(srl)
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
+```
+
+`build_var()` is the transparent OLS baseline: current variables are regressed
+on an intercept and their lag-1 values. It uses the same lag preparation,
+scaling, and within-person centering as `graphical_var()`, but applies no
+regularization or EBIC selection — making it the natural reference point for
+the regularized methods.
+
+# Fit one person
+
+Pass `subject` to the estimator instead of slicing the data frame yourself.
+
+```{r var}
+var_fit <- build_var(srl, vars = vars, id = "name", subject = "Grace",
+                     scale = TRUE)
+
+var_fit
+```
+
+Printing the fit *shows* both estimated networks — the directed lag-1 temporal
+network and the undirected contemporaneous partial-correlation network — with
+their weight ranges, so you see the model without calling another function.
+
+# Tidy tables
+
+Each question is one verb returning a tidy `data.frame`. Use `head()` when you
+only want the strongest edges; never index the result with brackets.
+
+```{r var-tables}
+head(edges(var_fit))
+
+nodes(var_fit)
+
+summary(var_fit)
+```
+
+`coefs()` returns the full coefficient table (every cell, including zeros), and
+`matrices()` prints the raw estimator matrices compactly:
+
+```{r var-coefs}
+head(coefs(var_fit))
+
+matrices(var_fit)
+```
+
+# Plot
+
+`plot()` draws the whole result; pass `layer` to draw a single network.
+
+```{r plot-var, eval=has_cograph}
+plot(var_fit)
+```
+
+```{r plot-var-temporal, eval=has_cograph}
+plot(var_fit, layer = "temporal")
+```
+
+```{r plot-var-contemp, eval=has_cograph}
+plot(var_fit, layer = "contemporaneous")
+```

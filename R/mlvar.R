@@ -45,7 +45,7 @@
 #' @param estimator Character. Only `"lmer"` / `"default"` are implemented;
 #'   `"lm"` / `"Mplus"` raise an error (use `mlVAR::mlVAR()`).
 #' @param temporal,contemporaneous Character. Only `"fixed"` is implemented
-#'   (idionet is a clean-room of mlVAR's fixed-effects path). The random-effects
+#'   (idiographic is a clean-room of mlVAR's fixed-effects path). The random-effects
 #'   modes (`"correlated"`, `"orthogonal"`, `"unique"`) raise an error pointing
 #'   to `mlVAR::mlVAR()`.
 #' @param AR Logical. If `TRUE`, estimate only autoregressive (own-lag) temporal
@@ -84,7 +84,7 @@
 #'       partial-correlation network of person means, derived from
 #'       `D (I - Gamma)`. `method = "mlvar_between"`, `directed = FALSE`.
 #'       \strong{Convention:} when a random-intercept SD is 0 the between
-#'       network is not estimable; idionet returns an all-zero matrix (with a
+#'       network is not estimable; idiographic returns an all-zero matrix (with a
 #'       warning) as a plotting-oriented convention, whereas `mlVAR` returns
 #'       an all-`NA` matrix. The contemporaneous network follows the same
 #'       zero-on-degeneracy convention. This is a deliberate departure from
@@ -102,7 +102,7 @@
 #'       standardization was applied.}
 #'   }
 #'
-#' @examplesIf requireNamespace("lme4", quietly = TRUE) && requireNamespace("corpcor", quietly = TRUE) && requireNamespace("data.table", quietly = TRUE)
+#' @examplesIf requireNamespace("lme4", quietly = TRUE)
 #' \donttest{
 #' set.seed(1)
 #' n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")
@@ -146,7 +146,7 @@ build_mlvar <- function(data, vars, id,
   temporal        <- match.arg(temporal)
   contemporaneous <- match.arg(contemporaneous)
 
-  # idionet implements mlVAR's fixed-effects path only (estimator = "lmer",
+  # idiographic implements mlVAR's fixed-effects path only (estimator = "lmer",
   # temporal/contemporaneous = "fixed"); the random-effects modes are a
   # different multilevel estimator and are out of scope.
   if (!estimator %in% c("lmer", "default")) {
@@ -162,7 +162,7 @@ build_mlvar <- function(data, vars, id,
          contemporaneous, "' use mlVAR::mlVAR().", call. = FALSE)
   }
 
-  # `lag` (idionet) and `standardize` (idionet) are deprecated aliases of the
+  # `lag` (idiographic) and `standardize` (idiographic) are deprecated aliases of the
   # mlVAR-API names `lags` / `scale`. If the caller sets BOTH the canonical name
   # and the deprecated alias to conflicting values, honour the canonical name
   # and warn rather than silently letting the alias win.
@@ -210,10 +210,8 @@ build_mlvar <- function(data, vars, id,
          paste(missing_cols, collapse = ", "), call. = FALSE)
   }
 
-  for (pkg in c("lme4", "corpcor", "data.table")) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      stop("Package '", pkg, "' is required for build_mlvar().", call. = FALSE)
-    }
+  if (!requireNamespace("lme4", quietly = TRUE)) {
+    stop("Package 'lme4' is required for build_mlvar().", call. = FALSE)
   }
   if (nCores > 1L) {
     message("build_mlvar() is single-threaded; ignoring nCores = ", nCores, ".")
@@ -261,7 +259,7 @@ build_mlvar <- function(data, vars, id,
   attr(nets, "AR")          <- AR
   attr(nets, "group_col")   <- "network_type"
 
-  class(nets) <- c("net_mlvar", "netobject_group")
+  class(nets) <- c("net_mlvar", "cograph_group", "netobject_group")
   nets
 }
 
@@ -353,60 +351,53 @@ coefs.default <- function(x, ...) {
 
 #' Beep-grid augmentation + within/between predictor construction
 #'
-#' Hybrid implementation: `data.table::CJ` + keyed join for the expensive
-#' grid construction, base R `ave()` for the within-group lag/center/mean
-#' arithmetic. The split matters because `data.table`'s optimized group
-#' aggregators (`gmean` et al.) accumulate sums in a different order than
-#' base R, which drifts at 1e-16 and amplifies through lmer into 1e-10
-#' coefficient diffs against mlVAR.
+#' Base-R implementation: build the full per-(id, day) consecutive-beep grid,
+#' place the observed rows onto it with a `match()`-based join (NA elsewhere),
+#' and order the augmented panel by (id, day, beep). The join copies each column
+#' by position (`df[[v]][match]`), so integer inputs keep integer type and NA
+#' fills stay `NA_integer_` -- important because base R's `mean()` uses two-pass
+#' summation for doubles but a plain sum/n for integers, and that ~1e-14
+#' difference otherwise amplifies through lmer into ~1e-10 coefficient diffs
+#' against `mlVAR`. The within-group lag/center/mean arithmetic then uses base
+#' `ave()` for the same reason.
 #' @noRd
 .mlvar_augment_data <- function(data, vars, id, day, beep, lag,
                                 scaleWithin = FALSE) {
-  # Silence R CMD check NOTE for data.table NSE symbols
-  .first <- .last <- NULL
-
   id_col   <- id
   day_col  <- if (is.null(day))  ".day"  else day
   beep_col <- if (is.null(beep)) ".beep" else beep
 
-  dt <- data.table::as.data.table(data)
-  if (is.null(day)) {
-    dt[, (day_col) := 1L]
-  }
+  df <- as.data.frame(data)
+  if (is.null(day)) df[[day_col]] <- 1L
   if (is.null(beep)) {
-    dt[, (beep_col) := seq_len(.N), by = c(id_col, day_col)]
+    df[[beep_col]] <- stats::ave(seq_len(nrow(df)), df[[id_col]], df[[day_col]],
+                                 FUN = seq_along)
   }
 
-  # Per-(id, day) beep range
-  first_last <- dt[, .(.first = min(get(beep_col), na.rm = TRUE),
-                       .last  = max(get(beep_col), na.rm = TRUE)),
-                   by = c(id_col, day_col)]
+  idv <- df[[id_col]]; dayv <- df[[day_col]]; beepv <- df[[beep_col]]
 
-  # Global beep grid, filtered down to each (id, day)'s actual range
-  gb_min <- min(dt[[beep_col]], na.rm = TRUE)
-  gb_max <- max(dt[[beep_col]], na.rm = TRUE)
-  allBeeps <- data.table::CJ(
-    V1 = unique(dt[[id_col]]),
-    V2 = unique(dt[[day_col]]),
-    V3 = seq(gb_min, gb_max),
-    sorted = FALSE
-  )
-  data.table::setnames(allBeeps, c("V1", "V2", "V3"),
-                       c(id_col, day_col, beep_col))
-  allBeeps <- allBeeps[first_last, on = c(id_col, day_col), nomatch = NULL]
-  allBeeps <- allBeeps[get(beep_col) >= .first & get(beep_col) <= .last]
-  allBeeps[, c(".first", ".last") := NULL]
+  # Per-(id, day) beep range; the augmented grid is first:last (consecutive
+  # integers), matching mlVAR's global seq() restricted to each block's range.
+  gkey <- paste(idv, dayv, sep = "\r")
+  first <- tapply(beepv, gkey, min, na.rm = TRUE)
+  last  <- tapply(beepv, gkey, max, na.rm = TRUE)
+  ud <- unique(data.frame(id = idv, day = dayv, stringsAsFactors = FALSE))
+  udk <- paste(ud$id, ud$day, sep = "\r")
+  grid <- do.call(rbind, lapply(seq_len(nrow(ud)), function(k) {
+    b <- seq.int(first[[udk[k]]], last[[udk[k]]])
+    data.frame(a = ud$id[k], b = ud$day[k], c = b, stringsAsFactors = FALSE)
+  }))
+  names(grid) <- c(id_col, day_col, beep_col)
+  grid <- grid[order(grid[[id_col]], grid[[day_col]], grid[[beep_col]]), ,
+               drop = FALSE]
 
-  # Right-join original data onto the grid (keeps all grid rows)
-  data.table::setkeyv(dt, c(id_col, day_col, beep_col))
-  data.table::setkeyv(allBeeps, c(id_col, day_col, beep_col))
-  augData <- dt[allBeeps, on = c(id_col, day_col, beep_col),
-                allow.cartesian = TRUE]
-  data.table::setkeyv(augData, c(id_col, day_col, beep_col))
-
-  # Drop back to a plain data.frame so subsequent `ave()` calls match
-  # mlVAR's accumulation order bit-for-bit.
-  augData <- as.data.frame(augData)
+  # Place observed values onto the grid by (id, day, beep), preserving types.
+  m <- match(paste(grid[[id_col]], grid[[day_col]], grid[[beep_col]], sep = "\r"),
+             paste(idv, dayv, beepv, sep = "\r"))
+  augData <- grid
+  for (col in setdiff(names(df), c(id_col, day_col, beep_col))) {
+    augData[[col]] <- df[[col]][m]
+  }
   rownames(augData) <- NULL
 
   predModel <- list()
@@ -642,8 +633,8 @@ coefs.default <- function(x, ...) {
 #' Matches mlVAR's Omega_mu branch:
 #'   `D = diag(1 / mu_SD^2)`
 #'   `inv = forcePositive(D (I - Gamma))`
-#'   `cov = corpcor::pseudoinverse(inv)`
-#'   `pcor = corpcor::cor2pcor(cov)`
+#'   `cov = .ido_pseudoinverse(inv)`
+#'   `pcor = .ido_cor2pcor(cov)`
 #' @noRd
 .mlvar_compute_between_from_gamma <- function(Gamma, mu_SD, vars) {
   d <- length(vars)
@@ -659,8 +650,8 @@ coefs.default <- function(x, ...) {
   inv <- (inv + t(inv)) / 2
   inv <- .mlvar_force_positive(inv)
 
-  mu_cov <- corpcor::pseudoinverse(inv)
-  pcor <- corpcor::cor2pcor(mu_cov)
+  mu_cov <- .ido_pseudoinverse(inv)
+  pcor <- .ido_cor2pcor(mu_cov)
   diag(pcor) <- 0
   rownames(pcor) <- colnames(pcor) <- vars
   pcor
@@ -686,7 +677,7 @@ coefs.default <- function(x, ...) {
   }
   D <- diag(sigma_vec)
   Theta_cov <- D %*% stats::cov2cor(R) %*% D
-  pcor <- corpcor::cor2pcor(Theta_cov)
+  pcor <- .ido_cor2pcor(Theta_cov)
   diag(pcor) <- 0
   rownames(pcor) <- colnames(pcor) <- vars
   pcor
@@ -698,11 +689,12 @@ coefs.default <- function(x, ...) {
 #' Print method for net_mlvar
 #'
 #' @param x A `net_mlvar` object returned by [build_mlvar()].
+#' @param digits Number of digits used for printed network matrices.
 #' @param ... Unused; present for S3 consistency.
 #' @return Invisibly returns `x`.
 #' @inherit build_mlvar examples
 #' @export
-print.net_mlvar <- function(x, ...) {
+print.net_mlvar <- function(x, digits = 2, ...) {
   coef_df <- attr(x, "coefs")
   d <- nrow(x$temporal$weights)
   n_sig <- sum(coef_df$significant, na.rm = TRUE)
@@ -713,12 +705,10 @@ print.net_mlvar <- function(x, ...) {
               attr(x, "n_obs"),
               d,
               attr(x, "lag")))
-  cat(sprintf("  $temporal        %d x %d directed    (%d/%d edges significant at p<0.05)\n",
-              d, d, n_sig, n_tot))
-  cat(sprintf("  $contemporaneous %d x %d undirected\n", d, d))
-  cat(sprintf("  $between         %d x %d undirected\n", d, d))
-  cat("Tidy: edges(fit) for one-row-per-edge; coefs(fit) for the coefficient",
-      "table.\n")
+  cat(sprintf("  Temporal edges significant at p<0.05: %d / %d\n", n_sig, n_tot))
+  .ido_print_networks(x, digits = digits)
+  cat("\n  plot(x) | plot(x, layer = \"temporal\") | plot(x, layer = \"between\")",
+      "\n  edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)\n")
   invisible(x)
 }
 
@@ -735,4 +725,3 @@ print.net_mlvar <- function(x, ...) {
 summary.net_mlvar <- function(object, ...) {
   .tidy_over_group(as_netobject(object), .net_metrics)
 }
-

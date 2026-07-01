@@ -4,10 +4,12 @@
 \alias{print.gvar_result}
 \title{Print Method for gvar_result}
 \usage{
-\method{print}{gvar_result}(x, ...)
+\method{print}{gvar_result}(x, digits = 2, ...)
 }
 \arguments{
 \item{x}{A \code{gvar_result} object.}
+
+\item{digits}{Number of digits used for printed network matrices.}
 
 \item{...}{Additional arguments (ignored).}
 }

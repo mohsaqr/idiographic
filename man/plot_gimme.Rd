@@ -35,7 +35,7 @@ Default \code{0.25}.}
 \item{...}{Further arguments forwarded to \code{\link[cograph:splot]{cograph::splot()}}.}
 }
 \value{
-Invisibly, the \code{cograph} network that was plotted.
+Invisibly, the mixed \code{cograph_network} object that was plotted.
 }
 \description{
 Draws a GIMME result the way the \code{gimme} package does: a single \code{p}-node

@@ -1,0 +1,77 @@
+---
+title: "8. Rolling networks"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{8. Rolling networks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
+)
+```
+
+```{r libraries}
+library(idiographic)
+data(srl)
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
+```
+
+Rolling windows ask whether a person's dynamics are **stable over time**. Each
+window refits the estimator on a moving slice of the series.
+
+# Rolling OLS VAR
+
+Set `keep_fits = TRUE` to retain the per-window model objects for inspection and
+plotting.
+
+```{r rolling-var}
+rolling_ols <- rolling_var(srl, vars = vars, id = "name", subject = "Grace",
+                           window_size = 50, step = 20, scale = TRUE,
+                           keep_fits = TRUE)
+
+rolling_ols
+```
+
+The result is a tidy table by default — one row per window-by-edge estimate.
+Use `head()` to peek; never index the table with brackets.
+
+```{r rolling-var-table}
+head(as.data.frame(rolling_ols))
+```
+
+Inspect a single window's matrices or plot it by passing `fit` — by name or by
+index — instead of digging into `$fits`.
+
+```{r rolling-var-matrices}
+matrices(rolling_ols, fit = 1)
+```
+
+```{r plot-rolling-var, eval=has_cograph}
+plot(rolling_ols, fit = 1, layer = "temporal")
+```
+
+# Rolling graphical VAR
+
+`rolling_graphical_var()` does the same with sparse estimation.
+
+```{r rolling-gvar}
+rolling_gvar <- rolling_graphical_var(srl, vars = vars, id = "name",
+                                      subject = "Grace", window_size = 70,
+                                      step = 25, n_lambda = 8, gamma = 0,
+                                      keep_fits = TRUE)
+
+rolling_gvar
+
+head(as.data.frame(rolling_gvar))
+```
+
+```{r plot-rolling-gvar, eval=has_cograph}
+plot(rolling_gvar, fit = 1, layer = "temporal")
+```

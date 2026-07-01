@@ -1,6 +1,6 @@
 ---
 title: "Idiographic Networks of Procrastination"
-subtitle: "graphical VAR, mlVAR, and GIMME on ESM data — the `idionet` package"
+subtitle: "graphical VAR, mlVAR, and GIMME on ESM data — the `idiographic` package"
 output:
   html_document:
     toc: true
@@ -19,11 +19,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = TRUE,
                       fig.align = "center", dpi = 110)
 library(gimme)      # plain attach: gimme registers S3 methods on load
-library(idionet)    # the package this tutorial documents
+library(idiographic)    # the package this tutorial documents
 library(cograph)    # renderer
 ```
 
-The three methods in `idionet` answer the same question from three vantage
+The three methods in `idiographic` answer the same question from three vantage
 points: **how do a person's states drive one another over time?** They differ in
 *whose* dynamics they model.
 
@@ -51,7 +51,7 @@ the self-control–emotion cycle:
 
 ```{r data}
 raw <- read.delim(
-  system.file("extdata", "esm_demo.tsv", package = "idionet"),
+  system.file("extdata", "esm_demo.tsv", package = "idiographic"),
   stringsAsFactors = FALSE
 )
 vars <- c("goal_directed", "purposeful", "attentive",

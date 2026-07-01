@@ -6,12 +6,12 @@ audit.md
 audit.zip
 AGENTS.md
 AGENT-NOTE-*.md
-cran-comments.md
 
 # Scratch / working dirs
 tmp/
 local_testing_and_equivalence/
 codex_docs/
+.claude/
 
 # R build artifacts
 *.tar.gz
@@ -26,3 +26,10 @@ Rplots.pdf
 # Rendered docs (regenerable, large)
 *.html
 README.html
+
+# Session artifacts / local validation reports (never committed)
+GOAL.md
+cran-comments.md
+MPLUS-EQUIVALENCE.md
+REAL-DATA-VALIDATION.md
+tests/testthat/fixtures/mplus/validate-*.R

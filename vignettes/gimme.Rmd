@@ -1,0 +1,68 @@
+---
+title: "7. GIMME"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{7. GIMME}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
+)
+```
+
+```{r libraries}
+library(idiographic)
+data(srl)
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
+```
+
+`build_gimme()` searches individual models and **promotes paths shared by enough
+people** to the group level. As with uSEM, pass the shipped `day` column as
+`time`. We fit a handful of students so the example runs quickly.
+
+```{r gimme}
+students <- subset(srl, name %in% c("Grace", "Eve", "Aisha", "Alice",
+                                    "Bob", "Diana", "Frank", "Heidi"))
+
+gimme_fit <- build_gimme(students, vars = vars, id = "name", time = "day",
+                         ar = TRUE, groupcutoff = 0.75, seed = 1)
+
+gimme_fit
+```
+
+The printout lists the group-level paths and then shows, for the temporal and
+contemporaneous networks, the **proportion of subjects** carrying each path —
+the quantity GIMME displays.
+
+# Tidy tables
+
+`edges()` returns one tidy row per path with a `level` column marking
+group-level versus individual-level paths; `coefs()` gives the per-subject
+estimates.
+
+```{r gimme-tables}
+head(edges(gimme_fit))
+
+head(coefs(gimme_fit))
+```
+
+```{r gimme-matrices}
+matrices(gimme_fit)
+```
+
+# Plot
+
+`plot()` draws the faithful gimme-style mixed network: **dashed** edges are
+lag-1 (temporal), **solid** edges are contemporaneous, edge width is the
+proportion of subjects with the path, and **black** edges are group-level.
+
+```{r plot-gimme, eval=has_cograph}
+plot(gimme_fit)
+```

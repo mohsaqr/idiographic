@@ -1,0 +1,70 @@
+---
+title: "3. Graphical VAR"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{3. Graphical VAR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
+)
+```
+
+```{r libraries}
+library(idiographic)
+data(srl)
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
+```
+
+`graphical_var()` estimates **sparse** temporal and contemporaneous networks
+with lasso regularization and EBIC model selection. It is the closest analogue
+to the chapter's graphical VAR section, and the regularized counterpart to the
+OLS baseline in the *Ordinary VAR* vignette.
+
+# Fit one person
+
+```{r gvar}
+gvar_fit <- graphical_var(srl, vars = vars, id = "name", subject = "Grace",
+                          n_lambda = 12, gamma = 0)
+
+gvar_fit
+```
+
+The printout reports the selected EBIC, `gamma`, and the two tuning parameters,
+then shows the sparse temporal and contemporaneous networks. Many cells are
+exactly zero — that sparsity is the point of the method.
+
+# Tidy tables
+
+```{r gvar-tables}
+head(edges(gvar_fit))
+
+nodes(gvar_fit)
+
+summary(gvar_fit)
+```
+
+```{r gvar-matrices}
+matrices(gvar_fit)
+```
+
+# Plot
+
+```{r plot-gvar, eval=has_cograph}
+plot(gvar_fit)
+```
+
+```{r plot-gvar-temporal, eval=has_cograph}
+plot(gvar_fit, layer = "temporal")
+```
+
+```{r plot-gvar-contemp, eval=has_cograph}
+plot(gvar_fit, layer = "contemporaneous")
+```
