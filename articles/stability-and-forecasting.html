@@ -34,7 +34,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/comparing-methods.html">10. Comparing methods</a></li>
+<li><a class="dropdown-item" href="../articles/clean-room-methods.html">11. Package overview: a clean-room methods tour</a></li>
+    <li><a class="dropdown-item" href="../articles/comparing-methods.html">10. Comparing methods</a></li>
     <li><a class="dropdown-item" href="../articles/gimme.html">7. GIMME</a></li>
     <li><a class="dropdown-item" href="../articles/graphical-var.html">3. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="../articles/mlvar.html">5. Multilevel VAR (mlVAR)</a></li>
@@ -82,6 +83,14 @@
 edge estimates are under resampling, and how well the model
 <em>predicts</em> unseen occasions. Both operate on a single series, so
 we select one student up front with <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>.</p>
+<blockquote>
+<p><strong>Experimental.</strong> Both tools are methodologically
+grounded — block resampling for dependent data and rolling-origin
+forecast evaluation — but unlike the estimators in this package they
+have no external reference implementation to validate against. Their
+interfaces, defaults, and reported statistics may change in a future
+release.</p>
+</blockquote>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grace</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">srl</span>, <span class="va">name</span> <span class="op">==</span> <span class="st">"Grace"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">

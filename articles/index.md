@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [11. Package overview: a clean-room methods
+  tour](https://mohsaqr.github.io/idiographic/articles/clean-room-methods.md):
 - [10. Comparing
   methods](https://mohsaqr.github.io/idiographic/articles/comparing-methods.md):
 - [7. GIMME](https://mohsaqr.github.io/idiographic/articles/gimme.md):

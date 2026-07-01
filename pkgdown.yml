@@ -2,6 +2,7 @@ pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
+  clean-room-methods: clean-room-methods.html
   comparing-methods: comparing-methods.html
   gimme: gimme.html
   graphical-var: graphical-var.html
@@ -12,7 +13,7 @@ articles:
   stability-and-forecasting: stability-and-forecasting.html
   subject-networks: subject-networks.html
   usem: usem.html
-last_built: 2026-07-01T20:15Z
+last_built: 2026-07-01T21:00Z
 urls:
   reference: https://mohsaqr.github.io/idiographic/reference
   article: https://mohsaqr.github.io/idiographic/articles

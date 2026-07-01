@@ -54,7 +54,7 @@
   : Tidy edge table for any idiographic result
 
 - [`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
-  : Estimate edge stability by block resampling
+  : Estimate edge stability by block resampling (experimental)
 
 - [`extract_edges()`](https://mohsaqr.github.io/idiographic/reference/extract_edges.md)
   : Tidy edge table from a network object
@@ -164,3 +164,4 @@
 
 - [`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md)
   : Validate one-step forecasts from idiographic VAR models
+  (experimental)

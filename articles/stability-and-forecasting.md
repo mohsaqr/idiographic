@@ -13,6 +13,12 @@ estimates are under resampling, and how well the model *predicts* unseen
 occasions. Both operate on a single series, so we select one student up
 front with [`subset()`](https://rdrr.io/r/base/subset.html).
 
+> **Experimental.** Both tools are methodologically grounded — block
+> resampling for dependent data and rolling-origin forecast evaluation —
+> but unlike the estimators in this package they have no external
+> reference implementation to validate against. Their interfaces,
+> defaults, and reported statistics may change in a future release.
+
 ``` r
 
 grace <- subset(srl, name == "Grace")

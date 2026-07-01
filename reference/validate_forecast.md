@@ -1,4 +1,10 @@
-# Validate one-step forecasts from idiographic VAR models
+# Validate one-step forecasts from idiographic VAR models (experimental)
+
+**Experimental.** The rolling-origin design follows standard time-series
+cross-validation practice, but unlike the estimators in this package it
+has no external reference implementation to validate against, and its
+interface, defaults, and reported metrics may change in a future
+release.
 
 Performs rolling-origin one-step prediction from
 [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)

@@ -149,13 +149,13 @@ build_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
 - [`audit_preprocess()`](https://mohsaqr.github.io/idiographic/reference/audit_preprocess.md)
   — preprocessing audit for ILD (compliance, variance, stationarity)
 - [`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
-  — bootstrap edge-stability diagnostics
+  — bootstrap edge-stability diagnostics (*experimental*)
 - [`rolling_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_var.md)
   /
   [`rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_graphical_var.md)
   — rolling-window (time-varying) networks
 - [`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md)
-  — rolling out-of-sample forecast validation
+  — rolling out-of-sample forecast validation (*experimental*)
 - [`compare_idiographic()`](https://mohsaqr.github.io/idiographic/reference/compare_idiographic.md)
   — model-comparison reports
 

@@ -1,4 +1,11 @@
-# Estimate edge stability by block resampling
+# Estimate edge stability by block resampling (experimental)
+
+**Experimental.** The resampling design is methodologically grounded
+(block bootstrap for dependent data; edge-stability summaries in the
+spirit of bootnet), but unlike the estimators in this package it has no
+external reference implementation to validate against, and its
+interface, defaults, and reported statistics may change in a future
+release.
 
 Refits an idiographic estimator across deterministic block resamples and
 summarizes edge-level stability. Blocks preserve within-block time
