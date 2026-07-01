@@ -11,12 +11,12 @@ Every estimator returns an object that
 - **prints** a compact, readable summary that *shows the estimated
   networks*,
 - exposes **one tidy verb per question** —
-  [`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md),
-  [`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),
+  [`edges()`](https://saqr.me/idiographic/reference/edges.md),
+  [`nodes()`](https://saqr.me/idiographic/reference/nodes.md),
   [`summary()`](https://rdrr.io/r/base/summary.html),
-  [`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
-  [`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
-  — each returning a plain `data.frame` you print directly, and
+  [`coefs()`](https://saqr.me/idiographic/reference/coefs.md),
+  [`matrices()`](https://saqr.me/idiographic/reference/matrices.md) —
+  each returning a plain `data.frame` you print directly, and
 - **plots** with a single
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html) call.
 
@@ -47,9 +47,8 @@ data from Chapter 20 of the *Learning Analytics Methods* book as a
 ready-to-model dataset. Loading it needs no ordering, indexing, or
 column selection — the rows are already ordered by `name` then `day`,
 and `day` is a within-person occasion index you can hand straight to
-[`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md)
-or
-[`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
+[`build_usem()`](https://saqr.me/idiographic/reference/build_usem.md) or
+[`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md).
 
 ``` r
 
@@ -124,7 +123,7 @@ yourself.
 ## Preprocessing audit
 
 Before fitting dynamic models,
-[`audit_preprocess()`](https://mohsaqr.github.io/idiographic/reference/audit_preprocess.md)
+[`audit_preprocess()`](https://saqr.me/idiographic/reference/audit_preprocess.md)
 builds the same lag-1 design the estimators use and reports missingness,
 day-boundary drops, trends, AR(1) persistence, split-half drift, and a
 unit-root screen. It does not fit a network; it makes the modelling

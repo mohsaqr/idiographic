@@ -4,16 +4,16 @@
 
 - New native Bayesian estimators that statistically reproduce Mplus DSEM
   output without requiring Mplus:
-  - [`build_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_bayes.md)
+  - [`build_mlvar_bayes()`](https://saqr.me/idiographic/reference/build_mlvar_bayes.md)
     — two-level Bayesian VAR(1) with latent mean centering.
     `temporal = "fixed"` matches Mplus DSEM fixed temporal + random
     intercepts; `temporal = "random"` fits the full DSEM with
     person-specific temporal matrices and a random-effect covariance
     (reports random-slope SDs).
-  - [`build_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_var_bayes.md)
+  - [`build_var_bayes()`](https://saqr.me/idiographic/reference/build_var_bayes.md)
     — single-level Bayesian VAR(1), the unregularized Bayesian analogue
     of
-    [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md).
+    [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md).
 - Pure-R conjugate Gibbs sampler (hand-rolled inverse-Wishart draws; no
   new dependencies). Posterior median / SD / 95% CI / one-tailed p,
   three networks (temporal, contemporaneous, between), and a

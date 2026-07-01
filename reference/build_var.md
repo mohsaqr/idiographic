@@ -3,7 +3,7 @@
 Fits a transparent VAR(1) baseline from intensive longitudinal data
 using ordinary least squares. The lag construction, scaling,
 within-person centering, and day-boundary behavior match
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
 but no regularization or EBIC model selection is applied.
 
 ## Usage
@@ -81,5 +81,5 @@ and tidy accessors.
 
 ## See also
 
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md)
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
+[`build_usem()`](https://saqr.me/idiographic/reference/build_usem.md)

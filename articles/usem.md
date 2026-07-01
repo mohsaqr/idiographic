@@ -8,7 +8,7 @@ vars <- c("A", "B")
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-[`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md)
+[`build_usem()`](https://saqr.me/idiographic/reference/build_usem.md)
 fits a **unified SEM** over lagged and contemporaneous paths for each
 person. Supply `id` plus either a `time` column or `day`/`beep` columns
 so lagged rows are formed in the correct within-person order.

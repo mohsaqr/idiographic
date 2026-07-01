@@ -1,13 +1,12 @@
 # Estimate rolling-window ordinary VAR networks
 
-Fits
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
+Fits [`build_var()`](https://saqr.me/idiographic/reference/build_var.md)
 over ordered, overlapping windows within each subject. This is a simple
 time-varying idiographic baseline: every window uses the same lag
 construction, scaling, within-person centering, and tidy coefficient
 access as
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-but returns one coefficient table per window.
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md), but
+returns one coefficient table per window.
 
 ## Usage
 
@@ -94,8 +93,8 @@ subject/window metadata plus `network`, `from`, `to`, and `weight`.
 
 ## See also
 
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`audit_preprocess()`](https://mohsaqr.github.io/idiographic/reference/audit_preprocess.md)
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
+[`audit_preprocess()`](https://saqr.me/idiographic/reference/audit_preprocess.md)
 
 ## Examples
 

@@ -14,7 +14,7 @@ print(x, digits = 2, ...)
 - x:
 
   A `net_mlvar` object returned by
-  [`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md).
+  [`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md).
 
 - digits:
 

@@ -1,7 +1,7 @@
 # Fit a graphical VAR for every subject
 
 Applies
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
 to each subject separately, returning one person-specific network per
 individual — the idiographic "all individuals" workflow. Subjects that
 cannot be fit (too few lag pairs after listwise deletion) are dropped
@@ -52,7 +52,7 @@ graphical_var_each(
 - ...:
 
   Further arguments passed to
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+  [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
   (e.g. `n_lambda`, `gamma`, `scale`).
 
 ## Value

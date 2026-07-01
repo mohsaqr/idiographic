@@ -7,7 +7,7 @@ data(srl)
 vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 ```
 
-[`compare_idiographic()`](https://mohsaqr.github.io/idiographic/reference/compare_idiographic.md)
+[`compare_idiographic()`](https://saqr.me/idiographic/reference/compare_idiographic.md)
 runs several estimators on the same data and stacks their summaries into
 **one comparison table**, so you read estimators against each other
 instead of assembling the comparison by hand.

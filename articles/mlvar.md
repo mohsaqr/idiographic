@@ -8,7 +8,7 @@ vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-[`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)
+[`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md)
 estimates **group-level** temporal, contemporaneous, and between-person
 networks in one multilevel model. Use it when the question moves from
 one person’s dynamics to the *average within-person process* and the
@@ -61,9 +61,9 @@ network, and the undirected between-person network.
 
 ## Tidy tables
 
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
-stacks all three networks into one tidy table with a `network` column;
-filter or summarise it with ordinary verbs.
+[`edges()`](https://saqr.me/idiographic/reference/edges.md) stacks all
+three networks into one tidy table with a `network` column; filter or
+summarise it with ordinary verbs.
 
 ``` r
 

@@ -209,7 +209,7 @@ build_gimme(
   [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html) API
   parity and ignored: idiographic reads a `data.frame` (not a CSV
   directory) and returns an object you plot with
-  [`plot_gimme()`](https://mohsaqr.github.io/idiographic/reference/plot_gimme.md).
+  [`plot_gimme()`](https://saqr.me/idiographic/reference/plot_gimme.md).
   `plot = TRUE` emits a message.
 
 - sub_feature, sub_method, sub_sim_thresh, confirm_subgroup,
@@ -291,9 +291,9 @@ An S3 object of class `"net_gimme"` containing:
 
 ## See also
 
-[`build_mlvar`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md),
-[`graphical_var`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`as_netobject`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md)
+[`build_mlvar`](https://saqr.me/idiographic/reference/build_mlvar.md),
+[`graphical_var`](https://saqr.me/idiographic/reference/graphical_var.md),
+[`as_netobject`](https://saqr.me/idiographic/reference/as_netobject.md)
 
 ## Examples
 

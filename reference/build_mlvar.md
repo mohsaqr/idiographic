@@ -126,9 +126,9 @@ stored as attributes. Each element is a standard
 `c("netobject", "cograph_network")` weight-matrix wrapper (no raw
 `$data`), so [`print()`](https://rdrr.io/r/base/print.html),
 [`summary()`](https://rdrr.io/r/base/summary.html),
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
-and `cograph::splot(fit$temporal)` work directly. The three constituents
-are matrix-wrapped and carry no underlying panel data, so any
+[`coefs()`](https://saqr.me/idiographic/reference/coefs.md), and
+`cograph::splot(fit$temporal)` work directly. The three constituents are
+matrix-wrapped and carry no underlying panel data, so any
 data-resampling workflow (bootstrap, reliability, stability) must start
 from the original panel rather than from these wrappers. Structure:
 
@@ -157,7 +157,7 @@ from the original panel rather than from these wrappers. Structure:
   strict reference equivalence in the singular case.
 
 - `attr(fit, "coefs")` /
-  [`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md):
+  [`coefs()`](https://saqr.me/idiographic/reference/coefs.md):
 
   Tidy `data.frame` with one row per `(outcome, predictor)` pair and
   columns `outcome`, `predictor`, `beta`, `se`, `t`, `p`, `ci_lower`,
@@ -213,9 +213,9 @@ ESM datasets from `openesm` and 20 simulated configurations (seeds
 
 ## See also
 
-[`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`as_netobject()`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md)
+[`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
+[`as_netobject()`](https://saqr.me/idiographic/reference/as_netobject.md)
 
 ## Examples
 

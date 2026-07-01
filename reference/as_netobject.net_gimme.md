@@ -7,7 +7,7 @@ group-average coefficient (which dilutes toward zero and is not what
 GIMME displays). For the faithful single mixed network (dashed lag /
 solid contemporaneous, group/individual colouring, autoregressive
 self-loops) use
-[`plot_gimme()`](https://mohsaqr.github.io/idiographic/reference/plot_gimme.md).
+[`plot_gimme()`](https://saqr.me/idiographic/reference/plot_gimme.md).
 
 ## Usage
 
@@ -27,7 +27,7 @@ as_netobject(x, style = c("pnode", "unified"), weight = c("prop", "coef"), ...)
   Either `"pnode"` (default) — a `netobject_group` of two directed
   `p`-node networks, `$temporal` (lagged; autoregression on the
   diagonal) and `$contemporaneous` (same-beep), matching the shape
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+  [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
   returns — or `"unified"`, a single directed `2p`-node network with the
   `*_lag` half feeding the current half (the literal uSEM topology).
 
@@ -49,5 +49,5 @@ For `style = "pnode"`, a `netobject_group` with `$temporal` and
 
 ## See also
 
-[`plot_gimme()`](https://mohsaqr.github.io/idiographic/reference/plot_gimme.md)
+[`plot_gimme()`](https://saqr.me/idiographic/reference/plot_gimme.md)
 for the faithful gimme-style mixed plot.

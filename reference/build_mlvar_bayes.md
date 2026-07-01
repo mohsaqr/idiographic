@@ -161,8 +161,8 @@ build_mlvar_bayes(
 A `net_mlvar_bayes` object (also inheriting `net_mlvar`), a named list
 of three netobjects (`temporal`, `contemporaneous`, `between`) with
 posterior-summary attributes.
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
-returns a tidy table with `estimate` (posterior median), `posterior_sd`,
+[`coefs()`](https://saqr.me/idiographic/reference/coefs.md) returns a
+tidy table with `estimate` (posterior median), `posterior_sd`,
 `ci_lower`, `ci_upper`, `p` (one-tailed), and `significant` (95% CI
 excludes 0). Posterior draws and the max Gelman-Rubin PSR are kept in
 attributes.
@@ -186,9 +186,9 @@ SD.
 
 ## See also
 
-[`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)
+[`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md)
 (frequentist lmer path),
-[`build_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_mplus.md)
+[`build_mlvar_mplus()`](https://saqr.me/idiographic/reference/build_mlvar_mplus.md)
 (true-Mplus wrapper).
 
 ## Examples

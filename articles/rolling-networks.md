@@ -121,7 +121,7 @@ plot(rolling_ols, fit = 1, layer = "temporal")
 
 ## Rolling graphical VAR
 
-[`rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/rolling_graphical_var.md)
+[`rolling_graphical_var()`](https://saqr.me/idiographic/reference/rolling_graphical_var.md)
 does the same with sparse estimation.
 
 ``` r

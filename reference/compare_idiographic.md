@@ -65,9 +65,9 @@ per method/network.
 
 ## See also
 
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
+[`estimate_stability()`](https://saqr.me/idiographic/reference/estimate_stability.md)
 
 ## Examples
 

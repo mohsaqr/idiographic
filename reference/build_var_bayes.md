@@ -3,14 +3,14 @@
 Native, pure-R Bayesian VAR(1) that reproduces Mplus's Bayesian
 (DSEM/time-series) estimates without needing Mplus. It is the
 unregularized Bayesian counterpart of
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md):
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md):
 instead of a graphical-lasso / EBIC sparse fit, it estimates a full
 VAR(1) with a flat prior on the temporal coefficients and an
 inverse-Wishart prior on the residual precision, then reports the
 temporal network `B` and the contemporaneous partial-correlation network
 derived from the residual covariance. With more than one subject the
 data are within-person centred and pooled (as in
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)).
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)).
 
 ## Usage
 
@@ -69,7 +69,7 @@ build_var_bayes(
 
   Logical. Within-person centre when \>1 id (removes between-person
   variance, as in
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)).
+  [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)).
   Default `TRUE`.
 
 - n_iter, n_burnin, n_chains, thin:
@@ -98,17 +98,17 @@ build_var_bayes(
 A `var_bayes_result` object (a cograph group with `temporal` and
 `contemporaneous` netobjects) carrying `beta`, `temporal`, `kappa`,
 `PCC`, `PDC`, posterior draws, and a tidy
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
-table (posterior median, SD, 95% CI, one-tailed p, significance by CI
+[`coefs()`](https://saqr.me/idiographic/reference/coefs.md) table
+(posterior median, SD, 95% CI, one-tailed p, significance by CI
 excluding 0).
 
 ## See also
 
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
 (regularized GLASSO/EBIC),
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md)
 (OLS),
-[`build_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_bayes.md)
+[`build_mlvar_bayes()`](https://saqr.me/idiographic/reference/build_mlvar_bayes.md)
 (multilevel Bayesian VAR).
 
 ## Examples

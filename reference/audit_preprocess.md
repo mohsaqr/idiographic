@@ -1,9 +1,8 @@
 # Audit preprocessing and lag construction
 
 Builds the same lag-1 design used by
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
-and
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
+and [`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
 then returns tidy diagnostics for missingness, day-boundary drops,
 simple linear trends, AR(1) persistence, split-half mean/variance drift,
 an ADF-style unit-root screen, and zero-variance variables. This is a
@@ -107,8 +106,8 @@ A `preprocess_audit` object with `pairs`, `counts`, `diagnostics`, and
 
 ## See also
 
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
 
 ## Examples
 

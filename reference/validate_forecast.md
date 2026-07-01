@@ -1,9 +1,8 @@
 # Validate one-step forecasts from idiographic VAR models
 
 Performs rolling-origin one-step prediction from
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
-or
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md).
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md) or
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md).
 Each split fits the estimator on earlier blocks and predicts current
 variables in the next block from their lag-1 values. Scaling and
 within-person centering parameters are learned from the training split
@@ -46,9 +45,9 @@ validate_forecast(
 - estimator:
 
   `"var"` for
-  [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
-  or `"graphical_var"` for
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md).
+  [`build_var()`](https://saqr.me/idiographic/reference/build_var.md) or
+  `"graphical_var"` for
+  [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md).
 
 - id:
 
@@ -111,9 +110,9 @@ A `forecast_result` with `$predictions`, `$metrics`, `$splits`,
 
 ## See also
 
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
+[`estimate_stability()`](https://saqr.me/idiographic/reference/estimate_stability.md)
 
 ## Examples
 

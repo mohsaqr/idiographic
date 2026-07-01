@@ -42,15 +42,15 @@ estimate_stability(
 - estimator:
 
   `"var"` for
-  [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
+  [`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
   `"graphical_var"` for
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
+  [`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md),
   `"mlvar"` for
-  [`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md),
+  [`build_mlvar()`](https://saqr.me/idiographic/reference/build_mlvar.md),
   `"usem"` for
-  [`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md),
+  [`build_usem()`](https://saqr.me/idiographic/reference/build_usem.md),
   or `"gimme"` for
-  [`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
+  [`build_gimme()`](https://saqr.me/idiographic/reference/build_gimme.md).
 
 - id:
 
@@ -101,8 +101,8 @@ A `stability_result` with `$stability` edge statistics, `$original` fit,
 
 ## See also
 
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+[`build_var()`](https://saqr.me/idiographic/reference/build_var.md),
+[`graphical_var()`](https://saqr.me/idiographic/reference/graphical_var.md)
 
 ## Examples
 
