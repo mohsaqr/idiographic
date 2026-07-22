@@ -27,11 +27,13 @@ test_that("Mplus wrapper forwards its complete public contract and converts outp
   capture <- new.env(parent = emptyenv())
   work <- tempfile("idiographic-mplus-contract-")
   dir.create(work)
+  file.create(file.path(work, ".idiographic-workdir-sentinel"))
   local_mocked_bindings(
     .mlvar_mplus_detect = function() "mock-mplus",
     .mlvar_mplus_call = function(args) {
       capture$args <- args
       capture$wd <- getwd()
+      capture$in_workdir <- file.exists(".idiographic-workdir-sentinel")
       .fake_mplus_mlvar(args$data, args$vars)
     },
     .package = "idiographic"
@@ -47,7 +49,7 @@ test_that("Mplus wrapper forwards its complete public contract and converts outp
     extra_control = 17
   )
 
-  expect_identical(capture$wd, normalizePath(work))
+  expect_true(capture$in_workdir)
   expect_identical(capture$args$estimator, "Mplus")
   expect_identical(capture$args$idvar, "id")
   expect_identical(capture$args$dayvar, "day")
