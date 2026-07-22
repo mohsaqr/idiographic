@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -189,22 +189,22 @@ no static output is substituted when execution is unavailable.</p>
 <span><span class="co">#&gt;     effort            0     0        0          0      0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contemporaneous [directed]</span></span>
-<span><span class="co">#&gt;     weights [0.348, 0.456]  |  +2 / -0 edges</span></span>
+<span><span class="co">#&gt;     weights [0.348, 0.456]  |  +3 / -0 edges</span></span>
 <span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt;     efficacy          0     0     0.00          0   0.00</span></span>
-<span><span class="co">#&gt;     value             0     0     0.00          0   0.00</span></span>
-<span><span class="co">#&gt;     planning          0     0     0.00          0   0.00</span></span>
-<span><span class="co">#&gt;     monitoring        0     0     0.00          0   0.46</span></span>
-<span><span class="co">#&gt;     effort            0     0     0.35          0   0.00</span></span>
+<span><span class="co">#&gt;     efficacy          0     0     0.00       0.42   0.00</span></span>
+<span><span class="co">#&gt;     value             0     0     0.00       0.00   0.00</span></span>
+<span><span class="co">#&gt;     planning          0     0     0.00       0.00   0.00</span></span>
+<span><span class="co">#&gt;     monitoring        0     0     0.00       0.00   0.46</span></span>
+<span><span class="co">#&gt;     effort            0     0     0.35       0.00   0.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Residual_cov [undirected]</span></span>
-<span><span class="co">#&gt;     weights [0.424, 0.424]  |  +1 / -0 edges</span></span>
+<span><span class="co">#&gt;     no non-zero edges</span></span>
 <span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt;     efficacy       0.00     0        0       0.42      0</span></span>
-<span><span class="co">#&gt;     value          0.00     0        0       0.00      0</span></span>
-<span><span class="co">#&gt;     planning       0.00     0        0       0.00      0</span></span>
-<span><span class="co">#&gt;     monitoring     0.42     0        0       0.00      0</span></span>
-<span><span class="co">#&gt;     effort         0.00     0        0       0.00      0</span></span>
+<span><span class="co">#&gt;     efficacy          0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     value             0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     planning          0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     monitoring        0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     effort            0     0        0          0      0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   plot(x) | plot(x, layer = "temporal") | plot(x, layer = "contemporaneous") </span></span>
 <span><span class="co">#&gt;   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)</span></span></code></pre></div>
@@ -222,9 +222,9 @@ with the edge count, density, and mean absolute weight.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           network n_nodes n_edges density mean_abs_weight n_positive n_negative</span></span>
-<span><span class="co">#&gt; 1        temporal       5       0     0.0       0.0000000          0          0</span></span>
-<span><span class="co">#&gt; 2 contemporaneous       5       2     0.1       0.4018332          2          0</span></span>
-<span><span class="co">#&gt; 3    residual_cov       5       1     0.1       0.4240055          1          0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        temporal       5       0    0.00       0.0000000          0          0</span></span>
+<span><span class="co">#&gt; 2 contemporaneous       5       3    0.15       0.4091159          3          0</span></span>
+<span><span class="co">#&gt; 3    residual_cov       5       0    0.00       0.0000000          0          0</span></span></code></pre></div>
 <p>The contemporaneous network has three of the 20 possible directed
 edges (density 0.15) and mean absolute weight 0.409. The temporal and
 residual layers have zero selected edges.</p>
@@ -237,9 +237,10 @@ be read as proof of no lagged process; a different candidate set,
 trimming rule, or person can give a different selected model.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">usem_fit</span>, network <span class="op">=</span> <span class="st">"contemporaneous"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           network       from       to    weight</span></span>
-<span><span class="co">#&gt; 1 contemporaneous monitoring   effort 0.4561344</span></span>
-<span><span class="co">#&gt; 2 contemporaneous     effort planning 0.3475320</span></span></code></pre></div>
+<span><span class="co">#&gt;           network       from         to    weight</span></span>
+<span><span class="co">#&gt; 1 contemporaneous monitoring     effort 0.4560847</span></span>
+<span><span class="co">#&gt; 2 contemporaneous   efficacy monitoring 0.4237396</span></span>
+<span><span class="co">#&gt; 3 contemporaneous     effort   planning 0.3475233</span></span></code></pre></div>
 <p>The directed contemporaneous network retains monitoring to effort
 (0.456), efficacy to monitoring (0.424), and effort to planning (0.348).
 These arrows are directed SEM coefficients conditional on the selected
@@ -253,15 +254,15 @@ within-occasion ordering.</p>
 <span><span class="co">#&gt; 3         temporal   planning 0.0000000    0.0000000   0.0000000    0</span></span>
 <span><span class="co">#&gt; 4         temporal monitoring 0.0000000    0.0000000   0.0000000    0</span></span>
 <span><span class="co">#&gt; 5         temporal     effort 0.0000000    0.0000000   0.0000000    0</span></span>
-<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.4237396    0.4237396   0.0000000    0</span></span>
 <span><span class="co">#&gt; 7  contemporaneous      value 0.0000000    0.0000000   0.0000000    0</span></span>
-<span><span class="co">#&gt; 8  contemporaneous   planning 0.3475320    0.0000000   0.3475320    0</span></span>
-<span><span class="co">#&gt; 9  contemporaneous monitoring 0.4561344    0.4561344   0.0000000    0</span></span>
-<span><span class="co">#&gt; 10 contemporaneous     effort 0.8036664    0.3475320   0.4561344    0</span></span>
-<span><span class="co">#&gt; 11    residual_cov   efficacy 0.4240055           NA          NA    0</span></span>
+<span><span class="co">#&gt; 8  contemporaneous   planning 0.3475233    0.0000000   0.3475233    0</span></span>
+<span><span class="co">#&gt; 9  contemporaneous monitoring 0.8798244    0.4560847   0.4237396    0</span></span>
+<span><span class="co">#&gt; 10 contemporaneous     effort 0.8036081    0.3475233   0.4560847    0</span></span>
+<span><span class="co">#&gt; 11    residual_cov   efficacy 0.0000000           NA          NA    0</span></span>
 <span><span class="co">#&gt; 12    residual_cov      value 0.0000000           NA          NA    0</span></span>
 <span><span class="co">#&gt; 13    residual_cov   planning 0.0000000           NA          NA    0</span></span>
-<span><span class="co">#&gt; 14    residual_cov monitoring 0.4240055           NA          NA    0</span></span>
+<span><span class="co">#&gt; 14    residual_cov monitoring 0.0000000           NA          NA    0</span></span>
 <span><span class="co">#&gt; 15    residual_cov     effort 0.0000000           NA          NA    0</span></span></code></pre></div>
 <p>Because the contemporaneous layer is directed, <code><a href="../reference/nodes.html">nodes()</a></code>
 separates outgoing from incoming weight. Monitoring has the largest
@@ -281,19 +282,19 @@ available from <code><a href="../reference/coefs.html">coefs()</a></code> and <c
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $contemporaneous</span></span>
 <span><span class="co">#&gt;            efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy          0     0        0      0.000  0.000</span></span>
-<span><span class="co">#&gt; value             0     0        0      0.000  0.000</span></span>
-<span><span class="co">#&gt; planning          0     0        0      0.000  0.348</span></span>
-<span><span class="co">#&gt; monitoring        0     0        0      0.000  0.000</span></span>
-<span><span class="co">#&gt; effort            0     0        0      0.456  0.000</span></span>
+<span><span class="co">#&gt; efficacy      0.000     0        0      0.000  0.000</span></span>
+<span><span class="co">#&gt; value         0.000     0        0      0.000  0.000</span></span>
+<span><span class="co">#&gt; planning      0.000     0        0      0.000  0.348</span></span>
+<span><span class="co">#&gt; monitoring    0.424     0        0      0.000  0.000</span></span>
+<span><span class="co">#&gt; effort        0.000     0        0      0.456  0.000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $residual_cov</span></span>
 <span><span class="co">#&gt;            efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy      0.000     0        0      0.424      0</span></span>
-<span><span class="co">#&gt; value         0.000     0        0      0.000      0</span></span>
-<span><span class="co">#&gt; planning      0.000     0        0      0.000      0</span></span>
-<span><span class="co">#&gt; monitoring    0.424     0        0      0.000      0</span></span>
-<span><span class="co">#&gt; effort        0.000     0        0      0.000      0</span></span></code></pre></div>
+<span><span class="co">#&gt; efficacy          0     0        0          0      0</span></span>
+<span><span class="co">#&gt; value             0     0        0          0      0</span></span>
+<span><span class="co">#&gt; planning          0     0        0          0      0</span></span>
+<span><span class="co">#&gt; monitoring        0     0        0          0      0</span></span>
+<span><span class="co">#&gt; effort            0     0        0          0      0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="visualizing-the-network">Visualizing the network<a class="anchor" aria-label="anchor" href="#visualizing-the-network"></a>

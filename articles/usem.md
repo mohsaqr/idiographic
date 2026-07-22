@@ -114,22 +114,22 @@ usem_fit
 #>     effort            0     0        0          0      0
 #> 
 #>   Contemporaneous [directed]
-#>     weights [0.348, 0.456]  |  +2 / -0 edges
+#>     weights [0.348, 0.456]  |  +3 / -0 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy          0     0     0.00          0   0.00
-#>     value             0     0     0.00          0   0.00
-#>     planning          0     0     0.00          0   0.00
-#>     monitoring        0     0     0.00          0   0.46
-#>     effort            0     0     0.35          0   0.00
+#>     efficacy          0     0     0.00       0.42   0.00
+#>     value             0     0     0.00       0.00   0.00
+#>     planning          0     0     0.00       0.00   0.00
+#>     monitoring        0     0     0.00       0.00   0.46
+#>     effort            0     0     0.35       0.00   0.00
 #> 
 #>   Residual_cov [undirected]
-#>     weights [0.424, 0.424]  |  +1 / -0 edges
+#>     no non-zero edges
 #>                efficacy value planning monitoring effort
-#>     efficacy       0.00     0        0       0.42      0
-#>     value          0.00     0        0       0.00      0
-#>     planning       0.00     0        0       0.00      0
-#>     monitoring     0.42     0        0       0.00      0
-#>     effort         0.00     0        0       0.00      0
+#>     efficacy          0     0        0          0      0
+#>     value             0     0        0          0      0
+#>     planning          0     0        0          0      0
+#>     monitoring        0     0        0          0      0
+#>     effort            0     0        0          0      0
 #> 
 #>   plot(x) | plot(x, layer = "temporal") | plot(x, layer = "contemporaneous") 
 #>   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)
@@ -151,9 +151,9 @@ absolute weight.
 
 summary(usem_fit)
 #>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
-#> 1        temporal       5       0     0.0       0.0000000          0          0
-#> 2 contemporaneous       5       2     0.1       0.4018332          2          0
-#> 3    residual_cov       5       1     0.1       0.4240055          1          0
+#> 1        temporal       5       0    0.00       0.0000000          0          0
+#> 2 contemporaneous       5       3    0.15       0.4091159          3          0
+#> 3    residual_cov       5       0    0.00       0.0000000          0          0
 ```
 
 The contemporaneous network has three of the 20 possible directed edges
@@ -174,9 +174,10 @@ rule, or person can give a different selected model.
 ``` r
 
 edges(usem_fit, network = "contemporaneous", n = 5)
-#>           network       from       to    weight
-#> 1 contemporaneous monitoring   effort 0.4561344
-#> 2 contemporaneous     effort planning 0.3475320
+#>           network       from         to    weight
+#> 1 contemporaneous monitoring     effort 0.4560847
+#> 2 contemporaneous   efficacy monitoring 0.4237396
+#> 3 contemporaneous     effort   planning 0.3475233
 ```
 
 The directed contemporaneous network retains monitoring to effort
@@ -194,15 +195,15 @@ nodes(usem_fit)
 #> 3         temporal   planning 0.0000000    0.0000000   0.0000000    0
 #> 4         temporal monitoring 0.0000000    0.0000000   0.0000000    0
 #> 5         temporal     effort 0.0000000    0.0000000   0.0000000    0
-#> 6  contemporaneous   efficacy 0.0000000    0.0000000   0.0000000    0
+#> 6  contemporaneous   efficacy 0.4237396    0.4237396   0.0000000    0
 #> 7  contemporaneous      value 0.0000000    0.0000000   0.0000000    0
-#> 8  contemporaneous   planning 0.3475320    0.0000000   0.3475320    0
-#> 9  contemporaneous monitoring 0.4561344    0.4561344   0.0000000    0
-#> 10 contemporaneous     effort 0.8036664    0.3475320   0.4561344    0
-#> 11    residual_cov   efficacy 0.4240055           NA          NA    0
+#> 8  contemporaneous   planning 0.3475233    0.0000000   0.3475233    0
+#> 9  contemporaneous monitoring 0.8798244    0.4560847   0.4237396    0
+#> 10 contemporaneous     effort 0.8036081    0.3475233   0.4560847    0
+#> 11    residual_cov   efficacy 0.0000000           NA          NA    0
 #> 12    residual_cov      value 0.0000000           NA          NA    0
 #> 13    residual_cov   planning 0.0000000           NA          NA    0
-#> 14    residual_cov monitoring 0.4240055           NA          NA    0
+#> 14    residual_cov monitoring 0.0000000           NA          NA    0
 #> 15    residual_cov     effort 0.0000000           NA          NA    0
 ```
 
@@ -230,19 +231,19 @@ matrices(usem_fit)
 #> 
 #> $contemporaneous
 #>            efficacy value planning monitoring effort
-#> efficacy          0     0        0      0.000  0.000
-#> value             0     0        0      0.000  0.000
-#> planning          0     0        0      0.000  0.348
-#> monitoring        0     0        0      0.000  0.000
-#> effort            0     0        0      0.456  0.000
+#> efficacy      0.000     0        0      0.000  0.000
+#> value         0.000     0        0      0.000  0.000
+#> planning      0.000     0        0      0.000  0.348
+#> monitoring    0.424     0        0      0.000  0.000
+#> effort        0.000     0        0      0.456  0.000
 #> 
 #> $residual_cov
 #>            efficacy value planning monitoring effort
-#> efficacy      0.000     0        0      0.424      0
-#> value         0.000     0        0      0.000      0
-#> planning      0.000     0        0      0.000      0
-#> monitoring    0.424     0        0      0.000      0
-#> effort        0.000     0        0      0.000      0
+#> efficacy          0     0        0          0      0
+#> value             0     0        0          0      0
+#> planning          0     0        0          0      0
+#> monitoring        0     0        0          0      0
+#> effort            0     0        0          0      0
 ```
 
 ## Visualizing the network

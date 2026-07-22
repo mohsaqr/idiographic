@@ -1,6 +1,6 @@
 # Changelog
 
-## idiographic (development version)
+## idiographic 0.2.0
 
 - Made the CRAN package offline-first: the only mandatory imports are
   standard R packages, while `lme4`, `lavaan`, plotting, and external

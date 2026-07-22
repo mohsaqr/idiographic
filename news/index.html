@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="idiographic-development-version">idiographic (development version)<a class="anchor" aria-label="anchor" href="#idiographic-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="idiographic-020">idiographic 0.2.0<a class="anchor" aria-label="anchor" href="#idiographic-020"></a></h2>
 <ul><li><p>Made the CRAN package offline-first: the only mandatory imports are standard R packages, while <code>lme4</code>, <code>lavaan</code>, plotting, and external backends are optional. Competitor-oracle tests and the real-panel corpus now run in a separate opt-in <code>validation/</code> lane and are excluded from the CRAN tarball.</p></li>
 <li><p>Added a registry-backed <code><a href="../reference/fit_idiographic.html">fit_idiographic()</a></code> front door, estimator discovery, method-specific <code><a href="../reference/equivalence.html">equivalence()</a></code> declarations, package-wide <code><a href="../reference/equivalence_table.html">equivalence_table()</a></code> and argument-by-argument <code><a href="../reference/argument_coverage.html">argument_coverage()</a></code> ledgers, and common tidy accessors. All 17 registered methods and 315 current public formals now have an executable evidence classification; new unassessed arguments fail the closure test.</p></li>
 <li><p>Expanded direct-oracle testing across graphicalVAR option combinations, mlVAR multi-lag/preprocessing/unique-model configurations, and bivariate plus three-variable GIMME standard, hybrid, and VAR searches. GIMME evidence now also covers fit statistics, uneven panels, exogenous-variable dimensions, and interacting correction/standardization controls. Tightened public argument validation so engine-specific controls cannot be silently ignored.</p></li>
