@@ -9,6 +9,8 @@
 \alias{nodes.gvar_result}
 \alias{nodes.net_mlvar}
 \alias{nodes.net_gimme}
+\alias{nodes.var_list}
+\alias{nodes.gvar_list}
 \title{Tidy per-node strength table for any idiographic result}
 \usage{
 \method{nodes}{net_usem}(x, ...)
@@ -26,6 +28,10 @@ nodes(x, ...)
 \method{nodes}{net_mlvar}(x, ...)
 
 \method{nodes}{net_gimme}(x, ...)
+
+\method{nodes}{var_list}(x, ...)
+
+\method{nodes}{gvar_list}(x, ...)
 }
 \arguments{
 \item{x}{A \code{gvar_result}, \code{net_mlvar}, \code{net_gimme}, \code{netobject}, or
@@ -40,4 +46,11 @@ A tidy \code{data.frame}.
 One row per node per network with \code{strength} (sum of absolute incident edge
 weights) and, for directed networks, \code{out_strength} / \code{in_strength}
 (\code{NA} for undirected). Self-loops are excluded.
+}
+\examples{
+W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+            dimnames = list(c("A", "B"), c("A", "B")))
+x <- structure(list(weights = W, method = "relative", directed = TRUE),
+               class = "cograph_network")
+nodes(as_netobject(x))
 }

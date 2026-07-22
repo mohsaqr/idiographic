@@ -19,9 +19,9 @@
 #' @param data A `data.frame` or matrix with columns for variables and optional
 #'   id/day/beep columns.
 #' @param vars Character vector of variable names.
-#' @param estimator `"var"` (default) for [build_var()], `"graphical_var"` for
-#'   [graphical_var()], `"mlvar"` for [build_mlvar()], `"usem"` for
-#'   [build_usem()], or `"gimme"` for [build_gimme()].
+#' @param estimator `"var"` (default) for [fit_var()], `"graphical_var"` for
+#'   [fit_graphical_var()], `"mlvar"` for [fit_mlvar()], `"usem"` for
+#'   [fit_usem()], or `"gimme"` for [fit_gimme()].
 #' @param id Character. Name of the person-ID column, or `NULL`.
 #' @param day Character. Name of the day/session column, or `NULL`.
 #' @param beep Character. Name of the measurement-occasion column, or `NULL`.
@@ -149,15 +149,15 @@ estimate_stability <- function(data, vars,
 #' @noRd
 .stability_fit <- function(estimator, data, vars, id, day, beep, ...) {
   if (identical(estimator, "var")) {
-    build_var(data, vars = vars, id = id, day = day, beep = beep, ...)
+    fit_var(data, vars = vars, id = id, day = day, beep = beep, ...)
   } else if (identical(estimator, "graphical_var")) {
-    graphical_var(data, vars = vars, id = id, day = day, beep = beep, ...)
+    fit_graphical_var(data, vars = vars, id = id, day = day, beep = beep, ...)
   } else if (identical(estimator, "mlvar")) {
-    build_mlvar(data, vars = vars, id = id, day = day, beep = beep, ...)
+    fit_mlvar(data, vars = vars, id = id, day = day, beep = beep, ...)
   } else if (identical(estimator, "usem")) {
-    build_usem(data, vars = vars, id = id, day = day, beep = beep, ...)
+    fit_usem(data, vars = vars, id = id, day = day, beep = beep, ...)
   } else {
-    build_gimme(data, vars = vars, id = id, day = day, beep = beep, ...)
+    fit_gimme(data, vars = vars, id = id, day = day, beep = beep, ...)
   }
 }
 
@@ -314,3 +314,6 @@ as.data.frame.stability_result <- function(x, row.names = NULL,
                                            optional = FALSE, ...) {
   x$stability
 }
+
+#' @export
+summary.stability_result <- function(object, ...) object$stability

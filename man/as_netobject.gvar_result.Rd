@@ -12,11 +12,12 @@
 \item{...}{Ignored.}
 }
 \value{
-A \code{netobject_group}: a named list with \code{$temporal}
-(directed) and \code{$contemporaneous} (undirected) netobjects.
+A \code{netobject_group}: a named list with \code{$temporal} for a
+lag-1 model, or one \code{temporal_lagN} element per multi-lag model, plus
+\code{$contemporaneous}.
 }
 \description{
-Returns the two networks a graphical VAR contains as Nestimate netobjects,
+Returns the temporal lag layer(s) and contemporaneous network as netobjects,
 so each renders directly with \code{cograph::splot()} (or any netobject verb)
 without the caller transposing matrices or dropping intercept columns. The
 temporal network is oriented \code{[from = predictor(t-1), to = outcome(t)]}.

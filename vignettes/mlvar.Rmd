@@ -1,10 +1,12 @@
 ---
-title: "5. Multilevel VAR (mlVAR)"
+title: "5. Multilevel VAR"
 output:
   rmarkdown::html_vignette:
     toc: true
+bibliography: references.bib
+link-citations: true
 vignette: >
-  %\VignetteIndexEntry{5. Multilevel VAR (mlVAR)}
+  %\VignetteIndexEntry{5. Multilevel VAR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,56 +16,238 @@ knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
   fig.width = 7, fig.height = 5.5
 )
-```
-
-```{r libraries}
 library(idiographic)
 data(srl)
-vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-`build_mlvar()` estimates **group-level** temporal, contemporaneous, and
-between-person networks in one multilevel model. Use it when the question moves
-from one person's dynamics to the *average within-person process* and the
-*between-person* differences across the whole sample.
+The multilevel vector autoregression models the intensive longitudinal series
+of an entire panel jointly, decomposing each person's observations into a
+stable person-specific mean and momentary deviations around that mean, and
+fitting a first-order dynamic process to the deviations
+[@epskamp2018mlvar]. Its estimand differs from that of the single-subject
+estimators in this package: where `fit_var()` and `fit_graphical_var()`
+recover one individual's dynamics, `fit_mlvar()` pools across individuals and
+recovers the average within-person process — the lag-one structure a typical
+member of the panel follows — together with a separate description of how the
+stable person-level means covary. It presumes weak stationarity of each
+person's series, meaning that the mean, variance, and autocovariance are
+constant across the observation window; linear, lag-one dynamics;
+approximately Gaussian residuals; equally spaced measurement occasions; and a
+correctly specified multilevel structure for the pooling.
 
-# Fit
+The model yields three networks over the same variables, and the distinction
+between the within-person and between-person layers is central to reading
+them. The temporal network is directed and within-person: an edge
+`from -> to` is the fixed effect of `from` at occasion $t-1$ on `to` at
+occasion $t$, holding the other lagged variables constant — the average
+lag-one prediction across the panel, expressed on within-person deviations.
+The contemporaneous network is undirected and also within-person: after the
+previous occasion has explained what it can, the residuals within the same
+occasion may still be associated, and the contemporaneous edges are the
+average within-person partial correlations among these same-occasion
+residuals. The between-person network is a different estimand altogether. Its
+edges are partial correlations among the stable person-level means —
+associations among who scores high on average, not among what fluctuates
+within anyone — and it must not be interpreted as a within-person process
+[@epskamp2018mlvar]. The two levels answer different
+questions, are estimated from different sources of variance, and are under no
+obligation to agree: a pair of variables can be positively coupled within
+persons and negatively associated between them, or the reverse, and the fit
+below contains exactly such a sign reversal.
 
-```{r mlvar}
-mlvar_fit <- build_mlvar(srl, vars = vars, id = "name", standardize = TRUE)
+The multilevel model therefore targets the group-average within-person
+structure, not any single person's network. On the idiographic premise that
+within-person dynamics need not match the structure of the group, the average
+process is a summary of the panel, not a portrait of any member: a
+fixed-effect temporal network can be weak or null while individual students
+carry strong, mutually cancelling dynamics. `fit_mlvar()` accordingly
+complements rather than replaces the single-subject estimators — it is the
+appropriate tool when the question concerns the typical process and the panel
+is large, and the subject-by-subject fits remain the appropriate tool when
+individual differences in dynamics are themselves the target.
 
+# Data and preprocessing
+
+The estimator expects long format: one row per person-occasion, an id column,
+and numeric time-varying indicators ordered within person. The bundled `srl`
+data hold self-regulated-learning indicators for 36 students measured over
+156 occasions each; the multilevel model uses the full panel on five
+indicators: `efficacy`, `value`, `planning`, `monitoring`, and `effort`.
+Because the estimators absorb assumption violations silently — a trending
+series inflates its autoregressive coefficient rather than producing an
+error — the stationarity screen precedes the fit, with `min_obs = 100`
+requiring at least one hundred usable occasions per student.
+
+```{r vars-audit}
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+preprocess(srl, vars = vars, id = "name", min_obs = 100)
+```
+
+The 36 students contribute 5616 ordered rows, of which 5548 survive as
+complete current/lagged pairs: each student loses the first occasion to the
+initial lag, and a few lose more to missing values. Ten subject-series trip
+the linear-trend flag and one shows drift between the halves of its window —
+a stationarity caution to carry into interpretation — but no series shows
+zero variance, near-unit-root persistence, or a unit root, so the model is
+fitted on the series as they stand.
+
+# Fitting the model
+
+The call specifies the mixed-model backend (`estimator = "lmer"`), a common
+temporal matrix across students (`temporal = "fixed"`), a common residual
+partial-correlation layer (`contemporaneous = "fixed"`), and the full set of
+lagged predictors rather than autoregressions only (`AR = FALSE`). The
+fixed-effect specification is deliberately conservative: it estimates the
+average temporal network without random slopes, which keeps the model fast
+and estimable at the cost of any statement about how individual students
+deviate from the average.
+
+```{r fit}
+mlvar_fit <- fit_mlvar(
+  srl, vars = vars, id = "name",
+  estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
+  AR = FALSE
+)
 mlvar_fit
 ```
 
-Three networks are estimated and shown: the directed temporal network (average
-within-person lag-1 effects), the undirected contemporaneous network, and the
-undirected between-person network.
+The fitted object pools 36 subjects and 5548 observations on five variables
+into the three layers. The temporal layer is weak: only 2 of the 25 fixed
+lag-one effects (self-loops included) reach significance at $p < .05$, and
+the weights, self-loops included, span -0.049 to 0.044. The contemporaneous
+layer is dense and entirely positive, with within-occasion partial
+correlations reaching 0.274. The between-person layer is the strongest of the
+three, spanning -0.086 to 0.553 with eight positive and two negative edges.
 
-# Tidy tables
+# Reading the output
 
-`edges()` stacks all three networks into one tidy table with a `network`
-column; filter or summarise it with ordinary verbs.
+The `summary()` method reports one row per network layer, with the edge
+count, density, and mean absolute weight.
 
-```{r mlvar-tables}
-head(edges(mlvar_fit))
-
+```{r summary}
 summary(mlvar_fit)
 ```
 
-```{r mlvar-matrices}
+No layer is pruned — the model is unregularized, so every off-diagonal cell
+carries an estimate and each density is 1 — which makes the mean absolute
+weight the informative column. The temporal mean of 0.012 is an order of
+magnitude below the contemporaneous 0.165 and the between-person 0.209: on
+average, a student's state one occasion earlier predicts little, while
+variables co-move within occasions and, above all, stable student averages
+covary. The `edges()` accessor lists the edges of a layer in decreasing
+magnitude.
+
+```{r edges-temporal}
+edges(mlvar_fit, network = "temporal", n = 5)
+```
+
+The strongest average lag-one effects between distinct variables run from
+monitoring at $t-1$ to effort at $t$ (0.029), from value to effort (0.029),
+and from monitoring to efficacy (0.024); the strongest negative effect runs
+from effort to value (-0.022). Each is an average within-person effect — a
+claim about the typical student's occasion-to-occasion prediction, not a
+claim that holds for every student.
+
+```{r edges-contemporaneous}
+edges(mlvar_fit, network = "contemporaneous", n = 5)
+```
+
+The contemporaneous layer is led by planning–effort (0.274),
+efficacy–planning (0.241), and efficacy–effort (0.208). Each is an average
+within-person, within-occasion conditional association: on occasions when a
+student reports more planning than their own average, they also report more
+effort at the same occasion, over and above what the other indicators and the
+previous occasion explain.
+
+```{r edges-between}
+edges(mlvar_fit, network = "between", n = 5)
+```
+
+The between-person layer reads differently in kind, not merely in strength.
+Its strongest edge, efficacy–planning at 0.553, states that students whose
+average efficacy is high also report high average planning; value–effort at
+0.415 is likewise a statement about stable differences among students.
+Nothing in these edges concerns change within any student. The
+value–monitoring pair makes the contrast between the two levels concrete: the
+association is positive within persons (0.07 in the contemporaneous layer)
+and negative between persons (-0.09 in the between layer) — a student
+momentarily above their own value average tends also to be above their
+monitoring average, while students whose value is high on average tend to
+have lower average monitoring than their peers.
+
+Node-level structure follows from the edges through `nodes()`, whose strength
+column sums the absolute weights incident to each node within a layer.
+
+```{r nodes}
+nodes(mlvar_fit)
+```
+
+In the temporal layer monitoring has the largest out-strength (0.078) and
+effort the largest in-strength (0.075), so the average lagged signal, weak as
+it is, flows from monitoring toward effort; the largest single temporal
+coefficients are the self-loops of efficacy (-0.049) and value (0.044),
+reported in the `self` column. In the between-person layer efficacy has the
+largest strength (1.176), driven by its associations with planning and value,
+followed by effort (1.054). The full coefficient tables are available from
+`coefs(mlvar_fit)`, and the three layer matrices from `matrices()`.
+
+```{r matrices}
 matrices(mlvar_fit)
 ```
 
-# Plot
+The matrices restate the layer contrast cell by cell: the contemporaneous
+matrix is entirely positive with planning–effort (0.274) as its largest
+entry, while the between-person efficacy–planning cell (0.553) exceeds every
+within-person association in the model — a reminder that the two layers
+estimate different quantities and require separate interpretation.
 
-Draw the whole result, or any single layer by name — including the
-between-person network.
+# Visualizing the network
 
-```{r plot-mlvar, eval=has_cograph}
+Plotting the fit draws the three layers side by side: arrows in the temporal
+panel denote average lag-one prediction, edge width scales with absolute
+weight, and colour encodes sign.
+
+```{r plot-all, eval=has_cograph}
+plot(mlvar_fit)
+```
+
+The contrast between panels restates the summary graphically: thin, diffuse
+temporal arrows against dense undirected contemporaneous and between-person
+structure. Each layer can also be drawn alone.
+
+```{r plot-temporal, eval=has_cograph}
 plot(mlvar_fit, layer = "temporal")
 ```
 
-```{r plot-mlvar-between, eval=has_cograph}
+The temporal layer is thin throughout; monitoring and value are the clearest
+lagged predictors of later effort.
+
+```{r plot-contemporaneous, eval=has_cograph}
+plot(mlvar_fit, layer = "contemporaneous")
+```
+
+The contemporaneous layer shows uniformly positive within-occasion partial
+correlations, led by planning–effort and efficacy–planning.
+
+The two within-person layers combine into a mixed network — directed average
+lag-one effects and undirected average contemporaneous partial correlations —
+which `plot(mlvar_fit, mixed = TRUE)` draws in one graph, the temporal edges as
+curved arrows and the contemporaneous edges as straight lines.
+
+```{r plot-mixed, eval=has_cograph}
+plot(mlvar_fit, mixed = TRUE)
+```
+
+```{r plot-between, eval=has_cograph}
 plot(mlvar_fit, layer = "between")
 ```
+
+The between-person layer is dominated by efficacy–planning and value–effort.
+It describes stable differences among students, not within-student change,
+and no edge in it is a temporal mechanism. A parallel caution applies to the
+fixed-effect layers themselves: as averages they can mask heterogeneous
+individual dynamics, and where those individual differences are the question,
+the single-subject estimators of the preceding vignettes are the instrument.
+
+# References

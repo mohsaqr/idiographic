@@ -1,4 +1,4 @@
-# Parity: native build_mlvar_bayes() vs real Mplus DSEM ground truth.
+# Parity: native fit_mlvar_bayes() vs real Mplus DSEM ground truth.
 #
 # Fixtures in fixtures/mplus/mlvar_*.rds were produced by running Mplus 9 (DEMO)
 # via mlVAR(estimator = "Mplus", temporal = "fixed", contemporaneous = "fixed")
@@ -15,7 +15,7 @@ test_that("Mplus mlVAR fixtures are present", {
 })
 
 run_bayes <- function(fx, n_iter = 6000L, seed = 2024L) {
-  build_mlvar_bayes(fx$data, vars = fx$vars, id = fx$id, beep = fx$beep,
+  fit_mlvar_bayes(fx$data, vars = fx$vars, id = fx$id, beep = fx$beep,
                     n_iter = n_iter, n_chains = 2L, seed = seed, verbose = FALSE)
 }
 

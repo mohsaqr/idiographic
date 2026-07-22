@@ -7,7 +7,7 @@
 \method{print}{net_mlvar_bayes}(x, digits = 2, ...)
 }
 \arguments{
-\item{x}{A \code{net_mlvar_bayes} object from \code{\link[=build_mlvar_bayes]{build_mlvar_bayes()}}.}
+\item{x}{A \code{net_mlvar_bayes} object from \code{\link[=fit_mlvar_bayes]{fit_mlvar_bayes()}}.}
 
 \item{digits}{Digits for printed network matrices.}
 

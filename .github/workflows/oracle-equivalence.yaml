@@ -1,0 +1,51 @@
+name: oracle-equivalence
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  oracle:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      IDIOGRAPHIC_RUN_EQUIVALENCE: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::rcmdcheck
+            any::testthat
+            any::pak
+          needs: check
+      - name: Install pinned oracle packages
+        shell: Rscript {0}
+        run: |
+          pak::pkg_install(c(
+            "graphicalVAR@0.4.1",
+            "mlVAR@0.7.3",
+            "gimme@10.0",
+            "corpcor",
+            "data.table",
+            "glasso"
+          ))
+      - name: Record oracle versions
+        shell: Rscript {0}
+        run: |
+          packages <- c("idiographic", "graphicalVAR", "mlVAR", "gimme",
+                        "corpcor", "data.table", "glasso")
+          for (package in packages[-1]) {
+            cat(package, as.character(utils::packageVersion(package)), "\n")
+          }
+      - name: Run oracle and equivalence tests
+        shell: Rscript {0}
+        run: |
+          source("validation/run-equivalence.R")

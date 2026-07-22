@@ -1,10 +1,10 @@
-fit_lavaan_equivalent <- function(syntax, data) {
+fit_lavaan_equivalent <- function(syntax, data, estimator = "ml") {
   lavaan::lavaan(
     model = paste(syntax, collapse = "\n"),
     data = data,
     model.type = "sem",
     missing = "fiml",
-    estimator = "ml",
+    estimator = estimator,
     int.ov.free = FALSE,
     int.lv.free = TRUE,
     auto.fix.first = TRUE,
@@ -55,12 +55,46 @@ expect_mats_equal_cellwise <- function(actual, expected, tolerance, label) {
   }
 }
 
-test_that("fixed build_usem is cell-equivalent to direct lavaan for one subject", {
+test_that("standardized non-default uSEM remains direct lavaan engine-equivalent", {
+  skip_unless_equivalence()
+  skip_if_not_installed("lavaan")
+  d <- synth_panel(n_id = 2, days = 3, beeps = 14,
+                   vars = c("A", "B", "C"), seed = 103)
+  vars <- c("A", "B", "C")
+  fit <- fit_usem(
+    d, vars = vars, id = "id", day = "day", beep = "beep",
+    temporal = "all", contemporaneous = c("B ~ A", "C ~ B"),
+    residual_cov = TRUE, standardize = TRUE, estimator = "mlr"
+  )
+  prepared <- idiographic:::.gimme_prepare_data(
+    d, vars = vars, id = "id", time = NULL, standardize = TRUE,
+    exogenous = NULL, day = "day"
+  )
+  refs <- lapply(seq_along(prepared), function(i) {
+    direct <- fit_lavaan_equivalent(fit$syntax, prepared[[i]],
+                                    estimator = "mlr")
+    extract_lavaan_usem_mats(direct, vars)
+  })
+  mean_mat <- function(name) {
+    Reduce("+", lapply(refs, `[[`, name)) / length(refs)
+  }
+  expect_mats_equal_cellwise(fit$temporal, mean_mat("temporal"), 1e-10,
+                             "standardized_temporal")
+  expect_mats_equal_cellwise(fit$contemporaneous,
+                             mean_mat("contemporaneous"), 1e-10,
+                             "standardized_contemporaneous")
+  expect_mats_equal_cellwise(fit$residual_cov, mean_mat("residual_cov"),
+                             1e-10, "standardized_residual_cov")
+  expect_identical(equivalence(fit)$status, "validated")
+})
+
+test_that("fixed fit_usem is cell-equivalent to direct lavaan for one subject", {
+  skip_unless_equivalence()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 1, days = 4, beeps = 14, vars = c("A", "B", "C"),
                    seed = 101)
   vars <- c("A", "B", "C")
-  fit <- build_usem(d, vars = vars, id = "id", day = "day", beep = "beep",
+  fit <- fit_usem(d, vars = vars, id = "id", day = "day", beep = "beep",
                     temporal = "all", contemporaneous = c("B ~ A", "C ~ B"),
                     residual_cov = TRUE)
   prepared <- idiographic:::.gimme_prepare_data(
@@ -78,12 +112,13 @@ test_that("fixed build_usem is cell-equivalent to direct lavaan for one subject"
                              1e-10, "residual_cov")
 })
 
-test_that("fixed build_usem averages direct lavaan subject matrices", {
+test_that("fixed fit_usem averages direct lavaan subject matrices", {
+  skip_unless_equivalence()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 3, beeps = 12, vars = c("A", "B"),
                    seed = 102)
   vars <- c("A", "B")
-  fit <- build_usem(d, vars = vars, id = "id", day = "day", beep = "beep",
+  fit <- fit_usem(d, vars = vars, id = "id", day = "day", beep = "beep",
                     temporal = "ar", contemporaneous = "B ~ A",
                     residual_cov = TRUE)
   prepared <- idiographic:::.gimme_prepare_data(

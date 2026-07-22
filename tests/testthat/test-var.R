@@ -1,6 +1,6 @@
-test_that("build_var returns a tidy OLS VAR result", {
+test_that("fit_var returns a tidy OLS VAR result", {
   d <- synth_single(n_t = 100, vars = c("A", "B", "C"), seed = 201)
-  fit <- build_var(d, vars = c("A", "B", "C"), id = "id",
+  fit <- fit_var(d, vars = c("A", "B", "C"), id = "id",
                    day = "day", beep = "beep", scale = FALSE)
 
   expect_s3_class(fit, "var_result")
@@ -22,10 +22,10 @@ test_that("build_var returns a tidy OLS VAR result", {
                      "in_strength", "self"))
 })
 
-test_that("build_var is cell-equivalent to stats::lm.fit", {
+test_that("fit_var is cell-equivalent to stats::lm.fit", {
   d <- synth_single(n_t = 120, vars = c("A", "B", "C"), seed = 202)
   vars <- c("A", "B", "C")
-  fit <- build_var(d, vars = vars, id = "id", day = "day", beep = "beep",
+  fit <- fit_var(d, vars = vars, id = "id", day = "day", beep = "beep",
                    scale = FALSE, center_within = FALSE)
   ts <- idiographic:::.gvar_tsdata(
     d, vars = vars, id = "id", day = "day", beep = "beep",
@@ -46,19 +46,19 @@ test_that("build_var is cell-equivalent to stats::lm.fit", {
                ignore_attr = TRUE)
 })
 
-test_that("build_var respects subject filtering and rejects unsupported lags", {
+test_that("fit_var respects subject filtering and rejects unsupported lags", {
   d <- synth_panel(n_id = 4, days = 2, beeps = 10, vars = c("A", "B"),
                    seed = 203)
-  one <- build_var(d, vars = c("A", "B"), id = "id", day = "day",
+  one <- fit_var(d, vars = c("A", "B"), id = "id", day = "day",
                    beep = "beep", subject = 2, scale = FALSE)
-  direct <- build_var(subset(d, id == 2), vars = c("A", "B"), id = "id",
+  direct <- fit_var(subset(d, id == 2), vars = c("A", "B"), id = "id",
                       day = "day", beep = "beep", scale = FALSE)
   expect_equal(one$temporal, direct$temporal, tolerance = 1e-12)
-  expect_error(build_var(d, vars = c("A", "B"), id = "id", lags = 2),
+  expect_error(fit_var(d, vars = c("A", "B"), id = "id", lags = 2),
                "lags = 1")
 })
 
-test_that("build_var rejects rank-deficient and non-numeric designs clearly", {
+test_that("fit_var rejects rank-deficient and non-numeric designs clearly", {
   set.seed(205)
   d <- data.frame(
     id = 1,
@@ -69,23 +69,23 @@ test_that("build_var rejects rank-deficient and non-numeric designs clearly", {
   )
   d$C <- d$A + d$B
   expect_error(
-    build_var(d, vars = c("A", "B", "C"), id = "id", day = "day",
+    fit_var(d, vars = c("A", "B", "C"), id = "id", day = "day",
               beep = "beep", scale = FALSE),
     "rank-deficient"
   )
 
   d$C <- factor(rep(1:4, length.out = nrow(d)))
   expect_error(
-    build_var(d, vars = c("A", "B", "C"), id = "id", day = "day",
+    fit_var(d, vars = c("A", "B", "C"), id = "id", day = "day",
               beep = "beep", scale = FALSE),
     "must be numeric"
   )
 })
 
-test_that("build_var_each is subject-by-subject equivalent to build_var", {
+test_that("fit_var_each is subject-by-subject equivalent to fit_var", {
   d <- synth_panel(n_id = 4, days = 2, beeps = 12, vars = c("A", "B", "C"),
                    seed = 204)
-  fits <- build_var_each(d, vars = c("A", "B", "C"), id = "id",
+  fits <- fit_var_each(d, vars = c("A", "B", "C"), id = "id",
                          day = "day", beep = "beep", scale = FALSE)
 
   expect_s3_class(fits, "var_list")
@@ -93,7 +93,7 @@ test_that("build_var_each is subject-by-subject equivalent to build_var", {
   expect_true(all(vapply(fits, inherits, logical(1), "var_result")))
 
   for (subject_id in names(fits)) {
-    direct <- build_var(d, vars = c("A", "B", "C"), id = "id",
+    direct <- fit_var(d, vars = c("A", "B", "C"), id = "id",
                         day = "day", beep = "beep",
                         subject = as.integer(subject_id), scale = FALSE)
     expect_equal(fits[[subject_id]]$beta, direct$beta, tolerance = 1e-12,

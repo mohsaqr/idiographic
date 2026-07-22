@@ -1,4 +1,4 @@
-# Gap-aware + TINTERVAL lag construction in build_mlvar_bayes's data prep.
+# Gap-aware + TINTERVAL lag construction in fit_mlvar_bayes's data prep.
 
 test_that("gap-aware lagging skips absent occasions (no spurious lag-1 pair)", {
   # Occasion 3 is absent for each subject: valid lag pairs are (2<-1) and (5<-4),
@@ -45,7 +45,7 @@ test_that("residual = 'random' requires temporal = 'random'", {
     data.frame(id = i, beep = 1:30, V1 = y[, 1], V2 = y[, 2])
   }))
   expect_error(
-    build_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
+    fit_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
                       temporal = "fixed", residual = "random", n_iter = 300),
     "requires temporal")
 })

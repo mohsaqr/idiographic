@@ -50,7 +50,7 @@ small_mlvar <- function() {
     m$id <- i; m$beep <- seq_len(80); m
   })
   suppressWarnings(
-    build_mlvar(do.call(rbind, rows), vars = c("A", "B"), id = "id", beep = "beep")
+    fit_mlvar(do.call(rbind, rows), vars = c("A", "B"), id = "id", beep = "beep")
   )
 }
 
@@ -76,7 +76,7 @@ test_that("plot.var_bayes_result is dispatched (whole result and single layer)",
   skip_if_not_installed("cograph"); skip_if_not_installed("corpcor")
   set.seed(1); y <- matrix(0, 150, 2)
   for (t in 2:150) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
-  fit <- build_var_bayes(data.frame(A = y[, 1], B = y[, 2]),
+  fit <- fit_var_bayes(data.frame(A = y[, 1], B = y[, 2]),
                          vars = c("A", "B"), n_iter = 600, seed = 1)
   expect_s3_class(fit, "var_bayes_result")
   on_null_device({
@@ -100,18 +100,18 @@ test_that("fixed sampler errors below 2p+1 subjects (between covariance)", {
   skip_if_not_installed("corpcor")
   vars <- c("V1", "V2")                                # p = 2 -> need >= 5
   expect_error(
-    build_mlvar_bayes(mk_panel(4), vars = vars, id = "id", beep = "beep",
+    fit_mlvar_bayes(mk_panel(4), vars = vars, id = "id", beep = "beep",
                       n_iter = 200),
     "at least 5")
-  expect_silent_fit <- build_mlvar_bayes(mk_panel(6), vars = vars, id = "id",
+  expect_silent_fit <- fit_mlvar_bayes(mk_panel(6), vars = vars, id = "id",
                                          beep = "beep", n_iter = 300, seed = 1)
   expect_true(all(is.finite(attr(expect_silent_fit, "matrices")$B)))
 })
 
-test_that("build_var_bayes errors below 2p+1 lag pairs", {
+test_that("fit_var_bayes errors below 2p+1 lag pairs", {
   skip_if_not_installed("corpcor")
   d <- data.frame(A = rnorm(4), B = rnorm(4))          # ~3 lag pairs < 5
   expect_error(
-    build_var_bayes(d, vars = c("A", "B"), n_iter = 200),
+    fit_var_bayes(d, vars = c("A", "B"), n_iter = 200),
     "at least 5|Too few")
 })

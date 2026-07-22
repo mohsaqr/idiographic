@@ -1,5 +1,5 @@
 # Generate an Mplus DSEM univariate random-AR(1) ground-truth fixture for
-# validating the random-slope engine of build_mlvar_bayes(temporal = "random").
+# validating the random-slope engine of fit_mlvar_bayes(temporal = "random").
 # The Mplus DEMO caps time-series latent variables at 2, so a univariate random
 # intercept + random slope (2 latent vars) is the only Mplus-checkable random
 # case; the multivariate engine is validated by parameter recovery instead.

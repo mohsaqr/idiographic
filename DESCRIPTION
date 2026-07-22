@@ -2,9 +2,9 @@ Package: idiographic
 Type: Package
 Title: Network Estimation from Intensive Longitudinal Data
 Version: 0.1.0
-Authors@R: person("Mohammed", "Saqr", role = c("aut", "cre"),
+Authors@R: person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
     email = "mohammed.saqr@uef.fi")
-Author: Mohammed Saqr [aut, cre]
+Author: Mohammed Saqr [aut, cre, cph]
 Maintainer: Mohammed Saqr <mohammed.saqr@uef.fi>
 Description: Person-specific and within-person network estimation from
     intensive longitudinal and panel data. Provides preprocessing audits,
@@ -12,35 +12,48 @@ Description: Person-specific and within-person network estimation from
     validation, rolling ordinary and graphical vector autoregression, ordinary
     vector autoregression (VAR), graphical vector autoregression (graphical
     VAR), multilevel vector autoregression (mlVAR), native Bayesian VAR and
-    multilevel VAR that statistically reproduce 'Mplus' Dynamic Structural
-    Equation Modeling (DSEM) output without requiring 'Mplus', unified
+    multilevel VAR validated statistically against selected frozen 'Mplus'
+    Dynamic Structural Equation Modeling (DSEM) outputs without requiring
+    'Mplus', unified
     Structural Equation Modeling (uSEM), and Group Iterative Multiple Model
-    Estimation (GIMME) as clean-room implementations. Split out of the 'Nestimate' package so the
-    idiographic time-series methods carry their own dependencies. Results have
-    tidy accessors and 'cograph_network' plotting support.
+    Estimation (GIMME).
+    Graphical VAR follows Epskamp et al. (2018)
+    <doi:10.1080/00273171.2018.1454823>; GIMME follows Gates and Molenaar
+    (2012) <doi:10.1016/j.neuroimage.2012.06.026>. Idiographic supervised
+    machine-learning models are available through fit_ml(), using native
+    base-R algorithms. Results have tidy accessors and optional network
+    plotting support.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
+Language: en-US
+LazyData: TRUE
+URL: https://github.com/mohsaqr/idiographic
+BugReports: https://github.com/mohsaqr/idiographic/issues
 Depends:
     R (>= 4.1)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports:
     stats,
     utils,
-    lme4,
-    lavaan
+    parallel
 Suggests:
     testthat (>= 3.0.0),
+    lme4,
+    lavaan,
     cograph,
     mlVAR,
     MplusAutomation,
     gimme,
     graphicalVAR,
     glasso,
+    corpcor,
+    data.table,
     qgraph,
     rio,
+    jsonlite,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

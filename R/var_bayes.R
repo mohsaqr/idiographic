@@ -1,11 +1,11 @@
-# ---- Native Bayesian VAR (graphical VAR analogue, Mplus equivalent) ----------
+# ---- Native Bayesian VAR (graphical VAR analogue, Mplus-targeted) ------------
 #
 # Single-level Bayesian VAR(1) matching Mplus's ESTIMATOR = BAYES time-series /
 # regression output. This is the *unregularized* Bayesian analogue of
-# graphical_var(): Mplus has no graphical lasso, so the honest "match Mplus"
+# fit_graphical_var(): Mplus has no graphical lasso, so the honest "match Mplus"
 # object is a full (non-sparse) VAR(1) with an inverse-Wishart residual
 # precision, from which the contemporaneous partial-correlation network is
-# derived exactly as graphical_var() derives its PCC.
+# derived exactly as fit_graphical_var() derives its PCC.
 #
 # Model (per pooled, within-centred series), verified against a real Mplus .out:
 #   y_t = c + B y_{t-1} + e_t ,   e_t ~ N(0, Sigma)
@@ -14,17 +14,17 @@
 #   Sigma | B ~ IW((Y - XB)'(Y - XB), n - (p+1)) ,  vec(B) | Sigma ~ matrix-normal
 # targets it exactly. Point estimates = posterior medians (Mplus default).
 
-#' Build a Bayesian VAR(1) network (unregularized Mplus-equivalent)
+#' Build a Bayesian VAR(1) network (unregularized, Mplus-targeted)
 #'
 #' @description Native, pure-R Bayesian VAR(1) that reproduces Mplus's Bayesian
 #'   (DSEM/time-series) estimates without needing Mplus. It is the unregularized
-#'   Bayesian counterpart of [graphical_var()]: instead of a graphical-lasso /
+#'   Bayesian counterpart of [fit_graphical_var()]: instead of a graphical-lasso /
 #'   EBIC sparse fit, it estimates a full VAR(1) with a flat prior on the
 #'   temporal coefficients and an inverse-Wishart prior on the residual
 #'   precision, then reports the temporal network `B` and the contemporaneous
 #'   partial-correlation network derived from the residual covariance. With more
 #'   than one subject the data are within-person centred and pooled (as in
-#'   [graphical_var()]).
+#'   [fit_graphical_var()]).
 #'
 #' @param data A `data.frame` or matrix.
 #' @param vars Character vector of variable names (length >= 2).
@@ -34,7 +34,7 @@
 #' @param lags Integer lag order; only `1` is supported.
 #' @param scale Logical. Global standardization of each variable. Default `TRUE`.
 #' @param center_within Logical. Within-person centre when >1 id (removes
-#'   between-person variance, as in [graphical_var()]). Default `TRUE`.
+#'   between-person variance, as in [fit_graphical_var()]). Default `TRUE`.
 #' @param n_iter,n_burnin,n_chains,thin MCMC controls. Defaults `4000`,
 #'   `n_iter/2`, `2`, `1`.
 #' @param seed Integer or `NULL`. Base seed (chain `c` uses `seed + c`).
@@ -54,14 +54,14 @@
 #' y <- matrix(0, 200, 2)
 #' for (t in 2:200) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
 #' d <- data.frame(A = y[, 1], B = y[, 2])
-#' fit <- build_var_bayes(d, vars = c("A", "B"), n_iter = 2000, seed = 1)
+#' fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 2000, seed = 1)
 #' print(fit)
 #' coefs(fit)
 #' }
-#' @seealso [graphical_var()] (regularized GLASSO/EBIC), [build_var()] (OLS),
-#'   [build_mlvar_bayes()] (multilevel Bayesian VAR).
+#' @seealso [fit_graphical_var()] (regularized GLASSO/EBIC), [fit_var()] (OLS),
+#'   [fit_mlvar_bayes()] (multilevel Bayesian VAR).
 #' @export
-build_var_bayes <- function(data, vars,
+fit_var_bayes <- function(data, vars,
                             id = NULL, day = NULL, beep = NULL,
                             lags = 1L,
                             scale = TRUE,
@@ -98,7 +98,7 @@ build_var_bayes <- function(data, vars,
   .ido_check_numeric_vars(data, vars)
 
   p <- length(vars)
-  # Reuse graphical_var's data preparation (scale, within-centre, lag pairs).
+  # Reuse fit_graphical_var's data preparation (scale, within-centre, lag pairs).
   ts <- .gvar_tsdata(data, vars, id, day, beep, scale, center_within,
                      delete_missings = TRUE)
   Y <- ts$data_c              # n x p current
@@ -255,7 +255,7 @@ print.var_bayes_result <- function(x, digits = 2, ...) {
   m <- attr(x, "model")
   d <- length(m$labels)
   n_sig <- sum(m$coefs$significant, na.rm = TRUE)
-  cat("Bayesian VAR(1) result (unregularized, Mplus-equivalent)\n")
+  cat("Bayesian VAR(1) result (unregularized, Mplus-targeted)\n")
   cat(sprintf("  Variables:    %d (%s)\n", d, paste(m$labels, collapse = ", ")))
   cat(sprintf("  Observations: %d\n", m$n_obs))
   cat(sprintf("  MCMC: %d chains x %d iter, %d draws | max PSR = %.3f\n",

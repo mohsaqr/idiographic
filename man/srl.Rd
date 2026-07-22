@@ -23,7 +23,9 @@ A \code{data.frame} with 5616 rows and 11 columns:
 \source{
 Learning Analytics Methods, Book 2, Chapter 20 (VAR):
 \url{https://lamethods.org/book2/chapters/ch20-var/ch20-var.html}. Original
-data: \url{https://github.com/lamethods/data2/raw/main/srl/srl.RDS}.
+data: \url{https://github.com/lamethods/data2/raw/main/srl/srl.RDS},
+licensed under CC BY-NC-SA 4.0. See the package \code{COPYRIGHTS} file for
+attribution and transformation details.
 }
 \usage{
 srl
@@ -38,7 +40,7 @@ for the idiographic time-series methods in this package.
 \details{
 The columns have already been tidied for modelling: rows are ordered by
 \code{name} then \code{day}, and \code{day} is a within-person occasion index (1-156) you can
-pass as the \code{time} argument to \code{\link[=build_usem]{build_usem()}} and \code{\link[=build_gimme]{build_gimme()}}. No further
+pass as the \code{time} argument to \code{\link[=fit_usem]{fit_usem()}} and \code{\link[=fit_gimme]{fit_gimme()}}. No further
 ordering, indexing, or column selection is needed before fitting a model.
 }
 \examples{

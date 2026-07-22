@@ -42,7 +42,7 @@
 #'   The original `mlVAR`/Mplus object is available as `attr(x, "mplus")`.
 #' @examplesIf requireNamespace("mlVAR", quietly = TRUE) && requireNamespace("MplusAutomation", quietly = TRUE)
 #' \dontrun{
-#' fit <- build_mlvar_mplus(
+#' fit <- fit_mlvar_mplus(
 #'   data, vars = c("A", "B", "C"), id = "id", beep = "time",
 #'   temporal = "fixed", contemporaneous = "fixed",
 #'   MplusName = "my_mplus_mlvar"
@@ -50,9 +50,9 @@
 #' edges(fit)
 #' attr(fit, "mplus")$output$summaries
 #' }
-#' @seealso [build_mlvar()]
+#' @seealso [fit_mlvar()]
 #' @export
-build_mlvar_mplus <- function(data, vars, id,
+fit_mlvar_mplus <- function(data, vars, id,
                               day = NULL, beep = NULL,
                               lags = 1L,
                               temporal = c("fixed", "correlated", "orthogonal",
@@ -101,20 +101,7 @@ build_mlvar_mplus <- function(data, vars, id,
   data <- .ido_keep(data, id, min_obs, subject)
   .ido_check_numeric_vars(data, vars)
 
-  if (!requireNamespace("mlVAR", quietly = TRUE)) {
-    stop("Package 'mlVAR' is required for build_mlvar_mplus().",
-         call. = FALSE)
-  }
-  if (!requireNamespace("MplusAutomation", quietly = TRUE)) {
-    stop("Package 'MplusAutomation' is required for build_mlvar_mplus().",
-         call. = FALSE)
-  }
-  mplus_command <- tryCatch(MplusAutomation::detectMplus(),
-                            error = function(e) NULL)
-  if (is.null(mplus_command)) {
-    stop("Mplus was not found by MplusAutomation::detectMplus(). ",
-         "Install Mplus or add its executable to PATH.", call. = FALSE)
-  }
+  mplus_command <- .mlvar_mplus_detect()
 
   if (!is.null(workdir)) {
     if (!(is.character(workdir) && length(workdir) == 1L)) {
@@ -148,7 +135,7 @@ build_mlvar_mplus <- function(data, vars, id,
   if (!is.null(beep)) args$beepvar <- beep
   if (!missing(signs)) args$signs <- signs
 
-  fit <- tryCatch(do.call(mlVAR::mlVAR, args), error = function(e) {
+  fit <- tryCatch(.mlvar_mplus_call(args), error = function(e) {
     files <- Sys.glob(paste0(MplusName, ".*"))
     msg <- conditionMessage(e)
     if (length(files) > 0L) {
@@ -160,12 +147,43 @@ build_mlvar_mplus <- function(data, vars, id,
   })
 
   .mlvar_mplus_to_idiographic(fit, vars, config = list(
+    engine = "mplus", estimator = "Mplus", lags = 1L,
     id = id, day = day, beep = beep, temporal = temporal,
     contemporaneous = contemporaneous, scale = scale,
     scaleWithin = scaleWithin, MplusName = MplusName,
     iterations = iterations, chains = chains,
     mplus_command = mplus_command
   ))
+}
+
+# Small indirections make the licensed-runtime boundary executable in tests:
+# the package suite can prove every argument is forwarded and every returned
+# mlVAR layer is converted without pretending that Mplus itself is installed.
+# A licensed integration job still exercises these same two functions.
+#' @keywords internal
+#' @noRd
+.mlvar_mplus_detect <- function() {
+  if (!requireNamespace("mlVAR", quietly = TRUE)) {
+    stop("Package 'mlVAR' is required for fit_mlvar_mplus().",
+         call. = FALSE)
+  }
+  if (!requireNamespace("MplusAutomation", quietly = TRUE)) {
+    stop("Package 'MplusAutomation' is required for fit_mlvar_mplus().",
+         call. = FALSE)
+  }
+  command <- tryCatch(MplusAutomation::detectMplus(),
+                      error = function(e) NULL)
+  if (is.null(command)) {
+    stop("Mplus was not found by MplusAutomation::detectMplus(). ",
+         "Install Mplus or add its executable to PATH.", call. = FALSE)
+  }
+  command
+}
+
+#' @keywords internal
+#' @noRd
+.mlvar_mplus_call <- function(args) {
+  do.call(mlVAR::mlVAR, args)
 }
 
 #' @keywords internal

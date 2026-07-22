@@ -11,11 +11,13 @@
 \alias{matrices.net_mlvar}
 \alias{matrices.net_usem}
 \alias{matrices.net_gimme}
-\alias{matrices.preprocess_audit}
+\alias{matrices.preprocess_result}
 \alias{matrices.rolling_var_result}
 \alias{matrices.rolling_gvar_result}
 \alias{matrices.stability_result}
 \alias{matrices.model_comparison}
+\alias{matrices.var_list}
+\alias{matrices.gvar_list}
 \title{Print model matrices for idiographic results}
 \usage{
 matrices(x, ...)
@@ -38,7 +40,7 @@ matrices(x, ...)
 
 \method{matrices}{net_gimme}(x, digits = 3, ...)
 
-\method{matrices}{preprocess_audit}(x, digits = 3, ...)
+\method{matrices}{preprocess_result}(x, digits = 3, ...)
 
 \method{matrices}{rolling_var_result}(x, fit = 1L, digits = 3, ...)
 
@@ -47,6 +49,10 @@ matrices(x, ...)
 \method{matrices}{stability_result}(x, digits = 3, ...)
 
 \method{matrices}{model_comparison}(x, fit = 1L, digits = 3, ...)
+
+\method{matrices}{var_list}(x, subject = 1L, digits = 3, ...)
+
+\method{matrices}{gvar_list}(x, subject = 1L, digits = 3, ...)
 }
 \arguments{
 \item{x}{An idiographic result or cograph network/group.}
@@ -57,6 +63,8 @@ matrices(x, ...)
 
 \item{fit}{Stored fit name or index for result containers that optionally keep
 fitted models, such as rolling results and model comparisons.}
+
+\item{subject}{Subject name or index for per-subject VAR/GVAR result lists.}
 }
 \value{
 Invisibly, a named list of matrices.
@@ -66,4 +74,11 @@ Invisibly, a named list of matrices.
 It returns the core estimated matrices invisibly and prints each matrix
 compactly with rounding, so users can inspect coefficients without digging
 through object internals.
+}
+\examples{
+W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+            dimnames = list(c("A", "B"), c("A", "B")))
+x <- structure(list(weights = W, method = "relative", directed = TRUE),
+               class = "cograph_network")
+matrices(as_netobject(x))
 }

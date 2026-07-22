@@ -1,4 +1,4 @@
-# Parity: native build_var_bayes() vs real Mplus Bayesian VAR(1) ground truth.
+# Parity: native fit_var_bayes() vs real Mplus Bayesian VAR(1) ground truth.
 # Fixtures var_*.rds hold a single standardized series and the Mplus BAYES
 # posterior medians for B (temporal) and Sigma (residual covariance). The exact
 # Normal-Inverse-Wishart sampler should reproduce them to tight MC error.
@@ -12,7 +12,7 @@ test_that("Mplus VAR fixtures are present", {
 })
 
 run_vb <- function(fx, n_iter = 6000L, seed = 2024L) {
-  build_var_bayes(fx$data, vars = fx$vars, n_iter = n_iter, n_chains = 2L,
+  fit_var_bayes(fx$data, vars = fx$vars, n_iter = n_iter, n_chains = 2L,
                   seed = seed, verbose = FALSE)
 }
 
@@ -59,7 +59,7 @@ test_that("var_bayes object structure and accessors are well-formed", {
 
 test_that("Bayesian VAR median ~ OLS VAR on a pooled multi-subject panel", {
   # No direct Mplus analogue for the within-centred pooled fit, so cross-check
-  # the Bayesian posterior median against the frequentist OLS build_var().
+  # the Bayesian posterior median against the frequentist OLS fit_var().
   skip_if_not_installed("corpcor")
   set.seed(11)
   rows <- lapply(1:8, function(i) {
@@ -68,8 +68,8 @@ test_that("Bayesian VAR median ~ OLS VAR on a pooled multi-subject panel", {
     data.frame(id = i, beep = seq_len(60), A = y[, 1], B = y[, 2])
   })
   d <- do.call(rbind, rows)
-  vb <- build_var_bayes(d, vars = c("A", "B"), id = "id", beep = "beep",
+  vb <- fit_var_bayes(d, vars = c("A", "B"), id = "id", beep = "beep",
                         n_iter = 4000, seed = 5)
-  ov <- build_var(d, vars = c("A", "B"), id = "id", beep = "beep")
+  ov <- fit_var(d, vars = c("A", "B"), id = "id", beep = "beep")
   expect_lt(max(abs(vb$temporal - ov$temporal)), 0.05)
 })

@@ -35,7 +35,7 @@ test_that("random-slope build recovers a known p = 2 transition matrix", {
     data.frame(id = i, beep = seq_len(n_t), V1 = y[, 1], V2 = y[, 2])
   })
   d <- do.call(rbind, rows)
-  fit <- build_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
+  fit <- fit_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
                            temporal = "random", n_iter = 3000, n_chains = 2,
                            seed = 3)
   expect_s3_class(fit, "net_mlvar_bayes")
@@ -56,7 +56,40 @@ test_that("random-slope path errors when subjects <= random effects", {
   })
   d <- do.call(rbind, rows)                         # N = 4 < p + p^2 + 1 = 7
   expect_error(
-    build_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
+    fit_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
                       temporal = "random", n_iter = 500),
     "at least .* subjects")
+})
+
+test_that("random residual covariance produces finite recovery-validated output", {
+  skip_if_not_installed("corpcor")
+  set.seed(19)
+  n_id <- 16; n_t <- 35
+  Bmean <- matrix(c(.30, .08, .04, .25), 2, 2, byrow = TRUE)
+  rows <- lapply(seq_len(n_id), function(i) {
+    mu <- rnorm(2, 0, .4)
+    Bi <- Bmean + matrix(rnorm(4, 0, .05), 2, 2)
+    sd_i <- runif(2, .7, 1.3)
+    Sigma_i <- diag(sd_i) %*% matrix(c(1, .2, .2, 1), 2, 2) %*%
+      diag(sd_i)
+    L <- t(chol(Sigma_i))
+    y <- matrix(0, n_t, 2)
+    for (tt in 2:n_t) {
+      y[tt, ] <- mu + Bi %*% (y[tt - 1, ] - mu) +
+        as.numeric(L %*% rnorm(2))
+    }
+    data.frame(id = i, beep = seq_len(n_t), V1 = y[, 1], V2 = y[, 2])
+  })
+  d <- do.call(rbind, rows)
+  fit <- fit_mlvar_bayes(
+    d, vars = c("V1", "V2"), id = "id", beep = "beep",
+    temporal = "random", residual = "random", n_iter = 700,
+    n_burnin = 300, n_chains = 1, thin = 2, seed = 19
+  )
+
+  expect_identical(attr(fit, "residual_type"), "random")
+  expect_true(all(is.finite(attr(fit, "matrices")$Sigma_W)))
+  expect_true(all(diag(attr(fit, "matrices")$Sigma_W) > 0))
+  expect_lt(max(abs(attr(fit, "matrices")$B - Bmean)), .2)
+  expect_identical(equivalence(fit)$status, "validated_recovery")
 })

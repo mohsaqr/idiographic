@@ -1,8 +1,8 @@
-test_that("build_usem fits fixed uSEM and returns Carm-style tidy outputs", {
+test_that("fit_usem fits fixed uSEM and returns Carm-style tidy outputs", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 10, vars = c("A", "B"),
                    seed = 42)
-  fit <- build_usem(d, vars = c("A", "B"), id = "id", day = "day",
+  fit <- fit_usem(d, vars = c("A", "B"), id = "id", day = "day",
                     beep = "beep", temporal = "ar",
                     contemporaneous = "none", residual_cov = TRUE)
 
@@ -37,11 +37,11 @@ test_that("build_usem fits fixed uSEM and returns Carm-style tidy outputs", {
                      "mean_abs_weight", "n_positive", "n_negative"))
 })
 
-test_that("build_usem supports all lagged paths and user contemporaneous paths", {
+test_that("fit_usem supports all lagged paths and user contemporaneous paths", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 3, beeps = 12, vars = c("A", "B"),
                    seed = 11)
-  fit <- build_usem(d, vars = c("A", "B"), id = "id", day = "day",
+  fit <- fit_usem(d, vars = c("A", "B"), id = "id", day = "day",
                     beep = "beep", temporal = "all",
                     contemporaneous = "B ~ A", residual_cov = FALSE)
 
@@ -54,17 +54,17 @@ test_that("build_usem supports all lagged paths and user contemporaneous paths",
   expect_true(any(coefs(fit)$network == "contemporaneous"))
 })
 
-test_that("build_usem validates path role against dynamic design", {
+test_that("fit_usem validates path role against dynamic design", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 2, beeps = 8, vars = c("A", "B"),
                    seed = 12)
   expect_error(
-    build_usem(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
+    fit_usem(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
                temporal = "A ~ B"),
     "Invalid `temporal`"
   )
   expect_error(
-    build_usem(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
+    fit_usem(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
                contemporaneous = "A ~ Blag"),
     "Invalid `contemporaneous`"
   )
@@ -74,11 +74,11 @@ test_that("trimmed uSEM is clean-room candidate search over declared paths", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 3, beeps = 12, vars = c("A", "B"),
                    seed = 14)
-  fixed <- build_usem(d, vars = c("A", "B"), id = "id", day = "day",
+  fixed <- fit_usem(d, vars = c("A", "B"), id = "id", day = "day",
                       beep = "beep", temporal = "all",
                       contemporaneous = "all", residual_cov = TRUE,
                       trim = FALSE)
-  trimmed <- build_usem(d, vars = c("A", "B"), id = "id", day = "day",
+  trimmed <- fit_usem(d, vars = c("A", "B"), id = "id", day = "day",
                         beep = "beep", temporal = "all",
                         contemporaneous = "all", residual_cov = TRUE,
                         trim = TRUE)
@@ -99,4 +99,5 @@ test_that("trimmed uSEM is clean-room candidate search over declared paths", {
   expect_true(all(vapply(trimmed$syntax, base_or_allowed, logical(1))))
   expect_true(trimmed$config$trim)
   expect_named(edges(trimmed), c("network", "from", "to", "weight"))
+  expect_identical(equivalence(trimmed)$status, "supported_extension")
 })

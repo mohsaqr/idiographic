@@ -17,9 +17,10 @@
 #   * B, alpha        ~ N(0, infinity)           (flat / improper)
 #   * Sigma_W, Sigma_B ~ IW(0, -(p+1))           (Mplus prints IW(0,-3) for p=2)
 # Point estimate reported = posterior MEDIAN (Mplus default), with posterior SD
-# and equal-tailed 95% credible interval. See LEARNINGS.md (mplus-dsem-anchor).
+# and equal-tailed 95% credible interval. The committed fixture metadata records
+# the Mplus configuration used for each oracle comparison.
 
-#' Build a Bayesian multilevel VAR network (Mplus DSEM equivalent)
+#' Build a Bayesian multilevel VAR network (Mplus DSEM-targeted)
 #'
 #' @description Native, pure-R Bayesian estimator for a two-level VAR(1) that
 #'   statistically reproduces Mplus DSEM output (the estimator behind
@@ -112,15 +113,15 @@
 #'   data.frame(id = i, beep = seq_len(n_t), A = y[, 1], B = y[, 2])
 #' })
 #' d <- do.call(rbind, rows)
-#' fit <- build_mlvar_bayes(d, vars = vars, id = "id", beep = "beep",
+#' fit <- fit_mlvar_bayes(d, vars = vars, id = "id", beep = "beep",
 #'                          n_iter = 2000, seed = 1)
 #' print(fit)
 #' coefs(fit)
 #' }
-#' @seealso [build_mlvar()] (frequentist lmer path), [build_mlvar_mplus()]
+#' @seealso [fit_mlvar()] (frequentist lmer path), [fit_mlvar_mplus()]
 #'   (true-Mplus wrapper).
 #' @export
-build_mlvar_bayes <- function(data, vars, id,
+fit_mlvar_bayes <- function(data, vars, id,
                               day = NULL, beep = NULL,
                               lags = 1L,
                               temporal = c("fixed", "default", "random"),
@@ -151,7 +152,7 @@ build_mlvar_bayes <- function(data, vars, id,
          call. = FALSE)
   }
   if (!contemporaneous %in% c("fixed", "default")) {
-    stop("build_mlvar_bayes() implements contemporaneous = \"fixed\" only.",
+    stop("fit_mlvar_bayes() implements contemporaneous = \"fixed\" only.",
          call. = FALSE)
   }
   stopifnot(is.data.frame(data) || is.matrix(data))
@@ -243,6 +244,11 @@ build_mlvar_bayes <- function(data, vars, id,
   attr(nets, "standardize") <- scale
   attr(nets, "scale")       <- scale
   attr(nets, "scaleWithin") <- scaleWithin
+  attr(nets, "config")      <- list(
+    engine = "bayes", estimator = "native", temporal = temporal,
+    contemporaneous = contemporaneous, residual = residual, lags = 1L,
+    scale = scale, scaleWithin = scaleWithin, impute = isTRUE(impute)
+  )
   attr(nets, "mcmc")        <- list(n_iter = n_iter, n_burnin = n_burnin,
                                     n_chains = n_chains, thin = thin,
                                     n_draws = dim(post$B)[3])
@@ -264,7 +270,7 @@ build_mlvar_bayes <- function(data, vars, id,
 #' *consecutive* measurement occasions (occasion index differing by exactly 1)
 #' within the same (id, day) block, so missing occasions do not create spurious
 #' lag-1 pairs across a gap (matching Mplus's `&1` operator and the frequentist
-#' `build_mlvar()` beep-grid augmentation). With `tinterval`, a continuous time
+#' `fit_mlvar()` beep-grid augmentation). With `tinterval`, a continuous time
 #' column is first binned onto a regular grid of that width (Mplus `TINTERVAL`),
 #' the resulting integer bin becomes the occasion index, and rows falling in the
 #' same (id, day, bin) are collapsed to the first observation.
@@ -414,7 +420,7 @@ build_mlvar_bayes <- function(data, vars, id,
   if (N < 2L * p + 1L) {
     stop("Bayesian mlVAR (temporal = \"fixed\") needs at least ", 2L * p + 1L,
          " subjects for p = ", p, " to estimate the between-subjects covariance; ",
-         "with fewer subjects use build_var_bayes() for a single-level VAR.",
+         "with fewer subjects use fit_var_bayes() for a single-level VAR.",
          call. = FALSE)
   }
 
@@ -977,7 +983,7 @@ coefs.net_mlvar_bayes <- function(x, ...) attr(x, "coefs")
 
 #' Print method for net_mlvar_bayes
 #'
-#' @param x A `net_mlvar_bayes` object from [build_mlvar_bayes()].
+#' @param x A `net_mlvar_bayes` object from [fit_mlvar_bayes()].
 #' @param digits Digits for printed network matrices.
 #' @param ... Unused.
 #' @return Invisibly returns `x`.
@@ -988,7 +994,7 @@ print.net_mlvar_bayes <- function(x, digits = 2, ...) {
   mc <- attr(x, "mcmc")
   n_sig <- sum(cf$significant, na.rm = TRUE)
   ttype <- attr(x, "temporal_type") %||% "fixed"
-  cat(sprintf(paste0("Bayesian mlVAR (Mplus DSEM equivalent, temporal = %s): ",
+  cat(sprintf(paste0("Bayesian mlVAR (Mplus DSEM-targeted, temporal = %s): ",
                      "%d subjects, %d observations, %d variables\n"),
               ttype, attr(x, "n_subjects"), attr(x, "n_obs"), d))
   cat(sprintf("  MCMC: %d chains x %d iter (%d burn-in), %d draws | max PSR = %.3f\n",

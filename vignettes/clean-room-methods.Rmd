@@ -1,11 +1,12 @@
 ---
-title: "11. Package overview: a clean-room methods tour"
+title: "10. Clean-room design"
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 2
+bibliography: references.bib
+link-citations: true
 vignette: >
-  %\VignetteIndexEntry{11. Package overview: a clean-room methods tour}
+  %\VignetteIndexEntry{10. Clean-room design}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,403 +16,73 @@ knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
   fig.width = 7, fig.height = 5.5
 )
-```
-
-# Introduction
-
-Idiographic science treats the individual — not the group average — as the
-unit of analysis (Molenaar, 2004). Intensive longitudinal designs such as
-experience sampling (ESM), ecological momentary assessment (EMA), and diary
-studies produce the many-occasions-per-person data this paradigm requires,
-and dynamic network models translate those repeated measurements into
-interpretable structures: *temporal* networks of lagged, directed effects,
-*contemporaneous* networks of same-occasion partial associations, and
-*between-person* networks of stable individual differences (Epskamp,
-Waldorp, Mõttus, & Borsboom, 2018).
-
-The `idiographic` package implements the principal estimators of this
-literature — ordinary and regularized vector autoregression (VAR), multilevel
-VAR, Bayesian dynamic structural equation modeling (DSEM), unified structural
-equation modeling (uSEM), and Group Iterative Multiple Model Estimation
-(GIMME) — together with the methodological workflow that surrounds them:
-preprocessing audits, rolling-window (time-varying) estimation, and
-structured model comparison. Every estimator is one verb with named arguments; every
-result answers questions through the same tidy accessors: `edges()`,
-`nodes()`, `coefs()`, `matrices()`, `summary()`, and `plot()`.
-
-# Clean-room implementation
-
-All estimators in `idiographic` are **clean-room reimplementations**: each
-was written from the published algorithm — the estimating equations, model
-specification, and selection criteria described in the methodological
-literature — rather than by wrapping an existing package. Correctness is then
-established empirically, by demonstrating numerical equivalence against the
-reference implementation on shared data:
-
-| Estimator | Method | Reference implementation | Agreement |
-|---|---|---|---|
-| `graphical_var()` | Regularized graphical VAR (graphical lasso + EBIC) | `graphicalVAR` | ~1e-10 |
-| `build_mlvar()` | Two-step multilevel VAR (`lmer` fixed effects) | `mlVAR` (`estimator = "lmer"`) | machine precision |
-| `build_mlvar_bayes()` | Bayesian multilevel VAR / DSEM | Mplus 9 DSEM; independent Stan/JAGS | Monte Carlo error |
-| `build_var_bayes()` | Bayesian VAR(1), Normal-inverse-Wishart | Mplus 9 `ESTIMATOR = BAYES` | ~1e-3 |
-| `build_gimme()` | GIMME group + individual search | `gimme` (its own bundled data) | exact path sets and coefficients |
-| internal graphical lasso | Friedman, Hastie, & Tibshirani (2008) | `glasso` (KKT-checked) | ~1e-11 |
-
-Two properties follow from this design. First, the runtime dependency
-footprint is minimal — the package imports only `stats`, `utils`, `lme4`,
-and `lavaan`; the reference packages are needed solely to regenerate
-validation fixtures. Second, the Bayesian DSEM estimator reproduces the
-two-level Bayesian VAR with latent mean centering that Mplus fits under
-`TYPE = TWOLEVEL; ESTIMATOR = BAYES` (Asparouhov, Hamaker, & Muthén, 2018)
-**without an Mplus installation**.
-
-# The empirical example
-
-Throughout this vignette we analyze the self-regulated learning (SRL)
-experience-sampling data from Chapter 20 of the *Learning Analytics Methods*
-book: 36 students each reported nine SRL indicators on 156 occasions. The
-panel is imported directly from the lamethods data repository:
-
-```{r import}
-library(rio)
 library(idiographic)
-
-df <- import("https://github.com/lamethods/data2/raw/main/srl/srl.RDS")
-
-nrow(df)
-length(unique(df$name))
-```
-
-Rows arrive ordered by student and, within student, by occasion, so the
-estimators form lag-1 pairs from consecutive rows within each `id` — no
-manual sorting or indexing is required. (The same panel, tidied to the nine
-SRL indicators with an explicit `day` occasion index, ships with the package
-as `data(srl)` for offline use.)
-
-We follow the package convention of a focused five-indicator set so printed
-networks stay readable, and use `Grace` for the single-person analyses:
-
-```{r vars}
-vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+data(srl)
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-# 1. Preprocessing audit — `audit_preprocess()`
+`idiographic` is designed as a clean-room implementation of common idiographic network estimators. The package exposes a uniform R interface and tidy accessors while keeping the estimands aligned with the external methods it validates against: ordinary VAR, graphical VAR, mlVAR, Bayesian/DSEM, uSEM/GIMME, rolling windows, model comparison, stability, and forecasting. This vignette documents the design logic rather than introducing a new estimator.
 
-Dynamic network estimates are only as sound as the lag-1 design behind them.
-`audit_preprocess()` constructs the exact lagged design the estimators use
-and reports compliance, missingness, day-boundary drops, linear trends,
-near-unit-root persistence, and split-half drift — making the modeling input
-explicit before any model is fit.
+# Design principles
+
+A clean-room implementation should reproduce the statistical estimand without copying an external package's internals. For `idiographic`, that means explicit lag construction, standardized accessors, shared print and plot conventions, and tests against reference behaviour where possible. The package separates temporal, contemporaneous, and between-person layers because their interpretations differ [@epskamp2018mlvar].
+
+The accessor contract is deliberately small. `summary()` reports network-level density and signed-edge counts. `edges()` returns one row per edge. `coefs()` includes full coefficient cells when available. `nodes()` summarizes strength, out-strength, in-strength, and self-loops. `matrices()` returns the estimator matrices. This common surface makes estimator differences visible without erasing them.
+
+# Method coverage
+
+Ordinary VAR is the unregularized single-person baseline [@bringmann2013]. Graphical VAR adds LASSO and graphical-lasso regularization with EBIC model selection. mlVAR estimates average within-person temporal and contemporaneous layers plus a between-person network [@epskamp2018mlvar]. Bayesian VAR and DSEM add posterior uncertainty and Mplus-oriented dynamic SEM links. uSEM and GIMME use SEM path vocabularies, with GIMME searching for group and individual paths.
+
+# Worked validation surface
+
+The same `srl` input can be audited and passed to multiple estimators through a common interface.
 
 ```{r audit}
-audit <- audit_preprocess(df, vars = vars, id = "name")
-
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+audit <- preprocess(srl, vars = vars, id = "name", min_obs = 100)
 audit
 ```
 
-The subject-by-variable diagnostics are a tidy table:
+The audit reports 5548 retained lagged pairs and no unit-root or zero-variance flags. This is the common preprocessing surface for the estimator vignettes.
 
-```{r audit-table}
-head(as.data.frame(audit))
-```
-
-# 2. Ordinary VAR — `build_var()`
-
-The transparent baseline: each variable is regressed on an intercept and the
-lag-1 values of all variables by ordinary least squares, and the residual
-concentration matrix yields the contemporaneous partial-correlation network.
-Passing `subject` selects one person's series — the caller never slices the
-data frame.
-
-```{r var}
-var_fit <- build_var(df, vars = vars, id = "name", subject = "Grace",
-                     scale = TRUE)
-
-var_fit
-```
-
-```{r var-tables}
-head(edges(var_fit))
-
+```{r fit-two}
+var_fit <- fit_var(srl, vars = vars, id = "name", subject = "Grace",
+                   scale = TRUE)
+gvar_fit <- fit_graphical_var(srl, vars = vars, id = "name", subject = "Grace",
+                              n_lambda = 8, gamma = 0)
 summary(var_fit)
+summary(gvar_fit)
 ```
+
+The two summaries expose the design contrast. OLS reports full temporal and contemporaneous density with mean absolute weights 0.075 and 0.160. Graphical VAR reports zero temporal edges and three contemporaneous edges. The same accessor shape makes the regularization consequence explicit.
+
+```{r matrices}
+head(edges(var_fit), 8)
+edges(gvar_fit)
+```
+
+The ordinary VAR edge table contains small lagged effects such as monitoring to later value (−0.160) and planning to later effort (0.159). The graphical VAR retains only contemporaneous monitoring–effort, efficacy–monitoring, and planning–effort edges. A temporal edge `from -> to` means `from` at occasion $t-1$ predicts `to` at occasion $t$; a contemporaneous graphical VAR edge is an undirected partial correlation.
+
+# Validation boundaries
+
+The package can validate deterministic estimators against external results more directly than stochastic or external-backend estimators. Bayesian estimators require Monte Carlo tolerances. Mplus-backed functions require licensed software and file-based workflows. uSEM and GIMME depend on SEM convergence and search behaviour. Stability and forecast helpers are experimental diagnostics without a single canonical reference implementation.
+
+# Visualization
 
 ```{r plot-var, eval=has_cograph}
 plot(var_fit)
 ```
 
-# 3. Graphical VAR — `graphical_var()`
-
-The regularized counterpart (Epskamp et al., 2018): lasso penalties on the
-temporal coefficients and the contemporaneous concentration matrix, with the
-penalty pair selected by the extended Bayesian information criterion (Chen &
-Chen, 2008). Sparsity — cells estimated as exactly zero — is the point of
-the method.
-
-```{r gvar}
-gvar_fit <- graphical_var(df, vars = vars, id = "name", subject = "Grace",
-                          n_lambda = 12, gamma = 0)
-
-gvar_fit
-```
-
-Fixing a penalty instead of searching it (e.g. `lambda_beta = 0.1`)
-reproduces published fixed-penalty analyses and collapses the EBIC grid.
+The ordinary VAR plot shows the full two-layer network used as the transparent baseline.
 
 ```{r plot-gvar, eval=has_cograph}
-plot(gvar_fit, layer = "temporal")
+plot(gvar_fit, layer = "contemporaneous")
 ```
 
-# 4. One network per person — `build_var_each()` / `graphical_var_each()`
+The graphical VAR plot shows the sparse selected contemporaneous layer, making the clean-room regularization result visually inspectable.
 
-When the analysis target is the idiographic map of *every* individual, fit
-one model per person. The collection prints a per-cohort summary and plots
-any subject by name.
+# Caveats
 
-```{r var-each}
-var_each <- build_var_each(df, vars = vars, id = "name", scale = TRUE)
-
-var_each
-```
-
-```{r plot-var-each, eval=has_cograph}
-plot(var_each, subject = "Grace")
-```
-
-`graphical_var_each()` does the same with sparse estimation; here on a
-four-student subsample for speed:
-
-```{r gvar-each}
-students4 <- subset(df, name %in% c("Grace", "Eve", "Aisha", "Bob"))
-
-gvar_each <- graphical_var_each(students4, vars = vars, id = "name",
-                                n_lambda = 8, gamma = 0)
-
-gvar_each
-```
-
-# 5. Multilevel VAR — `build_mlvar()`
-
-The multilevel VAR of Bringmann et al. (2013) and Epskamp et al. (2018)
-decomposes the panel into three group-level networks — the average
-within-person temporal network, the within-person contemporaneous network,
-and the between-person network of person means — estimated with `lme4` mixed
-models. This estimator matches `mlVAR::mlVAR(estimator = "lmer")` to machine
-precision.
-
-```{r mlvar}
-mlvar_fit <- build_mlvar(df, vars = vars, id = "name", standardize = TRUE)
-
-mlvar_fit
-```
-
-```{r mlvar-tables}
-head(edges(mlvar_fit))
-
-summary(mlvar_fit)
-```
-
-```{r plot-mlvar, eval=has_cograph}
-plot(mlvar_fit, layer = "between")
-```
-
-# 6. Bayesian multilevel VAR / DSEM — `build_mlvar_bayes()`
-
-A native Bayesian two-level VAR(1) with latent mean centering — the model
-Mplus fits as DSEM (Asparouhov et al., 2018) — estimated by a pure-R
-conjugate Gibbs sampler with Mplus's own priors (`N(0, ∞)` on coefficients
-and means, improper inverse-Wishart on covariance blocks; reported estimates
-are posterior medians). Convergence is monitored with the potential scale
-reduction factor across chains.
-
-```{r mlvar-bayes}
-bayes_fit <- build_mlvar_bayes(df, vars = vars, id = "name",
-                               n_iter = 2000, n_chains = 2, seed = 1)
-
-bayes_fit
-```
-
-`coefs()` returns posterior medians with posterior SDs, credible intervals,
-and one-sided posterior p-values:
-
-```{r mlvar-bayes-coefs}
-head(coefs(bayes_fit))
-```
-
-The full DSEM extensions — person-specific temporal matrices
-(`temporal = "random"`), person-specific residual covariances
-(`residual = "random"`), within-model imputation of missing observations
-(`impute = TRUE`), and Mplus-style time-interval binning (`tinterval`) — are
-available through arguments. Identifying the random-effect covariance under
-the improper prior requires at least `2(p + p²) + 1` subjects, so with 36
-students we demonstrate random slopes on a three-variable system (needs 25):
-
-```{r mlvar-bayes-random}
-dsem_fit <- build_mlvar_bayes(df,
-                              vars = c("planning", "monitoring", "effort"),
-                              id = "name", temporal = "random",
-                              n_iter = 2000, n_chains = 2, seed = 1)
-
-dsem_fit
-```
-
-# 7. Bayesian single-subject VAR — `build_var_bayes()`
-
-The single-level analogue: an exact Normal-inverse-Wishart two-block sampler
-for one person's VAR(1), validated against Mplus `ESTIMATOR = BAYES`.
-
-```{r var-bayes}
-var_bayes_fit <- build_var_bayes(df, vars = vars, id = "name",
-                                 subject = "Grace", n_iter = 2000, seed = 1)
-
-var_bayes_fit
-```
-
-# 8. The Mplus backend — `build_mlvar_mplus()`
-
-For laboratories that hold an Mplus license, `build_mlvar_mplus()` drives the
-genuine Mplus DSEM run through `MplusAutomation` and returns the same tidy
-result classes, so native and Mplus estimates are directly comparable. It is
-shown, not run, because it requires the external program:
-
-```{r mplus, eval=FALSE}
-mplus_fit <- build_mlvar_mplus(df, vars = vars, id = "name")
-```
-
-# 9. Unified SEM — `build_usem()`
-
-uSEM (Kim, Zhu, Chang, Bentler, & Ernst, 2007) places lagged and
-contemporaneous paths in a single structural equation model per person,
-estimated with `lavaan`. Contemporaneous paths are directed, which
-distinguishes it from the partial-correlation representation of the VAR
-family.
-
-```{r usem}
-students8 <- subset(df, name %in% c("Grace", "Eve", "Aisha", "Alice",
-                                    "Bob", "Diana", "Frank", "Heidi"))
-
-usem_fit <- build_usem(students8, vars = vars, id = "name",
-                       temporal = "ar", contemporaneous = "none",
-                       residual_cov = TRUE, seed = 1)
-
-usem_fit
-```
-
-# 10. GIMME — `build_gimme()`
-
-GIMME (Gates & Molenaar, 2012) searches each individual's uSEM and promotes
-paths carried by a sufficient proportion of the sample to the group level,
-yielding a group structure plus person-specific elaborations. The
-implementation replicates the `gimme` package exactly — identical path sets
-and coefficients on its own bundled benchmark data.
-
-```{r gimme}
-gimme_fit <- build_gimme(students8, vars = vars, id = "name",
-                         ar = TRUE, groupcutoff = 0.75, seed = 1)
-
-gimme_fit
-```
-
-```{r gimme-tables}
-head(edges(gimme_fit))
-```
-
-`plot()` draws the canonical GIMME display: dashed lag-1 edges, solid
-contemporaneous edges, width proportional to the share of subjects carrying
-the path, black for group-level paths.
-
-```{r plot-gimme, eval=has_cograph}
-plot(gimme_fit)
-```
-
-# 11. Rolling networks — `rolling_var()` / `rolling_graphical_var()`
-
-Rolling-window estimation asks whether one person's dynamics are stationary
-over the study period: the estimator is refit on a moving slice of the
-series, and the result is a tidy table of window-by-edge estimates.
-
-```{r rolling}
-rolling_fit <- rolling_var(df, vars = vars, id = "name", subject = "Grace",
-                           window_size = 50, step = 20, scale = TRUE,
-                           keep_fits = TRUE)
-
-rolling_fit
-
-head(as.data.frame(rolling_fit))
-```
-
-```{r plot-rolling, eval=has_cograph}
-plot(rolling_fit, fit = 1, layer = "temporal")
-```
-
-`rolling_graphical_var()` provides the sparse analogue with the same
-interface.
-
-# 12. Model comparison — `compare_idiographic()`
-
-`compare_idiographic()` runs several estimators on the same data and stacks
-their summaries into one comparison table, so estimators are read against
-each other rather than assembled by hand. Per-estimator arguments pass
-through `estimator_args`.
-
-```{r compare}
-cmp <- compare_idiographic(
-  df, vars = vars, id = "name",
-  estimators = c("var", "graphical_var"),
-  estimator_args = list(
-    var = list(subject = "Grace", scale = TRUE),
-    graphical_var = list(subject = "Grace", n_lambda = 8, gamma = 0)
-  )
-)
-
-cmp
-
-as.data.frame(cmp)
-```
-
-# One grammar for every result
-
-Every estimator above returned an object obeying the same contract: `print`
-shows the estimated networks; `edges()`, `nodes()`, `coefs()`, and
-`matrices()` return plain data frames; `summary()` condenses the fit;
-`plot()` draws it (via the optional `cograph` package); and `as_netobject()`
-converts any result into a network object for further graph-analytic work.
-The user never indexes into a result object — when a subset is needed, it is
-an argument, not a bracket.
+Uniform accessors do not imply identical estimands. A GIMME prevalence edge, an mlVAR fixed effect, a graphical VAR partial correlation, and a forecast residual answer different questions. Clean-room validation should therefore be read layer by layer and estimator by estimator, with the primary literature defining the target of reproduction.
 
 # References
-
-Asparouhov, T., Hamaker, E. L., & Muthén, B. (2018). Dynamic structural
-equation models. *Structural Equation Modeling, 25*(3), 359–388.
-
-Bringmann, L. F., Vissers, N., Wichers, M., Geschwind, N., Kuppens, P.,
-Peeters, F., Borsboom, D., & Tuerlinckx, F. (2013). A network approach to
-psychopathology: New insights into clinical longitudinal data. *PLoS ONE,
-8*(4), e60188.
-
-Chen, J., & Chen, Z. (2008). Extended Bayesian information criteria for
-model selection with large model spaces. *Biometrika, 95*(3), 759–771.
-
-Epskamp, S., Waldorp, L. J., Mõttus, R., & Borsboom, D. (2018). The Gaussian
-graphical model in cross-sectional and time-series data. *Multivariate
-Behavioral Research, 53*(4), 453–480.
-
-Friedman, J., Hastie, T., & Tibshirani, R. (2008). Sparse inverse covariance
-estimation with the graphical lasso. *Biostatistics, 9*(3), 432–441.
-
-Gates, K. M., & Molenaar, P. C. M. (2012). Group search algorithm recovers
-effective connectivity maps for individuals in homogeneous and heterogeneous
-samples. *NeuroImage, 63*(1), 310–319.
-
-Kim, J., Zhu, W., Chang, L., Bentler, P. M., & Ernst, T. (2007). Unified
-structural equation modeling approach for the analysis of multisubject fMRI
-data. *Human Brain Mapping, 28*(2), 85–93.
-
-Molenaar, P. C. M. (2004). A manifesto on psychology as idiographic science:
-Bringing the person back into scientific psychology, this time forever.
-*Measurement, 2*(4), 201–218.
-
-*Learning Analytics Methods*, Book 2, Chapter 20: Vector autoregression.
-<https://lamethods.org/book2/chapters/ch20-var/ch20-var.html> (source of the
-SRL data).

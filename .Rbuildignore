@@ -13,6 +13,14 @@
 ^HANDOFF\.md$
 ^LEARNINGS\.md$
 ^CHANGES\.md$
+^GOAL\.md$
+^MPLUS-EQUIVALENCE\.md$
+^REAL-DATA-VALIDATION\.md$
+^METHOD_COVERAGE_REPORT\.md$
+^tests/testthat/test-expanded-equivalence\.R$
+^tests/testthat/test-mlvar-real20-equivalence\.R$
+^tests/testthat/test-usem-equivalence\.R$
+^validation$
 ^LICENSE\.md$
 ^\.github$
 ^\.claude$

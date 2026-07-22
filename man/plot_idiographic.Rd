@@ -15,15 +15,15 @@
 \alias{plot.stability_result}
 \title{Plot an idiographic network result}
 \usage{
-\method{plot}{var_result}(x, layer = NULL, ...)
+\method{plot}{var_result}(x, layer = NULL, mixed = FALSE, ...)
 
-\method{plot}{gvar_result}(x, layer = NULL, ...)
+\method{plot}{gvar_result}(x, layer = NULL, mixed = FALSE, ...)
 
-\method{plot}{var_bayes_result}(x, layer = NULL, ...)
+\method{plot}{var_bayes_result}(x, layer = NULL, mixed = FALSE, ...)
 
-\method{plot}{net_mlvar}(x, layer = NULL, ...)
+\method{plot}{net_mlvar}(x, layer = NULL, mixed = FALSE, ...)
 
-\method{plot}{net_usem}(x, layer = NULL, ...)
+\method{plot}{net_usem}(x, layer = NULL, mixed = FALSE, ...)
 
 \method{plot}{net_gimme}(x, layer = NULL, weight = c("prop", "coef"), ...)
 
@@ -45,7 +45,15 @@
 \item{layer}{Optional network name to draw on its own. \code{NULL} (default) draws
 the whole result. Available names are reported if an unknown one is given.}
 
-\item{...}{Further arguments forwarded to \code{\link[cograph:splot]{cograph::splot()}}.}
+\item{mixed}{If \code{TRUE}, draw two layers as a single mixed network via
+\code{cograph::plot_mixed_network()} — the directed layer as curved arrows and
+the undirected layer as straight edges. For VAR, graphical VAR, and
+multilevel VAR this combines the directed temporal network with the
+undirected contemporaneous network; for uSEM it combines the directed
+contemporaneous paths with the undirected residual covariances. Default
+\code{FALSE} draws one panel per layer.}
+
+\item{...}{Further arguments forwarded to \code{cograph::splot()}.}
 
 \item{weight}{For GIMME: \code{"prop"} (proportion of subjects, default) or
 \code{"coef"} (group-average coefficient) for edge width.}
@@ -61,7 +69,7 @@ Invisibly, the object that was plotted (a \code{cograph}/ggplot object).
 }
 \description{
 S3 \code{plot()} methods that render any idiographic result with
-\code{\link[cograph:splot]{cograph::splot()}}. Call \code{plot(fit)} to draw the full result (every network
+\code{cograph::splot()}. Call \code{plot(fit)} to draw the full result (every network
 panel) or pass \code{layer} to draw a single network -- \code{"temporal"},
 \code{"contemporaneous"}, \code{"between"} (mlVAR), or \code{"residual_cov"} (uSEM) -- without
 indexing into the object.
@@ -70,7 +78,7 @@ indexing into the object.
 \dontshow{if (requireNamespace("cograph", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 set.seed(1)
 d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-fit <- build_var(d, vars = c("A", "B", "C"), id = "id")
+fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
 plot(fit)
 plot(fit, layer = "temporal")
 \dontshow{\}) # examplesIf}

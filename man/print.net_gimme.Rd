@@ -28,7 +28,7 @@ panel <- data.frame(
   t  = rep(seq_len(20), 5),
   A  = rnorm(100), B = rnorm(100), C = rnorm(100)
 )
-gm <- build_gimme(panel, vars = c("A","B","C"), id = "id", time = "t")
+gm <- fit_gimme(panel, vars = c("A","B","C"), id = "id", time = "t")
 print(gm)
 }
 \dontshow{\}) # examplesIf}

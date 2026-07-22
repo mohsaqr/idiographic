@@ -23,3 +23,10 @@ A \code{data.frame} with columns \code{from}, \code{to}, \code{weight}.
 Returns a one-row-per-edge \code{data.frame} with node labels, for any
 netobject / cograph_network (or a \code{gvar_result} constituent).
 }
+\examples{
+W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+            dimnames = list(c("A", "B"), c("A", "B")))
+x <- structure(list(weights = W, method = "relative", directed = TRUE),
+               class = "cograph_network")
+extract_edges(x)
+}

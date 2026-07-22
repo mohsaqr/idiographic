@@ -16,7 +16,7 @@ A \code{netobject_group} with \verb{$temporal}, \verb{$contemporaneous}, \verb{$
 }
 \description{
 Returns the three networks as netobjects oriented for plotting
-(temporal edges run predictor -> outcome, matching \code{graphical_var}), so
+(temporal edges run predictor -> outcome, matching \code{fit_graphical_var}), so
 \code{cograph::splot()} renders them consistently. The raw \code{fit$temporal$weights}
 keep mlVAR's \verb{[outcome, predictor]} layout for equivalence.
 }

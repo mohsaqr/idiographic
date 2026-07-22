@@ -11,8 +11,9 @@
 #' @param data A `data.frame` or matrix with columns for variables and optional
 #'   id/day/beep columns.
 #' @param vars Character vector of variable names.
-#' @param estimators Character vector naming estimators to fit. Supported values
-#'   are `"var"`, `"graphical_var"`, `"mlvar"`, `"usem"`, and `"gimme"`.
+#' @param estimators Character vector naming registered network estimators to
+#'   fit. Built-in values are `"var"`, `"var_bayes"`, `"graphical_var"`,
+#'   `"mlvar"`, `"mlvar_bayes"`, `"mlvar_mplus"`, `"usem"`, and `"gimme"`.
 #' @param id Character. Name of the person-ID column, or `NULL`.
 #' @param day Character. Name of the day/session column, or `NULL`.
 #' @param beep Character. Name of the measurement-occasion column, or `NULL`.
@@ -40,7 +41,8 @@ compare_idiographic <- function(data, vars,
                                 id = NULL, day = NULL, beep = NULL,
                                 estimator_args = list(),
                                 keep_fits = FALSE) {
-  supported <- c("var", "graphical_var", "mlvar", "usem", "gimme")
+  supported <- c("var", "var_bayes", "graphical_var", "mlvar",
+                 "mlvar_bayes", "mlvar_mplus", "usem", "gimme")
   stopifnot(is.data.frame(data) || is.matrix(data))
   stopifnot(is.character(vars), length(vars) >= 2L)
   stopifnot(is.character(estimators), length(estimators) >= 1L)
@@ -117,12 +119,7 @@ compare_idiographic <- function(data, vars,
 
 #' @noRd
 .compare_fit_fun <- function(method) {
-  switch(method,
-         var = build_var,
-         graphical_var = graphical_var,
-         mlvar = build_mlvar,
-         usem = build_usem,
-         gimme = build_gimme)
+  get_estimator(method)
 }
 
 #' @noRd
@@ -169,3 +166,6 @@ as.data.frame.model_comparison <- function(x, row.names = NULL,
                                            optional = FALSE, ...) {
   x$comparison
 }
+
+#' @export
+summary.model_comparison <- function(object, ...) object$comparison

@@ -17,3 +17,10 @@ A \code{c("netobject", "cograph_network")} object.
 \description{
 Returns netobjects unchanged; promotes a bare \code{cograph_network}.
 }
+\examples{
+W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+            dimnames = list(c("A", "B"), c("A", "B")))
+x <- structure(list(weights = W, method = "relative", directed = TRUE),
+               class = "cograph_network")
+as_netobject(x)
+}

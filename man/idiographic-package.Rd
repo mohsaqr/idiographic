@@ -8,20 +8,31 @@
 \description{
 Person-specific and within-person network estimation from intensive
 longitudinal / ESM panel data: preprocessing audits
-(\code{\link[=audit_preprocess]{audit_preprocess()}}), edge-stability diagnostics
+(\code{\link[=preprocess]{preprocess()}}), edge-stability diagnostics
 (\code{\link[=estimate_stability]{estimate_stability()}}), model-comparison reports
 (\code{\link[=compare_idiographic]{compare_idiographic()}}), rolling forecast validation
 (\code{\link[=validate_forecast]{validate_forecast()}}), rolling ordinary vector autoregression
-(\code{\link[=rolling_var]{rolling_var()}}), rolling graphical vector autoregression
-(\code{\link[=rolling_graphical_var]{rolling_graphical_var()}}), ordinary vector autoregression (\code{\link[=build_var]{build_var()}}),
-graphical vector autoregression (\code{\link[=graphical_var]{graphical_var()}}), multilevel vector
-autoregression (\code{\link[=build_mlvar]{build_mlvar()}}), unified SEM (\code{\link[=build_usem]{build_usem()}}), and Group
-Iterative Multiple Model Estimation (\code{\link[=build_gimme]{build_gimme()}}). Each estimator is
-implemented clean-room and returns tidy access through \code{\link[=edges]{edges()}}, \code{\link[=coefs]{coefs()}},
-\code{\link[=nodes]{nodes()}}, and \code{\link[=summary]{summary()}}.
+(\code{\link[=fit_rolling_var]{fit_rolling_var()}}), rolling graphical vector autoregression
+(\code{\link[=fit_rolling_graphical_var]{fit_rolling_graphical_var()}}), ordinary vector autoregression (\code{\link[=fit_var]{fit_var()}}),
+graphical vector autoregression (\code{\link[=fit_graphical_var]{fit_graphical_var()}}), multilevel vector
+autoregression (\code{\link[=fit_mlvar]{fit_mlvar()}}), unified SEM (\code{\link[=fit_usem]{fit_usem()}}), Group
+Iterative Multiple Model Estimation (\code{\link[=fit_gimme]{fit_gimme()}}), and idiographic
+supervised machine-learning models (\code{\link[=fit_ml]{fit_ml()}}) for
+individualized prediction. Use \code{\link[=fit_idiographic]{fit_idiographic()}} for registry-driven
+dispatch or the direct \verb{fit_*()} functions. Every result has tidy
+\code{as.data.frame()}, \code{\link[=summary]{summary()}}, and print methods; network estimators also
+share \code{\link[=edges]{edges()}}, \code{\link[=coefs]{coefs()}}, \code{\link[=nodes]{nodes()}}, \code{\link[=matrices]{matrices()}}, and plotting methods.
+\code{\link[=equivalence]{equivalence()}} reports the exact validation scope attached to each method.
 }
-\author{
-\strong{Maintainer}: Mohammed Saqr \email{mohammed.saqr@uef.fi}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mohsaqr/idiographic}
+  \item Report bugs at \url{https://github.com/mohsaqr/idiographic/issues}
+}
 
 }
-\keyword{internal}
+\author{
+\strong{Maintainer}: Mohammed Saqr \email{mohammed.saqr@uef.fi} [copyright holder]
+
+}

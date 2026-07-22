@@ -73,14 +73,15 @@ test_that("graphicalVAR lag design matches the line-by-line fixture", {
   }
 })
 
-test_that("fixture-backed build_mlvar is cell-equivalent to mlVAR", {
+test_that("fixture-backed fit_mlvar is cell-equivalent to mlVAR", {
+  skip_unless_equivalence()
   skip_if_not_installed("mlVAR")
   source(testthat::test_path("fixtures", "equivalence-panel.R"), local = TRUE)
   d <- .fixture_equivalence_panel()
   vars <- c("A", "B", "C")
 
   fit <- suppressWarnings(
-    build_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+    fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
   )
   ref <- suppressWarnings(mlVAR::mlVAR(
     d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
@@ -100,12 +101,13 @@ test_that("fixture-backed build_mlvar is cell-equivalent to mlVAR", {
 })
 
 test_that("fixture-backed graphical_var is cell-equivalent to graphicalVAR", {
+  skip_unless_equivalence()
   skip_if_not_installed("graphicalVAR")
   source(testthat::test_path("fixtures", "equivalence-panel.R"), local = TRUE)
   d <- .fixture_equivalence_series()
   vars <- c("A", "B", "C")
 
-  fit <- graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
+  fit <- fit_graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
                        n_lambda = 12, gamma = 0.5)
   ref <- suppressWarnings(graphicalVAR::graphicalVAR(
     d[, c(vars, "id", "day", "beep")], vars = vars,

@@ -1,116 +1,77 @@
 ---
-title: "1. Getting started with idiographic"
+title: "1. idiographic"
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 3
+bibliography: references.bib
+link-citations: true
 vignette: >
-  %\VignetteIndexEntry{1. Getting started with idiographic}
+  %\VignetteIndexEntry{1. idiographic}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE,
-  warning = FALSE,
-  fig.width = 7,
-  fig.height = 5.5
+  collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE,
+  fig.width = 7, fig.height = 5.5
 )
-```
-
-`idiographic` estimates **person-specific** and **within-person** networks from
-intensive longitudinal data. It implements ordinary VAR, graphical VAR,
-subject-by-subject VARs, mlVAR, uSEM, and GIMME as clean-room estimators, plus
-rolling networks, edge stability, forecast validation, and model comparison.
-
-Every estimator returns an object that
-
-* **prints** a compact, readable summary that *shows the estimated networks*,
-* exposes **one tidy verb per question** — `edges()`, `nodes()`, `summary()`,
-  `coefs()`, `matrices()` — each returning a plain `data.frame` you print
-  directly, and
-* **plots** with a single `plot()` call.
-
-This vignette covers the shared data and the preprocessing audit. Each method
-has its own vignette:
-
-| Method | Vignette |
-|---|---|
-| Ordinary VAR | *Ordinary VAR* |
-| Graphical VAR | *Graphical VAR* |
-| One network per person | *Subject-by-subject networks* |
-| mlVAR | *Multilevel VAR (mlVAR)* |
-| uSEM | *Unified SEM (uSEM)* |
-| GIMME | *GIMME* |
-| Rolling / time-varying | *Rolling networks* |
-| Stability & forecasting | *Stability and forecast validation* |
-| Comparing estimators | *Comparing methods* |
-
-```{r libraries}
 library(idiographic)
+data(srl)
+has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
-# The data
+`idiographic` estimates person-specific and within-person networks from intensive longitudinal data. The package separates three questions that are often conflated: a single person's lagged process, the average within-person process in a panel, and between-person covariance in stable individual differences. The vignettes are ordered as a method-selection guide, starting with data auditing, then ordinary and regularized VAR, multilevel and Bayesian extensions, SEM/GIMME search, rolling networks, and clean-room design. The organizing principle is idiographic inference: parameters estimated for one person or one within-person process should not be read as interchangeable with between-person associations.
 
-The package ships the self-regulated-learning (SRL) experience-sampling data
-from Chapter 20 of the *Learning Analytics Methods* book as a ready-to-model
-dataset. Loading it needs no ordering, indexing, or column selection — the rows
-are already ordered by `name` then `day`, and `day` is a within-person occasion
-index you can hand straight to `build_usem()` or `build_gimme()`.
+# The modelling problem
+
+Let $y_{itj}$ denote variable $j$ for person $i$ at occasion $t$. The central target is the conditional relation among variables within a person's ordered series. A temporal edge `from -> to` means `from` at $t-1$ predicts `to` at $t$, holding the other lagged variables constant. A contemporaneous edge is an undirected partial correlation: the within-occasion association left after lagged predictors and the remaining variables are conditioned out [@bringmann2013; @epskamp2018mlvar].
+
+Single-subject VAR and graphical VAR estimate one parameter set for one person. Subject-network estimators repeat that single-person analysis for every person. Multilevel VAR and Bayesian DSEM estimate an average within-person dynamic system, optionally adding random effects or a between-person network. uSEM and GIMME treat the same lagged and contemporaneous relations as structural paths, with GIMME adding a group-search rule for paths shared by many people.
+
+# Method selection
+
+Ordinary VAR is the transparent baseline when one person has many occasions relative to the number of variables. Graphical VAR is preferable when sparsity is substantively defensible or the number of candidate edges is large, because EBIC-regularized LASSO and graphical-lasso estimation shrink weak temporal and contemporaneous edges to zero.
+
+Subject networks are appropriate when heterogeneity is itself the target. Multilevel VAR is appropriate when the target is an average within-person process across people and the analyst accepts partial pooling. Bayesian VAR and DSEM are appropriate when uncertainty intervals and dynamic SEM formulations are central, but their vignettes use static excerpts because full MCMC and Mplus backends are not suitable for fast vignette builds.
+
+# Data and preprocessing
+
+The package example is the `srl` data set: 36 students, 156 occasions per student, and nine self-regulated-learning indicators. The method vignettes use the same five-variable subset so that printed matrices remain readable.
 
 ```{r data}
-data(srl)
-
-summary(srl)
-```
-
-Thirty-six students each contributed 156 occasions on nine SRL indicators:
-
-```{r data-shape}
-nrow(srl)
-length(unique(srl$name))
-head(srl)
-```
-
-Throughout the method vignettes we use a focused set of five indicators so the
-printed networks stay readable; all nine are available.
-
-```{r vars}
 vars <- c("efficacy", "value", "planning", "monitoring", "effort")
 ```
 
-The chapter uses `Grace` for the single-person examples, and we keep that
-convention. Where a method needs a single series, pass `subject = "Grace"` to
-the estimator rather than slicing the data frame yourself.
-
-# Preprocessing audit
-
-Before fitting dynamic models, `audit_preprocess()` builds the same lag-1 design
-the estimators use and reports missingness, day-boundary drops, trends, AR(1)
-persistence, split-half drift, and a unit-root screen. It does not fit a
-network; it makes the modelling input explicit.
+The preprocessing audit constructs the same lag-one design used by the estimators and reports stationarity risks, missingness, and retained pairs.
 
 ```{r audit}
-audit <- audit_preprocess(srl, vars = vars, id = "name", min_obs = 100)
-
+audit <- preprocess(srl, vars = vars, id = "name", min_obs = 100)
 audit
 ```
 
-The audit's tidy tables are accessible directly — one row per
-subject-by-variable for the diagnostics, one row per subject-by-day for the
-counts:
+The audit retains 5548 lagged pairs from 5616 rows. It reports 10 trend flags, one drift flag, no high-autoregression flags, no unit-root risk, and no zero-variance variables. Those flags make stationarity an explicit modelling assumption rather than a hidden preprocessing step.
 
-```{r audit-tables}
-head(as.data.frame(audit))
+# Worked selection example
 
-head(audit$counts)
+A compact comparison of Grace's ordinary and graphical VAR shows how the package exposes model choice as a table rather than a narrative judgement.
+
+```{r compare}
+cmp <- compare_idiographic(
+  srl, vars = vars, id = "name",
+  estimators = c("var", "graphical_var"),
+  estimator_args = list(
+    var = list(subject = "Grace", scale = TRUE),
+    graphical_var = list(subject = "Grace", n_lambda = 8, gamma = 0)
+  )
+)
+as.data.frame(cmp)
 ```
 
-# Where to go next
+The OLS VAR has full temporal and contemporaneous density, with mean absolute temporal weight 0.075 and contemporaneous weight 0.160. The graphical VAR keeps no temporal edges and three contemporaneous edges, reducing the contemporaneous density to 0.30. The choice is therefore not about which model is more elaborate; it is whether Grace's weak lagged coefficients should be retained as estimates or treated as regularization noise.
 
-Pick the method vignette that matches your question. A good first stop is
-*Ordinary VAR*: it is the transparent OLS baseline that every other temporal
-estimator can be read against.
+# Caveats
+
+All methods require an explicit alignment between the scientific estimand and the data-generating design. A single-person network is not a population network, a multilevel fixed effect is not an individual map, and a between-person edge is not a within-person mechanism. Stationarity, equal spacing, and missingness assumptions should be checked before model interpretation. Sparse estimators improve selection stability but bias surviving weights downward; unregularized estimators expose every coefficient but can overstate weak edges in small samples.
+
+# References

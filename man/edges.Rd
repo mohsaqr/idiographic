@@ -9,29 +9,79 @@
 \alias{edges.gvar_result}
 \alias{edges.net_mlvar}
 \alias{edges.net_gimme}
+\alias{edges.var_list}
+\alias{edges.gvar_list}
 \title{Tidy edge table for any idiographic result}
 \usage{
-\method{edges}{net_usem}(x, sort_by = "weight", include_self = FALSE, ...)
+\method{edges}{net_usem}(
+  x,
+  sort_by = "weight",
+  include_self = FALSE,
+  network = NULL,
+  n = NULL,
+  ...
+)
 
-\method{edges}{var_result}(x, sort_by = "weight", include_self = FALSE, ...)
+\method{edges}{var_result}(
+  x,
+  sort_by = "weight",
+  include_self = FALSE,
+  network = NULL,
+  n = NULL,
+  ...
+)
 
 edges(x, ...)
 
-\method{edges}{netobject}(x, sort_by = "weight", include_self = FALSE, ...)
+\method{edges}{netobject}(
+  x,
+  sort_by = "weight",
+  include_self = FALSE,
+  network = NULL,
+  n = NULL,
+  ...
+)
 
-\method{edges}{netobject_group}(x, sort_by = "weight", include_self = FALSE, ...)
+\method{edges}{netobject_group}(
+  x,
+  sort_by = "weight",
+  include_self = FALSE,
+  network = NULL,
+  n = NULL,
+  ...
+)
 
-\method{edges}{gvar_result}(x, sort_by = "weight", include_self = FALSE, ...)
+\method{edges}{gvar_result}(
+  x,
+  sort_by = "weight",
+  include_self = FALSE,
+  network = NULL,
+  n = NULL,
+  ...
+)
 
-\method{edges}{net_mlvar}(x, sort_by = "weight", include_self = FALSE, ...)
+\method{edges}{net_mlvar}(
+  x,
+  sort_by = "weight",
+  include_self = FALSE,
+  network = NULL,
+  n = NULL,
+  ...
+)
 
 \method{edges}{net_gimme}(
   x,
   sort_by = "weight",
   include_self = TRUE,
   weight = c("prop", "coef"),
+  network = NULL,
+  n = NULL,
   ...
 )
+
+\method{edges}{var_list}(x, ...)
+
+\method{edges}{gvar_list}(x, ...)
 }
 \arguments{
 \item{x}{A \code{gvar_result}, \code{net_mlvar}, \code{net_gimme}, \code{netobject}, or
@@ -41,6 +91,15 @@ edges(x, ...)
 
 \item{include_self}{Keep autoregressive self-loops? Default \code{FALSE}
 (\code{TRUE} for GIMME, where the autoregression is the point).}
+
+\item{network}{Optional character vector selecting the network layer(s) to
+return (e.g. \code{"temporal"}, \code{"contemporaneous"}, \code{"between"}). Default
+\code{NULL} returns every layer. An unknown layer errors and lists the available
+ones.}
+
+\item{n}{Optional integer. Keep only the first \code{n} edges, which are the
+strongest by absolute weight when \code{sort_by = "weight"}. Default \code{NULL}
+returns all edges.}
 
 \item{...}{Passed to methods.}
 
@@ -62,7 +121,7 @@ undirected networks (contemporaneous, between) report each pair once.
 \donttest{
 set.seed(1)
 d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-fit <- graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
+fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
 edges(fit)            # tidy: network / from / to / weight
 }
 \dontshow{\}) # examplesIf}

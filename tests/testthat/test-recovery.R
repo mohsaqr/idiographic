@@ -1,6 +1,6 @@
-test_that("build_var recovers planted temporal network signs and magnitudes", {
+test_that("fit_var recovers planted temporal network signs and magnitudes", {
   d <- synth_planted_var(seed = 901)
-  fit <- build_var(d, vars = c("A", "B", "C"), id = "id",
+  fit <- fit_var(d, vars = c("A", "B", "C"), id = "id",
                    day = "day", beep = "beep",
                    scale = FALSE, center_within = FALSE)
   B <- fit$temporal
@@ -18,7 +18,7 @@ test_that("build_var recovers planted temporal network signs and magnitudes", {
 
 test_that("graphical_var recovers planted temporal network with fixed penalties", {
   d <- synth_planted_var(seed = 901)
-  fit <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                        day = "day", beep = "beep",
                        scale = FALSE, center_within = FALSE,
                        lambda_beta = 0.02, lambda_kappa = 0.02,
@@ -34,13 +34,13 @@ test_that("graphical_var recovers planted temporal network with fixed penalties"
   expect_lt(abs(B["B", "C"]), 0.12)
 })
 
-test_that("build_mlvar recovers planted fixed temporal effects", {
+test_that("fit_mlvar recovers planted fixed temporal effects", {
   skip_if_not_installed("lme4")
   skip_if_not_installed("corpcor")
   skip_if_not_installed("data.table")
   d <- synth_planted_panel(n_id = 12, days = 5, beeps = 20, seed = 903,
                            noise_sd = 0.60, between_sd = 0.20)
-  fit <- suppressWarnings(build_mlvar(d, vars = c("A", "B"), id = "id",
+  fit <- suppressWarnings(fit_mlvar(d, vars = c("A", "B"), id = "id",
                                       day = "day", beep = "beep",
                                       scale = FALSE))
   B <- fit$temporal$weights
@@ -54,7 +54,7 @@ test_that("build_mlvar recovers planted fixed temporal effects", {
 test_that("fixed uSEM recovers planted temporal paths", {
   skip_if_not_installed("lavaan")
   d <- synth_planted_panel(n_id = 5, days = 8, beeps = 25, seed = 902)
-  fit <- build_usem(d, vars = c("A", "B"), id = "id",
+  fit <- fit_usem(d, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep",
                     temporal = "all", contemporaneous = "none",
                     residual_cov = TRUE)
@@ -70,7 +70,7 @@ test_that("fixed uSEM recovers planted temporal paths", {
 test_that("GIMME recovers planted group-level lagged paths", {
   skip_if_not_installed("lavaan")
   d <- synth_planted_panel(n_id = 5, days = 8, beeps = 25, seed = 902)
-  fit <- suppressWarnings(suppressMessages(build_gimme(
+  fit <- suppressWarnings(suppressMessages(fit_gimme(
     d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
     VAR = TRUE, groupcutoff = 0.60, n_excellent = 1, seed = 1
   )))

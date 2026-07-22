@@ -1,7 +1,7 @@
-test_that("build_gimme runs and returns a net_gimme object", {
+test_that("fit_gimme runs and returns a net_gimme object", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
-  gm <- build_gimme(d, vars = c("A", "B"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep", seed = 1)
   expect_s3_class(gm, "net_gimme")
   expect_equal(gm$n_subjects, 4L)
@@ -72,7 +72,7 @@ test_that("VAR = TRUE searches lagged paths only (no directed contemporaneous)",
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 5, days = 3, beeps = 12, vars = c("A", "B", "C"),
                    seed = 8)
-  gm <- build_gimme(d, vars = c("A", "B", "C"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B", "C"), id = "id",
                     day = "day", beep = "beep", VAR = TRUE, seed = 1)
   # The contemporaneous (directed) path-count block must be entirely zero;
   # contemporaneous relations become residual covariances under VAR.
@@ -96,9 +96,10 @@ test_that("VAR = TRUE searches lagged paths only (no directed contemporaneous)",
   }
 })
 
-test_that("build_gimme covers the full gimme::gimme() argument surface", {
+test_that("fit_gimme covers the full gimme::gimme() argument surface", {
+  skip_unless_equivalence()
   skip_if_not_installed("gimme")
-  missing <- setdiff(names(formals(gimme::gimme)), names(formals(build_gimme)))
+  missing <- setdiff(names(formals(gimme::gimme)), names(formals(fit_gimme)))
   expect_length(missing, 0L)
 })
 
@@ -106,7 +107,7 @@ test_that("I/O and sub-feature parity args are accepted (no unused-arg error)", 
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_no_error(
-    gm <- suppressWarnings(suppressMessages(build_gimme(
+    gm <- suppressWarnings(suppressMessages(fit_gimme(
       d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
       out = tempdir(), sep = ",", header = TRUE, sub_method = "Walktrap",
       conv_length = 16, lv_estimator = "miiv", diagnos = FALSE, seed = 1)))
@@ -114,7 +115,7 @@ test_that("I/O and sub-feature parity args are accepted (no unused-arg error)", 
   expect_s3_class(gm, "net_gimme")
   # plot = TRUE is accepted but emits a message pointing to plot_gimme()
   expect_message(
-    suppressWarnings(build_gimme(d, vars = c("A", "B"), id = "id",
+    suppressWarnings(fit_gimme(d, vars = c("A", "B"), id = "id",
                                  day = "day", beep = "beep", plot = TRUE,
                                  seed = 1)),
     "plot_gimme"
@@ -123,30 +124,30 @@ test_that("I/O and sub-feature parity args are accepted (no unused-arg error)", 
 
 test_that("unsupported gimme modes error clearly", {
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
-  expect_error(build_gimme(d, vars = c("A", "B"), id = "id", subgroup = TRUE),
+  expect_error(fit_gimme(d, vars = c("A", "B"), id = "id", subgroup = TRUE),
                "subgrouping")
-  expect_error(build_gimme(d, vars = c("A", "B"), id = "id", outcome = "A"),
+  expect_error(fit_gimme(d, vars = c("A", "B"), id = "id", outcome = "A"),
                "outcome")
-  expect_error(build_gimme(d, vars = c("A", "B"), id = "id",
+  expect_error(fit_gimme(d, vars = c("A", "B"), id = "id",
                            lv_model = "f =~ A + B"), "lv_model")
-  expect_error(build_gimme(d, vars = c("A", "B"), id = "id", ms_allow = TRUE),
+  expect_error(fit_gimme(d, vars = c("A", "B"), id = "id", ms_allow = TRUE),
                "ms_allow")
-  expect_error(build_gimme(d, vars = c("A", "B"), id = "id",
-                           group_correct = "none"), "Bonferoni")
+  expect_error(fit_gimme(d, vars = c("A", "B"), id = "id",
+                           group_correct = "none"), "Bonferroni Group")
 })
 
 test_that("dir_prop_cutoff = 0L (default-equivalent integer) is accepted", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_no_error(suppressWarnings(suppressMessages(
-    build_gimme(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
+    fit_gimme(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
                 dir_prop_cutoff = 0L, seed = 1))))
 })
 
 test_that("non-default inert sub-feature args warn (not silently ignored)", {
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_warning(
-    suppressMessages(build_gimme(d, vars = c("A", "B"), id = "id", day = "day",
+    suppressMessages(fit_gimme(d, vars = c("A", "B"), id = "id", day = "day",
                                  beep = "beep", sub_method = "Louvain",
                                  seed = 1)),
     "ignores these gimme sub-options"
@@ -160,7 +161,7 @@ test_that("GIMME with an exogenous variable runs (square stability blocks)", {
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B", "C"),
                    seed = 8)
   expect_no_error(
-    gm <- build_gimme(d, vars = c("A", "B", "C"), id = "id",
+    gm <- fit_gimme(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep",
                       exogenous = "C", seed = 1)
   )

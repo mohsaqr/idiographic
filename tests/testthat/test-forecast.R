@@ -24,13 +24,13 @@ test_that("validate_forecast is deterministic for OLS VAR", {
   expect_equal(as.data.frame(f1), f1$predictions)
 })
 
-test_that("validate_forecast predictions equal direct build_var matrix prediction", {
+test_that("validate_forecast predictions equal direct fit_var matrix prediction", {
   d <- synth_single(n_t = 80, vars = c("A", "B", "C"), seed = 502)
   vars <- c("A", "B", "C")
   train <- d[d$day <= 5, , drop = FALSE]
   test <- d[d$day == 6, , drop = FALSE]
 
-  fit <- build_var(train, vars = vars, id = "id", day = "day", beep = "beep",
+  fit <- fit_var(train, vars = vars, id = "id", day = "day", beep = "beep",
                    scale = FALSE, center_within = FALSE)
   design <- idiographic:::.forecast_design(
     train, test, vars = vars, id = "id", day = "day", beep = "beep",

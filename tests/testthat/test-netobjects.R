@@ -1,6 +1,6 @@
 test_that("as_netobject.gvar_result preserves plotting method names", {
   d <- synth_single(n_t = 100)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0.5)
   no <- as_netobject(gv)
   expect_s3_class(no, "netobject_group")
@@ -12,7 +12,7 @@ test_that("as_netobject.gvar_result preserves plotting method names", {
 
 test_that("standard estimators are cograph-ready groups from construction", {
   d <- synth_single(n_t = 100)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0)
   expect_s3_class(gv, "netobject_group")
   expect_s3_class(gv, "cograph_group")
@@ -25,7 +25,7 @@ test_that("standard estimators are cograph-ready groups from construction", {
   expect_identical(ng$contemporaneous$method, "co_occurrence")
   expect_equal(dim(gv$temporal), c(3L, 3L))
 
-  vv <- build_var(d, vars = c("A", "B", "C"), id = "id",
+  vv <- fit_var(d, vars = c("A", "B", "C"), id = "id",
                   day = "day", beep = "beep")
   expect_s3_class(vv, "netobject_group")
   vg <- as_netobject(vv)
@@ -55,7 +55,7 @@ test_that("as_netobject.cograph_network recovers a nested method", {
 test_that("matrices() prints compact blocks and returns estimator matrices", {
   d <- synth_single(n_t = 100, vars = c("A", "B", "C"), seed = 211)
 
-  vv <- build_var(d, vars = c("A", "B", "C"), id = "id",
+  vv <- fit_var(d, vars = c("A", "B", "C"), id = "id",
                   day = "day", beep = "beep")
   out <- capture.output(vm <- matrices(vv))
   expect_true(any(grepl("^\\$beta$", out)))
@@ -68,7 +68,7 @@ test_that("matrices() prints compact blocks and returns estimator matrices", {
   expect_true(any(grepl("^\\$weights$", out_net)))
   expect_equal(tm$weights, vv[["temporal"]]$weights)
 
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0)
   out_gv <- capture.output(gm <- matrices(gv))
   expect_true(any(grepl("^\\$PCC$", out_gv)))
@@ -79,13 +79,13 @@ test_that("matrices() prints compact blocks and returns estimator matrices", {
 test_that("matrices() delegates through fit-holding result containers", {
   d <- synth_single(n_t = 80, vars = c("A", "B", "C"), seed = 212)
 
-  roll <- rolling_var(d, vars = c("A", "B", "C"), id = "id",
+  roll <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", window_size = 40,
                       step = 20, keep_fits = TRUE)
   expect_no_error(capture.output(rm <- matrices(roll)))
   expect_equal(rm$beta, roll$fits[[1]]$beta)
 
-  roll_no_fits <- rolling_var(d, vars = c("A", "B", "C"), id = "id",
+  roll_no_fits <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
                               day = "day", beep = "beep", window_size = 40,
                               step = 20, keep_fits = FALSE)
   expect_error(matrices(roll_no_fits), "keep_fits")
@@ -107,7 +107,7 @@ test_that("matrices() delegates through fit-holding result containers", {
 test_that("as_netobject.net_gimme defaults to proportion-weighted p-node group", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
-  gm <- build_gimme(d, vars = c("A", "B"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep", seed = 1)
   pn <- as_netobject(gm)                                  # default style/weight
   expect_s3_class(pn, "netobject_group")
@@ -127,7 +127,7 @@ test_that("as_netobject.net_gimme defaults to proportion-weighted p-node group",
 test_that("as_netobject.net_gimme style='unified' is a 2p net; weight='coef' opt", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
-  gm <- build_gimme(d, vars = c("A", "B"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep", seed = 1)
   uni <- as_netobject(gm, style = "unified")
   expect_s3_class(uni, "cograph_network")
@@ -138,10 +138,10 @@ test_that("as_netobject.net_gimme style='unified' is a 2p net; weight='coef' opt
   expect_equal(pn_coef$temporal$weights, t(gm$temporal_avg), ignore_attr = TRUE)
 })
 
-test_that("build_gimme returns a mixed cograph_network from construction", {
+test_that("fit_gimme returns a mixed cograph_network from construction", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
-  gm <- build_gimme(d, vars = c("A", "B"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep", seed = 1)
 
   expect_s3_class(gm, "cograph_network")
@@ -165,7 +165,7 @@ test_that(".gimme_mixed_edges encodes gimme semantics; plot_gimme renders", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 6, days = 4, beeps = 12, vars = c("A", "B", "C"),
                    seed = 9)
-  gm <- build_gimme(d, vars = c("A", "B", "C"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B", "C"), id = "id",
                     day = "day", beep = "beep", seed = 1)
   edf <- idiographic:::.gimme_mixed_edges(gm)
   expect_named(edf, c("from", "to", "weight", "style", "color",
@@ -198,7 +198,7 @@ test_that(".gimme_mixed_edges encodes gimme semantics; plot_gimme renders", {
 
 test_that("extract_edges works on a single net and rejects groups", {
   d <- synth_single(n_t = 100)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0)
   no <- as_netobject(gv)
   ed <- extract_edges(no$contemporaneous)

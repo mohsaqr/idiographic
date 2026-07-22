@@ -21,7 +21,7 @@ test_that("compare_idiographic stacks direct VAR and graphical VAR summaries", {
   expect_output(print(cmp), "Idiographic Model Comparison")
   expect_equal(as.data.frame(cmp), cmp$comparison)
 
-  direct_var <- build_var(d, vars = vars, id = "id", day = "day",
+  direct_var <- fit_var(d, vars = vars, id = "id", day = "day",
                           beep = "beep", scale = FALSE,
                           center_within = FALSE)
   direct_row <- subset(summary(direct_var), network == "temporal")

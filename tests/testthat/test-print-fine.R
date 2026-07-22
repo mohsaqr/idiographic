@@ -4,7 +4,7 @@
 
 test_that("print.var_result shows network blocks and weight ranges", {
   d <- synth_single(n_t = 120, vars = c("A", "B", "C"))
-  fit <- build_var(d, vars = attr(d, "vars"), id = "id")
+  fit <- fit_var(d, vars = attr(d, "vars"), id = "id")
   out <- capture.output(print(fit))
   expect_true(any(grepl("Temporal \\[directed\\]", out)))
   expect_true(any(grepl("Contemporaneous \\[undirected\\]", out)))
@@ -15,7 +15,7 @@ test_that("print.var_result shows network blocks and weight ranges", {
 
 test_that("print stays invisible and returns the object", {
   d <- synth_single(n_t = 120, vars = c("A", "B", "C"))
-  fit <- build_var(d, vars = attr(d, "vars"), id = "id")
+  fit <- fit_var(d, vars = attr(d, "vars"), id = "id")
   expect_output(res <- withVisible(print(fit)))
   expect_false(res$visible)
   expect_identical(res$value, fit)
@@ -23,7 +23,7 @@ test_that("print stays invisible and returns the object", {
 
 test_that(".ido_print_networks matches edges()/as_netobject orientation", {
   d <- synth_single(n_t = 150, vars = c("A", "B", "C"))
-  fit <- build_var(d, vars = attr(d, "vars"), id = "id")
+  fit <- fit_var(d, vars = attr(d, "vars"), id = "id")
   g <- as_netobject(fit)
   out <- capture.output(print(fit))
   # directedness tags in the print reflect the netobject directedness

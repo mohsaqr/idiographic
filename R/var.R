@@ -6,7 +6,7 @@
 #' Fits a transparent VAR(1) baseline from intensive longitudinal data using
 #' ordinary least squares: current variables are regressed on an intercept and
 #' lag-1 predictors. The lag construction, scaling, within-person centering,
-#' and day-boundary behavior match [graphical_var()], but no regularization or
+#' and day-boundary behavior match [fit_graphical_var()], but no regularization or
 #' EBIC model selection is applied.
 #'
 #' @param data A `data.frame` or matrix with columns for variables and optional
@@ -33,10 +33,10 @@
 #' @examples
 #' set.seed(1)
 #' d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-#' fit <- build_var(d, vars = c("A", "B", "C"), id = "id")
+#' fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
 #' edges(fit)
 #' @export
-build_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
+fit_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
                       lags = 1L,
                       scale = TRUE,
                       center_within = TRUE,
@@ -46,7 +46,7 @@ build_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
   stopifnot(is.data.frame(data) || is.matrix(data))
   stopifnot(is.character(vars), length(vars) >= 2L)
   if (!(length(lags) == 1L && lags == 1L)) {
-    stop("build_var() supports lags = 1 only.", call. = FALSE)
+    stop("fit_var() supports lags = 1 only.", call. = FALSE)
   }
   .ido_check_flag(scale, "scale")
   .ido_check_flag(center_within, "center_within")
@@ -76,7 +76,7 @@ build_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
   fit <- stats::lm.fit(x = X, y = Y)
   if (fit$rank < ncol(X) || anyNA(fit$coefficients)) {
     stop("Lagged VAR design is rank-deficient; remove duplicated/collinear ",
-         "variables or use graphical_var() regularization.", call. = FALSE)
+         "variables or use fit_graphical_var() regularization.", call. = FALSE)
   }
   beta <- t(fit$coefficients)
   rownames(beta) <- vars
@@ -123,14 +123,14 @@ build_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
 
 #' Fit an ordinary least-squares VAR for every subject
 #'
-#' Applies [build_var()] to each subject separately, returning one transparent
+#' Applies [fit_var()] to each subject separately, returning one transparent
 #' person-specific OLS VAR result per individual. This is the unregularized
-#' companion to [graphical_var_each()] and is useful as an equivalence baseline
+#' companion to [fit_graphical_var_each()] and is useful as an equivalence baseline
 #' for checking lag construction, scaling, and temporal coefficient direction.
 #'
-#' @inheritParams build_var
+#' @inheritParams fit_var
 #' @param id Character. Name of the person-ID column; required.
-#' @param ... Further arguments passed to [build_var()].
+#' @param ... Further arguments passed to [fit_var()].
 #' @return A named list of `var_result` objects (class `var_list`), one element
 #'   per subject, named by subject id. Subjects that cannot be fit are dropped
 #'   with a warning.
@@ -142,11 +142,11 @@ build_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
 #'   beep = rep(seq_len(40), 3),
 #'   A = rnorm(120), B = rnorm(120), C = rnorm(120)
 #' )
-#' fits <- build_var_each(d, vars = c("A", "B", "C"), id = "id",
+#' fits <- fit_var_each(d, vars = c("A", "B", "C"), id = "id",
 #'                        day = "day", beep = "beep")
 #' fits[["1"]]
 #' @export
-build_var_each <- function(data, vars, id, day = NULL, beep = NULL,
+fit_var_each <- function(data, vars, id, day = NULL, beep = NULL,
                            min_obs = NULL, ...) {
   stopifnot(is.data.frame(data), is.character(vars), length(vars) >= 2L,
             is.character(id), length(id) == 1L, id %in% names(data))
@@ -156,7 +156,7 @@ build_var_each <- function(data, vars, id, day = NULL, beep = NULL,
 
   fits <- lapply(ids, function(s) {
     tryCatch(
-      build_var(data, vars = vars, id = id, day = day, beep = beep,
+      fit_var(data, vars = vars, id = id, day = day, beep = beep,
                 subject = s, ...),
       error = function(e) NULL
     )
@@ -189,8 +189,10 @@ as_netobject.var_result <- function(x, ...) {
 
 #' @rdname edges
 #' @export
-edges.var_result <- function(x, sort_by = "weight", include_self = FALSE, ...) {
-  edges(as_netobject(x), sort_by = sort_by, include_self = include_self)
+edges.var_result <- function(x, sort_by = "weight", include_self = FALSE,
+                             network = NULL, n = NULL, ...) {
+  edges(as_netobject(x), sort_by = sort_by, include_self = include_self,
+        network = network, n = n)
 }
 
 #' @rdname coefs
@@ -271,4 +273,14 @@ print.var_list <- function(x, ...) {
   cat(sprintf("  Access:         x[[\"%s\"]] | cograph::splot(x[[\"%s\"]])\n",
               names(x)[1L], names(x)[1L]))
   invisible(x)
+}
+
+#' @export
+summary.var_list <- function(object, ...) {
+  .ido_stack_subject_tables(object, summary, ...)
+}
+
+#' @export
+as.data.frame.var_list <- function(x, row.names = NULL, optional = FALSE, ...) {
+  coefs(x, ...)
 }

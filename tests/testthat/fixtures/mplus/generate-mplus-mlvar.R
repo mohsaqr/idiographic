@@ -1,4 +1,4 @@
-# Generate Mplus DSEM ground-truth fixtures for build_mlvar_bayes() parity tests.
+# Generate Mplus DSEM ground-truth fixtures for fit_mlvar_bayes() parity tests.
 #
 # Requires Mplus (here the version 9 DEMO) + mlVAR + MplusAutomation. Because the
 # DEMO caps models at 2 independent / 2 between variables, all fixtures are d = 2.

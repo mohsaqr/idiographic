@@ -7,7 +7,7 @@
 \method{summary}{net_mlvar}(object, ...)
 }
 \arguments{
-\item{object}{A \code{net_mlvar} object returned by \code{\link[=build_mlvar]{build_mlvar()}}.}
+\item{object}{A \code{net_mlvar} object returned by \code{\link[=fit_mlvar]{fit_mlvar()}}.}
 
 \item{...}{Unused; present for S3 consistency.}
 }
@@ -32,7 +32,7 @@ rows <- lapply(seq_len(n_id), function(i) {
   m
 })
 d <- do.call(rbind, rows)
-fit <- build_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
 print(fit)
 summary(fit)
 }

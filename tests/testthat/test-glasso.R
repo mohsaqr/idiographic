@@ -1,4 +1,4 @@
-# The pure-R graphical lasso underpins graphical_var(); test it against its own
+# The pure-R graphical lasso underpins fit_graphical_var(); test it against its own
 # stationarity (KKT) conditions and validate its input guards.
 
 test_that(".glasso_fit satisfies the KKT optimality conditions", {
@@ -12,6 +12,7 @@ test_that(".glasso_fit satisfies the KKT optimality conditions", {
 })
 
 test_that(".glasso_fit matches glasso when available", {
+  skip_unless_equivalence()
   skip_if_not_installed("glasso")
   set.seed(2)
   X <- matrix(stats::rnorm(300 * 4), ncol = 4)

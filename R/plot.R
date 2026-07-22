@@ -9,7 +9,7 @@
 #' Plot an idiographic network result
 #'
 #' S3 `plot()` methods that render any idiographic result with
-#' [cograph::splot()]. Call `plot(fit)` to draw the full result (every network
+#' `cograph::splot()`. Call `plot(fit)` to draw the full result (every network
 #' panel) or pass `layer` to draw a single network -- `"temporal"`,
 #' `"contemporaneous"`, `"between"` (mlVAR), or `"residual_cov"` (uSEM) -- without
 #' indexing into the object.
@@ -19,18 +19,17 @@
 #'   `rolling_gvar_result`, or `stability_result`).
 #' @param layer Optional network name to draw on its own. `NULL` (default) draws
 #'   the whole result. Available names are reported if an unknown one is given.
-#' @param ... Further arguments forwarded to [cograph::splot()].
+#' @param ... Further arguments forwarded to `cograph::splot()`.
 #' @return Invisibly, the object that was plotted (a `cograph`/ggplot object).
 #' @name plot_idiographic
 #' @examplesIf requireNamespace("cograph", quietly = TRUE)
 #' set.seed(1)
 #' d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-#' fit <- build_var(d, vars = c("A", "B", "C"), id = "id")
+#' fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
 #' plot(fit)
 #' plot(fit, layer = "temporal")
 NULL
 
-#' @keywords internal
 #' Ensure the optional 'cograph' plotting backend is available.
 #'
 #' cograph stays a Suggests dependency (so estimation-only installs stay light),
@@ -38,6 +37,7 @@ NULL
 #' prompt + install happen ONLY in an interactive session and ONLY with explicit
 #' user consent; in non-interactive runs (R CMD check, tests, scripts) this never
 #' installs anything and simply errors with instructions.
+#' @keywords internal
 #' @noRd
 .ido_require_cograph <- function(what = "plot") {
   if (requireNamespace("cograph", quietly = TRUE)) return(invisible(TRUE))
@@ -87,25 +87,77 @@ NULL
   invisible(x)
 }
 
+#' Draw a directed layer (curved arrows) together with an undirected layer
+#' (straight edges) as a single mixed network via cograph::plot_mixed_network().
+#' A missing undirected layer becomes an all-zero matrix.
+#' @noRd
+.ido_splot_mixed <- function(x, asym, sym, ...) {
+  .ido_require_cograph("plot")
+  g <- as_netobject(x)
+  A <- g[[asym]]$weights
+  S <- if (!is.null(g[[sym]])) {
+    g[[sym]]$weights
+  } else {
+    matrix(0, nrow(A), ncol(A), dimnames = dimnames(A))
+  }
+  invisible(cograph::plot_mixed_network(sym_matrix = S, asym_matrix = A, ...))
+}
+
 #' @rdname plot_idiographic
+#' @param mixed If `TRUE`, draw two layers as a single mixed network via
+#'   `cograph::plot_mixed_network()` — the directed layer as curved arrows and
+#'   the undirected layer as straight edges. For VAR, graphical VAR, and
+#'   multilevel VAR this combines the directed temporal network with the
+#'   undirected contemporaneous network; for uSEM it combines the directed
+#'   contemporaneous paths with the undirected residual covariances. Default
+#'   `FALSE` draws one panel per layer.
 #' @export
-plot.var_result <- function(x, layer = NULL, ...) .ido_splot(x, layer, ...)
+plot.var_result <- function(x, layer = NULL, mixed = FALSE, ...) {
+  if (isTRUE(mixed)) return(.ido_splot_mixed(x, "temporal", "contemporaneous", ...))
+  .ido_splot(x, layer, ...)
+}
 
 #' @rdname plot_idiographic
 #' @export
-plot.gvar_result <- function(x, layer = NULL, ...) .ido_splot(x, layer, ...)
+plot.gvar_result <- function(x, layer = NULL, mixed = FALSE, ...) {
+  temporal_names <- grep("^temporal($|_lag)", names(x), value = TRUE)
+  if (isTRUE(mixed)) {
+    if (length(temporal_names) != 1L) {
+      stop("`mixed = TRUE` requires one temporal lag; choose a lag with ",
+           "`layer = \"temporal_lagN\"` for a multi-lag fit.", call. = FALSE)
+    }
+    return(.ido_splot_mixed(x, temporal_names, "contemporaneous", ...))
+  }
+  .ido_splot(x, layer, ...)
+}
 
 #' @rdname plot_idiographic
 #' @export
-plot.var_bayes_result <- function(x, layer = NULL, ...) .ido_splot(x, layer, ...)
+plot.var_bayes_result <- function(x, layer = NULL, mixed = FALSE, ...) {
+  if (isTRUE(mixed)) return(.ido_splot_mixed(x, "temporal", "contemporaneous", ...))
+  .ido_splot(x, layer, ...)
+}
 
 #' @rdname plot_idiographic
 #' @export
-plot.net_mlvar <- function(x, layer = NULL, ...) .ido_splot(x, layer, ...)
+plot.net_mlvar <- function(x, layer = NULL, mixed = FALSE, ...) {
+  temporal_names <- grep("^temporal($|_lag)", names(x), value = TRUE)
+  if (isTRUE(mixed)) {
+    if (length(temporal_names) != 1L) {
+      stop("`mixed = TRUE` requires one temporal lag; choose a lag with ",
+           "`layer = \"temporal_lagN\"` for a multi-lag fit.", call. = FALSE)
+    }
+    return(.ido_splot_mixed(x, temporal_names, "contemporaneous", ...))
+  }
+  .ido_splot(x, layer, ...)
+}
 
 #' @rdname plot_idiographic
 #' @export
-plot.net_usem <- function(x, layer = NULL, ...) .ido_splot(x, layer, ...)
+plot.net_usem <- function(x, layer = NULL, mixed = FALSE, ...) {
+  if (isTRUE(mixed)) return(.ido_splot_mixed(x, "contemporaneous", "residual_cov", ...))
+  .ido_splot(x, layer, ...)
+}
 
 #' @rdname plot_idiographic
 #' @param weight For GIMME: `"prop"` (proportion of subjects, default) or

@@ -3,10 +3,10 @@
 #' Estimate rolling-window ordinary VAR networks
 #'
 #' @description
-#' Fits [build_var()] over ordered, overlapping windows within each subject.
+#' Fits [fit_var()] over ordered, overlapping windows within each subject.
 #' This is a simple time-varying idiographic baseline: every window uses the
 #' same lag construction, scaling, within-person centering, and tidy coefficient
-#' access as [build_var()], but returns one coefficient table per window.
+#' access as [fit_var()], but returns one coefficient table per window.
 #'
 #' @param data A `data.frame` or matrix with columns for variables and optional
 #'   id/day/beep columns.
@@ -37,12 +37,12 @@
 #' d <- data.frame(id = 1, day = rep(1:5, each = 20),
 #'                 beep = rep(1:20, 5),
 #'                 A = rnorm(100), B = rnorm(100), C = rnorm(100))
-#' tv <- rolling_var(d, vars = c("A", "B", "C"), id = "id",
+#' tv <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
 #'                   day = "day", beep = "beep",
 #'                   window_size = 40, step = 20, scale = FALSE)
 #' head(tv$estimates)
 #' @export
-rolling_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
+fit_rolling_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
                         window_size,
                         step = 1L,
                         scale = TRUE,
@@ -91,7 +91,7 @@ rolling_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
                                                        ".rolling_row")),
                        drop = FALSE]
       fit <- tryCatch(
-        build_var(d_win, vars = vars, id = id, day = day, beep = beep,
+        fit_var(d_win, vars = vars, id = id, day = day, beep = beep,
                   scale = scale, center_within = center_within,
                   delete_missings = delete_missings),
         error = function(e) e
@@ -209,3 +209,9 @@ as.data.frame.rolling_var_result <- function(x, row.names = NULL,
                                              optional = FALSE, ...) {
   x$estimates
 }
+
+#' @export
+summary.rolling_var_result <- function(object, ...) object$estimates
+
+#' @export
+coefs.rolling_var_result <- function(x, ...) x$estimates

@@ -11,7 +11,7 @@
 
 \item{style}{Either \code{"pnode"} (default) — a \code{netobject_group} of two directed
 \code{p}-node networks, \verb{$temporal} (lagged; autoregression on the diagonal) and
-\verb{$contemporaneous} (same-beep), matching the shape \code{\link[=graphical_var]{graphical_var()}} returns
+\verb{$contemporaneous} (same-beep), matching the shape \code{\link[=fit_graphical_var]{fit_graphical_var()}} returns
 — or \code{"unified"}, a single directed \verb{2p}-node network with the \verb{*_lag} half
 feeding the current half (the literal uSEM topology).}
 

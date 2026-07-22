@@ -8,8 +8,8 @@
 #' no external reference implementation to validate against, and its
 #' interface, defaults, and reported metrics may change in a future release.
 #'
-#' Performs rolling-origin one-step prediction from [build_var()] or
-#' [graphical_var()]. Each split fits the estimator on earlier blocks and
+#' Performs rolling-origin one-step prediction from [fit_var()] or
+#' [fit_graphical_var()]. Each split fits the estimator on earlier blocks and
 #' predicts current variables in the next block from their lag-1 values. Scaling
 #' and within-person centering parameters are learned from the training split
 #' only, then applied to the assessment split before prediction.
@@ -17,8 +17,8 @@
 #' @param data A `data.frame` or matrix with columns for variables and optional
 #'   id/day/beep columns.
 #' @param vars Character vector of variable names.
-#' @param estimator `"var"` (default) for [build_var()] or `"graphical_var"`
-#'   for [graphical_var()].
+#' @param estimator `"var"` (default) for [fit_var()] or `"graphical_var"`
+#'   for [fit_graphical_var()].
 #' @param id Character. Name of the person-ID column, or `NULL`.
 #' @param day Character. Name of the day/session column, or `NULL`.
 #' @param beep Character. Name of the measurement-occasion column, or `NULL`.
@@ -225,11 +225,11 @@ validate_forecast <- function(data, vars,
 .forecast_fit <- function(estimator, data, vars, id, day, beep, scale,
                           center_within, delete_missings, ...) {
   if (identical(estimator, "var")) {
-    build_var(data, vars = vars, id = id, day = day, beep = beep,
+    fit_var(data, vars = vars, id = id, day = day, beep = beep,
               scale = scale, center_within = center_within,
               delete_missings = delete_missings, ...)
   } else {
-    graphical_var(data, vars = vars, id = id, day = day, beep = beep,
+    fit_graphical_var(data, vars = vars, id = id, day = day, beep = beep,
                   scale = scale, center_within = center_within,
                   delete_missings = delete_missings, ...)
   }
@@ -371,3 +371,6 @@ as.data.frame.forecast_result <- function(x, row.names = NULL,
                                           optional = FALSE, ...) {
   x$predictions
 }
+
+#' @export
+summary.forecast_result <- function(object, ...) object$metrics

@@ -6,7 +6,7 @@
 #' Fits person-specific unified Structural Equation Models (uSEM) for intensive
 #' longitudinal data. A uSEM combines lagged directed effects, optional
 #' contemporaneous directed effects, and optional residual covariances in one
-#' SEM. Unlike [build_gimme()], this function does no automated path search:
+#' SEM. Unlike [fit_gimme()], this function does no automated path search:
 #' the model is fixed by `temporal`, `contemporaneous`, `residual_cov`, and
 #' `paths`. With `trim = TRUE`, idiographic uses an independent clean-room
 #' modification-index entry and z-value pruning layer over the declared
@@ -62,12 +62,12 @@
 #'   t = rep(seq_len(30), 4),
 #'   A = rnorm(120), B = rnorm(120), C = rnorm(120)
 #' )
-#' fit <- build_usem(d, vars = c("A", "B", "C"), id = "id", time = "t")
+#' fit <- fit_usem(d, vars = c("A", "B", "C"), id = "id", time = "t")
 #' edges(fit)
 #' }
-#' @seealso [build_gimme()], [graphical_var()], [build_mlvar()]
+#' @seealso [fit_gimme()], [fit_graphical_var()], [fit_mlvar()]
 #' @export
-build_usem <- function(data, vars, id,
+fit_usem <- function(data, vars, id,
                        time = NULL, day = NULL, beep = NULL,
                        min_obs = NULL, subject = NULL,
                        temporal = c("ar", "all", "none"),
@@ -86,8 +86,9 @@ build_usem <- function(data, vars, id,
                        estimator = "ml",
                        seed = NULL) {
   if (!requireNamespace("lavaan", quietly = TRUE)) {
-    stop("Package 'lavaan' is required for build_usem(). ",
-         "Install it with install.packages('lavaan').", call. = FALSE)
+    stop("fit_usem() requires the optional package 'lavaan'. The rest of ",
+         "idiographic remains available offline; install 'lavaan' only when ",
+         "you need uSEM estimation.", call. = FALSE)
   }
   if (!is.null(seed)) set.seed(seed)
 
@@ -565,8 +566,10 @@ as_netobject.net_usem <- function(x, ...) {
 
 #' @rdname edges
 #' @export
-edges.net_usem <- function(x, sort_by = "weight", include_self = FALSE, ...) {
-  edges(as_netobject(x), sort_by = sort_by, include_self = include_self)
+edges.net_usem <- function(x, sort_by = "weight", include_self = FALSE,
+                           network = NULL, n = NULL, ...) {
+  edges(as_netobject(x), sort_by = sort_by, include_self = include_self,
+        network = network, n = n)
 }
 
 #' @rdname coefs

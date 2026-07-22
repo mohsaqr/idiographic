@@ -16,7 +16,7 @@ plot_gimme(
 )
 }
 \arguments{
-\item{x}{A \code{net_gimme} object from \code{\link[=build_gimme]{build_gimme()}}.}
+\item{x}{A \code{net_gimme} object from \code{\link[=fit_gimme]{fit_gimme()}}.}
 
 \item{weight}{\code{"prop"} (default, proportion of subjects) or \code{"coef"}
 (group-average standardized coefficient) for edge width.}
@@ -24,7 +24,7 @@ plot_gimme(
 \item{group_color, individual_color}{Edge colours for group- vs
 individual-level paths. Defaults \code{"black"} / \code{"grey60"}.}
 
-\item{layout}{cograph layout passed to \code{\link[cograph:splot]{cograph::splot()}}. Default
+\item{layout}{cograph layout passed to \code{cograph::splot()}. Default
 \code{"circle"}, matching gimme.}
 
 \item{curvature}{Edge curvature (separates parallel lag/contemp edges).
@@ -32,7 +32,7 @@ Default \code{0.25}.}
 
 \item{edge_scale}{Multiplier mapping weight to drawn line width. Default \code{5}.}
 
-\item{...}{Further arguments forwarded to \code{\link[cograph:splot]{cograph::splot()}}.}
+\item{...}{Further arguments forwarded to \code{cograph::splot()}.}
 }
 \value{
 Invisibly, the mixed \code{cograph_network} object that was plotted.
@@ -43,7 +43,7 @@ network where \strong{dashed edges are lag-1 (temporal)} and \strong{solid
 edges are lag-0 (contemporaneous)}, \strong{edge width is the proportion of
 subjects} that have the path, \strong{black edges are group-level} paths and
 grey edges individual-level, and autoregression shows as a dashed self-loop.
-Rendered with \code{\link[cograph:splot]{cograph::splot()}}, so a lag and a contemporaneous effect
+Rendered with \code{cograph::splot()}, so a lag and a contemporaneous effect
 between the same pair are drawn as two parallel edges.
 }
 \examples{
@@ -55,7 +55,7 @@ panel <- data.frame(
   t  = rep(seq_len(30), 5),
   A  = rnorm(150), B = rnorm(150), C = rnorm(150)
 )
-gm <- build_gimme(panel, vars = c("A", "B", "C"), id = "id", time = "t")
+gm <- fit_gimme(panel, vars = c("A", "B", "C"), id = "id", time = "t")
 plot_gimme(gm)
 }
 \dontshow{\}) # examplesIf}

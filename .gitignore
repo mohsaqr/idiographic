@@ -1,4 +1,5 @@
 # Session artifacts (local-only)
+.DS_Store
 HANDOFF.md
 LEARNINGS.md
 CHANGES.md

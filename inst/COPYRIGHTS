@@ -1,0 +1,19 @@
+The R code and documentation in idiographic are Copyright (C) 2026
+Mohammed Saqr and are distributed under the GNU General Public License,
+version 3.
+
+The bundled `srl` data set is adapted from the companion data for
+"Advanced Learning Analytics Methods: AI, Precision and Complexity" and is
+distributed under the Creative Commons Attribution-NonCommercial-ShareAlike
+4.0 International license (CC BY-NC-SA 4.0):
+
+  https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Source and attribution:
+
+  Mohammed Saqr and Sonsoles Lopez-Pernas (editors), Advanced Learning
+  Analytics Methods: AI, Precision and Complexity, companion data,
+  https://github.com/lamethods/data2/tree/main/srl
+
+The `srl` rows have been ordered and a within-person occasion index has been
+added for use in the package examples. The data values are otherwise unchanged.

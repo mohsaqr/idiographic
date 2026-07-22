@@ -3,8 +3,8 @@
 #' Estimate rolling-window graphical VAR networks
 #'
 #' @description
-#' Fits [graphical_var()] over ordered, overlapping windows within each subject.
-#' This is the time-varying graphical VAR companion to [rolling_var()]: every
+#' Fits [fit_graphical_var()] over ordered, overlapping windows within each subject.
+#' This is the time-varying graphical VAR companion to [fit_rolling_var()]: every
 #' window uses graphical VAR's lag construction, EBIC/penalty settings, and
 #' tidy coefficient access, then returns one coefficient table per window.
 #'
@@ -28,7 +28,7 @@
 #' @param subject Optional vector naming the subject(s) to analyse.
 #' @param keep_fits Logical. Store successful `gvar_result` fits? Default
 #'   `FALSE`.
-#' @param ... Further arguments passed to [graphical_var()], such as
+#' @param ... Further arguments passed to [fit_graphical_var()], such as
 #'   `n_lambda`, `gamma`, `lambda_beta`, or `lambda_kappa`.
 #'
 #' @return A `rolling_gvar_result` with `$estimates`, `$windows`, `$failures`,
@@ -39,13 +39,13 @@
 #' d <- data.frame(id = 1, day = rep(1:5, each = 20),
 #'                 beep = rep(1:20, 5),
 #'                 A = rnorm(100), B = rnorm(100), C = rnorm(100))
-#' tv <- rolling_graphical_var(d, vars = c("A", "B", "C"), id = "id",
+#' tv <- fit_rolling_graphical_var(d, vars = c("A", "B", "C"), id = "id",
 #'                             day = "day", beep = "beep",
 #'                             window_size = 50, step = 25,
 #'                             scale = FALSE, n_lambda = 5)
 #' head(tv$estimates)
 #' @export
-rolling_graphical_var <- function(data, vars, id = NULL, day = NULL,
+fit_rolling_graphical_var <- function(data, vars, id = NULL, day = NULL,
                                   beep = NULL,
                                   window_size,
                                   step = 1L,
@@ -96,7 +96,7 @@ rolling_graphical_var <- function(data, vars, id = NULL, day = NULL,
                                                        ".rolling_row")),
                        drop = FALSE]
       fit <- tryCatch(
-        graphical_var(d_win, vars = vars, id = id, day = day, beep = beep,
+        fit_graphical_var(d_win, vars = vars, id = id, day = day, beep = beep,
                       scale = scale, center_within = center_within,
                       delete_missings = delete_missings, ...),
         error = function(e) e
@@ -173,3 +173,9 @@ as.data.frame.rolling_gvar_result <- function(x, row.names = NULL,
                                               optional = FALSE, ...) {
   x$estimates
 }
+
+#' @export
+summary.rolling_gvar_result <- function(object, ...) object$estimates
+
+#' @export
+coefs.rolling_gvar_result <- function(x, ...) x$estimates

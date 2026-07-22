@@ -5,11 +5,9 @@
 # lasso objective
 #     min_{Theta > 0}  -log det Theta + tr(S Theta) + rho * sum_{i != j}|Theta_ij|
 # is strictly convex in Theta, so its minimiser is unique. A tightly converged
-# pure-R fit therefore returns the same global optimum as glasso's Fortran
-# kernel (agreement ~1e-11) and satisfies the stationarity (KKT) conditions to
-# the same order (see .glasso_kkt_violation()). Validated against glasso over
-# 200+ random configurations and 100 Saqrlab datasets in
-# local_testing_and_equivalence/ (median KKT violation ~1e-12).
+# pure-R fit targets the same global optimum as glasso's Fortran kernel. The
+# committed tests compare the precision matrix at tolerance 1e-4 and require a
+# KKT violation below 1e-6 (see .glasso_kkt_violation()).
 #
 # The covariance (W) block-coordinate descent: for each column the off-diagonal
 # update is an ordinary lasso solved by Gauss-Seidel soft-thresholding, and the
@@ -53,13 +51,14 @@
 #'
 #' Drop-in replacement for \code{glasso::glasso(s = S, rho, penalize.diagonal,
 #' start, w.init, wi.init, zero)}: returns the same \code{$wi} (precision) and
-#' \code{$w} (regularised covariance) to ~1e-11.
+#' \code{$w} (regularised covariance); the committed precision-matrix oracle
+#' uses tolerance 1e-4.
 #'
 #' @param S Covariance / correlation matrix (p x p, symmetric).
 #' @param rho Scalar L1 penalty.
 #' @param penalize.diagonal Logical; if TRUE the diagonal of Theta is also
 #'   penalised (working covariance diagonal becomes \code{diag(S) + rho}).
-#'   Default FALSE, matching qgraph::EBICglasso and every Nestimate call site.
+#'   Default FALSE, matching qgraph::EBICglasso.
 #' @param max_outer,tol_outer Outer (column-sweep) convergence control.
 #' @param max_inner,tol_inner Inner (coordinate-descent) convergence control.
 #' @param w_init,beta_init Optional warm starts (covariance estimate and lasso

@@ -1,5 +1,5 @@
-# Self-contained helpers so idiographic depends on NO other package of this
-# ecosystem (no Nestimate import). These vendor the small pieces the estimators
+# Self-contained helpers so idiographic does not need another network-object
+# package at runtime. These vendor the small pieces the estimators
 # need: cograph_network constructors, grouped cograph objects, and netobject
 # compatibility classes where cograph still uses them for plotting dispatch.
 
@@ -78,6 +78,12 @@
 #' @param x A `netobject` or `cograph_network`.
 #' @param ... Passed to methods.
 #' @return A `c("netobject", "cograph_network")` object.
+#' @examples
+#' W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+#'             dimnames = list(c("A", "B"), c("A", "B")))
+#' x <- structure(list(weights = W, method = "relative", directed = TRUE),
+#'                class = "cograph_network")
+#' as_netobject(x)
 #' @export
 as_netobject <- function(x, ...) UseMethod("as_netobject")
 
@@ -264,7 +270,7 @@ as_netobject.default <- function(x, ...) {
 #' Plottable netobjects from an mlVAR fit
 #'
 #' Returns the three networks as netobjects oriented for plotting
-#' (temporal edges run predictor -> outcome, matching `graphical_var`), so
+#' (temporal edges run predictor -> outcome, matching `fit_graphical_var`), so
 #' `cograph::splot()` renders them consistently. The raw `fit$temporal$weights`
 #' keep mlVAR's `[outcome, predictor]` layout for equivalence.
 #' @param x A `net_mlvar` object.
@@ -275,11 +281,15 @@ as_netobject.default <- function(x, ...) {
 # directed (arrows), "co_occurrence" renders undirected. Custom names default to
 # undirected, so use these two so temporal networks draw arrows.
 as_netobject.net_mlvar <- function(x, ...) {
-  structure(
-    list(temporal        = .ido_wrap(t(x$temporal$weights), "relative", TRUE),
-         contemporaneous = .ido_wrap(x$contemporaneous$weights, "co_occurrence", FALSE),
-         between         = .ido_wrap(x$between$weights, "co_occurrence", FALSE)),
-    class = "netobject_group")
+  temporal_names <- grep("^temporal($|_lag)", names(x), value = TRUE)
+  out <- lapply(temporal_names, function(nm) {
+    .ido_wrap(t(x[[nm]]$weights), "relative", TRUE)
+  })
+  names(out) <- temporal_names
+  out$contemporaneous <- .ido_wrap(x$contemporaneous$weights,
+                                   "co_occurrence", FALSE)
+  out$between <- .ido_wrap(x$between$weights, "co_occurrence", FALSE)
+  structure(out, class = "netobject_group")
 }
 
 #' Plottable netobject(s) from a GIMME fit
@@ -294,7 +304,7 @@ as_netobject.net_mlvar <- function(x, ...) {
 #' @param x A `net_gimme` object.
 #' @param style Either `"pnode"` (default) — a `netobject_group` of two directed
 #'   `p`-node networks, `$temporal` (lagged; autoregression on the diagonal) and
-#'   `$contemporaneous` (same-beep), matching the shape [graphical_var()] returns
+#'   `$contemporaneous` (same-beep), matching the shape [fit_graphical_var()] returns
 #'   — or `"unified"`, a single directed `2p`-node network with the `*_lag` half
 #'   feeding the current half (the literal uSEM topology).
 #' @param weight Either `"prop"` (default) — edge weight is the proportion of
@@ -317,7 +327,9 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   # directed lag-0 block (which is all-zero there).
   cov_mode <- isTRUE(x$contemp_is_cov)
   if (weight == "prop") {
-    temp <- x$path_counts[, paste0(vars, "lag"), drop = FALSE] / n
+    # `$temporal` is always the tidy p x p layer. This matters when a declared
+    # exogenous variable correctly has no corresponding `*lag` raw column.
+    temp <- x$temporal / n
     cont <- if (cov_mode) x$contemp_cov / n else
       x$path_counts[, vars, drop = FALSE] / n
   } else {
@@ -358,7 +370,7 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   n <- x$n_subjects
   cov_mode <- isTRUE(x$contemp_is_cov)
   if (weight == "prop") {
-    temp <- x$path_counts[, paste0(vars, "lag"), drop = FALSE] / n
+    temp <- x$temporal / n
     cont <- if (cov_mode) x$contemp_cov / n else
       x$path_counts[, vars, drop = FALSE] / n
   } else {
@@ -444,10 +456,16 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   block <- function(predictor_cols, coef_mat, kind, drop_self) {
     g <- expand.grid(to = vars, from = vars, stringsAsFactors = FALSE)
     if (drop_self) g <- g[g$to != g$from, , drop = FALSE]
-    g$count <- pc[cbind(g$to, predictor_cols(g$from))]
+    cols <- predictor_cols(g$from)
+    # Exogenous variables have no lagged predictor column in gimme's model
+    # matrices. Keep the user-facing temporal matrix square, but give those
+    # structurally absent paths a zero count so they are omitted below.
+    present <- cols %in% colnames(pc)
+    g$count <- 0L
+    g$count[present] <- pc[cbind(g$to[present], cols[present])]
     g$coef  <- coef_mat[cbind(g$to, g$from)]
     g$kind  <- kind
-    g$path  <- paste0(g$to, "~", predictor_cols(g$from))
+    g$path  <- paste0(g$to, "~", cols)
     g
   }
   lagged  <- block(function(v) paste0(v, "lag"), x$temporal_avg,
@@ -473,7 +491,7 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
   all <- all[all$count > 0, , drop = FALSE]
   # A zero-edge fit (e.g. ar = FALSE with no group/individual paths selected) is
   # a legitimate result, so return an empty edge list here rather than erroring:
-  # build_gimme() must still return its (all-zero) matrices, and it is the
+  # fit_gimme() must still return its (all-zero) matrices, and it is the
   # plotting layer -- not estimation -- that special-cases the empty graph.
   # Group-level (black) = paths in the group model: the group-search additions
   # (`group_paths`) PLUS the fixed paths every subject carries (autoregression
@@ -510,20 +528,20 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
 #' edges are lag-0 (contemporaneous)}, \strong{edge width is the proportion of
 #' subjects} that have the path, \strong{black edges are group-level} paths and
 #' grey edges individual-level, and autoregression shows as a dashed self-loop.
-#' Rendered with [cograph::splot()], so a lag and a contemporaneous effect
+#' Rendered with `cograph::splot()`, so a lag and a contemporaneous effect
 #' between the same pair are drawn as two parallel edges.
 #'
-#' @param x A `net_gimme` object from [build_gimme()].
+#' @param x A `net_gimme` object from [fit_gimme()].
 #' @param weight `"prop"` (default, proportion of subjects) or `"coef"`
 #'   (group-average standardized coefficient) for edge width.
 #' @param group_color,individual_color Edge colours for group- vs
 #'   individual-level paths. Defaults `"black"` / `"grey60"`.
-#' @param layout cograph layout passed to [cograph::splot()]. Default
+#' @param layout cograph layout passed to `cograph::splot()`. Default
 #'   `"circle"`, matching gimme.
 #' @param curvature Edge curvature (separates parallel lag/contemp edges).
 #'   Default `0.25`.
 #' @param edge_scale Multiplier mapping weight to drawn line width. Default `5`.
-#' @param ... Further arguments forwarded to [cograph::splot()].
+#' @param ... Further arguments forwarded to `cograph::splot()`.
 #' @return Invisibly, the mixed `cograph_network` object that was plotted.
 #' @seealso [as_netobject()] for the matrix view.
 #' @examplesIf requireNamespace("lavaan", quietly = TRUE) && requireNamespace("cograph", quietly = TRUE)
@@ -534,7 +552,7 @@ as_netobject.net_gimme <- function(x, style = c("pnode", "unified"),
 #'   t  = rep(seq_len(30), 5),
 #'   A  = rnorm(150), B = rnorm(150), C = rnorm(150)
 #' )
-#' gm <- build_gimme(panel, vars = c("A", "B", "C"), id = "id", time = "t")
+#' gm <- fit_gimme(panel, vars = c("A", "B", "C"), id = "id", time = "t")
 #' plot_gimme(gm)
 #' }
 #' @export
@@ -543,7 +561,7 @@ plot_gimme <- function(x, weight = c("prop", "coef"),
                        layout = "circle", curvature = 0.25, edge_scale = 5,
                        ...) {
   if (!inherits(x, "net_gimme")) {
-    stop("plot_gimme() needs a 'net_gimme' object from build_gimme().",
+    stop("plot_gimme() needs a 'net_gimme' object from fit_gimme().",
          call. = FALSE)
   }
   .ido_require_cograph("plot_gimme")
@@ -584,6 +602,12 @@ plot_gimme <- function(x, weight = c("prop", "coef"),
 #' @param sort_by Either `"weight"` (descending by absolute weight) or `NULL`.
 #' @param include_self Keep autoregressive self-loops? Default `FALSE`.
 #' @return A `data.frame` with columns `from`, `to`, `weight`.
+#' @examples
+#' W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+#'             dimnames = list(c("A", "B"), c("A", "B")))
+#' x <- structure(list(weights = W, method = "relative", directed = TRUE),
+#'                class = "cograph_network")
+#' extract_edges(x)
 #' @export
 extract_edges <- function(model, sort_by = "weight", include_self = FALSE) {
   if (inherits(model, "netobject_group") ||
@@ -632,30 +656,67 @@ extract_edges <- function(model, sort_by = "weight", include_self = FALSE) {
 #' @param sort_by `"weight"` (descending |weight|) or `NULL` for natural order.
 #' @param include_self Keep autoregressive self-loops? Default `FALSE`
 #'   (`TRUE` for GIMME, where the autoregression is the point).
+#' @param network Optional character vector selecting the network layer(s) to
+#'   return (e.g. `"temporal"`, `"contemporaneous"`, `"between"`). Default
+#'   `NULL` returns every layer. An unknown layer errors and lists the available
+#'   ones.
+#' @param n Optional integer. Keep only the first `n` edges, which are the
+#'   strongest by absolute weight when `sort_by = "weight"`. Default `NULL`
+#'   returns all edges.
 #' @param ... Passed to methods.
 #' @return A tidy `data.frame`, one row per edge.
 #' @examplesIf requireNamespace("graphicalVAR", quietly = TRUE)
 #' \donttest{
 #' set.seed(1)
 #' d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-#' fit <- graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
+#' fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
 #' edges(fit)            # tidy: network / from / to / weight
 #' }
 #' @export
 edges <- function(x, ...) UseMethod("edges")
 
-#' @rdname edges
-#' @export
-edges.netobject <- function(x, sort_by = "weight", include_self = FALSE, ...) {
-  e <- extract_edges(x, sort_by = sort_by, include_self = include_self)
-  net <- x$meta$tna$method %||% x$method %||% "network"
-  data.frame(network = rep(net, nrow(e)), e, stringsAsFactors = FALSE)
+#' Filter a tidy edge table to selected network layer(s) and/or the top-n edges.
+#' `network` subsets the `network` column; `n` keeps the first `n` rows, which
+#' are the strongest edges when `sort_by = "weight"`. Both default to no-ops.
+#' A requested layer that is one of the canonical VAR layers but currently
+#' carries no edges (e.g. a temporal network fully shrunk to zero) yields an
+#' empty table rather than an error; only a name that is neither canonical nor
+#' present is treated as a typo and errors, listing what is available.
+#' @noRd
+.edges_select <- function(e, network = NULL, n = NULL) {
+  canonical <- c("temporal", "contemporaneous", "between")
+  if (!is.null(network)) {
+    stopifnot(is.character(network))
+    have <- unique(e$network)
+    bad <- setdiff(network, union(have, canonical))
+    if (length(bad)) {
+      stop("Unknown network layer(s): ", paste(bad, collapse = ", "),
+           ". Available: ", paste(have, collapse = ", "), ".", call. = FALSE)
+    }
+    e <- e[e$network %in% network, , drop = FALSE]
+  }
+  if (!is.null(n)) {
+    stopifnot(is.numeric(n), length(n) == 1L, n >= 0)
+    e <- utils::head(e, n)
+  }
+  rownames(e) <- NULL
+  e
 }
 
 #' @rdname edges
 #' @export
-edges.netobject_group <- function(x, sort_by = "weight",
-                                  include_self = FALSE, ...) {
+edges.netobject <- function(x, sort_by = "weight", include_self = FALSE,
+                            network = NULL, n = NULL, ...) {
+  e <- extract_edges(x, sort_by = sort_by, include_self = include_self)
+  net <- x$meta$tna$method %||% x$method %||% "network"
+  out <- data.frame(network = rep(net, nrow(e)), e, stringsAsFactors = FALSE)
+  .edges_select(out, network, n)
+}
+
+#' @rdname edges
+#' @export
+edges.netobject_group <- function(x, sort_by = "weight", include_self = FALSE,
+                                  network = NULL, n = NULL, ...) {
   nms <- names(x)
   if (is.null(nms)) nms <- paste0("network", seq_along(x))
   parts <- lapply(seq_along(x), function(i) {
@@ -670,21 +731,24 @@ edges.netobject_group <- function(x, sort_by = "weight",
   } else {
     do.call(rbind, parts)
   }
-  rownames(out) <- NULL
-  out
+  .edges_select(out, network, n)
 }
 
 #' @rdname edges
 #' @export
-edges.gvar_result <- function(x, sort_by = "weight", include_self = FALSE, ...) {
-  edges(as_netobject(x), sort_by = sort_by, include_self = include_self)
+edges.gvar_result <- function(x, sort_by = "weight", include_self = FALSE,
+                              network = NULL, n = NULL, ...) {
+  edges(as_netobject(x), sort_by = sort_by, include_self = include_self,
+        network = network, n = n)
 }
 
 #' @rdname edges
 #' @export
-edges.net_mlvar <- function(x, sort_by = "weight", include_self = FALSE, ...) {
+edges.net_mlvar <- function(x, sort_by = "weight", include_self = FALSE,
+                            network = NULL, n = NULL, ...) {
   # as_netobject() reorients temporal to from = predictor, to = outcome.
-  edges(as_netobject(x), sort_by = sort_by, include_self = include_self)
+  edges(as_netobject(x), sort_by = sort_by, include_self = include_self,
+        network = network, n = n)
 }
 
 #' @rdname edges
@@ -692,7 +756,8 @@ edges.net_mlvar <- function(x, sort_by = "weight", include_self = FALSE, ...) {
 #'   `"coef"` (group-average coefficient) for the edge weight.
 #' @export
 edges.net_gimme <- function(x, sort_by = "weight", include_self = TRUE,
-                            weight = c("prop", "coef"), ...) {
+                            weight = c("prop", "coef"),
+                            network = NULL, n = NULL, ...) {
   e <- .gimme_mixed_edges(x, weight = match.arg(weight))
   if (!include_self) e <- e[e$from != e$to, , drop = FALSE]
   out <- data.frame(
@@ -701,9 +766,16 @@ edges.net_gimme <- function(x, sort_by = "weight", include_self = TRUE,
     stringsAsFactors = FALSE
   )
   if (identical(sort_by, "weight")) out <- out[order(-abs(out$weight)), ]
-  rownames(out) <- NULL
-  out
+  .edges_select(out, network, n)
 }
+
+#' @rdname edges
+#' @export
+edges.var_list <- function(x, ...) .ido_stack_subject_tables(x, edges, ...)
+
+#' @rdname edges
+#' @export
+edges.gvar_list <- function(x, ...) .ido_stack_subject_tables(x, edges, ...)
 
 #' @export
 as.data.frame.gvar_result <- function(x, row.names = NULL, optional = FALSE,
@@ -836,9 +908,9 @@ coefs.gvar_result <- function(x, ...) {
 coefs.net_gimme <- function(x, ...) {
   # Per-person estimated paths: one row per (subject, network, from, to).
   vars <- x$labels
-  lag_names <- paste0(vars, "lag")
   rows <- lapply(names(x$coefs), function(s) {
     M <- x$coefs[[s]]
+    lag_names <- intersect(paste0(vars, "lag"), colnames(M))
     tl <- M[, lag_names, drop = FALSE]            # temporal (lagged)
     cl <- M[, vars, drop = FALSE]                 # contemporaneous
     # NA-safe (a non-converged subject's matrix may hold NA): treat NA as "no
@@ -848,7 +920,8 @@ coefs.net_gimme <- function(x, ...) {
     parts <- list()
     if (nrow(ti) > 0L) parts$t <- data.frame(
       subject = s, network = "temporal",
-      from = vars[ti[, 2]], to = rownames(M)[ti[, 1]], weight = tl[ti],
+      from = sub("lag$", "", lag_names[ti[, 2]]),
+      to = rownames(M)[ti[, 1]], weight = tl[ti],
       stringsAsFactors = FALSE)
     if (nrow(ci) > 0L) parts$c <- data.frame(
       subject = s, network = "contemporaneous",
@@ -864,6 +937,27 @@ coefs.net_gimme <- function(x, ...) {
   out
 }
 
+#' @rdname coefs
+#' @export
+coefs.var_list <- function(x, ...) .ido_stack_subject_tables(x, coefs, ...)
+
+#' @rdname coefs
+#' @export
+coefs.gvar_list <- function(x, ...) .ido_stack_subject_tables(x, coefs, ...)
+
+#' Stack one tidy accessor over person-specific fit lists
+#' @noRd
+.ido_stack_subject_tables <- function(x, fun, ...) {
+  out <- lapply(seq_along(x), function(i) {
+    tab <- fun(x[[i]], ...)
+    data.frame(subject = names(x)[i] %||% as.character(i), tab,
+               stringsAsFactors = FALSE)
+  })
+  ans <- do.call(rbind, out)
+  rownames(ans) <- NULL
+  ans
+}
+
 
 # ---- nodes(): tidy per-node strength ---------------------------------------
 
@@ -877,6 +971,12 @@ coefs.net_gimme <- function(x, ...) {
 #'   `netobject_group`.
 #' @param ... Passed to methods.
 #' @return A tidy `data.frame`.
+#' @examples
+#' W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+#'             dimnames = list(c("A", "B"), c("A", "B")))
+#' x <- structure(list(weights = W, method = "relative", directed = TRUE),
+#'                class = "cograph_network")
+#' nodes(as_netobject(x))
 #' @export
 nodes <- function(x, ...) UseMethod("nodes")
 
@@ -900,6 +1000,14 @@ nodes.net_mlvar <- function(x, ...) nodes(as_netobject(x), ...)
 #' @export
 nodes.net_gimme <- function(x, ...) nodes(as_netobject(x), ...)
 
+#' @rdname nodes
+#' @export
+nodes.var_list <- function(x, ...) .ido_stack_subject_tables(x, nodes, ...)
+
+#' @rdname nodes
+#' @export
+nodes.gvar_list <- function(x, ...) .ido_stack_subject_tables(x, nodes, ...)
+
 
 # ---- matrices(): compact matrix inspection ---------------------------------
 
@@ -914,8 +1022,15 @@ nodes.net_gimme <- function(x, ...) nodes(as_netobject(x), ...)
 #' @param digits Number of digits used for printing. Default `3`.
 #' @param fit Stored fit name or index for result containers that optionally keep
 #'   fitted models, such as rolling results and model comparisons.
+#' @param subject Subject name or index for per-subject VAR/GVAR result lists.
 #' @param ... Passed to methods.
 #' @return Invisibly, a named list of matrices.
+#' @examples
+#' W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+#'             dimnames = list(c("A", "B"), c("A", "B")))
+#' x <- structure(list(weights = W, method = "relative", directed = TRUE),
+#'                class = "cograph_network")
+#' matrices(as_netobject(x))
 #' @export
 matrices <- function(x, ...) UseMethod("matrices")
 
@@ -981,11 +1096,12 @@ matrices.var_result <- function(x, digits = 3, ...) {
 #' @rdname matrices
 #' @export
 matrices.net_mlvar <- function(x, digits = 3, ...) {
-  .ido_print_matrices(list(
-    temporal = x$temporal$weights,
-    contemporaneous = x$contemporaneous$weights,
-    between = x$between$weights
-  ), digits = digits)
+  temporal_names <- grep("^temporal($|_lag)", names(x), value = TRUE)
+  mats <- lapply(temporal_names, function(nm) x[[nm]]$weights)
+  names(mats) <- temporal_names
+  mats$contemporaneous <- x$contemporaneous$weights
+  mats$between <- x$between$weights
+  .ido_print_matrices(mats, digits = digits)
 }
 
 #' @rdname matrices
@@ -1015,7 +1131,7 @@ matrices.net_gimme <- function(x, digits = 3, ...) {
 
 #' @rdname matrices
 #' @export
-matrices.preprocess_audit <- function(x, digits = 3, ...) {
+matrices.preprocess_result <- function(x, digits = 3, ...) {
   .ido_print_matrices(x$matrices, digits = digits)
 }
 
@@ -1043,6 +1159,18 @@ matrices.model_comparison <- function(x, fit = 1L, digits = 3, ...) {
   matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
 }
 
+#' @rdname matrices
+#' @export
+matrices.var_list <- function(x, subject = 1L, digits = 3, ...) {
+  matrices(.ido_pick_fit(x, subject, "subject"), digits = digits, ...)
+}
+
+#' @rdname matrices
+#' @export
+matrices.gvar_list <- function(x, subject = 1L, digits = 3, ...) {
+  matrices(.ido_pick_fit(x, subject, "subject"), digits = digits, ...)
+}
+
 #' @keywords internal
 #' @noRd
 .ido_pick_fit <- function(fits, fit, arg) {
@@ -1064,7 +1192,7 @@ matrices.model_comparison <- function(x, fit = 1L, digits = 3, ...) {
   stop("`", arg, "` must be a stored fit name or index.", call. = FALSE)
 }
 
-#' Print one network block Nestimate-style: a one-line weight summary followed
+#' Print one network block: a one-line weight summary followed
 #' by the labelled, rounded weight matrix. `directed` controls which cells count
 #' as edges for the summary (all non-zero for directed, upper triangle for
 #' undirected) and how the block is tagged.

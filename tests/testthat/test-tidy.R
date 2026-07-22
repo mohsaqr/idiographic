@@ -3,7 +3,7 @@
 
 test_that("edges() on a netobject_group is tidy with a network column", {
   d <- synth_single(n_t = 120)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 10, gamma = 0)
   e <- edges(gv)
   expect_s3_class(e, "data.frame")
@@ -26,7 +26,7 @@ test_that("edges() empty result keeps the schema", {
 test_that("edges(net_mlvar) covers all three networks, predictor->outcome", {
   skip_if_not_installed("lme4")
   d <- synth_panel(n_id = 12, days = 4, beeps = 10, seed = 3)
-  fit <- suppressWarnings(build_mlvar(d, vars = c("A", "B", "C"), id = "id",
+  fit <- suppressWarnings(fit_mlvar(d, vars = c("A", "B", "C"), id = "id",
                                       day = "day", beep = "beep"))
   e <- edges(fit)
   expect_named(e, c("network", "from", "to", "weight"))
@@ -43,7 +43,7 @@ test_that("edges(net_mlvar) covers all three networks, predictor->outcome", {
 
 test_that("summary() returns a tidy per-network metrics data.frame", {
   d <- synth_single(n_t = 120)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       lambda_beta = 0.1, n_lambda = 8)
   s <- summary(gv)
   expect_s3_class(s, "data.frame")
@@ -57,7 +57,7 @@ test_that("edges() (no self-loops) and summary() agree on edge counts", {
   # Both route through the single .net_edge_idx() mask, so the per-network edge
   # count from edges() must equal summary()$n_edges (no <= vs < drift).
   d <- synth_single(n_t = 120)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       lambda_beta = 0.1, n_lambda = 8)
   s <- summary(gv)
   e <- edges(gv)
@@ -68,7 +68,7 @@ test_that("edges() (no self-loops) and summary() agree on edge counts", {
 
 test_that("nodes() is a tidy per-node strength table", {
   d <- synth_single(n_t = 120)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       lambda_beta = 0.1, n_lambda = 8)
   nd <- nodes(gv)
   expect_named(nd, c("network", "node", "strength", "out_strength",
@@ -83,7 +83,7 @@ test_that("nodes() is a tidy per-node strength table", {
 
 test_that("coefs() is tidy: full table for gvar, per-person for gimme", {
   d <- synth_single(n_t = 120)
-  gv <- graphical_var(d, vars = c("A", "B", "C"), id = "id",
+  gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       lambda_beta = 0.1, n_lambda = 8)
   cg <- coefs(gv)
   expect_named(cg, c("network", "from", "to", "weight"))
@@ -92,7 +92,7 @@ test_that("coefs() is tidy: full table for gvar, per-person for gimme", {
 
   skip_if_not_installed("lavaan")
   d2 <- synth_panel(n_id = 5, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
-  gm <- build_gimme(d2, vars = c("A", "B"), id = "id",
+  gm <- fit_gimme(d2, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep", seed = 1)
   cgm <- coefs(gm)
   expect_named(cgm, c("subject", "network", "from", "to", "weight"))
@@ -102,7 +102,7 @@ test_that("coefs() is tidy: full table for gvar, per-person for gimme", {
 test_that("edges(net_gimme) is tidy with network + level", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 5, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
-  gm <- build_gimme(d, vars = c("A", "B"), id = "id",
+  gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
                     day = "day", beep = "beep", seed = 1)
   e <- edges(gm)
   expect_named(e, c("network", "from", "to", "weight", "level"))
@@ -113,4 +113,32 @@ test_that("edges(net_gimme) is tidy with network + level", {
   # ... and droppable
   e2 <- edges(gm, include_self = FALSE)
   expect_false(any(e2$from == e2$to))
+})
+
+test_that("edges(network=, n=) filters layers, keeps top-n, handles empty layers", {
+  d <- synth_panel(n_id = 1, days = 4, beeps = 30, vars = c("A", "B", "C"),
+                   seed = 11)
+  fit <- fit_var(d, vars = c("A", "B", "C"), id = "id", day = "day",
+                 beep = "beep")
+
+  te <- edges(fit, network = "temporal")
+  expect_true(all(te$network == "temporal"))
+  expect_equal(nrow(edges(fit, network = "temporal", n = 2)), 2L)
+  # a genuine but empty canonical layer yields 0 rows, not an error
+  empty <- edges(fit, network = "between")
+  expect_s3_class(empty, "data.frame")
+  expect_equal(nrow(empty), 0L)
+  # a typo is still an error
+  expect_error(edges(fit, network = "temporl"), "Unknown network layer")
+})
+
+test_that("person-specific VAR lists stack the tidy accessor contract", {
+  d <- synth_panel(n_id = 3, days = 3, beeps = 12, seed = 55)
+  fits <- fit_var_each(d, vars = c("A", "B", "C"), id = "id",
+                      day = "day", beep = "beep", scale = FALSE)
+  expect_s3_class(summary(fits), "data.frame")
+  expect_true("subject" %in% names(summary(fits)))
+  expect_true("subject" %in% names(edges(fits)))
+  expect_true("subject" %in% names(nodes(fits)))
+  expect_identical(as.data.frame(fits), coefs(fits))
 })

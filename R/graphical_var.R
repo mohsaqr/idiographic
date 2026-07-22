@@ -12,29 +12,33 @@
 #' lag-1 construction within id/day blocks), identical lambda grids
 #' (\code{generate_lambdas}), the coupled MRCE beta-update / glasso kappa-update
 #' loop, the unpenalized-likelihood EBIC, and the same tie-broken model
-#' selection. On well-conditioned data it agrees with \code{graphicalVAR} to
-#' machine precision (~1e-11); on rank-deficient data (n close to the number of
-#' parameters) it agrees to the MRCE inner-solver tolerance (~1e-3), which
-#' \code{graphicalVAR} shares.
+#' selection. The committed end-to-end regression tests use tolerance `1e-6`, covering
+#' both well-conditioned and numerically difficult fits. That equivalence claim
+#' is limited to
+#' `mimic = "current"` and `lags = 1`; multiple lags are an idiographic
+#' extension and are labelled as such in the returned equivalence metadata.
 #'
 #' @param data A data.frame or matrix with columns for variables, and optionally
-#'   id, day, beep columns for panel/ESM data.
-#' @param vars Character vector of variable names.
+#'   id, day, beep columns for panel/ESM data. A prepared list containing
+#'   numeric matrices `data_c` (current responses) and `data_l` (lagged design,
+#'   with or without an intercept column) is also accepted.
+#' @param vars Character vector of variable names. May be omitted for prepared
+#'   input when `data_c` has column names.
 #' @param id Character. Name of the person-ID column. If NULL, assumes single
 #'   subject.
 #' @param day Character. Name of the day/session column. Default: NULL.
 #' @param beep Character. Name of the beep/measurement column. Default: NULL.
-#' @param lags Integer. Lag order. Only \code{1} is supported (matches
-#'   \code{graphicalVAR}'s default; multi-lag is not implemented). Default: 1.
-#' @param n_lambda Integer. Number of lambda values per penalty dimension.
-#'   Default: 50 (matches \code{graphicalVAR}'s \code{nLambda}).
+#' @param lags Positive integer vector of explicit lags to include. Default: 1.
+#' @param n_lambda Integer scalar, or a two-value vector giving the number of
+#'   beta and kappa penalties. The latter can be named, for example
+#'   `c(beta = 30, kappa = 20)`, or unnamed in beta/kappa order. Default: 50.
 #' @param gamma Numeric. EBIC hyperparameter (0 = BIC, higher = sparser).
 #'   Default: 0.5.
 #' @param scale Logical. Whether to standardize variables. Default: TRUE.
 #' @param center_within Logical. Whether to center within person when more than
 #'   one id is present (removes between-person variance). Default: TRUE.
-#' @param lambda_min_ratio Numeric. Ratio of min/max lambda applied to both the
-#'   beta and kappa grids unless overridden per-dimension. Default: 0.05.
+#' @param lambda_min_ratio Numeric scalar, or a two-value beta/kappa vector.
+#'   Ratio of min/max lambda unless overridden per-dimension. Default: 0.05.
 #' @param lambda_min_kappa,lambda_min_beta Numeric or \code{NULL}. Per-dimension
 #'   min/max lambda ratios (matching \code{graphicalVAR}'s \code{lambda_min_kappa}
 #'   / \code{lambda_min_beta}). When \code{NULL}, fall back to
@@ -57,8 +61,8 @@
 #'   the EBIC, matching \code{graphicalVAR}) or \code{"penalized"} (use the
 #'   regularized kappa directly).
 #' @param ebic_tol Numeric. Tolerance for the EBIC tie-break. Default 1e-4.
-#' @param mimic Character. Only \code{"current"} is supported (legacy
-#'   compatibility modes are ignored with a warning).
+#' @param mimic Character. Only \code{"current"} is supported. Legacy modes
+#'   error explicitly because idiographic does not claim equivalence to them.
 #' @param verbose Logical. Emit progress messages. Default FALSE.
 #' @param lambda_beta Numeric scalar (or vector), or \code{NULL}. When supplied,
 #'   the temporal penalty is pinned to this value instead of being EBIC-selected
@@ -75,8 +79,9 @@
 #' \describe{
 #'   \item{beta}{Temporal coefficient matrix, outcome x (intercept + predictors),
 #'     in \code{graphicalVAR}'s convention.}
-#'   \item{temporal}{The p x p temporal slice \code{beta[, -1]} as
-#'     \code{[outcome, predictor]} (intercept dropped).}
+#'   \item{temporal}{The first requested p x p temporal layer as
+#'     \code{[outcome, predictor]}; unchanged for the default lag 1 fit.}
+#'   \item{temporal_layers}{Named p x p coefficient matrices for every lag.}
 #'   \item{kappa}{Precision matrix (p x p, symmetric).}
 #'   \item{PCC}{Partial contemporaneous correlations \code{-cov2cor(kappa)},
 #'     diagonal zeroed.}
@@ -96,9 +101,17 @@
 #' Rothman, A. J., Levina, E., & Zhu, J. (2010). Sparse multivariate regression
 #' with covariance estimation. \emph{JCGS}, 19(4), 947-962.
 #'
+#' @examples
+#' set.seed(1)
+#' d <- data.frame(A = rnorm(60), B = rnorm(60))
+#' fit <- fit_graphical_var(d, vars = c("A", "B"), n_lambda = 3,
+#'                          scale = FALSE)
+#' fit$temporal
+#' fit$contemporaneous
+#'
 #' @importFrom stats cov2cor sd
 #' @export
-graphical_var <- function(data,
+fit_graphical_var <- function(data,
                           vars,
                           id = NULL,
                           day = NULL,
@@ -126,81 +139,146 @@ graphical_var <- function(data,
                           min_obs = NULL,
                           subject = NULL) {
 
+  lags_missing <- missing(lags)
+  vars_missing <- missing(vars) || is.null(vars)
   likelihood <- match.arg(likelihood)
-  stopifnot(is.data.frame(data) || is.matrix(data))
-  stopifnot(is.character(vars), length(vars) >= 2L)
-  stopifnot(is.numeric(gamma), length(gamma) == 1L, gamma >= 0)
-  stopifnot(is.numeric(n_lambda), length(n_lambda) == 1L, n_lambda >= 2L)
-  stopifnot(is.numeric(lambda_min_ratio), length(lambda_min_ratio) == 1L,
-            is.finite(lambda_min_ratio), lambda_min_ratio > 0,
-            lambda_min_ratio < 1)
-  stopifnot(is.numeric(maxit_in), maxit_in >= 1L,
-            is.numeric(maxit_out), maxit_out >= 1L,
-            is.numeric(ebic_tol), length(ebic_tol) == 1L, ebic_tol >= 0)
+  prepared <- is.list(data) && !is.data.frame(data) &&
+    all(c("data_c", "data_l") %in% names(data))
+  if (!(prepared || is.data.frame(data) || is.matrix(data))) {
+    stop("`data` must be a data frame, matrix, or a prepared list containing ",
+         "`data_c` and `data_l`.", call. = FALSE)
+  }
+  if (!vars_missing && !(is.character(vars) && length(vars) >= 2L &&
+                         !anyNA(vars) && !anyDuplicated(vars))) {
+    stop("`vars` must contain at least two unique variable names.", call. = FALSE)
+  }
+  if (!(is.numeric(gamma) && length(gamma) == 1L && is.finite(gamma) &&
+        gamma >= 0)) {
+    stop("`gamma` must be one finite non-negative number.", call. = FALSE)
+  }
+  n_lambda <- .gvar_pair_arg(n_lambda, "n_lambda", integer = TRUE,
+                             lower = 2, upper = Inf)
+  lambda_min_ratio <- .gvar_pair_arg(lambda_min_ratio, "lambda_min_ratio",
+                                     lower = 0, upper = 1,
+                                     open_lower = TRUE, open_upper = TRUE)
+  maxit_in <- .gvar_count(maxit_in, "maxit_in", minimum = 1L)
+  maxit_out <- .gvar_count(maxit_out, "maxit_out", minimum = 1L)
+  if (!(is.numeric(ebic_tol) && length(ebic_tol) == 1L &&
+        is.finite(ebic_tol) && ebic_tol >= 0)) {
+    stop("`ebic_tol` must be one finite non-negative number.", call. = FALSE)
+  }
   .ido_check_flag(scale, "scale")
   .ido_check_flag(center_within, "center_within")
   .ido_check_flag(penalize_diagonal, "penalize_diagonal")
   .ido_check_flag(delete_missings, "delete_missings")
   .ido_check_flag(verbose, "verbose")
-  if (!identical(as.character(mimic), "current")) {
-    warning("`mimic` only supports \"current\"; ignoring '", mimic, "'.",
-            call. = FALSE)
+  if (!(is.character(mimic) && length(mimic) == 1L && !is.na(mimic))) {
+    stop("`mimic` must be the single value \"current\".", call. = FALSE)
   }
-  # Only single-lag (lags = 1) is supported; graphicalVAR's multi-lag path is
-  # rarely used and its upstream `shift` handling is unreliable.
-  if (!(length(lags) == 1L && lags == 1L)) {
-    stop("`lags` must be 1; multi-lag VAR is not supported.", call. = FALSE)
+  if (!identical(mimic, "current")) {
+    stop("Legacy `mimic = \"", mimic, "\"` behavior is not implemented; ",
+         "idiographic only claims current-mode equivalence.", call. = FALSE)
   }
+  if (prepared && lags_missing) {
+    lags <- if (!is.null(data$lags)) data$lags else .gvar_infer_lags(data)
+  }
+  lags <- .gvar_lags(lags)
   # Per-dimension lambda minima (graphicalVAR's lambda_min_kappa/beta); fall back
   # to the shared lambda_min_ratio.
-  lmin_k <- lambda_min_kappa %||% lambda_min_ratio
-  lmin_b <- lambda_min_beta  %||% lambda_min_ratio
-  stopifnot(is.numeric(lmin_k), lmin_k > 0, lmin_k < 1,
-            is.numeric(lmin_b), lmin_b > 0, lmin_b < 1)
+  lmin_k <- lambda_min_kappa %||% lambda_min_ratio[["kappa"]]
+  lmin_b <- lambda_min_beta  %||% lambda_min_ratio[["beta"]]
+  .gvar_ratio(lmin_k, "lambda_min_kappa")
+  .gvar_ratio(lmin_b, "lambda_min_beta")
   # Fixed-penalty override (matches graphicalVAR's lambda_beta / lambda_kappa):
   # supply a scalar (or vector) to pin that penalty instead of EBIC-selecting it.
   if (!is.null(lambda_beta)) {
-    stopifnot(is.numeric(lambda_beta), length(lambda_beta) >= 1L,
-              all(is.finite(lambda_beta)), all(lambda_beta >= 0))
+    if (!(is.numeric(lambda_beta) && length(lambda_beta) >= 1L &&
+          all(is.finite(lambda_beta)) && all(lambda_beta >= 0))) {
+      stop("`lambda_beta` must contain finite non-negative numbers.",
+           call. = FALSE)
+    }
   }
   if (!is.null(lambda_kappa)) {
-    stopifnot(is.numeric(lambda_kappa), length(lambda_kappa) >= 1L,
-              all(is.finite(lambda_kappa)), all(lambda_kappa >= 0))
+    if (!(is.numeric(lambda_kappa) && length(lambda_kappa) >= 1L &&
+          all(is.finite(lambda_kappa)) && all(lambda_kappa >= 0))) {
+      stop("`lambda_kappa` must contain finite non-negative numbers.",
+           call. = FALSE)
+    }
   }
-  d <- length(vars)
-  if (!is.null(regularize_mat_beta)) {
-    stopifnot(is.matrix(regularize_mat_beta))
+  # ---- 1. Data preparation ----
+  if (prepared) {
+    if (!is.null(id) || !is.null(day) || !is.null(beep) ||
+        !is.null(min_obs) || !is.null(subject)) {
+      stop("`id`, `day`, `beep`, `min_obs`, and `subject` cannot be applied ",
+           "to prepared `data_c`/`data_l` input.", call. = FALSE)
+    }
+    ts <- .gvar_prepared(data, if (vars_missing) NULL else vars, lags,
+                         delete_missings)
+    vars <- ts$vars
+  } else {
+    data <- as.data.frame(data)
+    if (vars_missing) {
+      stop("`vars` is required for a data frame or matrix input.", call. = FALSE)
+    }
+    if (!all(vars %in% names(data))) {
+      stop("Variables not found in data: ",
+           paste(setdiff(vars, names(data)), collapse = ", "), call. = FALSE)
+    }
+    .ido_check_col(id,   "id",   data)
+    .ido_check_col(day,  "day",  data)
+    .ido_check_col(beep, "beep", data)
+    data <- .ido_keep(data, id, min_obs, subject)
+    .ido_check_numeric_vars(data, vars)
+    if (verbose) message("Preparing lagged data ...")
+    ts <- .gvar_tsdata(data, vars, id, day, beep, scale, center_within,
+                       delete_missings, lags = lags)
   }
-  if (!is.null(regularize_mat_kappa)) {
-    stopifnot(is.matrix(regularize_mat_kappa),
-              nrow(regularize_mat_kappa) == d,
-              ncol(regularize_mat_kappa) == d)
-    regularize_mat_kappa <- regularize_mat_kappa * 1   # logical -> numeric
-  }
-
-  data <- as.data.frame(data)
-  if (!all(vars %in% names(data))) {
-    stop("Variables not found in data: ",
-         paste(setdiff(vars, names(data)), collapse = ", "), call. = FALSE)
-  }
-  .ido_check_col(id,   "id",   data)
-  .ido_check_col(day,  "day",  data)
-  .ido_check_col(beep, "beep", data)
-
-  # Keep only well-sampled subjects (counts taken from the data frame).
-  data <- .ido_keep(data, id, min_obs, subject)
-
-  .ido_check_numeric_vars(data, vars)
-
-  # ---- 1. Data preparation (matches graphicalVAR::tsData, lags = 1) ----
-  if (verbose) message("Preparing lagged data ...")
-  ts <- .gvar_tsdata(data, vars, id, day, beep, scale, center_within,
-                     delete_missings)
   data_c <- ts$data_c       # n x p   (current)
-  data_l <- ts$data_l       # n x p+1 (intercept + lag-1)
+  data_l <- ts$data_l       # n x (1 + p * number of lags)
+  d <- length(vars)
   n <- nrow(data_c)
+  if (anyNA(data_c) || anyNA(data_l) ||
+      any(!is.finite(data_c)) || any(!is.finite(data_l))) {
+    stop("The graphical VAR estimator requires complete finite lag pairs. ",
+         "Use `delete_missings = TRUE` or impute the prepared matrices.",
+         call. = FALSE)
+  }
   if (n < d + 1L) {
     stop("Too few lag pairs (", n, ") for ", d, " variables.", call. = FALSE)
+  }
+  if (!is.null(regularize_mat_beta)) {
+    if (!is.matrix(regularize_mat_beta) ||
+        !(is.numeric(regularize_mat_beta) || is.logical(regularize_mat_beta)) ||
+        anyNA(regularize_mat_beta) || any(!is.finite(regularize_mat_beta)) ||
+        any(regularize_mat_beta < 0)) {
+      stop("`regularize_mat_beta` must be a finite, non-negative numeric/logical matrix.",
+           call. = FALSE)
+    }
+    # A simple p x p mask is applied identically to each requested lag.
+    if (length(lags) > 1L && identical(dim(regularize_mat_beta), c(d, d))) {
+      regularize_mat_beta <- do.call(cbind, rep(list(regularize_mat_beta),
+                                                length(lags)))
+    }
+    expected_beta <- c(d, 1L + d * length(lags))
+    if (!identical(dim(regularize_mat_beta), c(d, d * length(lags))) &&
+        !identical(dim(regularize_mat_beta), expected_beta)) {
+      stop("`regularize_mat_beta` has the wrong dimensions (expected ", d,
+           " x ", d * length(lags), " without an intercept, or ", d,
+           " x ", 1L + d * length(lags), " with an intercept).",
+           call. = FALSE)
+    }
+    regularize_mat_beta <- regularize_mat_beta * 1
+  }
+  if (!is.null(regularize_mat_kappa)) {
+    if (!is.matrix(regularize_mat_kappa) ||
+        !(is.numeric(regularize_mat_kappa) || is.logical(regularize_mat_kappa)) ||
+        anyNA(regularize_mat_kappa) || any(!is.finite(regularize_mat_kappa)) ||
+        any(regularize_mat_kappa < 0) ||
+        !identical(dim(regularize_mat_kappa), c(d, d))) {
+      stop("`regularize_mat_kappa` must be a finite, non-negative p x p numeric/logical matrix.",
+           call. = FALSE)
+    }
+    regularize_mat_kappa <- regularize_mat_kappa * 1
   }
 
   # ---- 2. Lambda grids (matches graphicalVAR::generate_lambdas) ----
@@ -211,7 +289,8 @@ graphical_var <- function(data,
   # glasso, that would be discarded).
   need_grid <- is.null(lambda_beta) || is.null(lambda_kappa)
   lams <- if (need_grid) {
-    .gvar_genlambda(data_l, data_c, n_lambda, n_lambda, lmin_k, lmin_b)
+    .gvar_genlambda(data_l, data_c, n_lambda[["kappa"]],
+                    n_lambda[["beta"]], lmin_k, lmin_b)
   } else {
     list(lambda_beta = NULL, lambda_kappa = NULL)
   }
@@ -235,10 +314,7 @@ graphical_var <- function(data,
   # ---- 4. EBIC selection with graphicalVAR's tie-break ----
   # which() drops cells whose EBIC is NA/NaN (a degenerate (lambda) pairing),
   # so one bad cell can't inject an NA index into the candidate set.
-  min_ebic <- min(grid$ebic, na.rm = TRUE)
-  cand <- which(abs(grid$ebic - min_ebic) < ebic_tol)
-  cand <- cand[grid$kappa[cand] == min(grid$kappa[cand])]
-  sel <- cand[grid$beta[cand] == min(grid$beta[cand])][1L]
+  sel <- .gvar_select_ebic(grid, ebic_tol)
   R <- est[[sel]]
 
   # ---- 5. Assemble result ----
@@ -248,54 +324,247 @@ graphical_var <- function(data,
   colnames(beta) <- colnames(data_l)
   dimnames(kappa) <- list(vars, vars)
 
-  temporal <- beta[, -1L, drop = FALSE]  # [outcome, predictor]
-  dimnames(temporal) <- list(vars, vars)
+  temporal_layers <- setNames(lapply(seq_along(lags), function(i) {
+    at <- 1L + (i - 1L) * d + seq_len(d)
+    out <- beta[, at, drop = FALSE]
+    dimnames(out) <- list(vars, vars)
+    out
+  }), paste0("lag", lags))
+  temporal <- temporal_layers[[1L]]
 
   pcc <- .gvar_compute_pcc(kappa)
-  pdc <- .gvar_compute_pdc(beta, kappa)
+  pdc_layers <- lapply(temporal_layers, .gvar_compute_pdc, kappa = kappa)
+  pdc <- pdc_layers[[1L]]
   dimnames(pcc) <- dimnames(pdc) <- list(vars, vars)
+
+  temporal_networks <- setNames(lapply(temporal_layers, function(layer) {
+    .ido_wrap(t(layer), method = "relative", directed = TRUE)
+  }), if (length(lags) == 1L && identical(lags, 1L)) "temporal" else
+       paste0("temporal_lag", lags))
 
   model <- list(
     beta            = beta,
     temporal        = temporal,
+    temporal_layers = temporal_layers,
+    PDC_layers      = pdc_layers,
     kappa           = kappa,
     PCC             = pcc,
     PDC             = pdc,
     contemporaneous = pcc,
     labels          = vars,
+    lags            = lags,
     n_obs           = n,
     lambda_beta     = grid$beta[sel],
     lambda_kappa    = grid$kappa[sel],
     gamma           = gamma,
     EBIC            = grid$ebic[sel],
-    likelihood      = likelihood
+    likelihood      = likelihood,
+    n_lambda        = n_lambda,
+    path            = grid,
+    convergence     = R$convergence,
+    prepared_input  = prepared,
+    equivalence     = list(
+      reference = "graphicalVAR",
+      mimic = mimic,
+      scope = if (identical(lags, 1L)) "current mode, lag 1" else
+        "idiographic multi-lag extension; no upstream numerical claim"
+    )
   )
   .ido_group_result(
     "gvar_result",
-    list(
-      temporal = .ido_wrap(t(temporal), method = "relative", directed = TRUE),
+    c(temporal_networks, list(
       contemporaneous = .ido_wrap(pcc, method = "co_occurrence",
                                   directed = FALSE)
-    ),
+    )),
     model
   )
 }
 
 
 # ============================================================
-# Internal: data preparation (graphicalVAR::tsData, lags = 1)
+# Internal: argument validation and data preparation
 # ============================================================
 
-#' Build current/lagged matrices matching tsData (lags = 1).
+#' @noRd
+.gvar_count <- function(x, arg, minimum = 1L) {
+  if (!(is.numeric(x) && length(x) == 1L && is.finite(x) && x == floor(x) &&
+        x >= minimum)) {
+    stop("`", arg, "` must be one integer >= ", minimum, ".", call. = FALSE)
+  }
+  as.integer(x)
+}
+
+#' Parse a scalar or beta/kappa pair while returning a stable named vector.
+#' @noRd
+.gvar_pair_arg <- function(x, arg, integer = FALSE, lower = -Inf, upper = Inf,
+                           open_lower = FALSE, open_upper = FALSE) {
+  if (!(is.numeric(x) && length(x) %in% c(1L, 2L) && all(is.finite(x)))) {
+    stop("`", arg, "` must be a numeric scalar or beta/kappa pair.",
+         call. = FALSE)
+  }
+  if (length(x) == 1L) {
+    x <- c(beta = x, kappa = x)
+  } else if (is.null(names(x)) || (!anyNA(names(x)) && all(names(x) == ""))) {
+    names(x) <- c("beta", "kappa")
+  } else {
+    if (anyNA(names(x)) || any(names(x) == "") ||
+        !setequal(names(x), c("beta", "kappa")) ||
+        anyDuplicated(names(x))) {
+      stop("A named `", arg, "` must contain exactly `beta` and `kappa`.",
+           call. = FALSE)
+    }
+    x <- x[c("beta", "kappa")]
+  }
+  low_ok <- if (open_lower) x > lower else x >= lower
+  high_ok <- if (open_upper) x < upper else x <= upper
+  if (!all(low_ok & high_ok) || (integer && any(x != floor(x)))) {
+    interval <- paste0(if (open_lower) "(" else "[", lower, ", ", upper,
+                       if (open_upper) ")" else "]")
+    stop("`", arg, "` values must be ", if (integer) "integers " else "",
+         "in ", interval, ".", call. = FALSE)
+  }
+  if (integer) x <- as.integer(x)
+  setNames(x, c("beta", "kappa"))
+}
+
+#' @noRd
+.gvar_ratio <- function(x, arg) {
+  if (!(is.numeric(x) && length(x) == 1L && is.finite(x) && x > 0 && x < 1)) {
+    stop("`", arg, "` must be one finite number strictly between 0 and 1.",
+         call. = FALSE)
+  }
+  invisible(x)
+}
+
+#' @noRd
+.gvar_lags <- function(lags) {
+  if (!(is.numeric(lags) && length(lags) >= 1L && all(is.finite(lags)) &&
+        all(lags == floor(lags)) && all(lags >= 1L))) {
+    stop("`lags` must be a non-empty vector of positive integers.",
+         call. = FALSE)
+  }
+  lags <- as.integer(lags)
+  if (anyDuplicated(lags)) {
+    stop("`lags` must not contain duplicates.", call. = FALSE)
+  }
+  lags
+}
+
+#' Infer lag metadata from a prepared design when the caller supplied only
+#' `data_c` and `data_l`.
+#' @noRd
+.gvar_infer_lags <- function(data) {
+  if (!(is.matrix(data$data_c) || is.data.frame(data$data_c)) ||
+      !(is.matrix(data$data_l) || is.data.frame(data$data_l))) {
+    stop("Prepared `data_c` and `data_l` must be matrices or data frames.",
+         call. = FALSE)
+  }
+  p <- ncol(as.matrix(data$data_c))
+  q <- ncol(as.matrix(data$data_l))
+  if (p < 2L || q < 1L) {
+    stop("Cannot infer `lags` from empty or underspecified prepared matrices.",
+         call. = FALSE)
+  }
+  n_predictors <- if (q %% p == 0L) q else if ((q - 1L) %% p == 0L) q - 1L else
+    stop("Cannot infer `lags` from the prepared matrix dimensions; supply ",
+         "`lags` explicitly.", call. = FALSE)
+  n_lags <- n_predictors %/% p
+  if (n_lags < 1L) {
+    stop("Prepared `data_l` contains no lagged predictors.", call. = FALSE)
+  }
+
+  cn <- colnames(as.matrix(data$data_l))
+  if (!is.null(cn) && length(cn) == q) {
+    predictor_names <- tail(cn, n_predictors)
+    is_labelled <- grepl("_lag[0-9]+$", predictor_names)
+    if (all(is_labelled)) {
+      labelled <- as.integer(sub(".*_lag([0-9]+)$", "\\1", predictor_names))
+      candidate <- labelled[seq.int(1L, length(labelled), by = p)]
+      if (length(candidate) == n_lags &&
+          identical(labelled, rep(candidate, each = p))) {
+        return(candidate)
+      }
+    }
+  }
+  seq_len(n_lags)
+}
+
+#' Validate and normalize caller-prepared current/lagged matrices.
+#' @noRd
+.gvar_prepared <- function(data, vars, lags, delete_missings = TRUE) {
+  if (!(is.matrix(data$data_c) || is.data.frame(data$data_c)) ||
+      !(is.matrix(data$data_l) || is.data.frame(data$data_l))) {
+    stop("Prepared `data_c` and `data_l` must be matrices or data frames.",
+         call. = FALSE)
+  }
+  data_c <- as.matrix(data$data_c)
+  data_l <- as.matrix(data$data_l)
+  if (!is.numeric(data_c) || !is.numeric(data_l)) {
+    stop("Prepared `data_c` and `data_l` must be numeric.", call. = FALSE)
+  }
+  if (nrow(data_c) != nrow(data_l)) {
+    stop("Prepared `data_c` and `data_l` must have the same number of rows.",
+         call. = FALSE)
+  }
+  p <- ncol(data_c)
+  if (p < 2L) stop("Prepared `data_c` must have at least two columns.",
+                   call. = FALSE)
+  if (is.null(vars)) {
+    vars <- colnames(data_c)
+    if (is.null(vars) || any(vars == "")) {
+      stop("`vars` is required when prepared `data_c` has no column names.",
+           call. = FALSE)
+    }
+  }
+  if (length(vars) != p || anyNA(vars) || any(vars == "") ||
+      anyDuplicated(vars)) {
+    stop("`vars` must uniquely name every column of prepared `data_c`.",
+         call. = FALSE)
+  }
+  expected <- p * length(lags)
+  if (ncol(data_l) == expected) {
+    data_l <- cbind(1, data_l)
+  } else if (ncol(data_l) != expected + 1L) {
+    stop("Prepared `data_l` must have p * length(lags) predictor columns, ",
+         "optionally preceded by an intercept.", call. = FALSE)
+  }
+  if (anyNA(data_l[, 1L]) || any(data_l[, 1L] != 1)) {
+    stop("The first column of prepared `data_l` must be an intercept of ones.",
+         call. = FALSE)
+  }
+  colnames(data_c) <- vars
+  lag_names <- if (identical(lags, 1L)) vars else
+    unlist(lapply(lags, function(lag) paste0(vars, "_lag", lag)),
+           use.names = FALSE)
+  colnames(data_l) <- c("(Intercept)", lag_names)
+  keep <- if (isTRUE(delete_missings)) {
+    stats::complete.cases(data_c, data_l) &
+      apply(data_c, 1L, function(z) all(is.finite(z))) &
+      apply(data_l, 1L, function(z) all(is.finite(z)))
+  } else {
+    rep(TRUE, nrow(data_c))
+  }
+  data_c <- data_c[keep, , drop = FALSE]
+  data_l <- data_l[keep, , drop = FALSE]
+  if (isTRUE(delete_missings) && nrow(data_c) == 0L) {
+    stop("No complete lag pairs remain after deleting missing values.",
+         call. = FALSE)
+  }
+  list(data_c = data_c, data_l = data_l, vars = vars, lags = lags)
+}
+
+#' Build current/lagged matrices for one or more explicit lags.
 #'
 #' Global per-variable scaling (always centered), optional within-person
-#' centering when >1 id, lag-1 construction within (id, day) blocks, and
+#' centering when >1 id, lag construction within (id, day) blocks, and
 #' (when `delete_missings`) deletion of rows with missing current or lagged
-#' values.
+#' values. When `beep` is supplied, an absent beep creates a missing lag rather
+#' than joining non-consecutive observations.
 #' @noRd
 .gvar_tsdata <- function(data, vars, id, day, beep, scale, center_within,
-                         delete_missings = TRUE) {
+                         delete_missings = TRUE, lags = 1L) {
   data <- as.data.frame(data)
+  lags <- .gvar_lags(lags)
 
   # global scale per variable (center always TRUE, scale optional)
   for (v in vars) {
@@ -315,27 +584,52 @@ graphical_var <- function(data,
 
   # order by id, day, then beep (or original row order within block)
   key <- if (is.null(beep)) seq_len(nrow(data)) else data[[beep]]
+  if (!is.null(beep) && !is.numeric(key)) {
+    stop("`beep` must identify a numeric measurement index.", call. = FALSE)
+  }
   ord <- order(idv, dayv, key)
   data <- data[ord, , drop = FALSE]
   idv  <- idv[ord]
   dayv <- dayv[ord]
+  key <- key[ord]
 
   Y <- as.matrix(data[, vars, drop = FALSE])
 
-  # lag-1 within (id, day) blocks: a row's lag is the previous row iff that
-  # previous row belongs to the same block; first row of each block -> NA.
-  blk  <- paste(idv, dayv, sep = "\r")
-  same <- c(FALSE, blk[-1L] == blk[-length(blk)])
-  lag  <- matrix(NA_real_, nrow(Y), ncol(Y))
-  lag[same, ] <- Y[which(same) - 1L, , drop = FALSE]
+  blk <- paste(idv, dayv, sep = "\r")
+  lagged <- lapply(lags, function(lag) {
+    source <- rep(NA_integer_, nrow(Y))
+    if (is.null(beep)) {
+      candidate <- seq_len(nrow(Y)) - lag
+      ok <- candidate >= 1L
+      ok[ok] <- blk[candidate[ok]] == blk[ok]
+      source[ok] <- candidate[ok]
+    } else {
+      for (ii in split(seq_len(nrow(Y)), blk)) {
+        pos <- match(key[ii] - lag, key[ii])
+        ok <- !is.na(pos)
+        source[ii[ok]] <- ii[pos[ok]]
+      }
+    }
+    out <- matrix(NA_real_, nrow(Y), ncol(Y))
+    ok <- !is.na(source)
+    out[ok, ] <- Y[source[ok], , drop = FALSE]
+    out
+  })
+  lag <- do.call(cbind, lagged)
 
   keep <- if (isTRUE(delete_missings)) {
     !(rowSums(is.na(Y)) > 0 | rowSums(is.na(lag)) > 0)
   } else {
     rep(TRUE, nrow(Y))
   }
+  lag_names <- if (identical(lags, 1L)) vars else
+    unlist(lapply(lags, function(l) paste0(vars, "_lag", l)),
+           use.names = FALSE)
   out <- list(data_c = Y[keep, , drop = FALSE],
-              data_l = cbind(1, lag[keep, , drop = FALSE]))
+              data_l = cbind(1, lag[keep, , drop = FALSE]),
+              vars = vars, lags = lags)
+  colnames(out$data_c) <- vars
+  colnames(out$data_l) <- c("(Intercept)", lag_names)
   if (isTRUE(delete_missings) && nrow(out$data_c) == 0L) {
     stop("No complete lag pairs remain after deleting missing values.",
          call. = FALSE)
@@ -381,6 +675,21 @@ graphical_var <- function(data,
   list(lambda_kappa = lam_k, lambda_beta = lam_b)
 }
 
+#' Select the minimum-EBIC cell, preferring lower kappa then lower beta within
+#' the requested absolute tolerance.
+#' @noRd
+.gvar_select_ebic <- function(grid, ebic_tol = 1e-4) {
+  ok <- is.finite(grid$ebic) & is.finite(grid$kappa) & is.finite(grid$beta)
+  if (!any(ok)) {
+    stop("No finite EBIC value was produced by the lambda grid.", call. = FALSE)
+  }
+  min_ebic <- min(grid$ebic[ok])
+  cand <- which(ok & abs(grid$ebic - min_ebic) <= ebic_tol)
+  cand <- cand[grid$kappa[cand] == min(grid$kappa[cand])]
+  cand <- cand[grid$beta[cand] == min(grid$beta[cand])]
+  cand[[1L]]
+}
+
 
 # ============================================================
 # Internal: Rothman/MRCE joint estimator (graphicalVAR::Rothmana)
@@ -394,13 +703,14 @@ graphical_var <- function(data,
 #' Minimises (1/n) tr{ kappa (Y - XB)'(Y - XB) } + sum lambda_mat * |B|.
 #' @noRd
 .gvar_beta <- function(kappa, beta, X, Y, lambda_mat,
-                       convergence = 1e-4, maxit = 100L) {
+                       convergence = 1e-4, maxit = 100L, details = FALSE) {
   n <- nrow(X); nX <- ncol(X); nY <- ncol(Y)
   Sxx <- crossprod(X)
   Sxy <- crossprod(X, Y)
   Om  <- kappa
   B <- beta
   U <- Sxy - Sxx %*% B
+  converged <- FALSE
   for (it in seq_len(maxit)) {
     B_old <- B
     for (cc in seq_len(nY)) {
@@ -415,9 +725,16 @@ graphical_var <- function(data,
         }
       }
     }
-    if (sum(abs(B - B_old)) < convergence * sum(abs(B))) break
+    if (sum(abs(B - B_old)) < convergence * sum(abs(B))) {
+      converged <- TRUE
+      break
+    }
   }
-  B
+  if (isTRUE(details)) {
+    list(beta = B, iterations = it, converged = converged)
+  } else {
+    B
+  }
 }
 
 #' kappa-update: graphical lasso on the residual covariance.
@@ -450,8 +767,11 @@ graphical_var <- function(data,
   if (is.null(regularize_mat_beta)) {
     lambda_mat <- matrix(lambda_beta, nX, nY)
     if (!penalize_diagonal) {
-      # beta is (intercept + p) x p, so the AR diagonal sits at [i + 1, i].
-      for (i in seq_len(nY)) lambda_mat[i + 1L, i] <- 0
+      # beta is (intercept + p * L) x p. Each lag block has its own AR
+      # diagonal, at predictor row 1 + (lag - 1) * p + outcome.
+      predictor_rows <- seq_len(nX - 1L)
+      outcome <- ((predictor_rows - 1L) %% nY) + 1L
+      lambda_mat[cbind(predictor_rows + 1L, outcome)] <- 0
     }
   } else {
     lambda_mat <- lambda_beta * t(regularize_mat_beta)
@@ -489,13 +809,23 @@ graphical_var <- function(data,
   beta_ridge <- solve(crossprod(X) + lambda_beta * diag(nX), crossprod(X, Y))
   beta <- matrix(0, nX, nY)
   it <- 0L
+  converged_outer <- FALSE
+  inner_iterations <- integer()
+  converged_inner <- logical()
   repeat {
     it <- it + 1L
     kappa <- .gvar_kappa(beta, X, Y, lambda_kappa, regularize_mat_kappa)
     beta_old <- beta
-    beta <- .gvar_beta(kappa, beta, X, Y, lambda_mat, convergence, maxit_in)
-    if (sum(abs(beta - beta_old)) < convergence * sum(abs(beta_ridge))) break
-    if (it > maxit_out) break
+    beta_fit <- .gvar_beta(kappa, beta, X, Y, lambda_mat, convergence,
+                           maxit_in, details = TRUE)
+    beta <- beta_fit$beta
+    inner_iterations <- c(inner_iterations, beta_fit$iterations)
+    converged_inner <- c(converged_inner, beta_fit$converged)
+    if (sum(abs(beta - beta_old)) < convergence * sum(abs(beta_ridge))) {
+      converged_outer <- TRUE
+      break
+    }
+    if (it >= maxit_out) break
   }
 
   WS <- (crossprod(Y) - crossprod(Y, X %*% beta) -
@@ -522,7 +852,19 @@ graphical_var <- function(data,
   ebic <- -2 * LLk + log(n) * (pdO + pdB) +
     (pdO + pdB) * 4 * gamma * log(2 * nY)
 
-  list(beta = t(beta), kappa = kappa, EBIC = as.numeric(ebic))
+  list(
+    beta = t(beta),
+    kappa = kappa,
+    EBIC = as.numeric(ebic),
+    convergence = list(
+      outer_converged = converged_outer,
+      outer_iterations = it,
+      inner_converged = converged_inner,
+      inner_iterations = inner_iterations,
+      maxit_out = maxit_out,
+      maxit_in = maxit_in
+    )
+  )
 }
 
 
@@ -562,34 +904,41 @@ graphical_var <- function(data,
 #' @export
 print.gvar_result <- function(x, digits = 2, ...) {
   d <- length(x$labels)
-  n_temp <- sum(x$temporal != 0)
+  temporal_layers <- x$temporal_layers %||% list(lag1 = x$temporal)
+  n_temp <- sum(vapply(temporal_layers, function(z) sum(z != 0), integer(1)))
   n_contemp <- sum(x$PCC[upper.tri(x$PCC)] != 0)
 
   cat("Graphical VAR Result\n")
   cat(sprintf("  Variables:      %d (%s)\n", d, paste(x$labels, collapse = ", ")))
+  cat(sprintf("  Lags:           %s\n", paste(x$lags %||% 1L, collapse = ", ")))
   cat(sprintf("  Observations:   %d\n", x$n_obs))
-  cat(sprintf("  Temporal edges: %d / %d\n", n_temp, d * d))
+  cat(sprintf("  Temporal edges: %d / %d\n", n_temp,
+              d * d * length(temporal_layers)))
   cat(sprintf("  Contemp edges:  %d / %d\n", n_contemp, d * (d - 1) / 2))
   cat(sprintf("  EBIC:           %.2f (gamma=%.2f)\n", x$EBIC, x$gamma))
   cat(sprintf("  Lambda:         beta=%.4f, kappa=%.4f\n",
               x$lambda_beta, x$lambda_kappa))
   .ido_print_networks(x, digits = digits)
-  cat("\n  plot(x) | plot(x, layer = \"temporal\")",
+  temporal_name <- if (length(temporal_layers) == 1L &&
+                       identical(x$lags %||% 1L, 1L)) "temporal" else
+    paste0("temporal_lag", (x$lags %||% 1L)[1L])
+  cat(paste0("\n  plot(x) | plot(x, layer = \"", temporal_name, "\")"),
       "\n  edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)\n")
   invisible(x)
 }
 
 #' Coerce a gvar_result to plottable netobjects
 #'
-#' Returns the two networks a graphical VAR contains as Nestimate netobjects,
+#' Returns the temporal lag layer(s) and contemporaneous network as netobjects,
 #' so each renders directly with \code{cograph::splot()} (or any netobject verb)
 #' without the caller transposing matrices or dropping intercept columns. The
 #' temporal network is oriented \code{[from = predictor(t-1), to = outcome(t)]}.
 #'
 #' @param x A \code{gvar_result}.
 #' @param ... Ignored.
-#' @return A \code{netobject_group}: a named list with \code{$temporal}
-#'   (directed) and \code{$contemporaneous} (undirected) netobjects.
+#' @return A \code{netobject_group}: a named list with \code{$temporal} for a
+#'   lag-1 model, or one `temporal_lagN` element per multi-lag model, plus
+#'   \code{$contemporaneous}.
 #' @export
 as_netobject.gvar_result <- function(x, ...) {
   .ido_network_group(x)

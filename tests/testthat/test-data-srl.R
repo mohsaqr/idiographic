@@ -21,7 +21,7 @@ test_that("srl is already ordered and carries a within-person occasion index", {
 test_that("srl fits every single-series estimator with no preprocessing", {
   data(srl, package = "idiographic")
   vars <- c("efficacy", "value", "planning", "monitoring", "effort")
-  fit <- build_var(srl, vars = vars, id = "name", subject = "Grace")
+  fit <- fit_var(srl, vars = vars, id = "name", subject = "Grace")
   expect_s3_class(fit, "var_result")
   expect_equal(fit$labels, vars)
 })

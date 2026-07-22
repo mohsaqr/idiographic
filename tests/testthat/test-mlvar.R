@@ -1,7 +1,7 @@
-test_that("build_mlvar returns three named cograph networks + tidy coefs", {
+test_that("fit_mlvar returns three named cograph networks + tidy coefs", {
   d <- synth_panel(n_id = 12, days = 4, beeps = 12, seed = 3)
   fit <- suppressWarnings(
-    build_mlvar(d, vars = c("A", "B", "C"), id = "id",
+    fit_mlvar(d, vars = c("A", "B", "C"), id = "id",
                 day = "day", beep = "beep")
   )
   expect_s3_class(fit, "net_mlvar")
@@ -22,11 +22,12 @@ test_that("coefs() errors for unsupported classes", {
 })
 
 test_that("matches mlVAR to machine precision on well-conditioned data", {
+  skip_unless_equivalence()
   skip_if_not_installed("mlVAR")
   d <- synth_panel(n_id = 20, days = 6, beeps = 10, seed = 21)
   vars <- c("A", "B", "C")
   fit <- suppressWarnings(
-    build_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+    fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
   )
   ref <- suppressWarnings(mlVAR::mlVAR(
     d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
@@ -45,18 +46,35 @@ test_that("matches mlVAR to machine precision on well-conditioned data", {
   expect_equal(bt[upper.tri(bt)], rb[upper.tri(rb)], tolerance = 1e-8)
 })
 
-test_that("unsupported mlVAR modes error clearly; aliases work", {
-  d <- synth_panel(n_id = 8, days = 3, beeps = 12, seed = 4)
+test_that("mlVAR modes, multiple lags, and aliases work", {
+  d <- synth_panel(n_id = 10, days = 3, beeps = 12, seed = 4)
   vars <- c("A", "B", "C")
-  expect_error(build_mlvar(d, vars = vars, id = "id", temporal = "correlated"),
-               "fixed")
-  expect_error(build_mlvar(d, vars = vars, id = "id",
-                           contemporaneous = "orthogonal"), "fixed")
-  expect_error(build_mlvar(d, vars = vars, id = "id", estimator = "lm"), "lmer")
-  expect_error(build_mlvar(d, vars = vars, id = "id", lags = 2), "lags")
+  correlated <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", temporal = "correlated"
+  ))
+  expect_s3_class(correlated, "net_mlvar")
+  expect_length(attr(correlated, "temporal_subjects"), 10L)
+
+  orthogonal <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", contemporaneous = "orthogonal"
+  ))
+  expect_length(attr(orthogonal, "contemporaneous_subjects"), 10L)
+
+  unique <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", estimator = "lm",
+    temporal = "unique", contemporaneous = "unique"
+  ))
+  expect_s3_class(unique, "net_mlvar")
+  expect_length(attr(unique, "temporal_subjects"), 10L)
+
+  multi <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", lags = c(1, 2)))
+  expect_named(multi, c("temporal_lag1", "temporal_lag2",
+                        "contemporaneous", "between"))
+  expect_equal(nrow(coefs(multi)), 18L)
+  expect_equal(sort(unique(coefs(multi)$lag)), c(1L, 2L))
   # standardize is a deprecated alias for scale: identical temporal weights.
-  a <- suppressWarnings(build_mlvar(d, vars = vars, id = "id", standardize = TRUE))
-  b <- suppressWarnings(build_mlvar(d, vars = vars, id = "id", scale = TRUE))
+  a <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", standardize = TRUE))
+  b <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", scale = TRUE))
   expect_equal(a$temporal$weights, b$temporal$weights)
 })
 
@@ -66,19 +84,81 @@ test_that("conflicting scale/standardize warns and honours the canonical name", 
   # standardize is a deprecated alias of scale; if both are set and disagree,
   # the canonical `scale` wins and a warning is emitted (not silently dropped).
   expect_warning(
-    a <- build_mlvar(d, vars = vars, id = "id", scale = TRUE,
+    a <- fit_mlvar(d, vars = vars, id = "id", scale = TRUE,
                      standardize = FALSE),
     "disagree"
   )
-  b <- suppressWarnings(build_mlvar(d, vars = vars, id = "id", scale = TRUE))
+  b <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", scale = TRUE))
   expect_equal(a$temporal$weights, b$temporal$weights)
 })
 
+test_that("easy mlVAR controls map to explicit native behavior", {
+  d <- synth_panel(n_id = 8, days = 3, beeps = 10, seed = 44)
+  vars <- c("A", "B", "C")
+
+  global <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", day = "day", beep = "beep",
+    standardize_mode = "global"
+  ))
+  explicit <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", day = "day", beep = "beep", scale = TRUE
+  ))
+  expect_equal(global$temporal$weights, explicit$temporal$weights)
+
+  bad <- d
+  bad$A[5] <- NA_real_
+  expect_error(
+    fit_mlvar(bad, vars = vars, id = "id", day = "day", beep = "beep",
+              missing = "fail"),
+    "Missing model or ordering values"
+  )
+
+  aligned <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", day = "day", beep = "beep",
+    lags = 1, compare_to_lags = c(1, 2)
+  ))
+  ordinary <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", day = "day", beep = "beep", lags = 1
+  ))
+  expect_lt(attr(aligned, "n_obs"), attr(ordinary, "n_obs"))
+
+  means <- stats::aggregate(d[vars], list(id = d$id), mean)
+  known <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", day = "day", beep = "beep",
+    true_means = means
+  ))
+  expect_s3_class(known, "net_mlvar")
+  expect_identical(attr(known, "config")$engine, "frequentist")
+
+  parallel_fit <- suppressWarnings(fit_mlvar(
+    d, vars = vars, id = "id", day = "day", beep = "beep", nCores = 2
+  ))
+  expect_equal(parallel_fit$temporal$weights, ordinary$temporal$weights,
+               tolerance = 0)
+
+  legacy_warnings <- character()
+  legacy <- withCallingHandlers(
+    fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep",
+              orthogonal = TRUE),
+    warning = function(w) {
+      legacy_warnings <<- c(legacy_warnings, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_match(paste(legacy_warnings, collapse = " "), "deprecated")
+  expect_identical(attr(legacy, "config")$temporal, "orthogonal")
+  expect_error(
+    fit_mlvar(d, vars = vars, id = "id", unknown_control = 1),
+    "Unused frequentist engine"
+  )
+})
+
 test_that("AR = TRUE gives a diagonal temporal matrix matching mlVAR", {
+  skip_unless_equivalence()
   skip_if_not_installed("mlVAR")
   d <- synth_panel(n_id = 18, days = 5, beeps = 11, seed = 31)
   vars <- c("A", "B", "C")
-  fit <- suppressWarnings(build_mlvar(d, vars = vars, id = "id", day = "day",
+  fit <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", day = "day",
                                       beep = "beep", AR = TRUE))
   B <- fit$temporal$weights
   expect_true(all(B[row(B) != col(B)] == 0))      # off-diagonal exactly 0
@@ -94,6 +174,20 @@ test_that("AR = TRUE gives a diagonal temporal matrix matching mlVAR", {
   expect_true(all(off$beta == 0))
   expect_false(any(is.na(off$significant)))
   expect_true(all(!off$significant))
+})
+
+test_that("reference engine converts upstream output without changing layers", {
+  skip_unless_equivalence()
+  skip_if_not_installed("mlVAR")
+  d <- synth_panel(n_id = 10, days = 3, beeps = 10, seed = 72)
+  fit <- suppressWarnings(fit_mlvar(
+    d, vars = c("A", "B", "C"), id = "id", day = "day", beep = "beep",
+    engine = "reference", verbose = FALSE
+  ))
+  expect_s3_class(fit, "net_mlvar_reference")
+  expect_named(fit, c("temporal", "contemporaneous", "between"))
+  expect_equal(nrow(coefs(fit)), 9L)
+  expect_identical(equivalence(fit)$status, "delegated")
 })
 
 test_that("singular between-network returns zeros with a warning (convention)", {

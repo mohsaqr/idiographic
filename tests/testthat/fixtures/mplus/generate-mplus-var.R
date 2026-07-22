@@ -1,5 +1,5 @@
 # Generate Mplus single-subject Bayesian VAR(1) ground-truth fixtures for
-# build_var_bayes() parity tests. Mplus fits the VAR as a Bayesian regression on
+# fit_var_bayes() parity tests. Mplus fits the VAR as a Bayesian regression on
 # explicit lagged columns (ESTIMATOR = BAYES), residual covariance = Sigma.
 # Run: Rscript tests/testthat/fixtures/mplus/generate-mplus-var.R
 suppressWarnings(suppressMessages(library(MplusAutomation)))
@@ -51,7 +51,7 @@ run_var_fixture <- function(tag, n_t, Phi, Theta, cc, seed) {
     else if (grepl("\\.WITH$", h)) { a <- vi(sub("\\.WITH$", "", h)); b <- vi(pa)
       S[a, b] <- S[b, a] <- e }
   }
-  # data for build_var_bayes: a single-subject frame of the standardized series
+  # data for fit_var_bayes: a single-subject frame of the standardized series
   sdat <- data.frame(V1 = Ys[, 1], V2 = Ys[, 2])
   fixture <- list(tag = tag, data = sdat, vars = vars,
                   mplus = list(B = B, B_sd = Bsd, Sigma = S),
