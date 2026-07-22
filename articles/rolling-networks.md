@@ -22,8 +22,8 @@ that lag-one prediction inside the window does not account for
 ([Bringmann et al. 2013](#ref-bringmann2013); [Epskamp et al.
 2018](#ref-epskamp2018mlvar)). Nothing in either estimand refers to
 other people: every window is estimated from one individual’s occasions,
-and differences between windows are within-person change in dynamics,
-not differences between persons.
+and differences between windows are within-person variation in estimated
+dynamics, not differences between persons.
 
 Two rolling estimators are provided.
 [`fit_rolling_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_var.md)
@@ -31,19 +31,19 @@ refits the ordinary least-squares VAR in each window and is the
 unregularized, time-varying baseline: every window returns a dense
 temporal matrix and a dense contemporaneous matrix.
 [`fit_rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_graphical_var.md)
-refits the penalized penalized two-step estimator in each window —
-lasso-penalized lagged regressions, a graphical lasso on their
-residuals, the penalty selected per window by the extended Bayesian
-information criterion — so each window carries its own sparsity
-decision. Both are descriptive instruments: a sequence of window fits
-shows that local dynamics differ, not why they differ. Rolling
-estimation is also not a remedy for short series — each window contains
-fewer observations than the full series, so the window size sets a
-bias-variance tradeoff in which smaller windows track change more finely
-but estimate every network from less data. Because adjacent windows
-share most of their occasions, their estimates are strongly dependent,
-and window-size sensitivity should be reported whenever rolling networks
-are offered as evidence of changing dynamics.
+refits the penalized two-step estimator in each window — lasso-penalized
+lagged regressions, a graphical lasso on their residuals, the penalty
+selected per window by the extended Bayesian information criterion — so
+each window carries its own sparsity decision. Both are descriptive
+instruments: a sequence of window fits shows that local dynamics differ,
+not why they differ. Rolling estimation is also not a remedy for short
+series — each window contains fewer observations than the full series,
+so the window size sets a bias-variance tradeoff in which smaller
+windows track change more finely but estimate every network from less
+data. Because adjacent windows share most of their occasions, their
+estimates are strongly dependent, and window-size sensitivity should be
+reported whenever rolling networks are offered as evidence of changing
+dynamics.
 
 ## Data and preprocessing
 
@@ -253,33 +253,33 @@ more stable than the temporal coefficients.
 
 ``` r
 
-head(as.data.frame(rolling_gvar), 12)
-#>    subject window start_row end_row start_day end_day start_beep end_beep
-#> 1    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 2    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 3    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 4    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 5    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 6    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 7    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 8    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 9    Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 10   Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 11   Grace      1         1      70      <NA>    <NA>         NA       NA
-#> 12   Grace      1         1      70      <NA>    <NA>         NA       NA
-#>     network       from       to weight
-#> 1  temporal   efficacy efficacy      0
-#> 2  temporal      value efficacy      0
-#> 3  temporal   planning efficacy      0
-#> 4  temporal monitoring efficacy      0
-#> 5  temporal     effort efficacy      0
-#> 6  temporal   efficacy    value      0
-#> 7  temporal      value    value      0
-#> 8  temporal   planning    value      0
-#> 9  temporal monitoring    value      0
-#> 10 temporal     effort    value      0
-#> 11 temporal   efficacy planning      0
-#> 12 temporal      value planning      0
+edge_counts <- do.call(rbind, lapply(seq_along(rolling_gvar$fits), function(i) {
+  data.frame(window = i, summary(rolling_gvar$fits[[i]]))
+}))
+edge_counts
+#>   window         network n_nodes n_edges density mean_abs_weight n_positive
+#> 1      1        temporal       5       0     0.0       0.0000000          0
+#> 2      1 contemporaneous       5       3     0.3       0.1939779          3
+#> 3      2        temporal       5       0     0.0       0.0000000          0
+#> 4      2 contemporaneous       5       2     0.2       0.1114952          2
+#> 5      3        temporal       5       0     0.0       0.0000000          0
+#> 6      3 contemporaneous       5       3     0.3       0.1774513          3
+#> 7      4        temporal       5       0     0.0       0.0000000          0
+#> 8      4 contemporaneous       5       5     0.5       0.1471085          5
+#>   n_negative
+#> 1          0
+#> 2          0
+#> 3          0
+#> 4          0
+#> 5          0
+#> 6          0
+#> 7          0
+#> 8          0
+edges(rolling_gvar$fits[[1]])
+#>           network       from         to     weight
+#> 1 contemporaneous monitoring     effort 0.26380483
+#> 2 contemporaneous   efficacy monitoring 0.24664052
+#> 3 contemporaneous   planning     effort 0.07148822
 matrices(rolling_gvar, fit = 1)
 #> 
 #> $beta
@@ -323,12 +323,14 @@ matrices(rolling_gvar, fit = 1)
 #> effort            0     0        0          0      0
 ```
 
-The first sparse window retains no temporal edges, matching the
-full-series graphical fit for the same student. Its contemporaneous
-layer keeps efficacy–monitoring (0.247), monitoring–effort (0.264), and
-a small planning–effort edge (0.071) — the same three within-occasion
-partial correlations the full-series graphical fit selects, here at
-window-local magnitudes.
+All four sparse windows retain no temporal edges, matching the
+full-series graphical fit for the same student. This is an executed
+selection result, not a missing or disabled network; with these data,
+windows, and criterion, the regularized temporal layer is empty. The
+first window’s contemporaneous layer keeps efficacy–monitoring (0.247),
+monitoring–effort (0.264), and a small planning–effort edge (0.071) —
+the same three within-occasion partial correlations the full-series
+graphical fit selects, here at window-local magnitudes.
 
 ## Visualizing the network
 

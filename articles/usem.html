@@ -103,23 +103,23 @@ uSEM from VAR and graphical VAR: where those models summarize
 same-occasion association as undirected partial correlations among
 residuals, uSEM resolves each within-occasion relation into a
 <em>directed</em> structural path, so an edge <code>from -&gt; to</code>
-asserts a same-occasion effect of <code>from</code> on <code>to</code>
-for that person. What the directed paths leave unexplained is carried by
-the third layer, an undirected residual-covariance network among the
-innovations. The directed contemporaneous reading is warranted when
-theory or design implies a within-occasion ordering among the
-indicators; where no ordering is defensible, the undirected
-graphical-VAR contemporaneous network is the more conservative summary.
-GIMME, treated in the next vignette, extends the uSEM equation with a
-group-level search that recovers paths shared across people.</p>
-<p><code><a href="../reference/fit_usem.html">fit_usem()</a></code> estimates one SEM per person and averages the
-resulting matrices across the converged fits, returning the averaged
-temporal, directed contemporaneous, and residual-covariance networks.
-The averages summarize a sample of individual processes; they do not
-assert that any single person’s model matches the average. When some
-subject-level models fail to converge — as can happen when the trimming
-search is enabled or the lagged path set is restricted — the function
-reports how many failed and averages over the rest.</p>
+records a directed same-occasion coefficient from <code>from</code> to
+<code>to</code> for that person. What the directed paths leave
+unexplained is carried by the third layer, an undirected
+residual-covariance network among the innovations. The directed
+contemporaneous reading is warranted when theory or design implies a
+within-occasion ordering among the indicators; where no ordering is
+defensible, the undirected graphical-VAR contemporaneous network is the
+more conservative summary. GIMME, treated in the next vignette, extends
+the uSEM equation with a group-level search that recovers paths shared
+across people.</p>
+<p><code><a href="../reference/fit_usem.html">fit_usem()</a></code> estimates one SEM per selected person and
+returns temporal, directed contemporaneous, and residual-covariance
+networks. With one selected person, as below, every coefficient is
+idiographic. With multiple people the function also averages across
+converged fits; that average summarizes the sample and is not any one
+person’s model. Failed fits are reported rather than silently
+included.</p>
 <div class="section level2">
 <h2 id="data-and-preprocessing">Data and preprocessing<a class="anchor" aria-label="anchor" href="#data-and-preprocessing"></a>
 </h2>
@@ -127,70 +127,92 @@ reports how many failed and averages over the rest.</p>
 estimators: one row per person-occasion, an id column, and numeric
 time-varying indicators ordered within person. The bundled
 <code>srl</code> data hold self-regulated-learning indicators for 36
-students measured over 156 occasions each; this vignette fits all 36
-students on five indicators: <code>efficacy</code>, <code>value</code>,
+students measured over 156 occasions each; this vignette fits Grace on
+five indicators: <code>efficacy</code>, <code>value</code>,
 <code>planning</code>, <code>monitoring</code>, and <code>effort</code>.
-Because uSEM is a dynamic lag-one model that absorbs assumption
-violations silently — a trending series inflates its lagged coefficients
-rather than producing an error — the stationarity screen precedes the
-fit.</p>
+Grace is chosen because her five series pass the input audit, not
+because of the network returned later. Because uSEM is a dynamic lag-one
+model that absorbs assumption violations silently — a trending series
+inflates its lagged coefficients rather than producing an error — the
+stationarity screen precedes the fit.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/preprocess.html">preprocess</a></span><span class="op">(</span><span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/preprocess.html">preprocess</a></span><span class="op">(</span><span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, subject <span class="op">=</span> <span class="st">"Grace"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Idiographic Preprocessing</span></span>
 <span><span class="co">#&gt;   Variables:      5 (efficacy, value, planning, monitoring, effort)</span></span>
-<span><span class="co">#&gt;   Ordered rows:   5616</span></span>
-<span><span class="co">#&gt;   Retained pairs: 5548</span></span>
-<span><span class="co">#&gt;   Trend flags:    10</span></span>
+<span><span class="co">#&gt;   Ordered rows:   156</span></span>
+<span><span class="co">#&gt;   Retained pairs: 155</span></span>
+<span><span class="co">#&gt;   Trend flags:    0</span></span>
 <span><span class="co">#&gt;   High AR flags:  0</span></span>
-<span><span class="co">#&gt;   Drift flags:    1</span></span>
+<span><span class="co">#&gt;   Drift flags:    0</span></span>
 <span><span class="co">#&gt;   Unit-root risk: 0</span></span>
 <span><span class="co">#&gt;   Zero variance:  0</span></span>
-<span><span class="co">#&gt;   Tables:         x$pairs | x$counts | x$diagnostics</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; 10 of 180 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:</span></span>
-<span><span class="co">#&gt;   preprocess(data = srl, vars = vars, id = "name", detrend = "auto")</span></span></code></pre></div>
-<p>The five indicators over 36 students give 5616 ordered rows, of which
-5548 survive as complete current/lagged pairs: each student loses the
-first occasion to the initial lag, and a few students lose a little more
-to missing values. Ten of the 180 subject-series trip the linear-trend
-flag and one a drift flag, while the high-autoregression, unit-root, and
-zero-variance screens are clear. The trends are mild, and the panel is
-fitted as it stands; the <code>detrend</code> options described in the
-preprocessing vignette are the corrective when the flags carry more
-weight.</p>
+<span><span class="co">#&gt;   Tables:         x$pairs | x$counts | x$diagnostics</span></span></code></pre></div>
+<p>Grace’s 156 rows yield 155 complete lagged pairs. None of the five
+series trips the trend, high-autoregression, mean-shift, variance-shift,
+unit-root, or zero-variance screen, so the series is fitted as
+supplied.</p>
 </div>
 <div class="section level2">
 <h2 id="fitting-the-model">Fitting the model<a class="anchor" aria-label="anchor" href="#fitting-the-model"></a>
 </h2>
 <p>The substantive arguments are <code>time</code> (orders occasions
 within <code>id</code>), <code>temporal</code> (<code>"ar"</code> for
-autoregressions only, <code>"all"</code> for the full lagged matrix),
+autoregressions only, <code>"all"</code> for candidate cross-lags),
 <code>contemporaneous</code> (<code>"none"</code> or <code>"all"</code>
-directed same-occasion paths), and <code>trim</code> (an optional search
-that prunes non-significant paths). Estimating the full lagged and
-directed contemporaneous path sets converges for every student here. The
-SEM fit is not evaluated during vignette building because convergence
-can differ across build environments; the excerpts below were generated
-from the displayed call.</p>
+candidate directed same-occasion paths), and <code>trim</code>. A
+reciprocal all-path same-occasion model is not identified as a final
+SEM. Therefore <code>trim = TRUE</code> starts from an identified base
+model and uses the documented fit and significance criteria to add and
+prune candidate paths; the vignette does not present the underidentified
+untrimmed model as a result. The fit and all accessors below are
+evaluated when the suggested <code>lavaan</code> package is installed
+and the build environment permits core detection. This second guard
+handles restricted builders where lavaan cannot initialize its options;
+no static output is substituted when execution is unavailable.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">usem_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_usem.html">fit_usem</a></span><span class="op">(</span><span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>,</span>
-<span>                     temporal <span class="op">=</span> <span class="st">"all"</span>, contemporaneous <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span><span class="va">usem_fit</span></span></code></pre></div>
-<p>All 36 subject-level SEMs converge, each on 155 usable occasions. The
-print method reports the three networks. The averaged temporal weights
-are small, ranging from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>0.086</mn></mrow><annotation encoding="application/x-tex">-0.086</annotation></semantics></math>
-to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.105</mn><annotation encoding="application/x-tex">0.105</annotation></semantics></math>,
-while the directed contemporaneous paths are an order of magnitude
-larger, ranging from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>0.684</mn></mrow><annotation encoding="application/x-tex">-0.684</annotation></semantics></math>
-to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0.475</mn><annotation encoding="application/x-tex">0.475</annotation></semantics></math>,
-and the residual covariances lie within
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>±</mi><mn>0.033</mn></mrow><annotation encoding="application/x-tex">\pm 0.033</annotation></semantics></math>
-— the directed same-occasion structure absorbs almost all of the
-within-occasion association.</p>
+<span>                     subject <span class="op">=</span> <span class="st">"Grace"</span>, temporal <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>                     contemporaneous <span class="op">=</span> <span class="st">"all"</span>, trim <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">usem_fit</span></span>
+<span><span class="co">#&gt; uSEM Result</span></span>
+<span><span class="co">#&gt;   Subjects:      1 (1 converged)</span></span>
+<span><span class="co">#&gt;   Variables:     5 (efficacy, value, planning, monitoring, effort)</span></span>
+<span><span class="co">#&gt;   Observations:  median 155 (range 155-155)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Temporal [directed]</span></span>
+<span><span class="co">#&gt;     no non-zero edges</span></span>
+<span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
+<span><span class="co">#&gt;     efficacy          0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     value             0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     planning          0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     monitoring        0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     effort            0     0        0          0      0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Contemporaneous [directed]</span></span>
+<span><span class="co">#&gt;     weights [0.348, 0.456]  |  +3 / -0 edges</span></span>
+<span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
+<span><span class="co">#&gt;     efficacy          0     0     0.00       0.42   0.00</span></span>
+<span><span class="co">#&gt;     value             0     0     0.00       0.00   0.00</span></span>
+<span><span class="co">#&gt;     planning          0     0     0.00       0.00   0.00</span></span>
+<span><span class="co">#&gt;     monitoring        0     0     0.00       0.00   0.46</span></span>
+<span><span class="co">#&gt;     effort            0     0     0.35       0.00   0.00</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Residual_cov [undirected]</span></span>
+<span><span class="co">#&gt;     no non-zero edges</span></span>
+<span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
+<span><span class="co">#&gt;     efficacy          0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     value             0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     planning          0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     monitoring        0     0        0          0      0</span></span>
+<span><span class="co">#&gt;     effort            0     0        0          0      0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   plot(x) | plot(x, layer = "temporal") | plot(x, layer = "contemporaneous") </span></span>
+<span><span class="co">#&gt;   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)</span></span></code></pre></div>
+<p>Grace’s model converges on 155 usable lagged pairs. The search
+retains three directed contemporaneous paths and no temporal or
+residual-covariance edges. That zero is an executed selection result: it
+says no candidate temporal path survived this uSEM search for Grace, not
+that the temporal layer was disabled.</p>
 </div>
 <div class="section level2">
 <h2 id="reading-the-output">Reading the output<a class="anchor" aria-label="anchor" href="#reading-the-output"></a>
@@ -198,68 +220,103 @@ within-occasion association.</p>
 <p>The <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method reports one row per network layer,
 with the edge count, density, and mean absolute weight.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span></code></pre></div>
-<p>The contemporaneous network carries the process: its mean absolute
-weight of 0.248 dwarfs the temporal figure of 0.038, and the residual
-covariances average 0.014 in absolute value, confirming that the
-directed paths leave little within-occasion association unexplained.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           network n_nodes n_edges density mean_abs_weight n_positive n_negative</span></span>
+<span><span class="co">#&gt; 1        temporal       5       0    0.00       0.0000000          0          0</span></span>
+<span><span class="co">#&gt; 2 contemporaneous       5       3    0.15       0.4091159          3          0</span></span>
+<span><span class="co">#&gt; 3    residual_cov       5       0    0.00       0.0000000          0          0</span></span></code></pre></div>
+<p>The contemporaneous network has three of the 20 possible directed
+edges (density 0.15) and mean absolute weight 0.409. The temporal and
+residual layers have zero selected edges.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">usem_fit</span>, network <span class="op">=</span> <span class="st">"temporal"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p>Averaged across students, the lag-one effects are weak: monitoring
-predicts a small rise in next-occasion task value (0.103), and planning
-predicts a small drop in subsequent effort
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>0.086</mn></mrow><annotation encoding="application/x-tex">-0.086</annotation></semantics></math>).
-As in the VAR analysis, the within-person carry-over from one occasion
-to the next is modest.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">usem_fit</span>, network <span class="op">=</span> <span class="st">"temporal"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] network from    to      weight </span></span>
+<span><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span></code></pre></div>
+<p>The empty table makes the selection outcome explicit. It should not
+be read as proof of no lagged process; a different candidate set,
+trimming rule, or person can give a different selected model.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">usem_fit</span>, network <span class="op">=</span> <span class="st">"contemporaneous"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p>The directed contemporaneous network is where uSEM adds information.
-The strongest path runs from effort to monitoring
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>0.684</mn></mrow><annotation encoding="application/x-tex">-0.684</annotation></semantics></math>):
-within an occasion, higher effort regulation is associated with lower
-monitoring. Value directs onto efficacy (0.475) and efficacy onto
-monitoring (0.453). These are directional statements a graphical VAR
-could not make; there the same couplings would appear only as undirected
-partial correlations among innovations.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">usem_fit</span>, network <span class="op">=</span> <span class="st">"contemporaneous"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           network       from         to    weight</span></span>
+<span><span class="co">#&gt; 1 contemporaneous monitoring     effort 0.4560847</span></span>
+<span><span class="co">#&gt; 2 contemporaneous   efficacy monitoring 0.4237396</span></span>
+<span><span class="co">#&gt; 3 contemporaneous     effort   planning 0.3475233</span></span></code></pre></div>
+<p>The directed contemporaneous network retains monitoring to effort
+(0.456), efficacy to monitoring (0.424), and effort to planning (0.348).
+These arrows are directed SEM coefficients conditional on the selected
+specification; causal interpretation still requires a defensible
+within-occasion ordering.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            network       node  strength out_strength in_strength self</span></span>
+<span><span class="co">#&gt; 1         temporal   efficacy 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 2         temporal      value 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 3         temporal   planning 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 4         temporal monitoring 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 5         temporal     effort 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.4237396    0.4237396   0.0000000    0</span></span>
+<span><span class="co">#&gt; 7  contemporaneous      value 0.0000000    0.0000000   0.0000000    0</span></span>
+<span><span class="co">#&gt; 8  contemporaneous   planning 0.3475233    0.0000000   0.3475233    0</span></span>
+<span><span class="co">#&gt; 9  contemporaneous monitoring 0.8798244    0.4560847   0.4237396    0</span></span>
+<span><span class="co">#&gt; 10 contemporaneous     effort 0.8036081    0.3475233   0.4560847    0</span></span>
+<span><span class="co">#&gt; 11    residual_cov   efficacy 0.0000000           NA          NA    0</span></span>
+<span><span class="co">#&gt; 12    residual_cov      value 0.0000000           NA          NA    0</span></span>
+<span><span class="co">#&gt; 13    residual_cov   planning 0.0000000           NA          NA    0</span></span>
+<span><span class="co">#&gt; 14    residual_cov monitoring 0.0000000           NA          NA    0</span></span>
+<span><span class="co">#&gt; 15    residual_cov     effort 0.0000000           NA          NA    0</span></span></code></pre></div>
 <p>Because the contemporaneous layer is directed, <code><a href="../reference/nodes.html">nodes()</a></code>
-separates outgoing from incoming weight. Monitoring is the most central
-contemporaneous node (strength 2.114) and receives far more than it
-sends (in-strength 1.528 against out-strength 0.586), while effort has
-the largest out-strength (1.265): in the averaged same-occasion
-structure, effort directs and monitoring receives. The full averaged
-path and residual matrices, including every coefficient the edge tables
-truncate, are available from <code><a href="../reference/coefs.html">coefs()</a></code> and
-<code><a href="../reference/matrices.html">matrices()</a></code>.</p>
+separates outgoing from incoming weight. Monitoring has the largest
+total contemporaneous strength (0.880); it receives the efficacy path
+and sends the effort path. The full path and residual matrices are
+available from <code><a href="../reference/coefs.html">coefs()</a></code> and <code><a href="../reference/matrices.html">matrices()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/matrices.html">matrices</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/matrices.html">matrices</a></span><span class="op">(</span><span class="va">usem_fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $temporal</span></span>
+<span><span class="co">#&gt;            efficacy value planning monitoring effort</span></span>
+<span><span class="co">#&gt; efficacy          0     0        0          0      0</span></span>
+<span><span class="co">#&gt; value             0     0        0          0      0</span></span>
+<span><span class="co">#&gt; planning          0     0        0          0      0</span></span>
+<span><span class="co">#&gt; monitoring        0     0        0          0      0</span></span>
+<span><span class="co">#&gt; effort            0     0        0          0      0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $contemporaneous</span></span>
+<span><span class="co">#&gt;            efficacy value planning monitoring effort</span></span>
+<span><span class="co">#&gt; efficacy      0.000     0        0      0.000  0.000</span></span>
+<span><span class="co">#&gt; value         0.000     0        0      0.000  0.000</span></span>
+<span><span class="co">#&gt; planning      0.000     0        0      0.000  0.348</span></span>
+<span><span class="co">#&gt; monitoring    0.424     0        0      0.000  0.000</span></span>
+<span><span class="co">#&gt; effort        0.000     0        0      0.456  0.000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $residual_cov</span></span>
+<span><span class="co">#&gt;            efficacy value planning monitoring effort</span></span>
+<span><span class="co">#&gt; efficacy          0     0        0          0      0</span></span>
+<span><span class="co">#&gt; value             0     0        0          0      0</span></span>
+<span><span class="co">#&gt; planning          0     0        0          0      0</span></span>
+<span><span class="co">#&gt; monitoring        0     0        0          0      0</span></span>
+<span><span class="co">#&gt; effort            0     0        0          0      0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="visualizing-the-network">Visualizing the network<a class="anchor" aria-label="anchor" href="#visualizing-the-network"></a>
 </h2>
-<p>The lagged and within-occasion structures are drawn separately,
-because a lag-one edge connects one occasion to the next while the
-contemporaneous paths and the residual covariances both live within a
-single occasion. The temporal panel draws the directed lag-one network,
-with edge width scaled to absolute weight and colour encoding sign.</p>
+<p>The temporal layer is already documented as empty, so the vignette
+does not draw an empty showcase panel. The contemporaneous panel draws
+the three selected directed paths, with edge width scaled to absolute
+weight and colour encoding sign.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">usem_fit</span>, layer <span class="op">=</span> <span class="st">"temporal"</span><span class="op">)</span></span></code></pre></div>
-<p>The temporal graph is diffuse, echoing the narrow lag-one weight
-range. The within-occasion structure is itself a mixed network, and
-<code>plot(usem_fit, mixed = TRUE)</code> draws it as a single graph:
-the directed contemporaneous paths appear as curved arrows and the
-undirected residual covariances as straight edges, so the structural
-directions and the associations they leave unexplained are seen
-together.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">usem_fit</span>, layer <span class="op">=</span> <span class="st">"contemporaneous"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="usem_files/figure-html/plot-contemporaneous-1.png" class="r-plt" alt="" width="672"></p>
+<p>The within-occasion structure can also be drawn as a mixed network.
+Directed contemporaneous paths appear as curved arrows and any residual
+covariances as straight edges.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">usem_fit</span>, mixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The heavy effort-to-monitoring arrow dominates the directed
-structure, while the residual covariances that remain are small and
-undirected. The direction of each arrow is only as credible as the
-within-occasion ordering assumption behind it, which is the
-consideration that should govern the choice between uSEM and the
-undirected graphical-VAR contemporaneous summary.</p>
+<p><img src="usem_files/figure-html/plot-mixed-1.png" class="r-plt" alt="" width="672"></p>
+<p>The monitoring-to-effort arrow is the largest retained coefficient.
+No residual covariance survives this search. The direction of each arrow
+is only as credible as the within-occasion ordering assumption behind
+it, which is the consideration that should govern the choice between
+uSEM and the undirected graphical-VAR contemporaneous summary.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

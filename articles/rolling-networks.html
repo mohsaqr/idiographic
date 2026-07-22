@@ -98,15 +98,15 @@ prediction inside the window does not account for <span class="citation">(<a hre
 2013</a>; <a href="#ref-epskamp2018mlvar">Epskamp et al.
 2018</a>)</span>. Nothing in either estimand refers to other people:
 every window is estimated from one individual’s occasions, and
-differences between windows are within-person change in dynamics, not
-differences between persons.</p>
+differences between windows are within-person variation in estimated
+dynamics, not differences between persons.</p>
 <p>Two rolling estimators are provided. <code><a href="../reference/fit_rolling_var.html">fit_rolling_var()</a></code>
 refits the ordinary least-squares VAR in each window and is the
 unregularized, time-varying baseline: every window returns a dense
 temporal matrix and a dense contemporaneous matrix.
-<code><a href="../reference/fit_rolling_graphical_var.html">fit_rolling_graphical_var()</a></code> refits the penalized penalized
-two-step estimator in each window — lasso-penalized lagged regressions,
-a graphical lasso on their residuals, the penalty selected per window by
+<code><a href="../reference/fit_rolling_graphical_var.html">fit_rolling_graphical_var()</a></code> refits the penalized two-step
+estimator in each window — lasso-penalized lagged regressions, a
+graphical lasso on their residuals, the penalty selected per window by
 the extended Bayesian information criterion — so each window carries its
 own sparsity decision. Both are descriptive instruments: a sequence of
 window fits shows that local dynamics differ, not why they differ.
@@ -311,33 +311,33 @@ close to Grace’s full-series contemporaneous pattern: in this series the
 within-occasion structure is more stable than the temporal
 coefficients.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">rolling_gvar</span><span class="op">)</span>, <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    subject window start_row end_row start_day end_day start_beep end_beep</span></span>
-<span><span class="co">#&gt; 1    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 2    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 3    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 4    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 5    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 6    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 7    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 8    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 9    Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 10   Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 11   Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt; 12   Grace      1         1      70      &lt;NA&gt;    &lt;NA&gt;         NA       NA</span></span>
-<span><span class="co">#&gt;     network       from       to weight</span></span>
-<span><span class="co">#&gt; 1  temporal   efficacy efficacy      0</span></span>
-<span><span class="co">#&gt; 2  temporal      value efficacy      0</span></span>
-<span><span class="co">#&gt; 3  temporal   planning efficacy      0</span></span>
-<span><span class="co">#&gt; 4  temporal monitoring efficacy      0</span></span>
-<span><span class="co">#&gt; 5  temporal     effort efficacy      0</span></span>
-<span><span class="co">#&gt; 6  temporal   efficacy    value      0</span></span>
-<span><span class="co">#&gt; 7  temporal      value    value      0</span></span>
-<span><span class="co">#&gt; 8  temporal   planning    value      0</span></span>
-<span><span class="co">#&gt; 9  temporal monitoring    value      0</span></span>
-<span><span class="co">#&gt; 10 temporal     effort    value      0</span></span>
-<span><span class="co">#&gt; 11 temporal   efficacy planning      0</span></span>
-<span><span class="co">#&gt; 12 temporal      value planning      0</span></span>
+<code class="sourceCode R"><span><span class="va">edge_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rolling_gvar</span><span class="op">$</span><span class="va">fits</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>window <span class="op">=</span> <span class="va">i</span>, <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rolling_gvar</span><span class="op">$</span><span class="va">fits</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">edge_counts</span></span>
+<span><span class="co">#&gt;   window         network n_nodes n_edges density mean_abs_weight n_positive</span></span>
+<span><span class="co">#&gt; 1      1        temporal       5       0     0.0       0.0000000          0</span></span>
+<span><span class="co">#&gt; 2      1 contemporaneous       5       3     0.3       0.1939779          3</span></span>
+<span><span class="co">#&gt; 3      2        temporal       5       0     0.0       0.0000000          0</span></span>
+<span><span class="co">#&gt; 4      2 contemporaneous       5       2     0.2       0.1114952          2</span></span>
+<span><span class="co">#&gt; 5      3        temporal       5       0     0.0       0.0000000          0</span></span>
+<span><span class="co">#&gt; 6      3 contemporaneous       5       3     0.3       0.1774513          3</span></span>
+<span><span class="co">#&gt; 7      4        temporal       5       0     0.0       0.0000000          0</span></span>
+<span><span class="co">#&gt; 8      4 contemporaneous       5       5     0.5       0.1471085          5</span></span>
+<span><span class="co">#&gt;   n_negative</span></span>
+<span><span class="co">#&gt; 1          0</span></span>
+<span><span class="co">#&gt; 2          0</span></span>
+<span><span class="co">#&gt; 3          0</span></span>
+<span><span class="co">#&gt; 4          0</span></span>
+<span><span class="co">#&gt; 5          0</span></span>
+<span><span class="co">#&gt; 6          0</span></span>
+<span><span class="co">#&gt; 7          0</span></span>
+<span><span class="co">#&gt; 8          0</span></span>
+<span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">rolling_gvar</span><span class="op">$</span><span class="va">fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           network       from         to     weight</span></span>
+<span><span class="co">#&gt; 1 contemporaneous monitoring     effort 0.26380483</span></span>
+<span><span class="co">#&gt; 2 contemporaneous   efficacy monitoring 0.24664052</span></span>
+<span><span class="co">#&gt; 3 contemporaneous   planning     effort 0.07148822</span></span>
 <span><span class="fu"><a href="../reference/matrices.html">matrices</a></span><span class="op">(</span><span class="va">rolling_gvar</span>, fit <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $beta</span></span>
@@ -379,12 +379,14 @@ coefficients.</p>
 <span><span class="co">#&gt; planning          0     0        0          0      0</span></span>
 <span><span class="co">#&gt; monitoring        0     0        0          0      0</span></span>
 <span><span class="co">#&gt; effort            0     0        0          0      0</span></span></code></pre></div>
-<p>The first sparse window retains no temporal edges, matching the
-full-series graphical fit for the same student. Its contemporaneous
-layer keeps efficacy–monitoring (0.247), monitoring–effort (0.264), and
-a small planning–effort edge (0.071) — the same three within-occasion
-partial correlations the full-series graphical fit selects, here at
-window-local magnitudes.</p>
+<p>All four sparse windows retain no temporal edges, matching the
+full-series graphical fit for the same student. This is an executed
+selection result, not a missing or disabled network; with these data,
+windows, and criterion, the regularized temporal layer is empty. The
+first window’s contemporaneous layer keeps efficacy–monitoring (0.247),
+monitoring–effort (0.264), and a small planning–effort edge (0.071) —
+the same three within-occasion partial correlations the full-series
+graphical fit selects, here at window-local magnitudes.</p>
 </div>
 <div class="section level2">
 <h2 id="visualizing-the-network">Visualizing the network<a class="anchor" aria-label="anchor" href="#visualizing-the-network"></a>

@@ -42,14 +42,15 @@ estimates both networks by ordinary least squares, one regression per
 variable, without regularization. Each equation carries one coefficient
 per lagged predictor plus an intercept, so the size of the temporal
 network grows quadratically in the number of variables and the sampling
-variance of the estimates grows with it. The estimates are unbiased,
-every cell of both networks receives a coefficient, and no edge is
-removed on the estimator’s behalf, which leaves the analyst to judge
-which small values are noise. This makes ordinary VAR the unbiased
-idiographic baseline: the appropriate estimator when the number of
-occasions is large relative to the number of parameters and every
-estimate is wanted for inspection, and the reference against which the
-regularized
+variance of the estimates grows with it. Under a correctly specified
+linear VAR with exogenous innovations, the coefficient estimates are
+unbiased; every cell of both networks receives a coefficient, and no
+edge is removed on the estimator’s behalf, which leaves the analyst to
+judge which small values are noise. This makes ordinary VAR the
+transparent unregularized baseline: the appropriate estimator when the
+number of occasions is large relative to the number of parameters and
+every estimate is wanted for inspection, and the reference against which
+the regularized
 [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
 trades variance for sparsity by shrinking weak edges to exactly zero
 under an extended-BIC penalty. For several people,
@@ -100,11 +101,13 @@ high-autoregression, unit-root, and zero-variance screens are clear.
 Grace’s own five series are among the clean ones: her 156 ordered
 occasions yield 155 complete pairs and trip no flag, so the model is
 fitted on her series as they stand. Where a flagged series is to be
-modelled, the `detrend` argument of
+modelled, `preprocess(..., detrend = )` constructs and rechecks the
+transformed lag design. The same transformation must then be applied to
+the long data supplied to
+[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md);
 [`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
-removes the offending trend before fitting, as the preprocessing
-vignette describes; a persistent trend left in place can masquerade as
-lag-one structure.
+does not mutate the source data. A persistent trend left in place can
+masquerade as lag-one structure.
 
 ## Fitting the model
 
@@ -173,9 +176,8 @@ summary(var_fit)
 Both layers are fully dense, as they must be under least squares, so the
 comparison is carried by the weights: the contemporaneous mean absolute
 weight of 0.160 is roughly twice the temporal 0.075. Within-occasion
-association dominates lagged prediction in Grace’s process, a pattern
-typical of self-report affect and motivation series measured a few times
-per day.
+association is larger than lagged prediction in this fitted series; no
+claim of typicality is made from one participant.
 
 The
 [`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
@@ -195,14 +197,14 @@ edges(var_fit, network = "temporal", n = 5)
 #> 5 temporal   planning      value -0.1098008
 ```
 
-Grace’s strongest lag-one effects are small. Monitoring on one occasion
-predicts lower task value on the next (−0.160), and planning predicts
-higher subsequent effort regulation (0.159): deliberate planning carries
-over into effort, while heavy monitoring is followed by a dip in
-reported task value. At this magnitude, and with 155 occasions, the
-individual temporal coefficients are estimated imprecisely — least
-squares is unbiased but high-variance — so the temporal layer is better
-read as a pattern than as a set of point claims. Where a sparse,
+Grace’s strongest lag-one coefficients are small. Monitoring on one
+occasion predicts lower task value on the next (−0.160), and planning
+predicts higher subsequent effort regulation (0.159), conditional on the
+other lagged variables. These are predictive associations, not evidence
+that planning causes effort or monitoring causes a later change in
+value. At this magnitude, and with 155 occasions, the individual
+temporal coefficients can be high-variance, so the temporal layer is
+better read as a pattern than as a set of point claims. Where a sparse,
 multiplicity-controlled temporal network is required,
 [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
 is the estimator of choice.
@@ -223,8 +225,8 @@ Monitoring and effort share a partial correlation of 0.467, and
 monitoring also couples with efficacy (0.378) and planning with effort
 (0.332). Within a single occasion, monitoring, effort, and efficacy move
 together after the other indicators are partialled out; these are the
-same three edges that survive the penalized selection in the
-graphical-VAR vignette, there with downwardly biased weights.
+same three edges retained when the clean-room vignette applies graphical
+VAR to Grace, there with shrinkage-biased weights.
 
 Node-level structure follows from
 [`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),

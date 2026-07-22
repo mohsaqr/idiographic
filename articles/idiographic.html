@@ -129,9 +129,9 @@ edges to zero.</p>
 target. Multilevel VAR is appropriate when the target is an average
 within-person process across people and the analyst accepts partial
 pooling. Bayesian VAR and DSEM are appropriate when uncertainty
-intervals and dynamic SEM formulations are central, but their vignettes
-use static excerpts because full MCMC and Mplus backends are not
-suitable for fast vignette builds.</p>
+intervals and dynamic SEM formulations are central. The native Bayesian
+examples are executed during vignette building; only the licensed
+external Mplus call is shown without execution.</p>
 </div>
 <div class="section level2">
 <h2 id="data-and-preprocessing">Data and preprocessing<a class="anchor" aria-label="anchor" href="#data-and-preprocessing"></a>
@@ -172,14 +172,16 @@ step.</p>
 </h2>
 <p>A compact comparison of Grace’s ordinary and graphical VAR shows how
 the package exposes model choice as a table rather than a narrative
-judgement.</p>
+judgement. Grace is used because the preceding five-variable
+stationarity audit gives her no trend, high-autoregression, drift,
+unit-root, or zero-variance flag.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_idiographic.html">compare_idiographic</a></span><span class="op">(</span></span>
 <span>  <span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>,</span>
 <span>  estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"graphical_var"</span><span class="op">)</span>,</span>
 <span>  estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>subject <span class="op">=</span> <span class="st">"Grace"</span>, scale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    graphical_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>subject <span class="op">=</span> <span class="st">"Grace"</span>, n_lambda <span class="op">=</span> <span class="fl">8</span>, gamma <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    graphical_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>subject <span class="op">=</span> <span class="st">"Grace"</span>, n_lambda <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">)</span></span>

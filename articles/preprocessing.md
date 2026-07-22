@@ -208,8 +208,12 @@ summary(clean2)
 #> 5     effort       36   0.827       1         0           0         1
 ```
 
-With the flags cleared, the same design is ready to hand to any
-estimator in the following vignettes.
+The transformed lag-pair design is available in `clean$pairs` and its
+current and lagged matrices in `matrices(clean)`. The model-fitting
+functions take long data rather than a `preprocess_result`, so an
+applied analysis must make the same documented transformation to its
+long input before fitting; the audit does not silently alter `srl` or
+any later model call.
 
 ## References
 

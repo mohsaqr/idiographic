@@ -68,15 +68,17 @@ audit
 ```
 
 The audit reports 5548 retained lagged pairs and no unit-root or
-zero-variance flags. This is the common preprocessing surface for the
-estimator vignettes.
+zero-variance flags. Grace is used below because none of her five series
+receives any audit flag; the selection is based on the input
+diagnostics, not on which fitted network looks best. This is the common
+preprocessing surface for the estimator vignettes.
 
 ``` r
 
 var_fit <- fit_var(srl, vars = vars, id = "name", subject = "Grace",
                    scale = TRUE)
 gvar_fit <- fit_graphical_var(srl, vars = vars, id = "name", subject = "Grace",
-                              n_lambda = 8, gamma = 0)
+                              n_lambda = 8)
 summary(var_fit)
 #>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
 #> 1        temporal       5      20       1      0.07457677          9         11

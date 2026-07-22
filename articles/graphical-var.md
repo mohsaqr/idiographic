@@ -46,13 +46,16 @@ survive.
 
 ## Data and preprocessing
 
-The `esm_srl` data hold momentary self-regulated-learning, motivation,
-and anxiety ratings for 41 students, each assessed several times per day
-for a study, giving roughly 70 to 80 occasions per person. This vignette
-fits a single student, Quinn, on all nine indicators. Because the
-penalty does not protect against a violated stationarity assumption — a
-trend inflates the lagged coefficients whether or not they are penalized
-— the stationarity screen precedes the fit.
+The `esm_srl` data are the supplied anonymized momentary
+self-regulated-learning, motivation, and anxiety ratings for 41
+students, each assessed repeatedly during a study. This vignette keeps
+the established worked example: Quinn on all nine indicators. Quinn was
+chosen for this deliberately edge-rich demonstration; the choice is not
+a population-sampling rule and must not be used as evidence that every
+participant has a non-empty temporal network. Because the penalty does
+not protect against a violated stationarity assumption — a trend
+inflates the lagged coefficients whether or not they are penalized — the
+stationarity screen precedes the fit.
 
 ``` r
 
@@ -73,23 +76,24 @@ preprocess(esm_srl, vars = vars, id = "name", subject = "Quinn")
 ```
 
 Quinn contributes 79 occasions, of which 78 form complete current/lagged
-pairs. Six of the nine series carry a linear-trend flag, which is
-expected in ratings collected over the weeks of a study. A
-linear-detrending sensitivity check confirms that the temporal edges
-reported below are stable — their signs and approximate magnitudes are
-unchanged after the trends are removed — so they are read as
-within-person dynamics rather than shared drift.
+pairs. Six of the nine series carry a linear-trend flag. The model below
+is therefore a worked API and interpretation example, not a confirmatory
+analysis of Quinn’s dynamics. A substantive analysis should resolve the
+flagged non-stationarity and report a detrending sensitivity analysis
+before interpreting the temporal edges.
 
 ## Fitting the model
 
-Two arguments deserve comment. `penalize_diagonal = FALSE` exempts the
-autoregressions from the lasso penalty; the default penalizes them along
-with the cross-lags, which shrinks the carry-over of each variable —
-often the most robust temporal effect — to zero. `gamma = 0.1` is a less
-conservative selection threshold than the default of 0.5; it is used
-here for demonstration, so that the directed temporal layer is populated
-rather than empty, and its edges should be understood as the more
-sensitive, less specific end of the selection scale.
+Two non-default arguments make this an intentionally sensitive
+demonstration. `penalize_diagonal = FALSE` exempts the autoregressions
+from the lasso penalty; the default penalizes them along with the
+cross-lags, which shrinks the carry-over of each variable — often the
+most robust temporal effect — to zero. `gamma = 0.1` is a less
+conservative selection threshold than the default of 0.5. These settings
+preserve the established non-empty worked network, but they are stated
+explicitly so that it cannot be mistaken for an outcome-neutral default
+fit. The selected edges belong to the more sensitive, less specific end
+of the selection scale.
 
 ``` r
 

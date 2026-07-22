@@ -45,9 +45,9 @@ Subject networks are appropriate when heterogeneity is itself the
 target. Multilevel VAR is appropriate when the target is an average
 within-person process across people and the analyst accepts partial
 pooling. Bayesian VAR and DSEM are appropriate when uncertainty
-intervals and dynamic SEM formulations are central, but their vignettes
-use static excerpts because full MCMC and Mplus backends are not
-suitable for fast vignette builds.
+intervals and dynamic SEM formulations are central. The native Bayesian
+examples are executed during vignette building; only the licensed
+external Mplus call is shown without execution.
 
 ## Data and preprocessing
 
@@ -93,7 +93,9 @@ explicit modelling assumption rather than a hidden preprocessing step.
 
 A compact comparison of Grace’s ordinary and graphical VAR shows how the
 package exposes model choice as a table rather than a narrative
-judgement.
+judgement. Grace is used because the preceding five-variable
+stationarity audit gives her no trend, high-autoregression, drift,
+unit-root, or zero-variance flag.
 
 ``` r
 
@@ -102,7 +104,7 @@ cmp <- compare_idiographic(
   estimators = c("var", "graphical_var"),
   estimator_args = list(
     var = list(subject = "Grace", scale = TRUE),
-    graphical_var = list(subject = "Grace", n_lambda = 8, gamma = 0)
+    graphical_var = list(subject = "Grace", n_lambda = 8)
   )
 )
 as.data.frame(cmp)

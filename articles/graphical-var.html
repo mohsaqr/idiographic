@@ -119,13 +119,16 @@ downward bias on the weights of the edges that survive.</p>
 <div class="section level2">
 <h2 id="data-and-preprocessing">Data and preprocessing<a class="anchor" aria-label="anchor" href="#data-and-preprocessing"></a>
 </h2>
-<p>The <code>esm_srl</code> data hold momentary self-regulated-learning,
-motivation, and anxiety ratings for 41 students, each assessed several
-times per day for a study, giving roughly 70 to 80 occasions per person.
-This vignette fits a single student, Quinn, on all nine indicators.
-Because the penalty does not protect against a violated stationarity
-assumption — a trend inflates the lagged coefficients whether or not
-they are penalized — the stationarity screen precedes the fit.</p>
+<p>The <code>esm_srl</code> data are the supplied anonymized momentary
+self-regulated-learning, motivation, and anxiety ratings for 41
+students, each assessed repeatedly during a study. This vignette keeps
+the established worked example: Quinn on all nine indicators. Quinn was
+chosen for this deliberately edge-rich demonstration; the choice is not
+a population-sampling rule and must not be used as evidence that every
+participant has a non-empty temporal network. Because the penalty does
+not protect against a violated stationarity assumption — a trend
+inflates the lagged coefficients whether or not they are penalized — the
+stationarity screen precedes the fit.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/preprocess.html">preprocess</a></span><span class="op">(</span><span class="va">esm_srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, subject <span class="op">=</span> <span class="st">"Quinn"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Idiographic Preprocessing</span></span>
@@ -142,25 +145,25 @@ they are penalized — the stationarity screen precedes the fit.</p>
 <span><span class="co">#&gt; 6 of 9 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:</span></span>
 <span><span class="co">#&gt;   preprocess(data = esm_srl, vars = vars, id = "name", subject = "Quinn", detrend = "auto")</span></span></code></pre></div>
 <p>Quinn contributes 79 occasions, of which 78 form complete
-current/lagged pairs. Six of the nine series carry a linear-trend flag,
-which is expected in ratings collected over the weeks of a study. A
-linear-detrending sensitivity check confirms that the temporal edges
-reported below are stable — their signs and approximate magnitudes are
-unchanged after the trends are removed — so they are read as
-within-person dynamics rather than shared drift.</p>
+current/lagged pairs. Six of the nine series carry a linear-trend flag.
+The model below is therefore a worked API and interpretation example,
+not a confirmatory analysis of Quinn’s dynamics. A substantive analysis
+should resolve the flagged non-stationarity and report a detrending
+sensitivity analysis before interpreting the temporal edges.</p>
 </div>
 <div class="section level2">
 <h2 id="fitting-the-model">Fitting the model<a class="anchor" aria-label="anchor" href="#fitting-the-model"></a>
 </h2>
-<p>Two arguments deserve comment. <code>penalize_diagonal = FALSE</code>
-exempts the autoregressions from the lasso penalty; the default
-penalizes them along with the cross-lags, which shrinks the carry-over
-of each variable — often the most robust temporal effect — to zero.
+<p>Two non-default arguments make this an intentionally sensitive
+demonstration. <code>penalize_diagonal = FALSE</code> exempts the
+autoregressions from the lasso penalty; the default penalizes them along
+with the cross-lags, which shrinks the carry-over of each variable —
+often the most robust temporal effect — to zero.
 <code>gamma = 0.1</code> is a less conservative selection threshold than
-the default of 0.5; it is used here for demonstration, so that the
-directed temporal layer is populated rather than empty, and its edges
-should be understood as the more sensitive, less specific end of the
-selection scale.</p>
+the default of 0.5. These settings preserve the established non-empty
+worked network, but they are stated explicitly so that it cannot be
+mistaken for an outcome-neutral default fit. The selected edges belong
+to the more sensitive, less specific end of the selection scale.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_graphical_var.html">fit_graphical_var</a></span><span class="op">(</span><span class="va">esm_srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, subject <span class="op">=</span> <span class="st">"Quinn"</span>,</span>
 <span>                         penalize_diagonal <span class="op">=</span> <span class="cn">FALSE</span>, gamma <span class="op">=</span> <span class="fl">0.1</span>,</span>

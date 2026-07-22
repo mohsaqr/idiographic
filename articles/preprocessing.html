@@ -274,8 +274,13 @@ variance drift.</p>
 <span><span class="co">#&gt; 3   planning       36   1.160       0         0           0         0</span></span>
 <span><span class="co">#&gt; 4 monitoring       36   0.706       1         0           0         1</span></span>
 <span><span class="co">#&gt; 5     effort       36   0.827       1         0           0         1</span></span></code></pre></div>
-<p>With the flags cleared, the same design is ready to hand to any
-estimator in the following vignettes.</p>
+<p>The transformed lag-pair design is available in
+<code>clean$pairs</code> and its current and lagged matrices in
+<code>matrices(clean)</code>. The model-fitting functions take long data
+rather than a <code>preprocess_result</code>, so an applied analysis
+must make the same documented transformation to its long input before
+fitting; the audit does not silently alter <code>srl</code> or any later
+model call.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

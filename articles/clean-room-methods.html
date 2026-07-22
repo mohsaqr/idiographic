@@ -134,13 +134,15 @@ estimators through a common interface.</p>
 <span><span class="co">#&gt; 10 of 180 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:</span></span>
 <span><span class="co">#&gt;   preprocess(data = srl, vars = vars, id = "name", min_obs = 100, detrend = "auto")</span></span></code></pre></div>
 <p>The audit reports 5548 retained lagged pairs and no unit-root or
-zero-variance flags. This is the common preprocessing surface for the
-estimator vignettes.</p>
+zero-variance flags. Grace is used below because none of her five series
+receives any audit flag; the selection is based on the input
+diagnostics, not on which fitted network looks best. This is the common
+preprocessing surface for the estimator vignettes.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_var.html">fit_var</a></span><span class="op">(</span><span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, subject <span class="op">=</span> <span class="st">"Grace"</span>,</span>
 <span>                   scale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">gvar_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_graphical_var.html">fit_graphical_var</a></span><span class="op">(</span><span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, subject <span class="op">=</span> <span class="st">"Grace"</span>,</span>
-<span>                              n_lambda <span class="op">=</span> <span class="fl">8</span>, gamma <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>                              n_lambda <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">var_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           network n_nodes n_edges density mean_abs_weight n_positive n_negative</span></span>
 <span><span class="co">#&gt; 1        temporal       5      20       1      0.07457677          9         11</span></span>
