@@ -1,7 +1,7 @@
 Package: idiographic
 Type: Package
 Title: Network Estimation from Intensive Longitudinal Data
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
     email = "mohammed.saqr@uef.fi")
 Author: Mohammed Saqr [aut, cre, cph]
