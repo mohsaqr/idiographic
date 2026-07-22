@@ -34,8 +34,9 @@ compare_idiographic(
 
 - estimators:
 
-  Character vector naming estimators to fit. Supported values are
-  `"var"`, `"graphical_var"`, `"mlvar"`, `"usem"`, and `"gimme"`.
+  Character vector naming registered network estimators to fit. Built-in
+  values are `"var"`, `"var_bayes"`, `"graphical_var"`, `"mlvar"`,
+  `"mlvar_bayes"`, `"mlvar_mplus"`, `"usem"`, and `"gimme"`.
 
 - id:
 
@@ -51,23 +52,18 @@ compare_idiographic(
 
 - estimator_args:
 
-  Named list of per-estimator argument lists.
+  Named list of per-estimator argument lists, e.g.
+  `list(graphical_var = list(n_lambda = 8), usem = list(temporal = "ar"))`.
 
 - keep_fits:
 
-  Logical. Store fitted model objects?
+  Logical. Store fitted model objects? Default `FALSE`.
 
 ## Value
 
 A `model_comparison` object with `$comparison`, `$failures`, and
 optionally `$fits`. `$comparison` is a tidy `data.frame` with one row
 per method/network.
-
-## See also
-
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
 
 ## Examples
 

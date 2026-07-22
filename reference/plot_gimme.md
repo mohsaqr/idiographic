@@ -30,7 +30,7 @@ plot_gimme(
 - x:
 
   A `net_gimme` object from
-  [`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
+  [`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md).
 
 - weight:
 
@@ -80,7 +80,7 @@ panel <- data.frame(
   t  = rep(seq_len(30), 5),
   A  = rnorm(150), B = rnorm(150), C = rnorm(150)
 )
-gm <- build_gimme(panel, vars = c("A", "B", "C"), id = "id", time = "t")
+gm <- fit_gimme(panel, vars = c("A", "B", "C"), id = "id", time = "t")
 plot_gimme(gm)
 
 # }

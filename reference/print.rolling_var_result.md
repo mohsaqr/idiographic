@@ -1,7 +1,6 @@
 # Print method for rolling VAR results
 
-Prints a concise summary of subject count, window count, and variable
-count for a rolling VAR result.
+Print method for rolling VAR results
 
 ## Usage
 

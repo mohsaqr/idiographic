@@ -37,7 +37,7 @@ panel <- data.frame(
   t  = rep(seq_len(20), 5),
   A  = rnorm(100), B = rnorm(100), C = rnorm(100)
 )
-gm <- build_gimme(panel, vars = c("A","B","C"), id = "id", time = "t")
+gm <- fit_gimme(panel, vars = c("A","B","C"), id = "id", time = "t")
 print(gm)
 #> GIMME Network Analysis
 #> ------------------------------ 
@@ -48,23 +48,23 @@ print(gm)
 #> 
 #> Group-level paths found: 0 
 #> 
-#> Individual-level paths:  mean 0.0, range 0-0
+#> Individual-level paths:  mean 1.0, range 0-2
 #> 
 #> Proportion of subjects with each path:
 #> 
 #>   Temporal [directed]
-#>     weights [1.000, 1.000]  |  +3 / -0 edges
-#>       A B C
-#>     A 1 0 0
-#>     B 0 1 0
-#>     C 0 0 1
+#>     weights [0.200, 1.000]  |  +6 / -0 edges
+#>         A   B C
+#>     A 1.0 0.0 0
+#>     B 0.2 1.0 0
+#>     C 0.2 0.2 1
 #> 
 #>   Contemporaneous [directed]
-#>     no non-zero edges
-#>       A B C
-#>     A 0 0 0
-#>     B 0 0 0
-#>     C 0 0 0
+#>     weights [0.200, 0.200]  |  +2 / -0 edges
+#>       A B   C
+#>     A 0 0 0.2
+#>     B 0 0 0.2
+#>     C 0 0 0.0
 #> 
 #>   plot(x)  (faithful gimme-style mixed network) | plot(x, layer = "temporal") 
 #>   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)

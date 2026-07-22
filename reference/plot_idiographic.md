@@ -12,19 +12,19 @@ the object.
 
 ``` r
 # S3 method for class 'var_result'
-plot(x, layer = NULL, ...)
+plot(x, layer = NULL, mixed = FALSE, ...)
 
 # S3 method for class 'gvar_result'
-plot(x, layer = NULL, ...)
+plot(x, layer = NULL, mixed = FALSE, ...)
 
 # S3 method for class 'var_bayes_result'
-plot(x, layer = NULL, ...)
+plot(x, layer = NULL, mixed = FALSE, ...)
 
 # S3 method for class 'net_mlvar'
-plot(x, layer = NULL, ...)
+plot(x, layer = NULL, mixed = FALSE, ...)
 
 # S3 method for class 'net_usem'
-plot(x, layer = NULL, ...)
+plot(x, layer = NULL, mixed = FALSE, ...)
 
 # S3 method for class 'net_gimme'
 plot(x, layer = NULL, weight = c("prop", "coef"), ...)
@@ -58,6 +58,17 @@ plot(x, layer = NULL, ...)
   Optional network name to draw on its own. `NULL` (default) draws the
   whole result. Available names are reported if an unknown one is given.
 
+- mixed:
+
+  If `TRUE`, draw two layers as a single mixed network via
+  [`cograph::plot_mixed_network()`](https://sonsoles.me/cograph/reference/plot_mixed_network.html)
+  — the directed layer as curved arrows and the undirected layer as
+  straight edges. For VAR, graphical VAR, and multilevel VAR this
+  combines the directed temporal network with the undirected
+  contemporaneous network; for uSEM it combines the directed
+  contemporaneous paths with the undirected residual covariances.
+  Default `FALSE` draws one panel per layer.
+
 - ...:
 
   Further arguments forwarded to
@@ -87,7 +98,7 @@ Invisibly, the object that was plotted (a `cograph`/ggplot object).
 ``` r
 set.seed(1)
 d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-fit <- build_var(d, vars = c("A", "B", "C"), id = "id")
+fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
 plot(fit)
 
 plot(fit, layer = "temporal")

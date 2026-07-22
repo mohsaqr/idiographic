@@ -65,16 +65,18 @@ A `data.frame` with 5616 rows and 11 columns:
 
 Learning Analytics Methods, Book 2, Chapter 20 (VAR):
 <https://lamethods.org/book2/chapters/ch20-var/ch20-var.html>. Original
-data: <https://github.com/lamethods/data2/raw/main/srl/srl.RDS>.
+data: <https://github.com/lamethods/data2/raw/main/srl/srl.RDS>,
+licensed under CC BY-NC-SA 4.0. See the package `COPYRIGHTS` file for
+attribution and transformation details.
 
 ## Details
 
 The columns have already been tidied for modelling: rows are ordered by
 `name` then `day`, and `day` is a within-person occasion index (1-156)
 you can pass as the `time` argument to
-[`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md)
+[`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md)
 and
-[`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
+[`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md).
 No further ordering, indexing, or column selection is needed before
 fitting a model.
 

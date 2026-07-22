@@ -14,7 +14,7 @@ print(x, digits = 2, ...)
 - x:
 
   A `net_mlvar_bayes` object from
-  [`build_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar_bayes.md).
+  [`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md).
 
 - digits:
 

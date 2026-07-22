@@ -37,10 +37,13 @@ panel <- data.frame(
   t  = rep(seq_len(20), 5),
   A  = rnorm(100), B = rnorm(100), C = rnorm(100)
 )
-gm <- build_gimme(panel, vars = c("A","B","C"), id = "id", time = "t")
+gm <- fit_gimme(panel, vars = c("A","B","C"), id = "id", time = "t")
 summary(gm)
-#>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
-#> 1        temporal       3       0       0               0          0          0
-#> 2 contemporaneous       3       0       0               0          0          0
+#>           network n_nodes n_edges   density mean_abs_weight n_positive
+#> 1        temporal       3       3 0.5000000             0.2          3
+#> 2 contemporaneous       3       2 0.3333333             0.2          2
+#>   n_negative
+#> 1          0
+#> 2          0
 # }
 ```

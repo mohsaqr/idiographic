@@ -29,3 +29,16 @@ extract_edges(model, sort_by = "weight", include_self = FALSE)
 ## Value
 
 A `data.frame` with columns `from`, `to`, `weight`.
+
+## Examples
+
+``` r
+W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
+            dimnames = list(c("A", "B"), c("A", "B")))
+x <- structure(list(weights = W, method = "relative", directed = TRUE),
+               class = "cograph_network")
+extract_edges(x)
+#>   from to weight
+#> 1    B  A    0.3
+#> 2    A  B   -0.2
+```

@@ -27,7 +27,7 @@ as_netobject(x, style = c("pnode", "unified"), weight = c("prop", "coef"), ...)
   Either `"pnode"` (default) — a `netobject_group` of two directed
   `p`-node networks, `$temporal` (lagged; autoregression on the
   diagonal) and `$contemporaneous` (same-beep), matching the shape
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
+  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
   returns — or `"unified"`, a single directed `2p`-node network with the
   `*_lag` half feeding the current half (the literal uSEM topology).
 

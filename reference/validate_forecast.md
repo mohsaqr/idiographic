@@ -7,9 +7,9 @@ interface, defaults, and reported metrics may change in a future
 release.
 
 Performs rolling-origin one-step prediction from
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
+[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
 or
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md).
+[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md).
 Each split fits the estimator on earlier blocks and predicts current
 variables in the next block from their lag-1 values. Scaling and
 within-person centering parameters are learned from the training split
@@ -51,10 +51,10 @@ validate_forecast(
 
 - estimator:
 
-  `"var"` for
-  [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md)
+  `"var"` (default) for
+  [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
   or `"graphical_var"` for
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md).
+  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md).
 
 - id:
 
@@ -70,15 +70,16 @@ validate_forecast(
 
 - initial:
 
-  Integer number of ordered blocks in the first training split.
+  Integer number of ordered blocks in the first training split. Default
+  uses 60 percent of blocks, leaving at least one assessment block.
 
 - assess:
 
-  Integer number of blocks to assess per split.
+  Integer number of blocks to assess per split. Default `1`.
 
 - step:
 
-  Integer number of blocks to advance between splits.
+  Integer number of blocks to advance between splits. Default `1`.
 
 - n_splits:
 
@@ -87,24 +88,26 @@ validate_forecast(
 - block_size:
 
   Integer or `NULL`. Consecutive block length used only when neither
-  `id` nor `day` is supplied.
+  `id` nor `day` is supplied. Defaults to `floor(sqrt(nrow(data)))`.
 
 - scale:
 
   Logical. Whether to standardize using training-split means and SDs.
+  Default `TRUE`.
 
 - center_within:
 
   Logical. Whether to center within person using training-split person
-  means when more than one id is present.
+  means when more than one id is present. Default `TRUE`.
 
 - delete_missings:
 
-  Logical. Drop incomplete current/lagged assessment rows.
+  Logical. Drop incomplete current/lagged assessment rows. Default
+  `TRUE`.
 
 - keep_fits:
 
-  Logical. Store fitted split models?
+  Logical. Store fitted split models? Default `FALSE`.
 
 - ...:
 
@@ -114,12 +117,6 @@ validate_forecast(
 
 A `forecast_result` with `$predictions`, `$metrics`, `$splits`,
 `$failures`, and optionally `$fits`.
-
-## See also
-
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
-[`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
 
 ## Examples
 

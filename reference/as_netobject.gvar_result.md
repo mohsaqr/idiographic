@@ -1,6 +1,6 @@
 # Coerce a gvar_result to plottable netobjects
 
-Returns the two networks a graphical VAR contains as Nestimate
+Returns the temporal lag layer(s) and contemporaneous network as
 netobjects, so each renders directly with
 [`cograph::splot()`](https://sonsoles.me/cograph/reference/splot.html)
 (or any netobject verb) without the caller transposing matrices or
@@ -26,5 +26,6 @@ as_netobject(x, ...)
 
 ## Value
 
-A `netobject_group`: a named list with `$temporal` (directed) and
-`$contemporaneous` (undirected) netobjects.
+A `netobject_group`: a named list with `$temporal` for a lag-1 model, or
+one `temporal_lagN` element per multi-lag model, plus
+`$contemporaneous`.

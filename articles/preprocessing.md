@@ -1,0 +1,222 @@
+# 2. Preprocessing
+
+The autoregressive models estimated in this package — ordinary and
+graphical VAR, multilevel VAR, unified SEM, GIMME, and their rolling
+variants — share a common set of assumptions about the input series.
+Each presumes weak stationarity, meaning that the mean, variance, and
+autocovariance of every series are constant across the observation
+window; linear, first-order (lag-one) dynamics; measurement occasions
+that are correctly ordered and approximately equally spaced; and
+non-degenerate variance in each variable ([Bringmann et al.
+2013](#ref-bringmann2013); [Epskamp et al.
+2018](#ref-epskamp2018mlvar)). Intensive longitudinal data seldom
+satisfy these conditions automatically. Series drift or trend across a
+protocol, their variance differs between its early and late phases,
+occasions are missed or unevenly attended, and an item is occasionally
+answered identically throughout. None of these violations is detected by
+the estimators themselves: a trending series, for instance, is fitted
+without error and its trend is absorbed into an inflated autoregressive
+coefficient, so the resulting network misrepresents the dynamics rather
+than failing outright.
+
+The purpose of
+[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+is to make these assumptions inspectable, and where necessary
+correctable, before a model is estimated and interpreted. It constructs
+the same lag-one design that the estimators use — applying the same
+variable selection, ordering, scaling, and within-person centring — and
+evaluates each subject-series against the stationarity assumptions,
+returning a set of diagnostic flags rather than a fitted network. It is
+not a required step: the estimators accept the raw data and standardize
+and centre it internally. Its role is diagnostic, and, where an
+assumption is violated, corrective, through the `detrend` argument
+described below.
+
+## The data
+
+The estimators expect long format: one row per person-occasion, an id
+column, an ordering column, and numeric time-varying indicators. The
+bundled `srl` data hold self-regulated-learning indicators for 36
+students measured over 156 occasions each; `name` is the student and
+`day` orders the occasions. This vignette works with five indicators:
+`efficacy`, `value`, `planning`, `monitoring`, and `effort`.
+
+A temporal edge is only defined once the series is ordered: `from -> to`
+means `from` at occasion $`t-1`$ predicts `to` at occasion $`t`$. Losing
+or reordering lagged pairs changes that estimand, which is why the
+design is worth inspecting before fitting.
+
+## Running preprocess and reading the diagnostics
+
+A call to
+[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+takes the variables and the identifier column. Printing the returned
+object reports the retained design and, where an assumption is at risk,
+an explicit recommendation for addressing it.
+
+``` r
+
+pp <- preprocess(srl, vars = vars, id = "name")
+pp
+#> Idiographic Preprocessing
+#>   Variables:      5 (efficacy, value, planning, monitoring, effort)
+#>   Ordered rows:   5616
+#>   Retained pairs: 5548
+#>   Trend flags:    10
+#>   High AR flags:  0
+#>   Drift flags:    1
+#>   Unit-root risk: 0
+#>   Zero variance:  0
+#>   Tables:         x$pairs | x$counts | x$diagnostics
+#> 
+#> 10 of 180 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
+#>   preprocess(data = srl, vars = vars, id = "name", detrend = "auto")
+```
+
+The five indicators over 36 students give 5616 ordered rows. Of these,
+5548 survive as complete current/lagged pairs: each student loses the
+first occasion to the initial lag, and a few students lose a little more
+to missing values. No series is constant, none shows near-unit-root
+persistence, and the unit-root screen is clear — but ten subject-series
+trip the linear-trend flag, and the message names the fix.
+
+The [`summary()`](https://rdrr.io/r/base/summary.html) method aggregates
+the per-subject diagnostics to one row per variable, reporting its mean
+dispersion and the number of subject-series that trip each flag.
+
+``` r
+
+summary(pp)
+#>     variable n_series mean_sd n_trend n_high_ar n_unit_root n_flagged
+#> 1   efficacy       36   0.796       1         0           0         1
+#> 2      value       36   0.830       2         0           0         2
+#> 3   planning       36   0.824       5         0           0         5
+#> 4 monitoring       36   0.706       1         0           0         1
+#> 5     effort       36   0.827       1         0           0         1
+```
+
+The trend flags are concentrated in `planning` (5 of 36 students) and
+`value` (2), with one each elsewhere. Across the flagged students
+`planning` drifts by roughly 0.003 standardized units per occasion —
+small per step, but enough over 156 occasions to bias its lag-one
+coefficients. The `n_high_ar` and `n_unit_root` columns are zero
+throughout: the non-stationarity here is a gentle deterministic trend,
+not a random walk.
+
+The `counts` table gives the lag-pair accounting per student, which is
+the denominator behind every temporal edge.
+
+``` r
+
+head(pp$counts)
+#>   subject day n_rows n_lag_possible n_complete_pairs n_retained
+#> 1   Aisha   1    156            155              155        155
+#> 2   Alice   1    156            155              155        155
+#> 3   Anika   1    156            155              155        155
+#> 4  Astrid   1    156            155              155        155
+#> 5   Bjorn   1    156            155              155        155
+#> 6     Bob   1    156            155              149        149
+#>   n_boundary_dropped
+#> 1                  1
+#> 2                  1
+#> 3                  1
+#> 4                  1
+#> 5                  1
+#> 6                  1
+```
+
+Each 156-occasion series offers 155 possible lag pairs; students with
+complete data retain all 155, while a student with a few missing
+occasions (here, Bob) retains fewer.
+
+## What the flags mean
+
+Each row of `pp$diagnostics` is one subject-series, and each flag marks
+a different way stationarity can fail:
+
+- **`flag_trend`** — a significant linear slope over time; the mean is
+  not constant.
+- **`flag_high_ar`** — a lag-one autocorrelation at or above 0.95;
+  near-unit-root persistence.
+- **`flag_unit_root`** — an ADF-style screen suggests the series may not
+  revert to a stable mean.
+- **`flag_mean_shift`** / **`flag_sd_shift`** — the first and second
+  halves of the series differ in mean or in spread; drift or changing
+  volatility.
+- **`flag_zero_variance`** — a constant series, which no network can
+  use.
+
+`flag_stationarity_risk` is `TRUE` when any of these fire, and is the
+column the [`summary()`](https://rdrr.io/r/base/summary.html) roll-up
+counts as `n_flagged`.
+
+## Cleaning non-stationary series with `detrend`
+
+[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+standardizes and centres, but it does **not** remove trends on its own —
+detrending changes what a temporal edge means, so it is a modelling
+decision the analyst should make deliberately. The `detrend` argument
+makes that decision explicit:
+
+- `"none"` (default) — diagnose only.
+- `"auto"` — transform only the flagged series: difference a stochastic
+  trend (unit root / near-unit-root), linearly detrend a deterministic
+  trend, and leave every stationary series untouched.
+- `"linear"` / `"difference"` — force one transform on every series.
+
+`"auto"` is the option the diagnostic message recommended. It runs over
+all subject-series and cleans only those that need it — no subsetting,
+one call.
+
+``` r
+
+clean <- preprocess(srl, vars = vars, id = "name", detrend = "auto")
+summary(clean)
+#>     variable n_series mean_sd n_trend n_high_ar n_unit_root n_flagged
+#> 1   efficacy       36   0.795       0         0           0         0
+#> 2      value       36   0.829       0         0           0         0
+#> 3   planning       36   0.823       0         0           0         1
+#> 4 monitoring       36   0.706       0         0           0         0
+#> 5     effort       36   0.826       0         0           0         0
+```
+
+The ten trend-flagged series are linearly detrended and the other 170
+are left as they were, so every `n_trend` count drops to zero. The
+retained-pair count is unchanged because no series here needed
+differencing (which would cost the first occasion of each block). One
+`planning` flag survives: it is a variance shift, not a trend, and
+`"auto"` deliberately does not touch heteroscedasticity — that is a
+substantive issue to weigh, not something to difference away.
+
+When `"auto"`’s per-series choices are not what you want, `detrend` also
+takes a **named vector** to set the method one variable at a time;
+unlisted variables are left untouched. And `checks` restricts the
+screening to the risks you care about — for example, flag only trends
+and unit roots and ignore variance drift.
+
+``` r
+
+clean2 <- preprocess(srl, vars = vars, id = "name",
+                     detrend = c(planning = "difference", value = "linear"),
+                     checks  = c("trend", "unit_root"))
+summary(clean2)
+#>     variable n_series mean_sd n_trend n_high_ar n_unit_root n_flagged
+#> 1   efficacy       36   0.796       1         0           0         1
+#> 2      value       36   0.827       0         0           0         0
+#> 3   planning       36   1.160       0         0           0         0
+#> 4 monitoring       36   0.706       1         0           0         1
+#> 5     effort       36   0.827       1         0           0         1
+```
+
+With the flags cleared, the same design is ready to hand to any
+estimator in the following vignettes.
+
+## References
+
+Bringmann, Laura F., Nathalie Vissers, Marieke Wichers, et al. 2013. “A
+Network Approach to Psychopathology: New Insights into Clinical
+Longitudinal Data.” *PLoS ONE* 8 (4): e60188.
+
+Epskamp, Sacha, Lourens J. Waldorp, René Mõttus, and Denny Borsboom.
+2018. “The Gaussian Graphical Model in Cross-Sectional and Time-Series
+Data.” *Multivariate Behavioral Research* 53 (4): 453–80.

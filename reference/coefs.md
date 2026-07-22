@@ -1,7 +1,7 @@
 # Tidy coefficients from a fitted mlvar model
 
 Generic accessor for the tidy coefficient table stored on a
-[`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md)
+[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
 result. Returns a `data.frame` with one row per `(outcome, predictor)`
 pair and columns `outcome`, `predictor`, `beta`, `se`, `t`, `p`,
 `ci_lower`, `ci_upper`, `significant`.
@@ -9,6 +9,9 @@ pair and columns `outcome`, `predictor`, `beta`, `se`, `t`, `p`,
 ## Usage
 
 ``` r
+# S3 method for class 'idioml_result'
+coefs(x, ...)
+
 coefs(x, ...)
 
 # S3 method for class 'net_mlvar'
@@ -33,6 +36,12 @@ coefs(x, ...)
 coefs(x, ...)
 
 # S3 method for class 'net_gimme'
+coefs(x, ...)
+
+# S3 method for class 'var_list'
+coefs(x, ...)
+
+# S3 method for class 'gvar_list'
 coefs(x, ...)
 ```
 
@@ -71,7 +80,7 @@ rows <- lapply(seq_len(n_id), function(i) {
   m
 })
 d <- do.call(rbind, rows)
-fit <- build_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
 #> Warning: Model for 'A': singular fit (random-effects variance near zero).
 #> Warning: Model for 'A': boundary (singular) fit: see help('isSingular')
 #> Warning: Model for 'B': singular fit (random-effects variance near zero).
@@ -80,7 +89,7 @@ fit <- build_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
 #> Warning: Model for 'C': boundary (singular) fit: see help('isSingular')
 #> Warning: Between-subjects network not estimable: a random-intercept SD is 0 (no between-person variance). Returning a zero matrix by convention (mlVAR returns NA here).
 print(fit)
-#> mlVAR result: 8 subjects, 232 observations, 3 variables (lag 1)
+#> mlVAR result: 8 subjects, 232 observations, 3 variables (lags 1)
 #>   Temporal edges significant at p<0.05: 1 / 9
 #> 
 #>   Temporal [directed]

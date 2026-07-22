@@ -1,7 +1,6 @@
 # Print method for stability results
 
-Prints a concise summary of estimator, resampling type, successful
-refits, and the size of the edge-stability table.
+Print method for stability results
 
 ## Usage
 

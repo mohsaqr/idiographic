@@ -1,7 +1,6 @@
 # Print method for forecast validation results
 
-Prints a concise summary of estimator, successful rolling splits,
-prediction count, and overall RMSE.
+Print method for forecast validation results
 
 ## Usage
 

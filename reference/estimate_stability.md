@@ -7,13 +7,13 @@ external reference implementation to validate against, and its
 interface, defaults, and reported statistics may change in a future
 release.
 
-Refits an idiographic estimator across deterministic block resamples and
-summarizes edge-level stability. Blocks preserve within-block time
-order: subject-day blocks when `id` and `day` are supplied, subjects
-when only `id` is supplied, days when only `day` is supplied, or
-consecutive row blocks for a single series. Duplicate blocks receive
-temporary ids/day labels before fitting so lag construction never
-connects two sampled copies.
+Refit an idiographic estimator across deterministic block resamples and
+summarize edge-level stability. Blocks preserve within-block time order:
+subject-day blocks when `id` and `day` are supplied, subjects when only
+`id` is supplied, days when only `day` is supplied, or consecutive row
+blocks for a single series. Duplicate blocks receive temporary ids/day
+labels before fitting so lag construction never connects two sampled
+copies.
 
 ## Usage
 
@@ -48,16 +48,16 @@ estimate_stability(
 
 - estimator:
 
-  `"var"` for
-  [`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
+  `"var"` (default) for
+  [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
   `"graphical_var"` for
-  [`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md),
+  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
   `"mlvar"` for
-  [`build_mlvar()`](https://mohsaqr.github.io/idiographic/reference/build_mlvar.md),
+  [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md),
   `"usem"` for
-  [`build_usem()`](https://mohsaqr.github.io/idiographic/reference/build_usem.md),
+  [`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md),
   or `"gimme"` for
-  [`build_gimme()`](https://mohsaqr.github.io/idiographic/reference/build_gimme.md).
+  [`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md).
 
 - id:
 
@@ -83,11 +83,12 @@ estimate_stability(
 - block_size:
 
   Integer or `NULL`. Consecutive block length used only when neither
-  `id` nor `day` is supplied.
+  `id` nor `day` is supplied. Defaults to `floor(sqrt(nrow(data)))`.
 
 - threshold:
 
   Numeric. Absolute weight above which an edge is counted as selected.
+  Default `1e-8`.
 
 - seed:
 
@@ -96,6 +97,7 @@ estimate_stability(
 - keep_fits:
 
   Logical. Store successful resampled fits in the returned object?
+  Default `FALSE`.
 
 - ...:
 
@@ -105,11 +107,6 @@ estimate_stability(
 
 A `stability_result` with `$stability` edge statistics, `$original` fit,
 `$resample_edges`, `$failures`, and `$config`.
-
-## See also
-
-[`build_var()`](https://mohsaqr.github.io/idiographic/reference/build_var.md),
-[`graphical_var()`](https://mohsaqr.github.io/idiographic/reference/graphical_var.md)
 
 ## Examples
 

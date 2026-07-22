@@ -2,24 +2,22 @@
 
 ### All vignettes
 
-- [11. Package overview: a clean-room methods
-  tour](https://mohsaqr.github.io/idiographic/articles/clean-room-methods.md):
-- [10. Comparing
-  methods](https://mohsaqr.github.io/idiographic/articles/comparing-methods.md):
-- [7. GIMME](https://mohsaqr.github.io/idiographic/articles/gimme.md):
-- [3. Graphical
+- [6. Bayesian VAR and
+  DSEM](https://mohsaqr.github.io/idiographic/articles/bayesian-var-dsem.md):
+- [10. Clean-room
+  design](https://mohsaqr.github.io/idiographic/articles/clean-room-methods.md):
+- [8. GIMME](https://mohsaqr.github.io/idiographic/articles/gimme.md):
+- [4. Graphical
   VAR](https://mohsaqr.github.io/idiographic/articles/graphical-var.md):
-- [1. Getting started with
+- [1.
   idiographic](https://mohsaqr.github.io/idiographic/articles/idiographic.md):
-- [5. Multilevel VAR
-  (mlVAR)](https://mohsaqr.github.io/idiographic/articles/mlvar.md):
-- [2. Ordinary
+- [5. Multilevel
+  VAR](https://mohsaqr.github.io/idiographic/articles/mlvar.md):
+- [3. Ordinary
   VAR](https://mohsaqr.github.io/idiographic/articles/ordinary-var.md):
-- [8. Rolling
+- [2.
+  Preprocessing](https://mohsaqr.github.io/idiographic/articles/preprocessing.md):
+- [9. Rolling
   networks](https://mohsaqr.github.io/idiographic/articles/rolling-networks.md):
-- [9. Stability and forecast
-  validation](https://mohsaqr.github.io/idiographic/articles/stability-and-forecasting.md):
-- [4. Subject-by-subject
-  networks](https://mohsaqr.github.io/idiographic/articles/subject-networks.md):
-- [6. Unified SEM
-  (uSEM)](https://mohsaqr.github.io/idiographic/articles/usem.md):
+- [7. Unified
+  SEM](https://mohsaqr.github.io/idiographic/articles/usem.md):

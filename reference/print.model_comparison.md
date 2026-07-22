@@ -1,7 +1,6 @@
 # Print method for model comparisons
 
-Prints a concise summary of requested estimators, successful fits, and
-failures in a model comparison report.
+Print method for model comparisons
 
 ## Usage
 
