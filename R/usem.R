@@ -460,6 +460,7 @@ fit_usem <- function(data, vars, id,
       auto.delta = TRUE,
       auto.cov.y = FALSE,
       auto.fix.single = TRUE,
+      ncpus = 1L,
       warn = FALSE
     ),
     error = function(e) NULL

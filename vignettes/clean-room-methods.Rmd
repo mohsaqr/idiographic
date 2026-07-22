@@ -43,13 +43,13 @@ audit <- preprocess(srl, vars = vars, id = "name", min_obs = 100)
 audit
 ```
 
-The audit reports 5548 retained lagged pairs and no unit-root or zero-variance flags. This is the common preprocessing surface for the estimator vignettes.
+The audit reports 5548 retained lagged pairs and no unit-root or zero-variance flags. Grace is used below because none of her five series receives any audit flag; the selection is based on the input diagnostics, not on which fitted network looks best. This is the common preprocessing surface for the estimator vignettes.
 
 ```{r fit-two}
 var_fit <- fit_var(srl, vars = vars, id = "name", subject = "Grace",
                    scale = TRUE)
 gvar_fit <- fit_graphical_var(srl, vars = vars, id = "name", subject = "Grace",
-                              n_lambda = 8, gamma = 0)
+                              n_lambda = 8)
 summary(var_fit)
 summary(gvar_fit)
 ```

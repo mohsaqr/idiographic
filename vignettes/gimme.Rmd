@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   fig.width = 7, fig.height = 5.5
 )
 library(idiographic)
-data(srl)
+data(esm_srl)
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
 ```
 
@@ -62,28 +62,36 @@ deviations, and when the question is which is which.
 
 The estimator expects long format: one row per person-occasion, an id
 column, an ordering column, and numeric time-varying indicators. The
-bundled `srl` data hold self-regulated-learning indicators for 36 students
-measured over 156 occasions each; `name` identifies the student and `day`
-orders the occasions. Five indicators enter the model: `efficacy`, `value`,
-`planning`, `monitoring`, and `effort`. Because GIMME estimates a full SEM
-per subject, each individual series must carry the model on its own, so the
-screen below also requires at least 100 usable occasions per student.
+supplied anonymized `esm_srl` data hold momentary self-regulated-learning
+indicators for 41 students; `name` identifies the student and `occasion` orders
+measurements within student. Five indicators enter the model: `efficacy`,
+`value`, `planning`, `monitoring`, and `effort`. To keep the vignette fast
+without hand-picking people for their fitted networks, the example uses the
+eight students with the most complete five-indicator occasions, breaking ties
+alphabetically.
 
 ```{r vars-audit}
 vars <- c("efficacy", "value", "planning", "monitoring", "effort")
-preprocess(srl, vars = vars, id = "name", min_obs = 100)
+complete_n <- tapply(complete.cases(esm_srl[vars]), esm_srl$name, sum)
+selection <- data.frame(subject = names(complete_n),
+                        complete = as.integer(complete_n))
+selection <- selection[order(-selection$complete, selection$subject), ]
+selected_ids <- head(selection$subject, 8)
+head(selection, 8)
+preprocess(esm_srl[esm_srl$name %in% selected_ids, ],
+           vars = vars, id = "name")
 ```
 
-The 36 students supply 5616 ordered rows, of which 5548 survive as complete
-current/lagged pairs. Ten of the 180 subject-series trip the linear-trend
-flag and one shows drift; none shows high autoregression, unit-root risk,
-or zero variance. The fitted example uses eight students to keep the
-vignette fast while preserving the `srl` measurement design.
+The transparent rule selects Hana, Iker, Jamal, Omar, Quinn, Yara, Cira, and
+Enzo: six have 79 complete occasions and two have 78. The audit is shown rather
+than silently assuming stationarity; these supplied series contain trend or
+shift flags, so the fit is a method demonstration and its paths should not be
+treated as confirmatory substantive findings.
 
 # Fitting the model
 
 The estimator takes the data, the variable set, the id column, and the time
-column; `time = "day"` orders occasions within each student. `ar = TRUE`
+column; `time = "occasion"` orders occasions within each student. `ar = TRUE`
 places an autoregressive path on every variable in every subject's model
 from the outset, which anchors the search. `groupcutoff = 0.75` and
 `subcutoff = 0.75` require a path to improve fit in at least 75 percent of
@@ -91,28 +99,20 @@ the relevant subjects — here, six of the eight — before it is promoted by
 the corresponding rule.
 
 ```{r fit}
-vars <- c("efficacy", "value", "planning", "monitoring", "effort")
-students <- subset(srl, name %in% c("Grace", "Eve", "Aisha", "Alice",
-                                    "Bob", "Diana", "Frank", "Heidi"))
+students <- esm_srl[esm_srl$name %in% selected_ids, ]
 gimme_fit <- fit_gimme(
-  students, vars = vars, id = "name", time = "day",
+  students, vars = vars, id = "name", time = "occasion",
   ar = TRUE, groupcutoff = 0.75, subcutoff = 0.75, seed = 1
 )
 gimme_fit
 ```
 
-The group model contains the five autoregressive paths, fixed by
-`ar = TRUE` and carried by all eight students, plus the two contemporaneous
-paths the group search added: efficacy predicting monitoring and planning
-predicting effort, each present in every student's model. No cross-variable
-temporal path met the group criterion, so the shared lag-one structure is
-autoregressive only — a statement about replication at these cutoffs, not
-about the absence of lagged effects in any one student. The
-individual-level search then added between one and four further
-contemporaneous paths per student, 2.5 on average. The printed matrices
-hold prevalences: the temporal matrix has 1 on its diagonal and 0
-elsewhere, and the contemporaneous matrix runs from 0.125 — a path carried
-by a single student — up to 1 for the two group paths.
+No cross-variable path reaches the 75 percent group threshold. The five
+autoregressive paths are fixed by `ar = TRUE` and carried by all eight
+students; all selected cross-variable paths are individual-level. This is a
+result of the stated rule and cutoffs, not a claim that the population has no
+shared dynamics. The fitted temporal and contemporaneous prevalence matrices
+range from 0.125 (one student) to 0.50 (four students) off the diagonal.
 
 # Reading the output
 
@@ -123,54 +123,45 @@ cross-variable edges only.
 summary(gimme_fit)
 ```
 
-The temporal layer shows zero edges and density 0, because its only
-retained paths are the self-loops, which are tallied separately. The
-contemporaneous layer holds 13 directed edges at density 0.65 — 13 of the
-20 possible ordered pairs — with a mean prevalence of 0.346 across retained
-paths. The `edges()` accessor lists every retained path with its layer,
+The temporal layer holds eight cross-variable edges at density 0.40 and mean
+prevalence 0.172; the contemporaneous layer holds 13 directed edges at density
+0.65 and mean prevalence 0.288. The `edges()` accessor lists every retained path with its layer,
 prevalence, and level.
 
 ```{r edges}
 edges(gimme_fit)
 ```
 
-The five temporal rows are the autoregressive self paths at prevalence 1,
-labelled group. The contemporaneous rows split by level: the two group
-paths at prevalence 1, then eleven individual-level paths, from efficacy
-predicting planning and monitoring predicting value at 0.375 — three of the
-eight students — down to four paths carried by a single student at 0.125.
+The first five temporal rows are the fixed autoregressive self paths at
+prevalence 1. Every cross-variable row is individual-level. The most prevalent
+contemporaneous paths are value to effort and planning to effort, each present
+in four of eight students; the most prevalent cross-lagged paths occur in two
+of eight students.
 
 ```{r coefs-nodes}
 head(coefs(gimme_fit))
 nodes(gimme_fit)
 ```
 
-`coefs()` supplies the person-specific estimates that the prevalence
-display abstracts away: one row per subject, layer, and path, holding that
-subject's regression coefficient. The first rows belong to Aisha — her five
-autoregressive coefficients, small values between −0.034 and 0.143, and the
-first of her contemporaneous paths, efficacy predicting value at 0.48. The
-`nodes()` table sums prevalence over the edges incident to each node within
-a layer. Contemporaneously, efficacy is the most connected node (strength
-2.125) and predominantly a sender (out-strength 1.875), while monitoring
-and effort are the main receivers (in-strength 1.375 each) and value
-participates least (strength 1.25). In the temporal layer the `self` column
-records the autoregressive prevalence of 1 for every variable, with no
-cross-variable strength.
+`coefs()` supplies the person-specific estimates that the prevalence display
+abstracts away: one row per subject, layer, and path. The displayed rows begin
+with Cira and show why prevalence and coefficient magnitude are separate
+quantities. The `nodes()` table sums prevalence over incident edges. Effort is
+the most connected contemporaneous node (strength 1.875), while planning is
+most connected temporally (strength 0.750); the `self` column separately records
+autoregressive prevalence 1 for every variable.
 
 ```{r matrices}
 matrices(gimme_fit)
 ```
 
-`matrices()` returns the count and group-average coefficient matrices
+`matrices()` returns the count and sample-average coefficient matrices
 behind these tables, with outcomes on the rows and predictors on the
-columns. The temporal count matrix has 8 on its diagonal and 0 elsewhere;
-the contemporaneous count matrix reaches 8 only in the two group cells. The
-average coefficient matrices put magnitudes on the shared structure: across
-the eight students the efficacy-to-monitoring path averages 0.325 and the
-planning-to-effort path 0.361, while the mean autoregressive coefficients
-lie between −0.027 and 0.045. A path can therefore be universal and weak —
-at these cutoffs the shared temporal structure is exactly that — so
+columns. The temporal count matrix has 8 on its diagonal and at most 2 in an
+off-diagonal cell; the contemporaneous count matrix reaches 4. The average
+coefficient matrices put magnitude beside recurrence; for example, the
+planning-to-effort contemporaneous path appears in four students and averages
+0.165 across all eight. A path can therefore be common and weak, so
 prevalence and magnitude have to be read together, and neither should be
 mistaken for a standardized effect size.
 
@@ -187,19 +178,18 @@ path prevalence.
 plot(gimme_fit, weight = "prop")
 ```
 
-The dashed black self-loops and the two solid black arrows — efficacy to
-monitoring and planning to effort — constitute the group model; the grey
-arrows are individual-level paths, drawn thinner in proportion to how few
-students carry them.
+The dashed black self-loops constitute the fixed group structure; the grey
+arrows are individual-level paths, drawn in proportion to how many students
+carry them.
 
 ```{r plot-coef, eval=has_cograph}
 plot(gimme_fit, weight = "coef")
 ```
 
-Reweighting by `weight = "coef"` keeps the same graph but scales width by
-the group-average coefficient, so the display answers how strong rather
-than how common: the two group contemporaneous arrows dominate at 0.325 and
-0.361, and the autoregressive loops recede because their average
-coefficients fall below 0.05 in absolute value.
+Reweighting by `weight = "coef"` keeps the same graph but scales width by the
+sample-average coefficient, so the display answers how large rather than how
+common. This view must still be read beside the count matrix because an average
+over all eight students can be small even when the fitted coefficients among
+the students carrying a path are sizeable.
 
 # References

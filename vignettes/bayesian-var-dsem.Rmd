@@ -60,10 +60,9 @@ outputs without requiring the external dependency.
 Bayesian estimation is appropriate when posterior intervals, prior
 regularization, or DSEM-style modelling is central to the analysis; when the
 goal is a fast point-estimate comparison, `fit_var()` and `fit_mlvar()`
-provide that baseline. The estimator chunks in this vignette are not
-evaluated, because MCMC chains and external Mplus runs are inappropriate for
-a fast package build; the printed excerpts below were generated from the
-documented calls with short local chains and are reproduced as static text.
+provide that baseline. The native Bayesian chunks below are evaluated during
+the build, so every printed result comes from the displayed call. Only the
+external Mplus call remains unevaluated because it requires licensed software.
 
 # Data and preprocessing
 
@@ -91,7 +90,7 @@ The single-person call takes the data, the variable set, the id column, and
 the subject; `n_iter` sets the chain length, `n_chains` the number of chains,
 and `seed` fixes the random state for reproducibility.
 
-```{r fit-var-bayes, eval=FALSE}
+```{r fit-var-bayes}
 var_bayes_fit <- fit_var_bayes(
   srl, vars = vars, id = "name", subject = "Grace",
   n_iter = 4000, n_chains = 2, seed = 1
@@ -99,24 +98,16 @@ var_bayes_fit <- fit_var_bayes(
 var_bayes_fit
 ```
 
-Precomputed excerpt from a short diagnostic run (`n_iter = 400`, `n_chains = 1`):
-
-```text
-Bayesian VAR(1) result (unregularized, Mplus-targeted)
-  Variables:    5 (efficacy, value, planning, monitoring, effort)
-  Observations: 155
-  MCMC: 1 chains x 400 iter, 200 draws | max PSR = NA
-  Temporal 95% CIs excluding 0: 1 / 25
-  Temporal weights [-0.163, 0.162]
-  Contemporaneous weights [-0.063, 0.468]
-```
+The evaluated fit uses two chains, retains 4,000 posterior draws after burn-in,
+and reports a maximum potential scale reduction statistic close to 1. No
+temporal 95% credible interval excludes zero in this run.
 
 The multilevel Bayesian call uses the same panel structure as `fit_mlvar()`.
 Setting `temporal = "fixed"` estimates the average lag-one matrix without
 subject-specific random deviations; `n_iter`, `n_chains`, and `seed` control
 the MCMC as before.
 
-```{r fit-mlvar-bayes, eval=FALSE}
+```{r fit-mlvar-bayes}
 mlvar_bayes_fit <- fit_mlvar_bayes(
   srl, vars = vars, id = "name", temporal = "fixed",
   n_iter = 4000, n_chains = 2, seed = 1
@@ -124,16 +115,9 @@ mlvar_bayes_fit <- fit_mlvar_bayes(
 mlvar_bayes_fit
 ```
 
-Precomputed excerpt from a short diagnostic run (`n_iter = 400`, `n_chains = 1`):
-
-```text
-Bayesian mlVAR (Mplus DSEM-targeted, temporal = fixed):
-  36 subjects, 5548 observations, 5 variables
-  Temporal 95% CIs excluding 0: 3 / 25
-  Temporal weights [-0.041, 0.049]
-  Contemporaneous weights [0.027, 0.272]
-  Between weights [-0.073, 0.539]
-```
+The evaluated multilevel fit also retains 4,000 posterior draws and has a
+maximum potential scale reduction statistic close to 1. Two of the 25 temporal
+95% credible intervals exclude zero.
 
 The Mplus backend call is shown but not evaluated, because it requires the
 suggested `mlVAR` and `MplusAutomation` packages plus a licensed Mplus
@@ -150,31 +134,31 @@ mplus_fit <- fit_mlvar_mplus(
 
 The single-person posterior medians reproduce the ordinary VAR pattern.
 Monitoring at occasion $t-1$ predicts lower value at occasion $t$ (posterior
-median −0.163), planning predicts higher effort (0.162), and the largest
-contemporaneous edge is monitoring–effort (0.468). The same accessors that serve the point-estimate
+median −0.158), planning predicts higher effort (0.159), and the largest
+contemporaneous edge is monitoring–effort (0.467). None of the temporal
+credible intervals excludes zero, so these medians are descriptive rather than
+evidence of selected temporal paths. The same accessors that serve the point-estimate
 fits apply: `summary()` reports one row per network layer, `edges()` lists
 edges in decreasing magnitude, `nodes()` gives node-level strength, and
 `matrices()` returns the underlying posterior-median matrices.
 
-```{r output-var-bayes, eval=FALSE}
+```{r output-var-bayes}
 summary(var_bayes_fit)
 edges(var_bayes_fit, n = 12)
 nodes(var_bayes_fit)
 matrices(var_bayes_fit)
 ```
 
-The Bayesian mlVAR short run gives a temporal mean absolute weight of 0.012,
+The Bayesian mlVAR fit gives a temporal mean absolute weight of 0.012,
 a contemporaneous mean absolute weight of 0.165, and a between-person mean
-absolute weight of 0.208 — the ordering typical of multilevel panels, in
-which average lag-one effects are weak, within-occasion structure is
-stronger, and the between layer is stronger still. Monitoring at occasion $t-1$
+absolute weight of 0.206 in this panel. Monitoring at occasion $t-1$
 to effort at occasion $t$ is the largest average temporal edge (posterior
-median 0.031). Planning–effort is the largest contemporaneous edge (0.272), and
-efficacy–planning is the largest between-person edge (0.539) — a statement about which
+median 0.032). Planning–effort is the largest contemporaneous edge (0.274), and
+efficacy–planning is the largest between-person edge (0.558) — a statement about which
 students report high efficacy and high planning on average, not about either
 process unfolding within any student.
 
-```{r output-mlvar-bayes, eval=FALSE}
+```{r output-mlvar-bayes}
 summary(mlvar_bayes_fit)
 edges(mlvar_bayes_fit, n = 12)
 nodes(mlvar_bayes_fit)
@@ -186,24 +170,23 @@ estimators: arrows for lag-one prediction in the temporal panel, undirected
 edges for the contemporaneous and between layers, width scaled by absolute
 weight and colour encoding sign.
 
-```{r plot-var-bayes, eval=FALSE}
+```{r plot-var-bayes, eval=has_cograph}
 plot(var_bayes_fit)
 plot(var_bayes_fit, layer = "temporal")
 plot(var_bayes_fit, layer = "contemporaneous")
 ```
 
-```{r plot-mlvar-bayes, eval=FALSE}
+```{r plot-mlvar-bayes, eval=has_cograph}
 plot(mlvar_bayes_fit)
 plot(mlvar_bayes_fit, layer = "temporal")
 plot(mlvar_bayes_fit, layer = "contemporaneous")
 plot(mlvar_bayes_fit, layer = "between")
 ```
 
-The excerpts above are not a substitute for full MCMC practice. The short
-chains were run only to anchor the vignette prose in real printed values;
-applied analyses require adequate iterations, multiple chains, convergence
-diagnostics such as the potential scale reduction factor, posterior
-predictive checks, and sensitivity analyses over the priors.
+The evaluated calls remove the gap between displayed code and reported output,
+but they are still examples rather than a universal MCMC prescription. Applied
+analyses require problem-specific chain lengths, convergence diagnostics,
+posterior predictive checks, and sensitivity analyses over the priors.
 `fit_mlvar_mplus()` additionally depends on an external Mplus installation,
 so it is demonstrated only as a call template.
 

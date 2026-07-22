@@ -33,7 +33,7 @@ Single-subject VAR and graphical VAR estimate one parameter set for one person. 
 
 Ordinary VAR is the transparent baseline when one person has many occasions relative to the number of variables. Graphical VAR is preferable when sparsity is substantively defensible or the number of candidate edges is large, because EBIC-regularized LASSO and graphical-lasso estimation shrink weak temporal and contemporaneous edges to zero.
 
-Subject networks are appropriate when heterogeneity is itself the target. Multilevel VAR is appropriate when the target is an average within-person process across people and the analyst accepts partial pooling. Bayesian VAR and DSEM are appropriate when uncertainty intervals and dynamic SEM formulations are central, but their vignettes use static excerpts because full MCMC and Mplus backends are not suitable for fast vignette builds.
+Subject networks are appropriate when heterogeneity is itself the target. Multilevel VAR is appropriate when the target is an average within-person process across people and the analyst accepts partial pooling. Bayesian VAR and DSEM are appropriate when uncertainty intervals and dynamic SEM formulations are central. The native Bayesian examples are executed during vignette building; only the licensed external Mplus call is shown without execution.
 
 # Data and preprocessing
 
@@ -54,7 +54,7 @@ The audit retains 5548 lagged pairs from 5616 rows. It reports 10 trend flags, o
 
 # Worked selection example
 
-A compact comparison of Grace's ordinary and graphical VAR shows how the package exposes model choice as a table rather than a narrative judgement.
+A compact comparison of Grace's ordinary and graphical VAR shows how the package exposes model choice as a table rather than a narrative judgement. Grace is used because the preceding five-variable stationarity audit gives her no trend, high-autoregression, drift, unit-root, or zero-variance flag.
 
 ```{r compare}
 cmp <- compare_idiographic(
@@ -62,7 +62,7 @@ cmp <- compare_idiographic(
   estimators = c("var", "graphical_var"),
   estimator_args = list(
     var = list(subject = "Grace", scale = TRUE),
-    graphical_var = list(subject = "Grace", n_lambda = 8, gamma = 0)
+    graphical_var = list(subject = "Grace", n_lambda = 8)
   )
 )
 as.data.frame(cmp)
