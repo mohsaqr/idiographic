@@ -19,7 +19,7 @@
 #' @param step Integer number of rows to advance between windows. Default `1`.
 #' @param scale Logical. Whether to standardize variables inside each window.
 #'   Default `TRUE`.
-#' @param center_within Logical. Whether to center within person inside each
+#' @param center_within Logical. Whether to centre within person inside each
 #'   window when more than one id is present. Default `TRUE`.
 #' @param delete_missings Logical. Drop incomplete current/lagged rows. Default
 #'   `TRUE`.

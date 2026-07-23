@@ -61,7 +61,7 @@ Default: 0.5.}
 
 \item{scale}{Logical. Whether to standardize variables. Default: TRUE.}
 
-\item{center_within}{Logical. Whether to center within person when more than
+\item{center_within}{Logical. Whether to centre within person when more than
 one id is present (removes between-person variance). Default: TRUE.}
 
 \item{lambda_min_ratio}{Numeric scalar, or a two-value beta/kappa vector.
@@ -145,7 +145,7 @@ residuals) using EBIC model selection over a lambda grid.
 This is a clean-room reimplementation of the Rothman/Epskamp two-step
 estimator that is \strong{numerically equivalent to}
 \code{graphicalVAR::graphicalVAR()}: identical data preparation
-(global scaling, optional within-person centering, intercept column,
+(global scaling, optional within-person centring, intercept column,
 lag-1 construction within id/day blocks), identical lambda grids
 (\code{generate_lambdas}), the coupled MRCE beta-update / glasso kappa-update
 loop, the unpenalized-likelihood EBIC, and the same tie-broken model

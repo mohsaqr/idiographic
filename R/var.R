@@ -5,8 +5,8 @@
 #' @description
 #' Fits a transparent VAR(1) baseline from intensive longitudinal data using
 #' ordinary least squares: current variables are regressed on an intercept and
-#' lag-1 predictors. The lag construction, scaling, within-person centering,
-#' and day-boundary behavior match [fit_graphical_var()], but no regularization or
+#' lag-1 predictors. The lag construction, scaling, within-person centring,
+#' and day-boundary behaviour match [fit_graphical_var()], but no regularization or
 #' EBIC model selection is applied.
 #'
 #' @param data A `data.frame` or matrix with columns for variables and optional
@@ -19,7 +19,7 @@
 #' @param lags Integer. Only `1` is supported.
 #' @param scale Logical. Whether to standardize variables before lagging.
 #'   Default `TRUE`.
-#' @param center_within Logical. Whether to center within person when more than
+#' @param center_within Logical. Whether to centre within person when more than
 #'   one id is present. Default `TRUE`.
 #' @param delete_missings Logical. Drop incomplete current/lagged rows. Default
 #'   `TRUE`.

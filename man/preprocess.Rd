@@ -40,7 +40,7 @@ series.}
 \item{scale}{Logical. Whether to standardize variables before lagging.
 Default \code{TRUE}.}
 
-\item{center_within}{Logical. Whether to center within person when more than
+\item{center_within}{Logical. Whether to centre within person when more than
 one id is present. Default \code{TRUE}.}
 
 \item{detrend}{How to remove non-stationarity from each series before

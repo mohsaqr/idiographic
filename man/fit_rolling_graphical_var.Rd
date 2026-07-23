@@ -41,7 +41,7 @@ series.}
 \item{scale}{Logical. Whether to standardize variables inside each window.
 Default \code{TRUE}.}
 
-\item{center_within}{Logical. Whether to center within person inside each
+\item{center_within}{Logical. Whether to centre within person inside each
 window when more than one id is present. Default \code{TRUE}.}
 
 \item{delete_missings}{Logical. Drop incomplete current/lagged rows. Default

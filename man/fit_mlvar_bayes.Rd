@@ -116,7 +116,7 @@ statistically reproduces Mplus DSEM output (the estimator behind
 \code{mlVAR::mlVAR(estimator = "Mplus")}) without needing Mplus installed. A
 conjugate Gibbs sampler estimates a fixed temporal matrix, a within-person
 residual (contemporaneous) network, and a between-person network, using
-latent mean centering and Mplus's default priors. Point estimates are
+latent mean centring and Mplus's default priors. Point estimates are
 posterior medians with posterior SDs and 95\% credible intervals.
 }
 \details{
@@ -125,7 +125,7 @@ iteration: the latent person means \code{mu_i} (Gaussian), the fixed temporal
 matrix \code{B} (matrix-normal), the within residual covariance \code{Sigma_W}
 (inverse-Wishart), the grand mean \code{alpha} (Gaussian), and the between
 covariance \code{Sigma_B} (inverse-Wishart). The lagged predictor is recentred
-on the current \code{mu_i} draw every iteration (latent mean centering). Data
+on the current \code{mu_i} draw every iteration (latent mean centring). Data
 are globally standardized first (matching \code{mlVAR}'s \code{scale = TRUE}); the
 first observation of each block is used only as a lag (condition-on-first).
 

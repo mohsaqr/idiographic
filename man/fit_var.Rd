@@ -36,7 +36,7 @@ series.}
 \item{scale}{Logical. Whether to standardize variables before lagging.
 Default \code{TRUE}.}
 
-\item{center_within}{Logical. Whether to center within person when more than
+\item{center_within}{Logical. Whether to centre within person when more than
 one id is present. Default \code{TRUE}.}
 
 \item{delete_missings}{Logical. Drop incomplete current/lagged rows. Default
@@ -55,8 +55,8 @@ tidy access through \code{\link[=edges]{edges()}}, \code{\link[=coefs]{coefs()}}
 \description{
 Fits a transparent VAR(1) baseline from intensive longitudinal data using
 ordinary least squares: current variables are regressed on an intercept and
-lag-1 predictors. The lag construction, scaling, within-person centering,
-and day-boundary behavior match \code{\link[=fit_graphical_var]{fit_graphical_var()}}, but no regularization or
+lag-1 predictors. The lag construction, scaling, within-person centring,
+and day-boundary behaviour match \code{\link[=fit_graphical_var]{fit_graphical_var()}}, but no regularization or
 EBIC model selection is applied.
 }
 \examples{

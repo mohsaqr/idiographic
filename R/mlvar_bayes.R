@@ -12,7 +12,7 @@
 #   Between:               mu_i ~ N(alpha, Sigma_B)
 #
 # The lagged predictor is centred on the LATENT person mean mu_i (sampled), not
-# the observed mean -- this is Mplus's latent mean centering that removes
+# the observed mean -- this is Mplus's latent mean centring that removes
 # Nickell/Ludtke bias. Defaults matched to Mplus BAYES exactly:
 #   * B, alpha        ~ N(0, infinity)           (flat / improper)
 #   * Sigma_W, Sigma_B ~ IW(0, -(p+1))           (Mplus prints IW(0,-3) for p=2)
@@ -27,7 +27,7 @@
 #'   `mlVAR::mlVAR(estimator = "Mplus")`) without needing Mplus installed. A
 #'   conjugate Gibbs sampler estimates a fixed temporal matrix, a within-person
 #'   residual (contemporaneous) network, and a between-person network, using
-#'   latent mean centering and Mplus's default priors. Point estimates are
+#'   latent mean centring and Mplus's default priors. Point estimates are
 #'   posterior medians with posterior SDs and 95% credible intervals.
 #'
 #' @details The sampler alternates five conjugate full-conditional draws per
@@ -35,7 +35,7 @@
 #'   matrix `B` (matrix-normal), the within residual covariance `Sigma_W`
 #'   (inverse-Wishart), the grand mean `alpha` (Gaussian), and the between
 #'   covariance `Sigma_B` (inverse-Wishart). The lagged predictor is recentred
-#'   on the current `mu_i` draw every iteration (latent mean centering). Data
+#'   on the current `mu_i` draw every iteration (latent mean centring). Data
 #'   are globally standardized first (matching `mlVAR`'s `scale = TRUE`); the
 #'   first observation of each block is used only as a lag (condition-on-first).
 #'
@@ -499,7 +499,7 @@ fit_mlvar_bayes <- function(data, vars, id,
 #' Conjugate block Gibbs for the full DSEM: person-specific temporal matrices
 #' B_i with random effects theta_i = (mu_i, vec(B_i)) ~ N(gamma, Sigma_RE),
 #' within residual Sigma_W. Priors: gamma flat N(0, inf); Sigma_RE, Sigma_W
-#' ~ IW(0, -(dim+1)). Latent mean centering via the sampled mu_i. Validated at
+#' ~ IW(0, -(dim+1)). Latent mean centring via the sampled mu_i. Validated at
 #' p = 1 against Mplus DSEM random-AR; dimension-general for p >= 1.
 #'
 #' The (mu_i, B_i) block is updated by two conditionally-linear Gaussian steps

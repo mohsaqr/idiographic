@@ -5,7 +5,7 @@
 #' @description
 #' Fits [fit_var()] over ordered, overlapping windows within each subject.
 #' This is a simple time-varying idiographic baseline: every window uses the
-#' same lag construction, scaling, within-person centering, and tidy coefficient
+#' same lag construction, scaling, within-person centring, and tidy coefficient
 #' access as [fit_var()], but returns one coefficient table per window.
 #'
 #' @param data A `data.frame` or matrix with columns for variables and optional
@@ -19,7 +19,7 @@
 #' @param step Integer number of rows to advance between windows. Default `1`.
 #' @param scale Logical. Whether to standardize variables inside each window.
 #'   Default `TRUE`.
-#' @param center_within Logical. Whether to center within person inside each
+#' @param center_within Logical. Whether to centre within person inside each
 #'   window when more than one id is present. Default `TRUE`.
 #' @param delete_missings Logical. Drop incomplete current/lagged rows. Default
 #'   `TRUE`.

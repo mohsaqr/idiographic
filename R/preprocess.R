@@ -21,7 +21,7 @@
 #' @param beep Character. Name of the measurement-occasion column, or `NULL`.
 #' @param scale Logical. Whether to standardize variables before lagging.
 #'   Default `TRUE`.
-#' @param center_within Logical. Whether to center within person when more than
+#' @param center_within Logical. Whether to centre within person when more than
 #'   one id is present. Default `TRUE`.
 #' @param detrend How to remove non-stationarity from each series before
 #'   lagging. Either a single string applied to every variable, or a

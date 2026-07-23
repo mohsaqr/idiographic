@@ -53,7 +53,7 @@ neither \code{id} nor \code{day} is supplied. Defaults to \code{floor(sqrt(nrow(
 \item{scale}{Logical. Whether to standardize using training-split means and
 SDs. Default \code{TRUE}.}
 
-\item{center_within}{Logical. Whether to center within person using
+\item{center_within}{Logical. Whether to centre within person using
 training-split person means when more than one id is present. Default
 \code{TRUE}.}
 
@@ -77,7 +77,7 @@ interface, defaults, and reported metrics may change in a future release.
 Performs rolling-origin one-step prediction from \code{\link[=fit_var]{fit_var()}} or
 \code{\link[=fit_graphical_var]{fit_graphical_var()}}. Each split fits the estimator on earlier blocks and
 predicts current variables in the next block from their lag-1 values. Scaling
-and within-person centering parameters are learned from the training split
+and within-person centring parameters are learned from the training split
 only, then applied to the assessment split before prediction.
 }
 \examples{

@@ -44,7 +44,7 @@ in the CRAN tarball.
 
 The Bayesian DSEM sampler is a particular highlight: `fit_mlvar_bayes()`
 targets the output of `mlVAR::mlVAR(estimator = "Mplus")` — Mplus's two-level
-Bayesian VAR with latent mean centering — **without Mplus installed**, using a
+Bayesian VAR with latent mean centring — **without Mplus installed**, using a
 pure-R conjugate Gibbs sampler with hand-rolled inverse-Wishart draws (no
 `MCMCpack`/`rstan`). The committed evidence consists of fixed bivariate Mplus
 fixtures, one univariate random-AR fixture, and parameter-recovery tests; use
@@ -215,8 +215,9 @@ Package page and binaries: **<https://mohsaqr.r-universe.dev/idiographic>**.
 
 ## Citation
 
-Saqr, M. (2026). *idiographic: Network Estimation from Intensive Longitudinal
-Data*. R package. <https://github.com/mohsaqr/idiographic>
+Saqr, M., & López-Pernas, S. (2026). *idiographic: Idiographic
+Person-Specific and Heterogeneous Complex Networks*. R package.
+<https://github.com/mohsaqr/idiographic>
 
 ## License
 

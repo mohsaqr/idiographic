@@ -8,7 +8,7 @@
 #' This is a clean-room reimplementation of the Rothman/Epskamp two-step
 #' estimator that is **numerically equivalent to**
 #' \code{graphicalVAR::graphicalVAR()}: identical data preparation
-#' (global scaling, optional within-person centering, intercept column,
+#' (global scaling, optional within-person centring, intercept column,
 #' lag-1 construction within id/day blocks), identical lambda grids
 #' (\code{generate_lambdas}), the coupled MRCE beta-update / glasso kappa-update
 #' loop, the unpenalized-likelihood EBIC, and the same tie-broken model
@@ -35,7 +35,7 @@
 #' @param gamma Numeric. EBIC hyperparameter (0 = BIC, higher = sparser).
 #'   Default: 0.5.
 #' @param scale Logical. Whether to standardize variables. Default: TRUE.
-#' @param center_within Logical. Whether to center within person when more than
+#' @param center_within Logical. Whether to centre within person when more than
 #'   one id is present (removes between-person variance). Default: TRUE.
 #' @param lambda_min_ratio Numeric scalar, or a two-value beta/kappa vector.
 #'   Ratio of min/max lambda unless overridden per-dimension. Default: 0.05.
@@ -555,8 +555,8 @@ fit_graphical_var <- function(data,
 
 #' Build current/lagged matrices for one or more explicit lags.
 #'
-#' Global per-variable scaling (always centered), optional within-person
-#' centering when >1 id, lag construction within (id, day) blocks, and
+#' Global per-variable scaling (always centred), optional within-person
+#' centring when >1 id, lag construction within (id, day) blocks, and
 #' (when `delete_missings`) deletion of rows with missing current or lagged
 #' values. When `beep` is supplied, an absent beep creates a missing lag rather
 #' than joining non-consecutive observations.

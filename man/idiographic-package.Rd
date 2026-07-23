@@ -35,4 +35,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Mohammed Saqr \email{mohammed.saqr@uef.fi} [copyright holder]
 
+Authors:
+\itemize{
+  \item Sonsoles López-Pernas \email{sonsoles.lopez@uef.fi}
+}
+
 }

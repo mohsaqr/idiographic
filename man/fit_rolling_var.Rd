@@ -40,7 +40,7 @@ series.}
 \item{scale}{Logical. Whether to standardize variables inside each window.
 Default \code{TRUE}.}
 
-\item{center_within}{Logical. Whether to center within person inside each
+\item{center_within}{Logical. Whether to centre within person inside each
 window when more than one id is present. Default \code{TRUE}.}
 
 \item{delete_missings}{Logical. Drop incomplete current/lagged rows. Default
@@ -62,7 +62,7 @@ subject/window metadata plus \code{network}, \code{from}, \code{to}, and \code{w
 \description{
 Fits \code{\link[=fit_var]{fit_var()}} over ordered, overlapping windows within each subject.
 This is a simple time-varying idiographic baseline: every window uses the
-same lag construction, scaling, within-person centering, and tidy coefficient
+same lag construction, scaling, within-person centring, and tidy coefficient
 access as \code{\link[=fit_var]{fit_var()}}, but returns one coefficient table per window.
 }
 \examples{

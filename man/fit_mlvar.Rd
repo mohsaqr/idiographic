@@ -63,7 +63,7 @@ unique temporal effects to its full random-slope model.}
 effects, giving a diagonal temporal matrix (matches \code{mlVAR(AR = TRUE)}).
 For the native frequentist/reference path this requires \code{estimator = "lmer"}. Default \code{FALSE}.}
 
-\item{scale}{Logical. If \code{TRUE}, each variable is grand-mean centered and
+\item{scale}{Logical. If \code{TRUE}, each variable is grand-mean centred and
 divided by its pooled SD before augmentation (mlVAR's \code{scale}). Default
 \code{FALSE}. (The deprecated \code{standardize} is an alias.)}
 
@@ -196,7 +196,7 @@ declaration available through \code{\link[=equivalence]{equivalence()}}.
 
 When \code{beep} is supplied, every complete \verb{(id, day, beep)} key (or \verb{(id, beep)} when \code{day = NULL}) must be unique. Duplicate keys often indicate that
 a study-period/session column was lost during data conversion. Because
-upstream join behavior is row-order dependent in that case, \code{fit_mlvar()}
+upstream join behaviour is row-order dependent in that case, \code{fit_mlvar()}
 errors and asks you to resolve or explicitly deduplicate the source data.
 }
 

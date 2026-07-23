@@ -55,7 +55,7 @@
 #'   effects, giving a diagonal temporal matrix (matches `mlVAR(AR = TRUE)`).
 #'   For the native frequentist/reference path this requires `estimator =
 #'   "lmer"`. Default `FALSE`.
-#' @param scale Logical. If `TRUE`, each variable is grand-mean centered and
+#' @param scale Logical. If `TRUE`, each variable is grand-mean centred and
 #'   divided by its pooled SD before augmentation (mlVAR's `scale`). Default
 #'   `FALSE`. (The deprecated `standardize` is an alias.)
 #' @param scaleWithin Logical. If `TRUE`, additionally scale within person
@@ -94,7 +94,7 @@
 #' When `beep` is supplied, every complete `(id, day, beep)` key (or `(id,
 #' beep)` when `day = NULL`) must be unique. Duplicate keys often indicate that
 #' a study-period/session column was lost during data conversion. Because
-#' upstream join behavior is row-order dependent in that case, `fit_mlvar()`
+#' upstream join behaviour is row-order dependent in that case, `fit_mlvar()`
 #' errors and asks you to resolve or explicitly deduplicate the source data.
 #'
 #' @return A dual-class `c("net_mlvar", "netobject_group")` object — a
@@ -756,7 +756,7 @@ coefs.default <- function(x, ...) {
 #' fills stay `NA_integer_` -- important because base R's `mean()` uses two-pass
 #' summation for doubles but a plain sum/n for integers, and that ~1e-14
 #' difference otherwise amplifies through lmer into ~1e-10 coefficient diffs
-#' against `mlVAR`. The within-group lag/center/mean arithmetic then uses base
+#' against `mlVAR`. The within-group lag/centre/mean arithmetic then uses base
 #' `ave()` for the same reason.
 #' @noRd
 .mlvar_augment_data <- function(data, vars, id, day, beep, lag,

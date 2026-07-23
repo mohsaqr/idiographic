@@ -11,7 +11,7 @@
 #' Performs rolling-origin one-step prediction from [fit_var()] or
 #' [fit_graphical_var()]. Each split fits the estimator on earlier blocks and
 #' predicts current variables in the next block from their lag-1 values. Scaling
-#' and within-person centering parameters are learned from the training split
+#' and within-person centring parameters are learned from the training split
 #' only, then applied to the assessment split before prediction.
 #'
 #' @param data A `data.frame` or matrix with columns for variables and optional
@@ -31,7 +31,7 @@
 #'   neither `id` nor `day` is supplied. Defaults to `floor(sqrt(nrow(data)))`.
 #' @param scale Logical. Whether to standardize using training-split means and
 #'   SDs. Default `TRUE`.
-#' @param center_within Logical. Whether to center within person using
+#' @param center_within Logical. Whether to centre within person using
 #'   training-split person means when more than one id is present. Default
 #'   `TRUE`.
 #' @param delete_missings Logical. Drop incomplete current/lagged assessment
