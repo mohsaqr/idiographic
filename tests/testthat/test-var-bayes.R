@@ -8,6 +8,7 @@ var_fixture_files <- list.files(
   pattern = "^var_.*\\.rds$", full.names = TRUE)
 
 test_that("Mplus VAR fixtures are present", {
+  skip_on_cran()
   expect_true(length(var_fixture_files) >= 1L)
 })
 
@@ -20,17 +21,20 @@ for (f in var_fixture_files) {
   fx <- readRDS(f); tag <- fx$tag
 
   test_that(paste0("temporal B matches Mplus BAYES VAR [", tag, "]"), {
+    skip_on_cran()
     fit <- run_vb(fx)
     expect_lt(max(abs(fit$temporal - fx$mplus$B)), 0.03)
     expect_lt(mean(abs(fit$temporal - fx$mplus$B)), 0.02)
   })
 
   test_that(paste0("residual covariance Sigma matches Mplus [", tag, "]"), {
+    skip_on_cran()
     fit <- run_vb(fx)
     expect_lt(max(abs(fit$Sigma - fx$mplus$Sigma)), 0.03)
   })
 
   test_that(paste0("posterior SDs match Mplus scale [", tag, "]"), {
+    skip_on_cran()
     fit <- run_vb(fx)
     my_sd <- matrix(coefs(fit)$posterior_sd, 2, 2, byrow = TRUE)
     expect_lt(max(abs(my_sd - fx$mplus$B_sd)), 0.02)
@@ -38,6 +42,7 @@ for (f in var_fixture_files) {
 }
 
 test_that("var_bayes object structure and accessors are well-formed", {
+  skip_on_cran()
   fx <- readRDS(var_fixture_files[[1]])
   fit <- run_vb(fx, n_iter = 2000L)
   expect_s3_class(fit, "var_bayes_result")
@@ -54,6 +59,7 @@ test_that("var_bayes object structure and accessors are well-formed", {
 })
 
 test_that("Bayesian VAR median ~ OLS VAR on a pooled multi-subject panel", {
+  skip_on_cran()
   # No direct Mplus analogue for the within-centred pooled fit, so cross-check
   # the Bayesian posterior median against the frequentist OLS fit_var().
   set.seed(11)

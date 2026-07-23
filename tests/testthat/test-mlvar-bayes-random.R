@@ -7,6 +7,7 @@
 # general; the p = 1 case exercises the same conjugate blocks).
 
 test_that("random-slope engine matches Mplus DSEM random-AR(1) [p = 1]", {
+  skip_on_cran()
   f <- testthat::test_path("fixtures", "mplus", "randomar.rds")
   skip_if_not(file.exists(f))
   fx <- readRDS(f)
@@ -24,6 +25,7 @@ test_that("random-slope engine matches Mplus DSEM random-AR(1) [p = 1]", {
 })
 
 test_that("random-slope build recovers a known p = 2 transition matrix", {
+  skip_on_cran()
   set.seed(7); n_id <- 60; n_t <- 50
   Bmean <- matrix(c(0.35, 0.10, 0.05, 0.30), 2, 2, byrow = TRUE)
   rows <- lapply(seq_len(n_id), function(i) {
@@ -45,6 +47,7 @@ test_that("random-slope build recovers a known p = 2 transition matrix", {
 })
 
 test_that("random-slope path errors when subjects <= random effects", {
+  skip_on_cran()
   set.seed(1)
   rows <- lapply(1:4, function(i) {
     y <- matrix(0, 30, 2)
@@ -59,6 +62,7 @@ test_that("random-slope path errors when subjects <= random effects", {
 })
 
 test_that("random residual covariance produces finite recovery-validated output", {
+  skip_on_cran()
   set.seed(19)
   n_id <- 16; n_t <- 35
   Bmean <- matrix(c(.30, .08, .04, .25), 2, 2, byrow = TRUE)

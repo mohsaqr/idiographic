@@ -1,4 +1,5 @@
 test_that("as_netobject.gvar_result preserves plotting method names", {
+  skip_on_cran()
   d <- synth_single(n_t = 100)
   gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0.5)
@@ -11,6 +12,7 @@ test_that("as_netobject.gvar_result preserves plotting method names", {
 })
 
 test_that("standard estimators are cograph-ready groups from construction", {
+  skip_on_cran()
   d <- synth_single(n_t = 100)
   gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0)
@@ -41,6 +43,7 @@ test_that("standard estimators are cograph-ready groups from construction", {
 })
 
 test_that("as_netobject.cograph_network recovers a nested method", {
+  skip_on_cran()
   cn <- structure(
     list(weights = matrix(c(0, 1, 0, 0), 2, 2,
                           dimnames = list(c("A", "B"), c("A", "B"))),
@@ -53,6 +56,7 @@ test_that("as_netobject.cograph_network recovers a nested method", {
 })
 
 test_that("matrices() prints compact blocks and returns estimator matrices", {
+  skip_on_cran()
   d <- synth_single(n_t = 100, vars = c("A", "B", "C"), seed = 211)
 
   vv <- fit_var(d, vars = c("A", "B", "C"), id = "id",
@@ -77,6 +81,7 @@ test_that("matrices() prints compact blocks and returns estimator matrices", {
 })
 
 test_that("matrices() delegates through fit-holding result containers", {
+  skip_on_cran()
   d <- synth_single(n_t = 80, vars = c("A", "B", "C"), seed = 212)
 
   roll <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
@@ -105,6 +110,7 @@ test_that("matrices() delegates through fit-holding result containers", {
 })
 
 test_that("as_netobject.net_gimme defaults to proportion-weighted p-node group", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
   gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
@@ -125,6 +131,7 @@ test_that("as_netobject.net_gimme defaults to proportion-weighted p-node group",
 })
 
 test_that("as_netobject.net_gimme style='unified' is a 2p net; weight='coef' opt", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
   gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
@@ -139,6 +146,7 @@ test_that("as_netobject.net_gimme style='unified' is a 2p net; weight='coef' opt
 })
 
 test_that("fit_gimme returns a mixed cograph_network from construction", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
   gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
@@ -162,6 +170,7 @@ test_that("fit_gimme returns a mixed cograph_network from construction", {
 })
 
 test_that(".gimme_mixed_edges encodes gimme semantics; plot_gimme renders", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 6, days = 4, beeps = 12, vars = c("A", "B", "C"),
                    seed = 9)
@@ -197,6 +206,7 @@ test_that(".gimme_mixed_edges encodes gimme semantics; plot_gimme renders", {
 })
 
 test_that("extract_edges works on a single net and rejects groups", {
+  skip_on_cran()
   d <- synth_single(n_t = 100)
   gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       day = "day", beep = "beep", n_lambda = 8, gamma = 0)

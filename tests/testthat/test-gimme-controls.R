@@ -1,4 +1,5 @@
 test_that("fit_gimme exposes the current GIMME 10.0 search controls", {
+  skip_on_cran()
   f <- formals(fit_gimme)
   upstream_surface <- c(
     "data", "out", "sep", "header", "ar", "plot", "subgroup",
@@ -22,6 +23,7 @@ test_that("fit_gimme exposes the current GIMME 10.0 search controls", {
 })
 
 test_that("group correction names include current and deprecated spellings", {
+  skip_on_cran()
   normalize <- idiographic:::.gimme_normalize_group_correct
 
   expect_identical(normalize("Bonferroni Group"), "Bonferroni Group")
@@ -40,6 +42,7 @@ test_that("group correction names include current and deprecated spellings", {
 })
 
 test_that("group correction modes produce their documented thresholds", {
+  skip_on_cran()
   thresholds <- idiographic:::.gimme_group_thresholds
 
   by_group <- thresholds("Bonferroni Group", alpha = 0.05,
@@ -65,6 +68,7 @@ test_that("group correction modes produce their documented thresholds", {
 })
 
 test_that("individual Bonferroni and FDR controls affect entry and pruning", {
+  skip_on_cran()
   thresholds <- idiographic:::.gimme_individual_thresholds
   bonf <- thresholds("Bonferroni", alpha = 0.05, n_paths = 10L)
   fdr <- thresholds("fdr", alpha = 0.05, n_paths = 10L)
@@ -87,6 +91,7 @@ test_that("individual Bonferroni and FDR controls affect entry and pruning", {
 })
 
 test_that("group FDR is applied across pooled person-by-path tests", {
+  skip_on_cran()
   make_mi <- function(p1, p2) {
     data.frame(
       lhs = c("A", "B"), op = "~", rhs = c("B", "A"),
@@ -113,6 +118,7 @@ test_that("group FDR is applied across pooled person-by-path tests", {
 })
 
 test_that("individual stopping modes separate fit and significance", {
+  skip_on_cran()
   choose <- idiographic:::.gimme_choose_individual_path
   cutoff <- stats::qchisq(0.95, df = 1)
   weak <- data.frame(
@@ -144,6 +150,7 @@ test_that("individual stopping modes separate fit and significance", {
 })
 
 test_that("new controls are validated at the public interface", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 2, beeps = 6, vars = c("A", "B"), seed = 3)
 
@@ -160,6 +167,7 @@ test_that("new controls are validated at the public interface", {
 })
 
 test_that("inapplicable subgroup and file-I/O controls are not silent", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 2, beeps = 6, vars = c("A", "B"), seed = 3)
   seen <- character()
@@ -180,6 +188,7 @@ test_that("inapplicable subgroup and file-I/O controls are not silent", {
 })
 
 test_that("new controls are recorded by a complete fit", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 2, beeps = 8, vars = c("A", "B"), seed = 4)
   gm <- fit_gimme(

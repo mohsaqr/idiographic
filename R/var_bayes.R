@@ -54,7 +54,7 @@
 #' y <- matrix(0, 200, 2)
 #' for (t in 2:200) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
 #' d <- data.frame(A = y[, 1], B = y[, 2])
-#' fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 2000, seed = 1)
+#' fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 500, seed = 1)
 #' print(fit)
 #' coefs(fit)
 #' }

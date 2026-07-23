@@ -1,4 +1,5 @@
 test_that("fit_gimme runs and returns a net_gimme object", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   gm <- fit_gimme(d, vars = c("A", "B"), id = "id",
@@ -11,6 +12,7 @@ test_that("fit_gimme runs and returns a net_gimme object", {
 })
 
 test_that("GIMME lags never cross day boundaries", {
+  skip_on_cran()
   # One subject, two days; day-2's first row must not pair with day-1's last.
   df <- data.frame(
     id = 1L,
@@ -41,6 +43,7 @@ test_that("GIMME lags never cross day boundaries", {
 })
 
 test_that("a missing day value does not inject NA rows into the lag design", {
+  skip_on_cran()
   df <- data.frame(
     id = 1L, day = c(1, 1, 1, NA, 2, 2, 2), beep = 1:7,
     A = c(1, 2, 3, 4, 5, 6, 7), B = c(1, 2, 3, 4, 5, 6, 7) + 0.1
@@ -53,6 +56,7 @@ test_that("a missing day value does not inject NA rows into the lag design", {
 })
 
 test_that("path_counts ignores NA coefficients", {
+  skip_on_cran()
   # Inject an NA into a per-person coef matrix and confirm it is not counted.
   varnames <- c("A", "B")
   lag_names <- paste0(varnames, "lag")
@@ -69,6 +73,7 @@ test_that("path_counts ignores NA coefficients", {
 })
 
 test_that("VAR = TRUE searches lagged paths only (no directed contemporaneous)", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 5, days = 3, beeps = 12, vars = c("A", "B", "C"),
                    seed = 8)
@@ -97,6 +102,7 @@ test_that("VAR = TRUE searches lagged paths only (no directed contemporaneous)",
 })
 
 test_that("I/O and sub-feature parity args are accepted (no unused-arg error)", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_no_error(
@@ -116,6 +122,7 @@ test_that("I/O and sub-feature parity args are accepted (no unused-arg error)", 
 })
 
 test_that("unsupported gimme modes error clearly", {
+  skip_on_cran()
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_error(fit_gimme(d, vars = c("A", "B"), id = "id", subgroup = TRUE),
                "subgrouping")
@@ -130,6 +137,7 @@ test_that("unsupported gimme modes error clearly", {
 })
 
 test_that("dir_prop_cutoff = 0L (default-equivalent integer) is accepted", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_no_error(suppressWarnings(suppressMessages(
@@ -138,6 +146,7 @@ test_that("dir_prop_cutoff = 0L (default-equivalent integer) is accepted", {
 })
 
 test_that("non-default inert sub-feature args warn (not silently ignored)", {
+  skip_on_cran()
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_warning(
     suppressMessages(fit_gimme(d, vars = c("A", "B"), id = "id", day = "day",
@@ -148,6 +157,7 @@ test_that("non-default inert sub-feature args warn (not silently ignored)", {
 })
 
 test_that("GIMME with an exogenous variable runs (square stability blocks)", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   # Exogenous current variables drop endogenous beta rows, which previously made
   # the stability eigen blocks non-square. The run must complete without error.

@@ -82,6 +82,7 @@ test_that("nodes() is a tidy per-node strength table", {
 })
 
 test_that("coefs() is tidy: full table for gvar, per-person for gimme", {
+  skip_on_cran()
   d <- synth_single(n_t = 120)
   gv <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                       lambda_beta = 0.1, n_lambda = 8)
@@ -100,6 +101,7 @@ test_that("coefs() is tidy: full table for gvar, per-person for gimme", {
 })
 
 test_that("edges(net_gimme) is tidy with network + level", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 5, days = 3, beeps = 12, vars = c("A", "B"), seed = 6)
   gm <- fit_gimme(d, vars = c("A", "B"), id = "id",

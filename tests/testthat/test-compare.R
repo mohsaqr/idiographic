@@ -1,4 +1,5 @@
 test_that("compare_idiographic stacks direct VAR and graphical VAR summaries", {
+  skip_on_cran()
   d <- synth_single(n_t = 100, vars = c("A", "B", "C"), seed = 701)
   vars <- c("A", "B", "C")
   cmp <- compare_idiographic(
@@ -31,6 +32,7 @@ test_that("compare_idiographic stacks direct VAR and graphical VAR summaries", {
 })
 
 test_that("compare_idiographic keeps successful fits and captures failures", {
+  skip_on_cran()
   d <- synth_single(n_t = 80, vars = c("A", "B"), seed = 702)
   cmp <- compare_idiographic(
     d[, c("A", "B")], vars = c("A", "B"),
@@ -47,6 +49,7 @@ test_that("compare_idiographic keeps successful fits and captures failures", {
 })
 
 test_that("compare_idiographic supports uSEM and GIMME in the comparison table", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_planted_panel(n_id = 3, days = 4, beeps = 16, seed = 703)
   cmp <- compare_idiographic(
@@ -65,6 +68,7 @@ test_that("compare_idiographic supports uSEM and GIMME in the comparison table",
 })
 
 test_that("compare_idiographic validates estimator names and argument lists", {
+  skip_on_cran()
   d <- synth_single(n_t = 60, vars = c("A", "B"), seed = 704)
   expect_error(
     compare_idiographic(d, vars = c("A", "B"), estimators = "nope"),

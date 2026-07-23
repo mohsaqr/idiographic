@@ -122,6 +122,7 @@ test_that("estimate_stability supports uSEM edge stability", {
 })
 
 test_that("estimate_stability supports GIMME edge stability", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"),
                    seed = 407)

@@ -93,12 +93,12 @@ and `seed` fixes the random state for reproducibility.
 ```{r fit-var-bayes}
 var_bayes_fit <- fit_var_bayes(
   srl, vars = vars, id = "name", subject = "Grace",
-  n_iter = 4000, n_chains = 2, seed = 1
+  n_iter = 1000, n_chains = 2, seed = 1
 )
 var_bayes_fit
 ```
 
-The evaluated fit uses two chains, retains 4,000 posterior draws after burn-in,
+The evaluated fit uses two chains, retains 1,000 posterior draws after burn-in,
 and reports a maximum potential scale reduction statistic close to 1. No
 temporal 95% credible interval excludes zero in this run.
 
@@ -110,13 +110,13 @@ the MCMC as before.
 ```{r fit-mlvar-bayes}
 mlvar_bayes_fit <- fit_mlvar_bayes(
   srl, vars = vars, id = "name", temporal = "fixed",
-  n_iter = 4000, n_chains = 2, seed = 1
+  n_iter = 1000, n_chains = 2, seed = 1
 )
 mlvar_bayes_fit
 ```
 
-The evaluated multilevel fit also retains 4,000 posterior draws and has a
-maximum potential scale reduction statistic close to 1. Two of the 25 temporal
+The evaluated multilevel fit also retains 1,000 posterior draws and has a
+maximum potential scale reduction statistic close to 1. Three of the 25 temporal
 95% credible intervals exclude zero.
 
 The Mplus backend call is shown but not evaluated, because it requires the
@@ -134,8 +134,8 @@ mplus_fit <- fit_mlvar_mplus(
 
 The single-person posterior medians reproduce the ordinary VAR pattern.
 Monitoring at occasion $t-1$ predicts lower value at occasion $t$ (posterior
-median −0.158), planning predicts higher effort (0.159), and the largest
-contemporaneous edge is monitoring–effort (0.467). None of the temporal
+median −0.121), planning predicts higher effort (0.107), and the largest
+contemporaneous edge is monitoring–effort (0.465). None of the temporal
 credible intervals excludes zero, so these medians are descriptive rather than
 evidence of selected temporal paths. The same accessors that serve the point-estimate
 fits apply: `summary()` reports one row per network layer, `edges()` lists
@@ -149,12 +149,12 @@ nodes(var_bayes_fit)
 matrices(var_bayes_fit)
 ```
 
-The Bayesian mlVAR fit gives a temporal mean absolute weight of 0.012,
+The Bayesian mlVAR fit gives a temporal mean absolute weight of 0.015,
 a contemporaneous mean absolute weight of 0.165, and a between-person mean
-absolute weight of 0.206 in this panel. Monitoring at occasion $t-1$
+absolute weight of 0.205 in this panel. Monitoring at occasion $t-1$
 to effort at occasion $t$ is the largest average temporal edge (posterior
-median 0.032). Planning–effort is the largest contemporaneous edge (0.274), and
-efficacy–planning is the largest between-person edge (0.558) — a statement about which
+median 0.033). Planning–effort is the largest contemporaneous edge (0.274), and
+efficacy–planning is the largest between-person edge (0.548) — a statement about which
 students report high efficacy and high planning on average, not about either
 process unfolding within any student.
 

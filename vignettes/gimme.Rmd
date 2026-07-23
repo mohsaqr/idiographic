@@ -67,7 +67,7 @@ indicators for 41 students; `name` identifies the student and `occasion` orders
 measurements within student. Five indicators enter the model: `efficacy`,
 `value`, `planning`, `monitoring`, and `effort`. To keep the vignette fast
 without hand-picking people for their fitted networks, the example uses the
-eight students with the most complete five-indicator occasions, breaking ties
+four students with the most complete five-indicator occasions, breaking ties
 alphabetically.
 
 ```{r vars-audit}
@@ -76,14 +76,14 @@ complete_n <- tapply(complete.cases(esm_srl[vars]), esm_srl$name, sum)
 selection <- data.frame(subject = names(complete_n),
                         complete = as.integer(complete_n))
 selection <- selection[order(-selection$complete, selection$subject), ]
-selected_ids <- head(selection$subject, 8)
-head(selection, 8)
+selected_ids <- head(selection$subject, 4)
+head(selection, 4)
 preprocess(esm_srl[esm_srl$name %in% selected_ids, ],
            vars = vars, id = "name")
 ```
 
-The transparent rule selects Hana, Iker, Jamal, Omar, Quinn, Yara, Cira, and
-Enzo: six have 79 complete occasions and two have 78. The audit is shown rather
+The transparent rule selects Hana, Iker, Jamal, and Omar, each with 79
+complete five-indicator occasions. The audit is shown rather
 than silently assuming stationarity; these supplied series contain trend or
 shift flags, so the fit is a method demonstration and its paths should not be
 treated as confirmatory substantive findings.
@@ -95,7 +95,7 @@ column; `time = "occasion"` orders occasions within each student. `ar = TRUE`
 places an autoregressive path on every variable in every subject's model
 from the outset, which anchors the search. `groupcutoff = 0.75` and
 `subcutoff = 0.75` require a path to improve fit in at least 75 percent of
-the relevant subjects — here, six of the eight — before it is promoted by
+the relevant subjects — here, three of the four — before it is promoted by
 the corresponding rule.
 
 ```{r fit}
@@ -108,11 +108,11 @@ gimme_fit
 ```
 
 No cross-variable path reaches the 75 percent group threshold. The five
-autoregressive paths are fixed by `ar = TRUE` and carried by all eight
+autoregressive paths are fixed by `ar = TRUE` and carried by all four
 students; all selected cross-variable paths are individual-level. This is a
 result of the stated rule and cutoffs, not a claim that the population has no
 shared dynamics. The fitted temporal and contemporaneous prevalence matrices
-range from 0.125 (one student) to 0.50 (four students) off the diagonal.
+range from 0.25 (one student) to 0.75 (three students) off the diagonal.
 
 # Reading the output
 
@@ -123,9 +123,9 @@ cross-variable edges only.
 summary(gimme_fit)
 ```
 
-The temporal layer holds eight cross-variable edges at density 0.40 and mean
-prevalence 0.172; the contemporaneous layer holds 13 directed edges at density
-0.65 and mean prevalence 0.288. The `edges()` accessor lists every retained path with its layer,
+The temporal layer holds six cross-variable edges at density 0.30 and mean
+prevalence 0.250; the contemporaneous layer holds 11 directed edges at density
+0.55 and mean prevalence 0.409. The `edges()` accessor lists every retained path with its layer,
 prevalence, and level.
 
 ```{r edges}
@@ -134,9 +134,9 @@ edges(gimme_fit)
 
 The first five temporal rows are the fixed autoregressive self paths at
 prevalence 1. Every cross-variable row is individual-level. The most prevalent
-contemporaneous paths are value to effort and planning to effort, each present
-in four of eight students; the most prevalent cross-lagged paths occur in two
-of eight students.
+contemporaneous path is planning to efficacy, present in three of the four
+students; the most prevalent cross-lagged paths occur in one of the four
+students.
 
 ```{r coefs-nodes}
 head(coefs(gimme_fit))
@@ -145,10 +145,10 @@ nodes(gimme_fit)
 
 `coefs()` supplies the person-specific estimates that the prevalence display
 abstracts away: one row per subject, layer, and path. The displayed rows begin
-with Cira and show why prevalence and coefficient magnitude are separate
-quantities. The `nodes()` table sums prevalence over incident edges. Effort is
-the most connected contemporaneous node (strength 1.875), while planning is
-most connected temporally (strength 0.750); the `self` column separately records
+with Jamal and show why prevalence and coefficient magnitude are separate
+quantities. The `nodes()` table sums prevalence over incident edges. Planning is
+the most connected contemporaneous node (strength 2.25), while value is
+most connected temporally (strength 1.00); the `self` column separately records
 autoregressive prevalence 1 for every variable.
 
 ```{r matrices}
@@ -157,11 +157,11 @@ matrices(gimme_fit)
 
 `matrices()` returns the count and sample-average coefficient matrices
 behind these tables, with outcomes on the rows and predictors on the
-columns. The temporal count matrix has 8 on its diagonal and at most 2 in an
-off-diagonal cell; the contemporaneous count matrix reaches 4. The average
+columns. The temporal count matrix has 4 on its diagonal and at most 1 in an
+off-diagonal cell; the contemporaneous count matrix reaches 3. The average
 coefficient matrices put magnitude beside recurrence; for example, the
-planning-to-effort contemporaneous path appears in four students and averages
-0.165 across all eight. A path can therefore be common and weak, so
+planning-to-efficacy contemporaneous path appears in three students and averages
+0.302 across all four. A path can therefore be common and weak, so
 prevalence and magnitude have to be read together, and neither should be
 mistaken for a standardized effect size.
 

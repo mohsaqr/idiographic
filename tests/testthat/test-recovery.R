@@ -66,6 +66,7 @@ test_that("fixed uSEM recovers planted temporal paths", {
 })
 
 test_that("GIMME recovers planted group-level lagged paths", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_planted_panel(n_id = 5, days = 8, beeps = 25, seed = 902)
   fit <- suppressWarnings(suppressMessages(fit_gimme(

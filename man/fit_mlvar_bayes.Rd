@@ -144,7 +144,7 @@ rows <- lapply(seq_len(n_id), function(i) {
 })
 d <- do.call(rbind, rows)
 fit <- fit_mlvar_bayes(d, vars = vars, id = "id", beep = "beep",
-                         n_iter = 2000, seed = 1)
+                         n_iter = 500, seed = 1)
 print(fit)
 coefs(fit)
 }

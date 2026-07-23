@@ -1,6 +1,6 @@
 Package: idiographic
 Type: Package
-Title: Idiographic Person-Specific and Heterogeneous Complex Networks
+Title: Person-Specific (Idiographic) and Heterogeneous Complex Networks
 Version: 0.3.2
 Authors@R: c(
     person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),

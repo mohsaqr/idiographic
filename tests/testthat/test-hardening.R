@@ -193,6 +193,7 @@ test_that("true_means validation is complete and upstream-aligned", {
 })
 
 test_that("GIMME validates scalar controls and stable output dimensions", {
+  skip_on_cran()
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 3, days = 1, beeps = 12,
                    vars = c("A", "B"), seed = 905)
