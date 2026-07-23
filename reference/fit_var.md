@@ -3,7 +3,7 @@
 Fits a transparent VAR(1) baseline from intensive longitudinal data
 using ordinary least squares: current variables are regressed on an
 intercept and lag-1 predictors. The lag construction, scaling,
-within-person centering, and day-boundary behavior match
+within-person centring, and day-boundary behaviour match
 [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
 but no regularization or EBIC model selection is applied.
 
@@ -60,7 +60,7 @@ fit_var(
 
 - center_within:
 
-  Logical. Whether to center within person when more than one id is
+  Logical. Whether to centre within person when more than one id is
   present. Default `TRUE`.
 
 - delete_missings:

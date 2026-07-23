@@ -67,7 +67,7 @@ preprocess(
 
 - center_within:
 
-  Logical. Whether to center within person when more than one id is
+  Logical. Whether to centre within person when more than one id is
   present. Default `TRUE`.
 
 - detrend:

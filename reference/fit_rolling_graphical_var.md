@@ -69,7 +69,7 @@ fit_rolling_graphical_var(
 
 - center_within:
 
-  Logical. Whether to center within person inside each window when more
+  Logical. Whether to centre within person inside each window when more
   than one id is present. Default `TRUE`.
 
 - delete_missings:

@@ -1,5 +1,16 @@
 # Changelog
 
+## idiographic 0.3.1
+
+- New package Title — “Idiographic Person-Specific and Heterogeneous
+  Complex Networks” — and a rewritten Description with method references
+  <doi:10.1007/978-3-031-95365-1_20> and
+  <doi:10.1080/00273171.2018.1454823>.
+- Added Sonsoles López-Pernas as package author.
+- Documentation language standardized to British English
+  (`Language: en-GB`), with dialect fixes across the documentation prose
+  and a new `inst/WORDLIST` so the package spell check runs clean.
+
 ## idiographic 0.2.0
 
 - Made the CRAN package offline-first: the only mandatory imports are
@@ -62,7 +73,7 @@
   output without requiring Mplus:
 
   - [`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
-    — two-level Bayesian VAR(1) with latent mean centering.
+    — two-level Bayesian VAR(1) with latent mean centring.
     `temporal = "fixed"` is statistically validated against frozen Mplus
     DSEM fixed-temporal + random-intercept fixtures;
     `temporal = "random"` fits the full DSEM with person-specific

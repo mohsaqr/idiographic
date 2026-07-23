@@ -88,7 +88,7 @@ fit_graphical_var(
 
 - center_within:
 
-  Logical. Whether to center within person when more than one id is
+  Logical. Whether to centre within person when more than one id is
   present (removes between-person variance). Default: TRUE.
 
 - lambda_min_ratio:
@@ -227,7 +227,7 @@ This is a clean-room reimplementation of the Rothman/Epskamp two-step
 estimator that is **numerically equivalent to**
 [`graphicalVAR::graphicalVAR()`](https://rdrr.io/pkg/graphicalVAR/man/graphicalVAR.html):
 identical data preparation (global scaling, optional within-person
-centering, intercept column, lag-1 construction within id/day blocks),
+centring, intercept column, lag-1 construction within id/day blocks),
 identical lambda grids (`generate_lambdas`), the coupled MRCE
 beta-update / glasso kappa-update loop, the unpenalized-likelihood EBIC,
 and the same tie-broken model selection. The committed end-to-end

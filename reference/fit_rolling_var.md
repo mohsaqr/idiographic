@@ -4,7 +4,7 @@ Fits
 [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
 over ordered, overlapping windows within each subject. This is a simple
 time-varying idiographic baseline: every window uses the same lag
-construction, scaling, within-person centering, and tidy coefficient
+construction, scaling, within-person centring, and tidy coefficient
 access as
 [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
 but returns one coefficient table per window.
@@ -68,7 +68,7 @@ fit_rolling_var(
 
 - center_within:
 
-  Logical. Whether to center within person inside each window when more
+  Logical. Whether to centre within person inside each window when more
   than one id is present. Default `TRUE`.
 
 - delete_missings:

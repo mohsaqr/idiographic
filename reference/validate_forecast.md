@@ -12,7 +12,7 @@ or
 [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md).
 Each split fits the estimator on earlier blocks and predicts current
 variables in the next block from their lag-1 values. Scaling and
-within-person centering parameters are learned from the training split
+within-person centring parameters are learned from the training split
 only, then applied to the assessment split before prediction.
 
 ## Usage
@@ -97,7 +97,7 @@ validate_forecast(
 
 - center_within:
 
-  Logical. Whether to center within person using training-split person
+  Logical. Whether to centre within person using training-split person
   means when more than one id is present. Default `TRUE`.
 
 - delete_missings:

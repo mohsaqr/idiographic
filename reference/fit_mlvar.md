@@ -92,9 +92,9 @@ fit_mlvar(
 
 - scale:
 
-  Logical. If `TRUE`, each variable is grand-mean centered and divided
-  by its pooled SD before augmentation (mlVAR's `scale`). Default
-  `FALSE`. (The deprecated `standardize` is an alias.)
+  Logical. If `TRUE`, each variable is grand-mean centred and divided by
+  its pooled SD before augmentation (mlVAR's `scale`). Default `FALSE`.
+  (The deprecated `standardize` is an alias.)
 
 - scaleWithin:
 
@@ -281,7 +281,7 @@ narrower declaration available through
 When `beep` is supplied, every complete `(id, day, beep)` key (or
 `(id, beep)` when `day = NULL`) must be unique. Duplicate keys often
 indicate that a study-period/session column was lost during data
-conversion. Because upstream join behavior is row-order dependent in
+conversion. Because upstream join behaviour is row-order dependent in
 that case, `fit_mlvar()` errors and asks you to resolve or explicitly
 deduplicate the source data.
 

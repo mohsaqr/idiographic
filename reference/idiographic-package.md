@@ -52,3 +52,7 @@ Useful links:
 
 **Maintainer**: Mohammed Saqr <mohammed.saqr@uef.fi> \[copyright
 holder\]
+
+Authors:
+
+- Sonsoles López-Pernas <sonsoles.lopez@uef.fi>
