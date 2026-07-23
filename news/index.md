@@ -1,6 +1,6 @@
 # Changelog
 
-## idiographic 0.3.1
+## idiographic 0.3.2
 
 - New package Title — “Idiographic Person-Specific and Heterogeneous
   Complex Networks” — and a rewritten Description with method references
@@ -10,6 +10,11 @@
 - Documentation language standardized to British English
   (`Language: en-GB`), with dialect fixes across the documentation prose
   and a new `inst/WORDLIST` so the package spell check runs clean.
+- Slimmer CRAN footprint: all competitor-equivalence tests now live only
+  in the repository’s opt-in validation lane and are excluded from the
+  CRAN tarball. Suggests trimmed from 16 to 8 packages — removed
+  `gimme`, `graphicalVAR`, `glasso`, `corpcor`, `data.table`, `qgraph`,
+  `rio`, and `jsonlite`, none of which the shipped package uses.
 
 ## idiographic 0.2.0
 
