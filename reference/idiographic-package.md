@@ -50,8 +50,7 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Mohammed Saqr <mohammed.saqr@uef.fi> \[copyright
-holder\]
+**Maintainer**: Mohammed Saqr <saqr@saqr.me> \[copyright holder\]
 
 Authors:
 
