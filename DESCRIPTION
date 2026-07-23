@@ -4,12 +4,12 @@ Title: Idiographic Person-Specific and Heterogeneous Complex Networks
 Version: 0.3.2
 Authors@R: c(
     person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
-        email = "mohammed.saqr@uef.fi"),
+        email = "saqr@saqr.me"),
     person("Sonsoles", "López-Pernas", role = "aut",
         email = "sonsoles.lopez@uef.fi"))
 Author: Mohammed Saqr [aut, cre, cph],
     Sonsoles López-Pernas [aut]
-Maintainer: Mohammed Saqr <mohammed.saqr@uef.fi>
+Maintainer: Mohammed Saqr <saqr@saqr.me>
 Description: Person-specific and within-person network estimation from
     intensive longitudinal and panel data. Estimators include ordinary
     vector autoregression (VAR), graphical vector autoregression (graphical
