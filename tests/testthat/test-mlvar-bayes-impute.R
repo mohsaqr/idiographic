@@ -17,7 +17,6 @@ make_panel <- function(n_id = 15, n_t = 40, seed = 1, miss = 0) {
 }
 
 test_that("impute=TRUE equals impute=FALSE on complete data (no cells to fill)", {
-  skip_if_not_installed("corpcor")
   d <- make_panel(n_id = 14, n_t = 35, seed = 4)   # >= 2K+1 = 13 for p = 2
   a <- fit_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
                          temporal = "random", impute = TRUE,  n_iter = 800,
@@ -31,7 +30,6 @@ test_that("impute=TRUE equals impute=FALSE on complete data (no cells to fill)",
 })
 
 test_that("impute=TRUE runs under missingness and recovers the transition matrix", {
-  skip_if_not_installed("corpcor")
   d <- make_panel(n_id = 25, n_t = 40, seed = 2, miss = 0.25)
   expect_true(anyNA(d$V1))
   fit <- fit_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
@@ -45,7 +43,6 @@ test_that("impute=TRUE runs under missingness and recovers the transition matrix
 })
 
 test_that("impute=TRUE requires temporal='random'", {
-  skip_if_not_installed("corpcor")
   d <- make_panel(n_id = 10, n_t = 30, seed = 1, miss = 0.2)
   expect_error(
     fit_mlvar_bayes(d, vars = c("V1", "V2"), id = "id", beep = "beep",
@@ -54,7 +51,6 @@ test_that("impute=TRUE requires temporal='random'", {
 })
 
 test_that("imputation handles absent-occasion rows (gap grid)", {
-  skip_if_not_installed("corpcor")
   # drop whole occasions for some subjects -> grid must reinsert + impute them
   d <- make_panel(n_id = 20, n_t = 40, seed = 5)
   d <- d[!(d$id %% 2 == 0 & d$beep %in% c(10, 11, 25)), ]   # absent rows

@@ -96,13 +96,6 @@ test_that("VAR = TRUE searches lagged paths only (no directed contemporaneous)",
   }
 })
 
-test_that("fit_gimme covers the full gimme::gimme() argument surface", {
-  skip_unless_equivalence()
-  skip_if_not_installed("gimme")
-  missing <- setdiff(names(formals(gimme::gimme)), names(formals(fit_gimme)))
-  expect_length(missing, 0L)
-})
-
 test_that("I/O and sub-feature parity args are accepted (no unused-arg error)", {
   skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)

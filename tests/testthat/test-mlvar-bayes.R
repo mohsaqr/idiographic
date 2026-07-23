@@ -24,7 +24,6 @@ for (f in fixture_files) {
   tag <- fx$tag
 
   test_that(paste0("temporal B matches Mplus DSEM [", tag, "]"), {
-    skip_if_not_installed("corpcor")
     fit <- run_bayes(fx)
     B <- attr(fit, "matrices")$B
     mB <- fx$mplus$B; mSD <- fx$mplus$B_sd
@@ -38,14 +37,12 @@ for (f in fixture_files) {
   })
 
   test_that(paste0("contemporaneous Sigma_W matches Mplus [", tag, "]"), {
-    skip_if_not_installed("corpcor")
     fit <- run_bayes(fx)
     SW <- attr(fit, "matrices")$Sigma_W
     expect_lt(max(abs(SW - fx$mplus$Sigma_W)), 0.08)
   })
 
   test_that(paste0("between Sigma_B matches Mplus (wide posterior) [", tag, "]"), {
-    skip_if_not_installed("corpcor")
     fit <- run_bayes(fx)
     SB <- attr(fit, "matrices")$Sigma_B
     # Sigma_B has few clusters -> wide, skewed posterior; looser tolerance.
@@ -53,7 +50,6 @@ for (f in fixture_files) {
   })
 
   test_that(paste0("posterior SDs are on Mplus's scale [", tag, "]"), {
-    skip_if_not_installed("corpcor")
     fit <- run_bayes(fx)
     cf <- coefs(fit)
     my_sd <- matrix(cf$posterior_sd, 2, 2, byrow = TRUE)
@@ -62,7 +58,6 @@ for (f in fixture_files) {
 }
 
 test_that("object structure and accessors are well-formed", {
-  skip_if_not_installed("corpcor")
   fx <- readRDS(fixture_files[[1]])
   fit <- run_bayes(fx, n_iter = 2000L)
   expect_s3_class(fit, "net_mlvar_bayes")
@@ -77,7 +72,6 @@ test_that("object structure and accessors are well-formed", {
 })
 
 test_that("convergence (PSR) is near 1 on a well-identified fixture", {
-  skip_if_not_installed("corpcor")
   fx <- readRDS(fixture_files[[1]])
   fit <- run_bayes(fx)
   expect_lt(attr(fit, "max_psr"), 1.1)

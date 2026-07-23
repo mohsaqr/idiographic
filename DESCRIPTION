@@ -1,7 +1,7 @@
 Package: idiographic
 Type: Package
 Title: Idiographic Person-Specific and Heterogeneous Complex Networks
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: c(
     person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
         email = "mohammed.saqr@uef.fi"),
@@ -43,14 +43,6 @@ Suggests:
     cograph,
     mlVAR,
     MplusAutomation,
-    gimme,
-    graphicalVAR,
-    glasso,
-    corpcor,
-    data.table,
-    qgraph,
-    rio,
-    jsonlite,
     knitr,
     rmarkdown
 VignetteBuilder: knitr

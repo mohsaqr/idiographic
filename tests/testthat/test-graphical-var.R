@@ -52,22 +52,6 @@ test_that("fixed lambda_beta pins the temporal penalty (skips its EBIC grid)", {
   expect_error(fit_graphical_var(d, vars = vars, id = "id", lambda_beta = -1))
 })
 
-test_that("fixed lambda_beta matches graphicalVAR's lambda_beta argument", {
-  skip_unless_equivalence()
-  skip_if_not_installed("graphicalVAR")
-  d <- synth_single(n_t = 150, seed = 17)
-  vars <- c("A", "B", "C")
-  ido <- fit_graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
-                       lambda_beta = 0.1, gamma = 0.5, n_lambda = 30)
-  ref <- suppressWarnings(graphicalVAR::graphicalVAR(
-    d[, c(vars, "id", "day", "beep")], vars = vars,
-    idvar = "id", dayvar = "day", beepvar = "beep",
-    lambda_beta = 0.1, gamma = 0.5, nLambda = 30, verbose = FALSE
-  ))
-  expect_equal(ido$beta, ref$beta, tolerance = 1e-3, ignore_attr = TRUE)
-  expect_equal(sum(ido$temporal != 0), sum(ref$beta[, -1] != 0))
-})
-
 test_that("multi-lag fits expose coherent named temporal layers", {
   d <- synth_single(n_t = 80, seed = 41)
   vars <- c("A", "B", "C")
@@ -230,51 +214,6 @@ test_that(".glasso_fit accepts a matrix penalty (regularize_mat_kappa path)", {
   # equals the scalar path when the matrix is constant off-diagonal, 0 on diag
   fit_scalar <- idiographic:::.glasso_fit(S, 0.1, penalize.diagonal = FALSE)
   expect_equal(fit$wi, fit_scalar$wi, tolerance = 1e-8)
-})
-
-test_that("graphicalVAR API options match graphicalVAR", {
-  skip_unless_equivalence()
-  skip_if_not_installed("graphicalVAR")
-  d <- synth_single(n_t = 150, seed = 23)
-  vars <- c("A", "B", "C")
-  gv <- function(...) fit_graphical_var(d, vars = vars, id = "id", n_lambda = 20, ...)
-  rg <- function(...) suppressWarnings(graphicalVAR::graphicalVAR(
-    d[, vars], vars = vars, nLambda = 20, verbose = FALSE, ...))
-
-  # penalized likelihood
-  expect_equal(gv(likelihood = "penalized")$beta,
-               rg(likelihood = "penalized")$beta, tolerance = 1e-3,
-               ignore_attr = TRUE)
-  # separate lambda_min_beta
-  expect_equal(gv(lambda_min_beta = 0.01)$beta,
-               rg(lambda_min_beta = 0.01)$beta, tolerance = 1e-3,
-               ignore_attr = TRUE)
-  # custom kappa regularization mask (off-diagonal only)
-  rk <- matrix(TRUE, 3, 3); diag(rk) <- FALSE; rk[1, 2] <- rk[2, 1] <- FALSE
-  expect_equal(gv(regularize_mat_kappa = rk)$kappa,
-               rg(regularize_mat_kappa = rk)$kappa, tolerance = 1e-3,
-               ignore_attr = TRUE)
-  # mask WITH a penalised diagonal must also match (diag was previously ignored)
-  rk2 <- matrix(TRUE, 3, 3)
-  expect_equal(gv(regularize_mat_kappa = rk2)$kappa,
-               rg(regularize_mat_kappa = rk2)$kappa, tolerance = 1e-3,
-               ignore_attr = TRUE)
-})
-
-test_that("graphical_var matches graphicalVAR to ~machine precision", {
-  skip_unless_equivalence()
-  skip_if_not_installed("graphicalVAR")
-  d <- synth_single(n_t = 150, seed = 11)
-  vars <- c("A", "B", "C")
-  gv <- fit_graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
-                      n_lambda = 20, gamma = 0.5)
-  ref <- suppressWarnings(graphicalVAR::graphicalVAR(
-    d[, c(vars, "id", "day", "beep")], vars = vars,
-    idvar = "id", dayvar = "day", beepvar = "beep",
-    gamma = 0.5, nLambda = 20, verbose = FALSE
-  ))
-  expect_equal(gv$beta, ref$beta, tolerance = 1e-4, ignore_attr = TRUE)
-  expect_equal(gv$kappa, ref$kappa, tolerance = 1e-4, ignore_attr = TRUE)
 })
 
 test_that("regularize_mat_beta penalty rows align (intercept prepended)", {

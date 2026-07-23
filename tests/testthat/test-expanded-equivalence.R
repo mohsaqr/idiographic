@@ -284,3 +284,307 @@ test_that("GIMME multivariate interactions and uneven panels match gimme 10.0", 
     expect_identical(equivalence(local)$status, "validated")
   }
 })
+
+# ---- moved from test-fixtures-equivalence.R (equivalence lane only) ----
+
+test_that("fixture-backed fit_mlvar is cell-equivalent to mlVAR", {
+  skip_unless_equivalence()
+  skip_if_not_installed("mlVAR")
+  source(testthat::test_path("fixtures", "equivalence-panel.R"), local = TRUE)
+  d <- .fixture_equivalence_panel()
+  vars <- c("A", "B", "C")
+
+  fit <- suppressWarnings(
+    fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+  )
+  ref <- suppressWarnings(mlVAR::mlVAR(
+    d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
+    estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
+    scale = FALSE, verbose = FALSE
+  ))
+
+  expect_matrix_cells_equal(fit$temporal$weights, ref$results$Beta$mean[, , 1],
+                            tolerance = 1e-10, label = "temporal")
+  expect_vector_cells_equal(upper_triangle_values(fit$contemporaneous$weights),
+                            upper_triangle_values(ref$results$Theta$pcor$mean),
+                            tolerance = 1e-10,
+                            label = "contemporaneous_upper")
+  expect_vector_cells_equal(upper_triangle_values(fit$between$weights),
+                            upper_triangle_values(ref$results$Omega_mu$pcor$mean),
+                            tolerance = 1e-10, label = "between_upper")
+})
+
+test_that("fixture-backed graphical_var is cell-equivalent to graphicalVAR", {
+  skip_unless_equivalence()
+  skip_if_not_installed("graphicalVAR")
+  source(testthat::test_path("fixtures", "equivalence-panel.R"), local = TRUE)
+  d <- .fixture_equivalence_series()
+  vars <- c("A", "B", "C")
+
+  fit <- fit_graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
+                       n_lambda = 12, gamma = 0.5)
+  ref <- suppressWarnings(graphicalVAR::graphicalVAR(
+    d[, c(vars, "id", "day", "beep")], vars = vars,
+    idvar = "id", dayvar = "day", beepvar = "beep",
+    nLambda = 12, gamma = 0.5, verbose = FALSE
+  ))
+
+  expect_matrix_cells_equal(fit$beta, ref$beta, tolerance = 1e-4,
+                            label = "beta")
+  expect_matrix_cells_equal(fit$kappa, ref$kappa, tolerance = 1e-4,
+                            label = "kappa")
+})
+
+# ---- moved from test-mlvar.R (equivalence lane only) ----
+
+test_that("matches mlVAR to machine precision on well-conditioned data", {
+  skip_unless_equivalence()
+  skip_if_not_installed("mlVAR")
+  d <- synth_panel(n_id = 20, days = 6, beeps = 10, seed = 21)
+  vars <- c("A", "B", "C")
+  fit <- suppressWarnings(
+    fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+  )
+  ref <- suppressWarnings(mlVAR::mlVAR(
+    d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
+    estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
+    scale = FALSE, verbose = FALSE
+  ))
+  # Temporal fixed effects: exact ([response, predictor] orientation).
+  expect_equal(fit$temporal$weights, ref$results$Beta$mean[, , 1],
+               tolerance = 1e-8, ignore_attr = TRUE)
+  # Off-diagonal contemporaneous / between pcor (diagonals differ by convention).
+  co <- fit$contemporaneous$weights
+  rc <- ref$results$Theta$pcor$mean
+  expect_equal(co[upper.tri(co)], rc[upper.tri(rc)], tolerance = 1e-8)
+  bt <- fit$between$weights
+  rb <- ref$results$Omega_mu$pcor$mean
+  expect_equal(bt[upper.tri(bt)], rb[upper.tri(rb)], tolerance = 1e-8)
+})
+
+test_that("AR = TRUE gives a diagonal temporal matrix matching mlVAR", {
+  skip_unless_equivalence()
+  skip_if_not_installed("mlVAR")
+  d <- synth_panel(n_id = 18, days = 5, beeps = 11, seed = 31)
+  vars <- c("A", "B", "C")
+  fit <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", day = "day",
+                                      beep = "beep", AR = TRUE))
+  B <- fit$temporal$weights
+  expect_true(all(B[row(B) != col(B)] == 0))      # off-diagonal exactly 0
+  ref <- suppressWarnings(mlVAR::mlVAR(
+    d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
+    estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
+    AR = TRUE, scale = FALSE, verbose = FALSE))
+  expect_equal(B, ref$results$Beta$mean[, , 1], tolerance = 1e-8,
+               ignore_attr = TRUE)
+  # AR off-diagonal coefs are coherent: beta 0, significant FALSE (not NA).
+  co <- coefs(fit)
+  off <- co[co$outcome != co$predictor, , drop = FALSE]
+  expect_true(all(off$beta == 0))
+  expect_false(any(is.na(off$significant)))
+  expect_true(all(!off$significant))
+})
+
+test_that("reference engine converts upstream output without changing layers", {
+  skip_unless_equivalence()
+  skip_if_not_installed("mlVAR")
+  d <- synth_panel(n_id = 10, days = 3, beeps = 10, seed = 72)
+  fit <- suppressWarnings(fit_mlvar(
+    d, vars = c("A", "B", "C"), id = "id", day = "day", beep = "beep",
+    engine = "reference", verbose = FALSE
+  ))
+  expect_s3_class(fit, "net_mlvar_reference")
+  expect_named(fit, c("temporal", "contemporaneous", "between"))
+  expect_equal(nrow(coefs(fit)), 9L)
+  expect_identical(equivalence(fit)$status, "delegated")
+})
+
+# ---- moved from test-graphical-var.R (equivalence lane only) ----
+
+test_that("fixed lambda_beta matches graphicalVAR's lambda_beta argument", {
+  skip_unless_equivalence()
+  skip_if_not_installed("graphicalVAR")
+  d <- synth_single(n_t = 150, seed = 17)
+  vars <- c("A", "B", "C")
+  ido <- fit_graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
+                       lambda_beta = 0.1, gamma = 0.5, n_lambda = 30)
+  ref <- suppressWarnings(graphicalVAR::graphicalVAR(
+    d[, c(vars, "id", "day", "beep")], vars = vars,
+    idvar = "id", dayvar = "day", beepvar = "beep",
+    lambda_beta = 0.1, gamma = 0.5, nLambda = 30, verbose = FALSE
+  ))
+  expect_equal(ido$beta, ref$beta, tolerance = 1e-3, ignore_attr = TRUE)
+  expect_equal(sum(ido$temporal != 0), sum(ref$beta[, -1] != 0))
+})
+
+test_that("graphicalVAR API options match graphicalVAR", {
+  skip_unless_equivalence()
+  skip_if_not_installed("graphicalVAR")
+  d <- synth_single(n_t = 150, seed = 23)
+  vars <- c("A", "B", "C")
+  gv <- function(...) fit_graphical_var(d, vars = vars, id = "id", n_lambda = 20, ...)
+  rg <- function(...) suppressWarnings(graphicalVAR::graphicalVAR(
+    d[, vars], vars = vars, nLambda = 20, verbose = FALSE, ...))
+
+  # penalized likelihood
+  expect_equal(gv(likelihood = "penalized")$beta,
+               rg(likelihood = "penalized")$beta, tolerance = 1e-3,
+               ignore_attr = TRUE)
+  # separate lambda_min_beta
+  expect_equal(gv(lambda_min_beta = 0.01)$beta,
+               rg(lambda_min_beta = 0.01)$beta, tolerance = 1e-3,
+               ignore_attr = TRUE)
+  # custom kappa regularization mask (off-diagonal only)
+  rk <- matrix(TRUE, 3, 3); diag(rk) <- FALSE; rk[1, 2] <- rk[2, 1] <- FALSE
+  expect_equal(gv(regularize_mat_kappa = rk)$kappa,
+               rg(regularize_mat_kappa = rk)$kappa, tolerance = 1e-3,
+               ignore_attr = TRUE)
+  # mask WITH a penalised diagonal must also match (diag was previously ignored)
+  rk2 <- matrix(TRUE, 3, 3)
+  expect_equal(gv(regularize_mat_kappa = rk2)$kappa,
+               rg(regularize_mat_kappa = rk2)$kappa, tolerance = 1e-3,
+               ignore_attr = TRUE)
+})
+
+test_that("graphical_var matches graphicalVAR to ~machine precision", {
+  skip_unless_equivalence()
+  skip_if_not_installed("graphicalVAR")
+  d <- synth_single(n_t = 150, seed = 11)
+  vars <- c("A", "B", "C")
+  gv <- fit_graphical_var(d, vars = vars, id = "id", day = "day", beep = "beep",
+                      n_lambda = 20, gamma = 0.5)
+  ref <- suppressWarnings(graphicalVAR::graphicalVAR(
+    d[, c(vars, "id", "day", "beep")], vars = vars,
+    idvar = "id", dayvar = "day", beepvar = "beep",
+    gamma = 0.5, nLambda = 20, verbose = FALSE
+  ))
+  expect_equal(gv$beta, ref$beta, tolerance = 1e-4, ignore_attr = TRUE)
+  expect_equal(gv$kappa, ref$kappa, tolerance = 1e-4, ignore_attr = TRUE)
+})
+
+# ---- moved from test-package-closure.R (equivalence lane only) ----
+
+test_that("native lmer mlVAR matches every supported random-effect structure", {
+  skip_unless_equivalence()
+  skip_if_not_installed("mlVAR", minimum_version = "0.7.3")
+  d <- synth_panel(n_id = 14, days = 2, beeps = 12,
+                   vars = c("A", "B", "C"), seed = 905)
+  structures <- expand.grid(
+    temporal = c("fixed", "correlated", "orthogonal"),
+    contemporaneous = c("fixed", "unique", "correlated", "orthogonal"),
+    stringsAsFactors = FALSE
+  )
+
+  for (i in seq_len(nrow(structures))) {
+    args <- list(
+      data = d, vars = c("A", "B", "C"), id = "id", day = "day",
+      beep = "beep", scale = FALSE,
+      temporal = structures$temporal[i],
+      contemporaneous = structures$contemporaneous[i]
+    )
+    local <- suppressWarnings(do.call(fit_mlvar, args))
+    ref <- suppressWarnings(do.call(fit_mlvar,
+                                    c(args, list(engine = "reference"))))
+    for (network in c("temporal", "contemporaneous", "between")) {
+      expect_lte(max(abs(local[[network]]$weights -
+                         ref[[network]]$weights), na.rm = TRUE), 1e-8)
+    }
+    expect_identical(equivalence(local)$status, "validated")
+  }
+})
+
+test_that("per-subject graphical VAR equals direct upstream subject fits", {
+  skip_unless_equivalence()
+  skip_if_not_installed("graphicalVAR", minimum_version = "0.4.1")
+  d <- synth_panel(n_id = 3, days = 1, beeps = 55,
+                   vars = c("A", "B", "C"), seed = 904)
+  local <- fit_graphical_var_each(
+    d, vars = c("A", "B", "C"), id = "id", day = "day", beep = "beep",
+    n_lambda = 8, verbose = FALSE
+  )
+
+  expect_identical(length(local), 3L)
+  for (sid in names(local)) {
+    one <- d[d$id == as.integer(sid), , drop = FALSE]
+    ref <- suppressWarnings(graphicalVAR::graphicalVAR(
+      one, vars = c("A", "B", "C"), idvar = "id", dayvar = "day",
+      beepvar = "beep", nLambda = 8, verbose = FALSE
+    ))
+    expect_lte(max(abs(local[[sid]]$beta - ref$beta)), 1e-6)
+    expect_lte(max(abs(local[[sid]]$kappa - ref$kappa)), 1e-6)
+  }
+  expect_identical(equivalence(local)$status, "validated")
+})
+
+test_that("graphical VAR closes multi-ID, missingness, and grid argument cells", {
+  skip_unless_equivalence()
+  skip_if_not_installed("graphicalVAR", minimum_version = "0.4.1")
+  d <- synth_panel(n_id = 8, days = 2, beeps = 12,
+                   vars = c("A", "B", "C"), seed = 906)
+  vars <- c("A", "B", "C")
+  cases <- list(
+    center = list(local = list(center_within = FALSE),
+                  ref = list(centerWithin = FALSE)),
+    lambda_minima = list(
+      local = list(lambda_min_kappa = .2, lambda_min_beta = .1),
+      ref = list(lambda_min_kappa = .2, lambda_min_beta = .1)
+    )
+  )
+  for (case in cases) {
+    local <- do.call(fit_graphical_var, c(list(
+      data = d, vars = vars, id = "id", day = "day", beep = "beep",
+      n_lambda = 10
+    ), case$local))
+    ref <- suppressWarnings(do.call(graphicalVAR::graphicalVAR, c(list(
+      data = d[, c(vars, "id", "day", "beep")], vars = vars,
+      idvar = "id", dayvar = "day", beepvar = "beep",
+      nLambda = 10, verbose = FALSE
+    ), case$ref)))
+    expect_lte(max(abs(local$beta - ref$beta)), 1e-6)
+    expect_lte(max(abs(local$kappa - ref$kappa)), 1e-6)
+  }
+
+  with_na <- d
+  with_na$A[c(4, 30)] <- NA_real_
+  local_na <- fit_graphical_var(
+    with_na, vars = vars, id = "id", day = "day", beep = "beep",
+    n_lambda = 8, delete_missings = TRUE
+  )
+  ref_na <- suppressWarnings(graphicalVAR::graphicalVAR(
+    with_na[, c(vars, "id", "day", "beep")], vars = vars,
+    idvar = "id", dayvar = "day", beepvar = "beep", nLambda = 8,
+    deleteMissings = TRUE, verbose = FALSE
+  ))
+  expect_lte(max(abs(local_na$beta - ref_na$beta)), 1e-6)
+  expect_lte(max(abs(local_na$kappa - ref_na$kappa)), 1e-6)
+
+  unequal <- fit_graphical_var(
+    d, vars = vars, id = "id", day = "day", beep = "beep",
+    n_lambda = c(beta = 4, kappa = 3),
+    lambda_beta = .08, lambda_kappa = .08
+  )
+  expect_identical(equivalence(unequal)$status, "supported_extension")
+})
+
+# ---- moved from test-gimme.R (equivalence lane only) ----
+
+test_that("fit_gimme covers the full gimme::gimme() argument surface", {
+  skip_unless_equivalence()
+  skip_if_not_installed("gimme")
+  missing <- setdiff(names(formals(gimme::gimme)), names(formals(fit_gimme)))
+  expect_length(missing, 0L)
+})
+
+# ---- moved from test-glasso.R (equivalence lane only) ----
+
+test_that(".glasso_fit matches glasso when available", {
+  skip_unless_equivalence()
+  skip_if_not_installed("glasso")
+  set.seed(2)
+  X <- matrix(stats::rnorm(300 * 4), ncol = 4)
+  S <- stats::cov(X)
+  rho <- 0.15
+  ours <- idiographic:::.glasso_fit(S, rho)$wi
+  ref  <- glasso::glasso(S, rho = rho, penalize.diagonal = FALSE)$wi
+  expect_equal(ours, ref, tolerance = 1e-4, ignore_attr = TRUE)
+})

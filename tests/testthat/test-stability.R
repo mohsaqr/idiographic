@@ -90,8 +90,6 @@ test_that("estimate_stability validates unsupported split-half designs", {
 
 test_that("estimate_stability supports mlVAR edge stability", {
   skip_if_not_installed("lme4")
-  skip_if_not_installed("corpcor")
-  skip_if_not_installed("data.table")
   d <- synth_panel(n_id = 5, days = 3, beeps = 8, vars = c("A", "B", "C"),
                    seed = 405)
 

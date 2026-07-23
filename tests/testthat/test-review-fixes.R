@@ -73,7 +73,6 @@ test_that("whole-object plot(net_mlvar) and single layers render without error",
 })
 
 test_that("plot.var_bayes_result is dispatched (whole result and single layer)", {
-  skip_if_not_installed("cograph"); skip_if_not_installed("corpcor")
   set.seed(1); y <- matrix(0, 150, 2)
   for (t in 2:150) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
   fit <- fit_var_bayes(data.frame(A = y[, 1], B = y[, 2]),
@@ -97,7 +96,6 @@ mk_panel <- function(nid, p = 2) {
 }
 
 test_that("fixed sampler errors below 2p+1 subjects (between covariance)", {
-  skip_if_not_installed("corpcor")
   vars <- c("V1", "V2")                                # p = 2 -> need >= 5
   expect_error(
     fit_mlvar_bayes(mk_panel(4), vars = vars, id = "id", beep = "beep",
@@ -109,7 +107,6 @@ test_that("fixed sampler errors below 2p+1 subjects (between covariance)", {
 })
 
 test_that("fit_var_bayes errors below 2p+1 lag pairs", {
-  skip_if_not_installed("corpcor")
   d <- data.frame(A = rnorm(4), B = rnorm(4))          # ~3 lag pairs < 5
   expect_error(
     fit_var_bayes(d, vars = c("A", "B"), n_iter = 200),

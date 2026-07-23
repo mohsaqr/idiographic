@@ -11,18 +11,6 @@ test_that(".glasso_fit satisfies the KKT optimality conditions", {
   expect_lt(v, 1e-6)
 })
 
-test_that(".glasso_fit matches glasso when available", {
-  skip_unless_equivalence()
-  skip_if_not_installed("glasso")
-  set.seed(2)
-  X <- matrix(stats::rnorm(300 * 4), ncol = 4)
-  S <- stats::cov(X)
-  rho <- 0.15
-  ours <- idiographic:::.glasso_fit(S, rho)$wi
-  ref  <- glasso::glasso(S, rho = rho, penalize.diagonal = FALSE)$wi
-  expect_equal(ours, ref, tolerance = 1e-4, ignore_attr = TRUE)
-})
-
 test_that(".glasso_fit rejects malformed input", {
   expect_error(idiographic:::.glasso_fit(matrix(1:6, 2, 3), 0.1), "square")
   bad <- matrix(c(1, NA, NA, 1), 2)

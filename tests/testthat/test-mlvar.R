@@ -21,31 +21,6 @@ test_that("coefs() errors for unsupported classes", {
   expect_error(coefs(1L), "No coefs")
 })
 
-test_that("matches mlVAR to machine precision on well-conditioned data", {
-  skip_unless_equivalence()
-  skip_if_not_installed("mlVAR")
-  d <- synth_panel(n_id = 20, days = 6, beeps = 10, seed = 21)
-  vars <- c("A", "B", "C")
-  fit <- suppressWarnings(
-    fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
-  )
-  ref <- suppressWarnings(mlVAR::mlVAR(
-    d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
-    estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
-    scale = FALSE, verbose = FALSE
-  ))
-  # Temporal fixed effects: exact ([response, predictor] orientation).
-  expect_equal(fit$temporal$weights, ref$results$Beta$mean[, , 1],
-               tolerance = 1e-8, ignore_attr = TRUE)
-  # Off-diagonal contemporaneous / between pcor (diagonals differ by convention).
-  co <- fit$contemporaneous$weights
-  rc <- ref$results$Theta$pcor$mean
-  expect_equal(co[upper.tri(co)], rc[upper.tri(rc)], tolerance = 1e-8)
-  bt <- fit$between$weights
-  rb <- ref$results$Omega_mu$pcor$mean
-  expect_equal(bt[upper.tri(bt)], rb[upper.tri(rb)], tolerance = 1e-8)
-})
-
 test_that("mlVAR modes, multiple lags, and aliases work", {
   d <- synth_panel(n_id = 10, days = 3, beeps = 12, seed = 4)
   vars <- c("A", "B", "C")
@@ -151,43 +126,6 @@ test_that("easy mlVAR controls map to explicit native behavior", {
     fit_mlvar(d, vars = vars, id = "id", unknown_control = 1),
     "Unused frequentist engine"
   )
-})
-
-test_that("AR = TRUE gives a diagonal temporal matrix matching mlVAR", {
-  skip_unless_equivalence()
-  skip_if_not_installed("mlVAR")
-  d <- synth_panel(n_id = 18, days = 5, beeps = 11, seed = 31)
-  vars <- c("A", "B", "C")
-  fit <- suppressWarnings(fit_mlvar(d, vars = vars, id = "id", day = "day",
-                                      beep = "beep", AR = TRUE))
-  B <- fit$temporal$weights
-  expect_true(all(B[row(B) != col(B)] == 0))      # off-diagonal exactly 0
-  ref <- suppressWarnings(mlVAR::mlVAR(
-    d, vars = vars, idvar = "id", dayvar = "day", beepvar = "beep",
-    estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
-    AR = TRUE, scale = FALSE, verbose = FALSE))
-  expect_equal(B, ref$results$Beta$mean[, , 1], tolerance = 1e-8,
-               ignore_attr = TRUE)
-  # AR off-diagonal coefs are coherent: beta 0, significant FALSE (not NA).
-  co <- coefs(fit)
-  off <- co[co$outcome != co$predictor, , drop = FALSE]
-  expect_true(all(off$beta == 0))
-  expect_false(any(is.na(off$significant)))
-  expect_true(all(!off$significant))
-})
-
-test_that("reference engine converts upstream output without changing layers", {
-  skip_unless_equivalence()
-  skip_if_not_installed("mlVAR")
-  d <- synth_panel(n_id = 10, days = 3, beeps = 10, seed = 72)
-  fit <- suppressWarnings(fit_mlvar(
-    d, vars = c("A", "B", "C"), id = "id", day = "day", beep = "beep",
-    engine = "reference", verbose = FALSE
-  ))
-  expect_s3_class(fit, "net_mlvar_reference")
-  expect_named(fit, c("temporal", "contemporaneous", "between"))
-  expect_equal(nrow(coefs(fit)), 9L)
-  expect_identical(equivalence(fit)$status, "delegated")
 })
 
 test_that("singular between-network returns zeros with a warning (convention)", {

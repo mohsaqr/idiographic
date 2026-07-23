@@ -39,7 +39,6 @@ test_that("tinterval bins a continuous time column onto a grid", {
 })
 
 test_that("residual = 'random' requires temporal = 'random'", {
-  skip_if_not_installed("corpcor")
   d <- do.call(rbind, lapply(1:10, function(i) {
     y <- matrix(0, 30, 2); for (t in 2:30) y[t, ] <- c(0.3, 0.2) * y[t - 1, ] + rnorm(2)
     data.frame(id = i, beep = 1:30, V1 = y[, 1], V2 = y[, 2])

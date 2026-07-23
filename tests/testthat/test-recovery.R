@@ -36,8 +36,6 @@ test_that("graphical_var recovers planted temporal network with fixed penalties"
 
 test_that("fit_mlvar recovers planted fixed temporal effects", {
   skip_if_not_installed("lme4")
-  skip_if_not_installed("corpcor")
-  skip_if_not_installed("data.table")
   d <- synth_planted_panel(n_id = 12, days = 5, beeps = 20, seed = 903,
                            noise_sd = 0.60, between_sd = 0.20)
   fit <- suppressWarnings(fit_mlvar(d, vars = c("A", "B"), id = "id",
