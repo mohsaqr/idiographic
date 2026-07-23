@@ -215,8 +215,8 @@ Package page and binaries: **<https://mohsaqr.r-universe.dev/idiographic>**.
 
 ## Citation
 
-Saqr, M., & López-Pernas, S. (2026). *idiographic: Idiographic
-Person-Specific and Heterogeneous Complex Networks*. R package.
+Saqr, M., & López-Pernas, S. (2026). *idiographic: Person-Specific
+(Idiographic) and Heterogeneous Complex Networks*. R package.
 <https://github.com/mohsaqr/idiographic>
 
 ## License
