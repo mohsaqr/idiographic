@@ -161,35 +161,35 @@ the random state for reproducibility.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var_bayes_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_var_bayes.html">fit_var_bayes</a></span><span class="op">(</span></span>
 <span>  <span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, subject <span class="op">=</span> <span class="st">"Grace"</span>,</span>
-<span>  n_iter <span class="op">=</span> <span class="fl">4000</span>, n_chains <span class="op">=</span> <span class="fl">2</span>, seed <span class="op">=</span> <span class="fl">1</span></span>
+<span>  n_iter <span class="op">=</span> <span class="fl">1000</span>, n_chains <span class="op">=</span> <span class="fl">2</span>, seed <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">var_bayes_fit</span></span>
 <span><span class="co">#&gt; Bayesian VAR(1) result (unregularized, Mplus-targeted)</span></span>
 <span><span class="co">#&gt;   Variables:    5 (efficacy, value, planning, monitoring, effort)</span></span>
 <span><span class="co">#&gt;   Observations: 155</span></span>
-<span><span class="co">#&gt;   MCMC: 2 chains x 4000 iter, 4000 draws | max PSR = 1.002</span></span>
+<span><span class="co">#&gt;   MCMC: 2 chains x 1000 iter, 1000 draws | max PSR = 1.008</span></span>
 <span><span class="co">#&gt;   Temporal 95% CIs excluding 0: 0 / 25</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Temporal [directed]</span></span>
-<span><span class="co">#&gt;     weights [-0.158, 0.159]  |  +12 / -13 edges</span></span>
+<span><span class="co">#&gt;     weights [-0.157, 0.160]  |  +12 / -13 edges</span></span>
 <span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt;     efficacy      -0.13  0.04    -0.01      -0.05  -0.09</span></span>
+<span><span class="co">#&gt;     efficacy      -0.13  0.04     0.00      -0.05  -0.09</span></span>
 <span><span class="co">#&gt;     value         -0.10  0.10     0.09      -0.12   0.13</span></span>
 <span><span class="co">#&gt;     planning      -0.04 -0.11    -0.01      -0.05   0.16</span></span>
 <span><span class="co">#&gt;     monitoring     0.05 -0.16    -0.03       0.00   0.00</span></span>
-<span><span class="co">#&gt;     effort         0.07  0.07     0.11       0.01  -0.02</span></span>
+<span><span class="co">#&gt;     effort         0.06  0.07     0.11       0.01  -0.02</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contemporaneous [undirected]</span></span>
-<span><span class="co">#&gt;     weights [-0.058, 0.467]  |  +6 / -4 edges</span></span>
+<span><span class="co">#&gt;     weights [-0.066, 0.465]  |  +6 / -4 edges</span></span>
 <span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt;     efficacy       0.00  0.06    -0.06       0.38  -0.04</span></span>
-<span><span class="co">#&gt;     value          0.06  0.00     0.10       0.10  -0.01</span></span>
-<span><span class="co">#&gt;     planning      -0.06  0.10     0.00      -0.06   0.33</span></span>
-<span><span class="co">#&gt;     monitoring     0.38  0.10    -0.06       0.00   0.47</span></span>
-<span><span class="co">#&gt;     effort        -0.04 -0.01     0.33       0.47   0.00</span></span>
+<span><span class="co">#&gt;     efficacy       0.00  0.06    -0.05       0.38  -0.04</span></span>
+<span><span class="co">#&gt;     value          0.06  0.00     0.11       0.10  -0.01</span></span>
+<span><span class="co">#&gt;     planning      -0.05  0.11     0.00      -0.07   0.34</span></span>
+<span><span class="co">#&gt;     monitoring     0.38  0.10    -0.07       0.00   0.46</span></span>
+<span><span class="co">#&gt;     effort        -0.04 -0.01     0.34       0.46   0.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   coefs(x) | matrices(x) | edges(x) | nodes(x) | summary(x)</span></span></code></pre></div>
-<p>The evaluated fit uses two chains, retains 4,000 posterior draws
+<p>The evaluated fit uses two chains, retains 1,000 posterior draws
 after burn-in, and reports a maximum potential scale reduction statistic
 close to 1. No temporal 95% credible interval excludes zero in this
 run.</p>
@@ -201,21 +201,21 @@ deviations; <code>n_iter</code>, <code>n_chains</code>, and
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mlvar_bayes_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_mlvar_bayes.html">fit_mlvar_bayes</a></span><span class="op">(</span></span>
 <span>  <span class="va">srl</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"name"</span>, temporal <span class="op">=</span> <span class="st">"fixed"</span>,</span>
-<span>  n_iter <span class="op">=</span> <span class="fl">4000</span>, n_chains <span class="op">=</span> <span class="fl">2</span>, seed <span class="op">=</span> <span class="fl">1</span></span>
+<span>  n_iter <span class="op">=</span> <span class="fl">1000</span>, n_chains <span class="op">=</span> <span class="fl">2</span>, seed <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">mlvar_bayes_fit</span></span>
 <span><span class="co">#&gt; Bayesian mlVAR (Mplus DSEM-targeted, temporal = fixed): 36 subjects, 5548 observations, 5 variables</span></span>
-<span><span class="co">#&gt;   MCMC: 2 chains x 4000 iter (2000 burn-in), 4000 draws | max PSR = 1.000</span></span>
-<span><span class="co">#&gt;   Temporal 95% CIs excluding 0: 2 / 25</span></span>
+<span><span class="co">#&gt;   MCMC: 2 chains x 1000 iter (500 burn-in), 1000 draws | max PSR = 1.005</span></span>
+<span><span class="co">#&gt;   Temporal 95% CIs excluding 0: 3 / 25</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Temporal [directed]</span></span>
 <span><span class="co">#&gt;     weights [-0.042, 0.051]  |  +18 / -7 edges</span></span>
 <span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
 <span><span class="co">#&gt;     efficacy      -0.04  0.01     0.01      -0.01   0.00</span></span>
 <span><span class="co">#&gt;     value          0.00  0.05     0.01      -0.01   0.03</span></span>
-<span><span class="co">#&gt;     planning       0.00 -0.01     0.00       0.01  -0.02</span></span>
+<span><span class="co">#&gt;     planning       0.00 -0.01     0.01       0.02  -0.02</span></span>
 <span><span class="co">#&gt;     monitoring     0.03  0.02     0.01       0.01   0.03</span></span>
-<span><span class="co">#&gt;     effort         0.01 -0.02     0.00       0.00   0.02</span></span>
+<span><span class="co">#&gt;     effort         0.01 -0.02     0.01       0.00   0.02</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contemporaneous [undirected]</span></span>
 <span><span class="co">#&gt;     weights [0.026, 0.274]  |  +10 / -0 edges</span></span>
@@ -227,18 +227,18 @@ deviations; <code>n_iter</code>, <code>n_chains</code>, and
 <span><span class="co">#&gt;     effort         0.21  0.13     0.27       0.14   0.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Between [undirected]</span></span>
-<span><span class="co">#&gt;     weights [-0.075, 0.558]  |  +8 / -2 edges</span></span>
+<span><span class="co">#&gt;     weights [-0.075, 0.548]  |  +9 / -1 edges</span></span>
 <span><span class="co">#&gt;                efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt;     efficacy       0.00  0.26     0.56       0.11   0.24</span></span>
-<span><span class="co">#&gt;     value          0.26  0.00    -0.01      -0.08   0.42</span></span>
-<span><span class="co">#&gt;     planning       0.56 -0.01     0.00       0.01   0.22</span></span>
-<span><span class="co">#&gt;     monitoring     0.11 -0.08     0.01       0.00   0.17</span></span>
-<span><span class="co">#&gt;     effort         0.24  0.42     0.22       0.17   0.00</span></span>
+<span><span class="co">#&gt;     efficacy       0.00  0.25     0.55       0.10   0.26</span></span>
+<span><span class="co">#&gt;     value          0.25  0.00     0.02      -0.08   0.42</span></span>
+<span><span class="co">#&gt;     planning       0.55  0.02     0.00       0.01   0.21</span></span>
+<span><span class="co">#&gt;     monitoring     0.10 -0.08     0.01       0.00   0.17</span></span>
+<span><span class="co">#&gt;     effort         0.26  0.42     0.21       0.17   0.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   coefs(x) posterior median/SD/CI | matrices(x) | edges(x) | summary(x)</span></span></code></pre></div>
-<p>The evaluated multilevel fit also retains 4,000 posterior draws and
-has a maximum potential scale reduction statistic close to 1. Two of the
-25 temporal 95% credible intervals exclude zero.</p>
+<p>The evaluated multilevel fit also retains 1,000 posterior draws and
+has a maximum potential scale reduction statistic close to 1. Three of
+the 25 temporal 95% credible intervals exclude zero.</p>
 <p>The Mplus backend call is shown but not evaluated, because it
 requires the suggested <code>mlVAR</code> and
 <code>MplusAutomation</code> packages plus a licensed Mplus installation
@@ -257,8 +257,8 @@ pattern. Monitoring at occasion
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t-1</annotation></semantics></math>
 predicts lower value at occasion
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
-(posterior median −0.158), planning predicts higher effort (0.159), and
-the largest contemporaneous edge is monitoring–effort (0.467). None of
+(posterior median −0.121), planning predicts higher effort (0.107), and
+the largest contemporaneous edge is monitoring–effort (0.465). None of
 the temporal credible intervals excludes zero, so these medians are
 descriptive rather than evidence of selected temporal paths. The same
 accessors that serve the point-estimate fits apply:
@@ -270,125 +270,125 @@ matrices.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">var_bayes_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           network n_nodes n_edges density mean_abs_weight n_positive n_negative</span></span>
-<span><span class="co">#&gt; 1        temporal       5      20       1      0.07342064         10         10</span></span>
-<span><span class="co">#&gt; 2 contemporaneous       5      10       1      0.16003715          6          4</span></span>
+<span><span class="co">#&gt; 1        temporal       5      20       1       0.0732450         10         10</span></span>
+<span><span class="co">#&gt; 2 contemporaneous       5      10       1       0.1614563          6          4</span></span>
 <span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">var_bayes_fit</span>, n <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     network       from         to      weight</span></span>
-<span><span class="co">#&gt; 1  temporal   planning     effort  0.15855702</span></span>
-<span><span class="co">#&gt; 2  temporal monitoring      value -0.15752088</span></span>
-<span><span class="co">#&gt; 3  temporal      value     effort  0.13341509</span></span>
-<span><span class="co">#&gt; 4  temporal      value monitoring -0.11957255</span></span>
-<span><span class="co">#&gt; 5  temporal   planning      value -0.10703952</span></span>
-<span><span class="co">#&gt; 6  temporal     effort   planning  0.10585644</span></span>
-<span><span class="co">#&gt; 7  temporal      value   efficacy -0.10050352</span></span>
-<span><span class="co">#&gt; 8  temporal   efficacy     effort -0.08773320</span></span>
-<span><span class="co">#&gt; 9  temporal      value   planning  0.08768917</span></span>
-<span><span class="co">#&gt; 10 temporal     effort      value  0.06738818</span></span>
-<span><span class="co">#&gt; 11 temporal     effort   efficacy  0.06590692</span></span>
-<span><span class="co">#&gt; 12 temporal   planning monitoring -0.05476234</span></span>
+<span><span class="co">#&gt; 1  temporal   planning     effort  0.15953567</span></span>
+<span><span class="co">#&gt; 2  temporal monitoring      value -0.15742877</span></span>
+<span><span class="co">#&gt; 3  temporal      value     effort  0.12944831</span></span>
+<span><span class="co">#&gt; 4  temporal      value monitoring -0.12057964</span></span>
+<span><span class="co">#&gt; 5  temporal   planning      value -0.11206296</span></span>
+<span><span class="co">#&gt; 6  temporal     effort   planning  0.10723652</span></span>
+<span><span class="co">#&gt; 7  temporal      value   efficacy -0.09825493</span></span>
+<span><span class="co">#&gt; 8  temporal      value   planning  0.09029697</span></span>
+<span><span class="co">#&gt; 9  temporal   efficacy     effort -0.08742151</span></span>
+<span><span class="co">#&gt; 10 temporal     effort      value  0.06741039</span></span>
+<span><span class="co">#&gt; 11 temporal     effort   efficacy  0.05951823</span></span>
+<span><span class="co">#&gt; 12 temporal   planning monitoring -0.05478317</span></span>
 <span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">var_bayes_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            network       node  strength out_strength in_strength         self</span></span>
-<span><span class="co">#&gt; 1         temporal   efficacy 0.4399302    0.1835059   0.2564242 -0.130868483</span></span>
-<span><span class="co">#&gt; 2         temporal      value 0.8146126    0.4411803   0.3734323  0.103757343</span></span>
-<span><span class="co">#&gt; 3         temporal   planning 0.5893630    0.3576854   0.2316776 -0.006208376</span></span>
-<span><span class="co">#&gt; 4         temporal monitoring 0.4665718    0.2401494   0.2264224  0.001209551</span></span>
-<span><span class="co">#&gt; 5         temporal     effort 0.6263479    0.2458916   0.3804562 -0.024440733</span></span>
-<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.5301826           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 7  contemporaneous      value 0.2733152           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 8  contemporaneous   planning 0.5516642           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 9  contemporaneous monitoring 1.0015677           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 10 contemporaneous     effort 0.8440133           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 1         temporal   efficacy 0.4278016    0.1806610   0.2471406 -0.129984766</span></span>
+<span><span class="co">#&gt; 2         temporal      value 0.8162971    0.4385799   0.3777173  0.104785889</span></span>
+<span><span class="co">#&gt; 3         temporal   planning 0.5969774    0.3638190   0.2331584 -0.006601233</span></span>
+<span><span class="co">#&gt; 4         temporal monitoring 0.4712370    0.2421910   0.2290460  0.002989445</span></span>
+<span><span class="co">#&gt; 5         temporal     effort 0.6174869    0.2396491   0.3778378 -0.022167789</span></span>
+<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.5265997           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 7  contemporaneous      value 0.2802705           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 8  contemporaneous   planning 0.5586513           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 9  contemporaneous monitoring 1.0119863           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 10 contemporaneous     effort 0.8516183           NA          NA  0.000000000</span></span>
 <span><span class="fu"><a href="../reference/matrices.html">matrices</a></span><span class="op">(</span><span class="va">var_bayes_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $temporal</span></span>
 <span><span class="co">#&gt;            efficacy  value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy     -0.131  0.041   -0.009     -0.045 -0.088</span></span>
-<span><span class="co">#&gt; value        -0.101  0.104    0.088     -0.120  0.133</span></span>
-<span><span class="co">#&gt; planning     -0.037 -0.107   -0.006     -0.055  0.159</span></span>
-<span><span class="co">#&gt; monitoring    0.053 -0.158   -0.029      0.001  0.001</span></span>
-<span><span class="co">#&gt; effort        0.066  0.067    0.106      0.007 -0.024</span></span>
+<span><span class="co">#&gt; efficacy     -0.130  0.041   -0.004     -0.048 -0.087</span></span>
+<span><span class="co">#&gt; value        -0.098  0.105    0.090     -0.121  0.129</span></span>
+<span><span class="co">#&gt; planning     -0.037 -0.112   -0.007     -0.055  0.160</span></span>
+<span><span class="co">#&gt; monitoring    0.052 -0.157   -0.031      0.003  0.001</span></span>
+<span><span class="co">#&gt; effort        0.060  0.067    0.107      0.005 -0.022</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $contemporaneous</span></span>
 <span><span class="co">#&gt;            efficacy  value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy      0.000  0.059   -0.058      0.377 -0.036</span></span>
-<span><span class="co">#&gt; value         0.059  0.000    0.104      0.100 -0.010</span></span>
-<span><span class="co">#&gt; planning     -0.058  0.104    0.000     -0.058  0.331</span></span>
-<span><span class="co">#&gt; monitoring    0.377  0.100   -0.058      0.000  0.467</span></span>
-<span><span class="co">#&gt; effort       -0.036 -0.010    0.331      0.467  0.000</span></span></code></pre></div>
+<span><span class="co">#&gt; efficacy      0.000  0.058   -0.050      0.380 -0.038</span></span>
+<span><span class="co">#&gt; value         0.058  0.000    0.108      0.101 -0.013</span></span>
+<span><span class="co">#&gt; planning     -0.050  0.108    0.000     -0.066  0.335</span></span>
+<span><span class="co">#&gt; monitoring    0.380  0.101   -0.066      0.000  0.465</span></span>
+<span><span class="co">#&gt; effort       -0.038 -0.013    0.335      0.465  0.000</span></span></code></pre></div>
 <p>The Bayesian mlVAR fit gives a temporal mean absolute weight of
-0.012, a contemporaneous mean absolute weight of 0.165, and a
-between-person mean absolute weight of 0.206 in this panel. Monitoring
+0.015, a contemporaneous mean absolute weight of 0.165, and a
+between-person mean absolute weight of 0.205 in this panel. Monitoring
 at occasion
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t-1</annotation></semantics></math>
 to effort at occasion
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
-is the largest average temporal edge (posterior median 0.032).
+is the largest average temporal edge (posterior median 0.033).
 Planning–effort is the largest contemporaneous edge (0.274), and
-efficacy–planning is the largest between-person edge (0.558) — a
+efficacy–planning is the largest between-person edge (0.548) — a
 statement about which students report high efficacy and high planning on
 average, not about either process unfolding within any student.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mlvar_bayes_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           network n_nodes n_edges density mean_abs_weight n_positive n_negative</span></span>
-<span><span class="co">#&gt; 1        temporal       5      20       1       0.0123179         14          6</span></span>
-<span><span class="co">#&gt; 2 contemporaneous       5      10       1       0.1647556         10          0</span></span>
-<span><span class="co">#&gt; 3         between       5      10       1       0.2062346          8          2</span></span>
+<span><span class="co">#&gt; 1        temporal       5      20       1      0.01234895         14          6</span></span>
+<span><span class="co">#&gt; 2 contemporaneous       5      10       1      0.16469662         10          0</span></span>
+<span><span class="co">#&gt; 3         between       5      10       1      0.20470739          9          1</span></span>
 <span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">mlvar_bayes_fit</span>, n <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     network       from         to      weight</span></span>
-<span><span class="co">#&gt; 1  temporal monitoring     effort  0.03219318</span></span>
-<span><span class="co">#&gt; 2  temporal      value     effort  0.02835559</span></span>
-<span><span class="co">#&gt; 3  temporal monitoring   efficacy  0.02741661</span></span>
-<span><span class="co">#&gt; 4  temporal     effort      value -0.02154632</span></span>
-<span><span class="co">#&gt; 5  temporal monitoring      value  0.01628370</span></span>
-<span><span class="co">#&gt; 6  temporal   planning     effort -0.01609616</span></span>
-<span><span class="co">#&gt; 7  temporal   planning monitoring  0.01456523</span></span>
-<span><span class="co">#&gt; 8  temporal   efficacy   planning  0.01361466</span></span>
-<span><span class="co">#&gt; 9  temporal      value   planning  0.01232276</span></span>
-<span><span class="co">#&gt; 10 temporal monitoring   planning  0.01125437</span></span>
-<span><span class="co">#&gt; 11 temporal   efficacy      value  0.01100432</span></span>
-<span><span class="co">#&gt; 12 temporal      value monitoring -0.00808864</span></span>
+<span><span class="co">#&gt;     network       from         to       weight</span></span>
+<span><span class="co">#&gt; 1  temporal monitoring     effort  0.032807015</span></span>
+<span><span class="co">#&gt; 2  temporal      value     effort  0.029170729</span></span>
+<span><span class="co">#&gt; 3  temporal monitoring   efficacy  0.028340115</span></span>
+<span><span class="co">#&gt; 4  temporal     effort      value -0.021695847</span></span>
+<span><span class="co">#&gt; 5  temporal monitoring      value  0.016088755</span></span>
+<span><span class="co">#&gt; 6  temporal   planning monitoring  0.015464195</span></span>
+<span><span class="co">#&gt; 7  temporal   planning     effort -0.015033523</span></span>
+<span><span class="co">#&gt; 8  temporal   efficacy   planning  0.013505247</span></span>
+<span><span class="co">#&gt; 9  temporal      value   planning  0.011991976</span></span>
+<span><span class="co">#&gt; 10 temporal   efficacy      value  0.010760533</span></span>
+<span><span class="co">#&gt; 11 temporal monitoring   planning  0.010302765</span></span>
+<span><span class="co">#&gt; 12 temporal      value monitoring -0.008491691</span></span>
 <span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">mlvar_bayes_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            network       node   strength out_strength in_strength         self</span></span>
-<span><span class="co">#&gt; 1         temporal   efficacy 0.07111313   0.03328348  0.03782965 -0.042321793</span></span>
-<span><span class="co">#&gt; 2         temporal      value 0.10666673   0.05073933  0.05592740  0.051256016</span></span>
-<span><span class="co">#&gt; 3         temporal   planning 0.08095734   0.03933515  0.04162219  0.004545817</span></span>
-<span><span class="co">#&gt; 4         temporal monitoring 0.12031678   0.08714786  0.03316892  0.012794045</span></span>
-<span><span class="co">#&gt; 5         temporal     effort 0.11366219   0.03585226  0.07780993  0.016079869</span></span>
-<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.81333100           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 7  contemporaneous      value 0.59864052           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 8  contemporaneous   planning 0.73179508           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 9  contemporaneous monitoring 0.40012171           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 10 contemporaneous     effort 0.75122467           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 11         between   efficacy 1.16801787           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 12         between      value 0.76459065           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 13         between   planning 0.79032247           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 14         between monitoring 0.35865695           NA          NA  0.000000000</span></span>
-<span><span class="co">#&gt; 15         between     effort 1.04310460           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 1         temporal   efficacy 0.07079707   0.03336966  0.03742741 -0.041577067</span></span>
+<span><span class="co">#&gt; 2         temporal      value 0.10589088   0.05087406  0.05501683  0.051165278</span></span>
+<span><span class="co">#&gt; 3         temporal   planning 0.08020999   0.03911112  0.04109887  0.005566967</span></span>
+<span><span class="co">#&gt; 4         temporal monitoring 0.12253127   0.08753865  0.03499262  0.012694945</span></span>
+<span><span class="co">#&gt; 5         temporal     effort 0.11452895   0.03608560  0.07844335  0.015813819</span></span>
+<span><span class="co">#&gt; 6  contemporaneous   efficacy 0.81438362           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 7  contemporaneous      value 0.59778025           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 8  contemporaneous   planning 0.73176750           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 9  contemporaneous monitoring 0.39903872           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 10 contemporaneous     effort 0.75096236           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 11         between   efficacy 1.15960010           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 12         between      value 0.75769103           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 13         between   planning 0.77745059           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 14         between monitoring 0.35009043           NA          NA  0.000000000</span></span>
+<span><span class="co">#&gt; 15         between     effort 1.04931570           NA          NA  0.000000000</span></span>
 <span><span class="fu"><a href="../reference/matrices.html">matrices</a></span><span class="op">(</span><span class="va">mlvar_bayes_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $temporal</span></span>
 <span><span class="co">#&gt;            efficacy  value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy     -0.042  0.002    0.002      0.027  0.007</span></span>
-<span><span class="co">#&gt; value         0.011  0.051   -0.007      0.016 -0.022</span></span>
-<span><span class="co">#&gt; planning      0.014  0.012    0.005      0.011  0.004</span></span>
-<span><span class="co">#&gt; monitoring   -0.007 -0.008    0.015      0.013 -0.003</span></span>
-<span><span class="co">#&gt; effort        0.001  0.028   -0.016      0.032  0.016</span></span>
+<span><span class="co">#&gt; efficacy     -0.042  0.001    0.002      0.028  0.006</span></span>
+<span><span class="co">#&gt; value         0.011  0.051   -0.006      0.016 -0.022</span></span>
+<span><span class="co">#&gt; planning      0.014  0.012    0.006      0.010  0.005</span></span>
+<span><span class="co">#&gt; monitoring   -0.008 -0.008    0.015      0.013 -0.003</span></span>
+<span><span class="co">#&gt; effort        0.001  0.029   -0.015      0.033  0.016</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $contemporaneous</span></span>
 <span><span class="co">#&gt;            efficacy value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy      0.000 0.206    0.240      0.158  0.209</span></span>
-<span><span class="co">#&gt; value         0.206 0.000    0.192      0.074  0.126</span></span>
-<span><span class="co">#&gt; planning      0.240 0.192    0.000      0.026  0.274</span></span>
-<span><span class="co">#&gt; monitoring    0.158 0.074    0.026      0.000  0.142</span></span>
+<span><span class="co">#&gt; efficacy      0.000 0.207    0.241      0.158  0.209</span></span>
+<span><span class="co">#&gt; value         0.207 0.000    0.192      0.073  0.126</span></span>
+<span><span class="co">#&gt; planning      0.241 0.192    0.000      0.026  0.274</span></span>
+<span><span class="co">#&gt; monitoring    0.158 0.073    0.026      0.000  0.142</span></span>
 <span><span class="co">#&gt; effort        0.209 0.126    0.274      0.142  0.000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $between</span></span>
 <span><span class="co">#&gt;            efficacy  value planning monitoring effort</span></span>
-<span><span class="co">#&gt; efficacy      0.000  0.264    0.558      0.105  0.240</span></span>
-<span><span class="co">#&gt; value         0.264  0.000   -0.007     -0.075  0.417</span></span>
-<span><span class="co">#&gt; planning      0.558 -0.007    0.000      0.008  0.216</span></span>
-<span><span class="co">#&gt; monitoring    0.105 -0.075    0.008      0.000  0.170</span></span>
-<span><span class="co">#&gt; effort        0.240  0.417    0.216      0.170  0.000</span></span></code></pre></div>
+<span><span class="co">#&gt; efficacy      0.000  0.250    0.548      0.103  0.259</span></span>
+<span><span class="co">#&gt; value         0.250  0.000    0.016     -0.075  0.417</span></span>
+<span><span class="co">#&gt; planning      0.548  0.016    0.000      0.006  0.208</span></span>
+<span><span class="co">#&gt; monitoring    0.103 -0.075    0.006      0.000  0.166</span></span>
+<span><span class="co">#&gt; effort        0.259  0.417    0.208      0.166  0.000</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method draws the layers with the same
 conventions as the other estimators: arrows for lag-one prediction in
 the temporal panel, undirected edges for the contemporaneous and between

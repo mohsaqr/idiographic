@@ -255,37 +255,37 @@ Mplus 9 DSEM output on standardized synthetic panels: posterior medians of
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">rows</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_mlvar_bayes</span><span class="op">(</span><span class="va">d</span>, vars <span class="op">=</span> <span class="va">vars</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span>,</span></span>
-<span class="r-in"><span>                         n_iter <span class="op">=</span> <span class="fl">2000</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                         n_iter <span class="op">=</span> <span class="fl">500</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bayesian mlVAR (Mplus DSEM-targeted, temporal = fixed): 10 subjects, 390 observations, 2 variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   MCMC: 2 chains x 2000 iter (1000 burn-in), 2000 draws | max PSR = 1.003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   MCMC: 2 chains x 500 iter (250 burn-in), 500 draws | max PSR = 1.023</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Temporal 95% CIs excluding 0: 2 / 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Temporal [directed]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     weights [-0.083, 0.256]  |  +2 / -2 edges</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     weights [-0.088, 0.252]  |  +2 / -2 edges</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           A     B</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     A  0.26 -0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     A  0.25 -0.09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     B -0.07  0.13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Contemporaneous [undirected]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     weights [-0.005, -0.005]  |  +0 / -1 edges</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     weights [-0.003, -0.003]  |  +0 / -1 edges</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       A B</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     A 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     B 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Between [undirected]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     weights [0.201, 0.201]  |  +1 / -0 edges</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         A   B</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     A 0.0 0.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     B 0.2 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     weights [0.312, 0.312]  |  +1 / -0 edges</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          A    B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     A 0.00 0.31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     B 0.31 0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   coefs(x) posterior median/SD/CI | matrices(x) | edges(x) | summary(x)</span>
 <span class="r-in"><span><span class="fu"><a href="coefs.html">coefs</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   outcome predictor    estimate posterior_sd    ci_lower   ci_upper     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       A         A  0.25617841   0.05061229  0.15903046 0.35618498 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       A         B -0.07096325   0.05116161 -0.17225969 0.03004842 0.078</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       B         A -0.08325036   0.05187507 -0.18856429 0.01414300 0.045</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       B         B  0.12607025   0.05115064  0.02490567 0.22468417 0.009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       A         A  0.25209120   0.05021821  0.15945833 0.34723692 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       A         B -0.06643236   0.04845493 -0.16844721 0.01897108 0.086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       B         A -0.08835699   0.05652692 -0.20220844 0.02199014 0.062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       B         B  0.12768325   0.05189932  0.02778123 0.22516873 0.012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   significant</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       FALSE</span>

@@ -204,37 +204,37 @@ rows <- lapply(seq_len(n_id), function(i) {
 })
 d <- do.call(rbind, rows)
 fit <- fit_mlvar_bayes(d, vars = vars, id = "id", beep = "beep",
-                         n_iter = 2000, seed = 1)
+                         n_iter = 500, seed = 1)
 print(fit)
 #> Bayesian mlVAR (Mplus DSEM-targeted, temporal = fixed): 10 subjects, 390 observations, 2 variables
-#>   MCMC: 2 chains x 2000 iter (1000 burn-in), 2000 draws | max PSR = 1.003
+#>   MCMC: 2 chains x 500 iter (250 burn-in), 500 draws | max PSR = 1.023
 #>   Temporal 95% CIs excluding 0: 2 / 4
 #> 
 #>   Temporal [directed]
-#>     weights [-0.083, 0.256]  |  +2 / -2 edges
+#>     weights [-0.088, 0.252]  |  +2 / -2 edges
 #>           A     B
-#>     A  0.26 -0.08
+#>     A  0.25 -0.09
 #>     B -0.07  0.13
 #> 
 #>   Contemporaneous [undirected]
-#>     weights [-0.005, -0.005]  |  +0 / -1 edges
+#>     weights [-0.003, -0.003]  |  +0 / -1 edges
 #>       A B
 #>     A 0 0
 #>     B 0 0
 #> 
 #>   Between [undirected]
-#>     weights [0.201, 0.201]  |  +1 / -0 edges
-#>         A   B
-#>     A 0.0 0.2
-#>     B 0.2 0.0
+#>     weights [0.312, 0.312]  |  +1 / -0 edges
+#>          A    B
+#>     A 0.00 0.31
+#>     B 0.31 0.00
 #> 
 #>   coefs(x) posterior median/SD/CI | matrices(x) | edges(x) | summary(x)
 coefs(fit)
 #>   outcome predictor    estimate posterior_sd    ci_lower   ci_upper     p
-#> 1       A         A  0.25617841   0.05061229  0.15903046 0.35618498 0.000
-#> 2       A         B -0.07096325   0.05116161 -0.17225969 0.03004842 0.078
-#> 3       B         A -0.08325036   0.05187507 -0.18856429 0.01414300 0.045
-#> 4       B         B  0.12607025   0.05115064  0.02490567 0.22468417 0.009
+#> 1       A         A  0.25209120   0.05021821  0.15945833 0.34723692 0.000
+#> 2       A         B -0.06643236   0.04845493 -0.16844721 0.01897108 0.086
+#> 3       B         A -0.08835699   0.05652692 -0.20220844 0.02199014 0.062
+#> 4       B         B  0.12768325   0.05189932  0.02778123 0.22516873 0.012
 #>   significant
 #> 1        TRUE
 #> 2       FALSE

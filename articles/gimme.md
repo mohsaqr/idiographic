@@ -49,9 +49,9 @@ self-regulated-learning indicators for 41 students; `name` identifies
 the student and `occasion` orders measurements within student. Five
 indicators enter the model: `efficacy`, `value`, `planning`,
 `monitoring`, and `effort`. To keep the vignette fast without
-hand-picking people for their fitted networks, the example uses the
-eight students with the most complete five-indicator occasions, breaking
-ties alphabetically.
+hand-picking people for their fitted networks, the example uses the four
+students with the most complete five-indicator occasions, breaking ties
+alphabetically.
 
 ``` r
 
@@ -60,39 +60,35 @@ complete_n <- tapply(complete.cases(esm_srl[vars]), esm_srl$name, sum)
 selection <- data.frame(subject = names(complete_n),
                         complete = as.integer(complete_n))
 selection <- selection[order(-selection$complete, selection$subject), ]
-selected_ids <- head(selection$subject, 8)
-head(selection, 8)
+selected_ids <- head(selection$subject, 4)
+head(selection, 4)
 #>    subject complete
 #> 15    Hana       79
 #> 17    Iker       79
 #> 19   Jamal       79
 #> 29    Omar       79
-#> 32   Quinn       79
-#> 40    Yara       79
-#> 5     Cira       78
-#> 10    Enzo       78
 preprocess(esm_srl[esm_srl$name %in% selected_ids, ],
            vars = vars, id = "name")
 #> Idiographic Preprocessing
 #>   Variables:      5 (efficacy, value, planning, monitoring, effort)
-#>   Ordered rows:   630
-#>   Retained pairs: 622
-#>   Trend flags:    21
+#>   Ordered rows:   316
+#>   Retained pairs: 312
+#>   Trend flags:    10
 #>   High AR flags:  0
-#>   Drift flags:    12
+#>   Drift flags:    4
 #>   Unit-root risk: 0
 #>   Zero variance:  0
 #>   Tables:         x$pairs | x$counts | x$diagnostics
 #> 
-#> 21 of 40 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
+#> 10 of 20 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
 #>   preprocess(data = esm_srl[esm_srl$name %in% selected_ids, ], vars = vars, id = "name", detrend = "auto")
 ```
 
-The transparent rule selects Hana, Iker, Jamal, Omar, Quinn, Yara, Cira,
-and Enzo: six have 79 complete occasions and two have 78. The audit is
-shown rather than silently assuming stationarity; these supplied series
-contain trend or shift flags, so the fit is a method demonstration and
-its paths should not be treated as confirmatory substantive findings.
+The transparent rule selects Hana, Iker, Jamal, and Omar, each with 79
+complete five-indicator occasions. The audit is shown rather than
+silently assuming stationarity; these supplied series contain trend or
+shift flags, so the fit is a method demonstration and its paths should
+not be treated as confirmatory substantive findings.
 
 ## Fitting the model
 
@@ -101,8 +97,8 @@ time column; `time = "occasion"` orders occasions within each student.
 `ar = TRUE` places an autoregressive path on every variable in every
 subject’s model from the outset, which anchors the search.
 `groupcutoff = 0.75` and `subcutoff = 0.75` require a path to improve
-fit in at least 75 percent of the relevant subjects — here, six of the
-eight — before it is promoted by the corresponding rule.
+fit in at least 75 percent of the relevant subjects — here, three of the
+four — before it is promoted by the corresponding rule.
 
 ``` r
 
@@ -114,46 +110,46 @@ gimme_fit <- fit_gimme(
 gimme_fit
 #> GIMME Network Analysis
 #> ------------------------------ 
-#> Subjects:   8 
+#> Subjects:   4 
 #> Variables:  5  ( efficacy, value, planning, monitoring, effort )
 #> AR paths:   yes 
 #> Hybrid:     no 
 #> 
 #> Group-level paths found: 0 
 #> 
-#> Individual-level paths:  mean 5.1, range 2-9
+#> Individual-level paths:  mean 6.0, range 4-9
 #> 
 #> Proportion of subjects with each path:
 #> 
 #>   Temporal [directed]
-#>     weights [0.125, 1.000]  |  +13 / -0 edges
+#>     weights [0.250, 1.000]  |  +11 / -0 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy       1.00  0.00     0.25       0.12   0.00
-#>     value          0.25  1.00     0.00       0.00   0.12
-#>     planning       0.00  0.12     1.00       0.12   0.00
-#>     monitoring     0.00  0.00     0.25       1.00   0.00
-#>     effort         0.00  0.12     0.00       0.00   1.00
+#>     efficacy       1.00  0.00     0.25       0.00   0.00
+#>     value          0.25  1.00     0.00       0.00   0.25
+#>     planning       0.00  0.25     1.00       0.25   0.00
+#>     monitoring     0.00  0.00     0.00       1.00   0.00
+#>     effort         0.00  0.25     0.00       0.00   1.00
 #> 
 #>   Contemporaneous [directed]
-#>     weights [0.125, 0.500]  |  +13 / -0 edges
+#>     weights [0.250, 0.750]  |  +11 / -0 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy       0.00  0.00     0.00       0.00   0.12
-#>     value          0.38  0.00     0.38       0.12   0.50
-#>     planning       0.38  0.00     0.00       0.00   0.50
-#>     monitoring     0.25  0.12     0.25       0.00   0.00
-#>     effort         0.12  0.00     0.25       0.38   0.00
+#>     efficacy       0.00  0.00     0.00       0.00    0.0
+#>     value          0.50  0.00     0.50       0.25    0.5
+#>     planning       0.75  0.00     0.00       0.00    0.5
+#>     monitoring     0.50  0.25     0.25       0.00    0.0
+#>     effort         0.00  0.00     0.25       0.25    0.0
 #> 
 #>   plot(x)  (faithful gimme-style mixed network) | plot(x, layer = "temporal") 
 #>   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)
 ```
 
 No cross-variable path reaches the 75 percent group threshold. The five
-autoregressive paths are fixed by `ar = TRUE` and carried by all eight
+autoregressive paths are fixed by `ar = TRUE` and carried by all four
 students; all selected cross-variable paths are individual-level. This
 is a result of the stated rule and cutoffs, not a claim that the
 population has no shared dynamics. The fitted temporal and
-contemporaneous prevalence matrices range from 0.125 (one student) to
-0.50 (four students) off the diagonal.
+contemporaneous prevalence matrices range from 0.25 (one student) to
+0.75 (three students) off the diagonal.
 
 ## Reading the output
 
@@ -164,13 +160,13 @@ one row per network layer, counting cross-variable edges only.
 
 summary(gimme_fit)
 #>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
-#> 1        temporal       5       8    0.40       0.1718750          8          0
-#> 2 contemporaneous       5      13    0.65       0.2884615         13          0
+#> 1        temporal       5       6    0.30       0.2500000          6          0
+#> 2 contemporaneous       5      11    0.55       0.4090909         11          0
 ```
 
-The temporal layer holds eight cross-variable edges at density 0.40 and
-mean prevalence 0.172; the contemporaneous layer holds 13 directed edges
-at density 0.65 and mean prevalence 0.288. The
+The temporal layer holds six cross-variable edges at density 0.30 and
+mean prevalence 0.250; the contemporaneous layer holds 11 directed edges
+at density 0.55 and mean prevalence 0.409. The
 [`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
 accessor lists every retained path with its layer, prevalence, and
 level.
@@ -179,74 +175,70 @@ level.
 
 edges(gimme_fit)
 #>            network       from         to weight      level
-#> 1         temporal   efficacy   efficacy  1.000      group
-#> 2         temporal      value      value  1.000      group
-#> 3         temporal   planning   planning  1.000      group
-#> 4         temporal monitoring monitoring  1.000      group
-#> 5         temporal     effort     effort  1.000      group
-#> 6  contemporaneous      value     effort  0.500 individual
-#> 7  contemporaneous   planning     effort  0.500 individual
-#> 8  contemporaneous      value   efficacy  0.375 individual
-#> 9  contemporaneous      value   planning  0.375 individual
-#> 10 contemporaneous   planning   efficacy  0.375 individual
-#> 11 contemporaneous     effort monitoring  0.375 individual
-#> 12        temporal   efficacy   planning  0.250 individual
-#> 13        temporal      value   efficacy  0.250 individual
-#> 14        temporal monitoring   planning  0.250 individual
-#> 15 contemporaneous monitoring   efficacy  0.250 individual
-#> 16 contemporaneous monitoring   planning  0.250 individual
-#> 17 contemporaneous     effort   planning  0.250 individual
-#> 18        temporal   efficacy monitoring  0.125 individual
-#> 19        temporal      value     effort  0.125 individual
-#> 20        temporal   planning      value  0.125 individual
-#> 21        temporal   planning monitoring  0.125 individual
-#> 22        temporal     effort      value  0.125 individual
-#> 23 contemporaneous   efficacy     effort  0.125 individual
-#> 24 contemporaneous      value monitoring  0.125 individual
-#> 25 contemporaneous monitoring      value  0.125 individual
-#> 26 contemporaneous     effort   efficacy  0.125 individual
+#> 1         temporal   efficacy   efficacy   1.00      group
+#> 2         temporal      value      value   1.00      group
+#> 3         temporal   planning   planning   1.00      group
+#> 4         temporal monitoring monitoring   1.00      group
+#> 5         temporal     effort     effort   1.00      group
+#> 6  contemporaneous   planning   efficacy   0.75 individual
+#> 7  contemporaneous      value   efficacy   0.50 individual
+#> 8  contemporaneous      value   planning   0.50 individual
+#> 9  contemporaneous      value     effort   0.50 individual
+#> 10 contemporaneous   planning     effort   0.50 individual
+#> 11 contemporaneous monitoring   efficacy   0.50 individual
+#> 12        temporal   efficacy   planning   0.25 individual
+#> 13        temporal      value   efficacy   0.25 individual
+#> 14        temporal      value     effort   0.25 individual
+#> 15        temporal   planning      value   0.25 individual
+#> 16        temporal   planning monitoring   0.25 individual
+#> 17        temporal     effort      value   0.25 individual
+#> 18 contemporaneous      value monitoring   0.25 individual
+#> 19 contemporaneous monitoring      value   0.25 individual
+#> 20 contemporaneous monitoring   planning   0.25 individual
+#> 21 contemporaneous     effort   planning   0.25 individual
+#> 22 contemporaneous     effort monitoring   0.25 individual
 ```
 
 The first five temporal rows are the fixed autoregressive self paths at
 prevalence 1. Every cross-variable row is individual-level. The most
-prevalent contemporaneous paths are value to effort and planning to
-effort, each present in four of eight students; the most prevalent
-cross-lagged paths occur in two of eight students.
+prevalent contemporaneous path is planning to efficacy, present in three
+of the four students; the most prevalent cross-lagged paths occur in one
+of the four students.
 
 ``` r
 
 head(coefs(gimme_fit))
-#>   subject  network       from         to  weight
-#> 1    Cira temporal   efficacy   efficacy  0.0689
-#> 2    Cira temporal   efficacy   planning  0.2322
-#> 3    Cira temporal      value      value  0.0809
-#> 4    Cira temporal   planning   planning  0.6277
-#> 5    Cira temporal monitoring   planning -0.2309
-#> 6    Cira temporal monitoring monitoring  0.2347
+#>   subject         network       from         to  weight
+#> 1   Jamal        temporal   efficacy   efficacy -0.1262
+#> 2   Jamal        temporal      value      value -0.0100
+#> 3   Jamal        temporal   planning   planning  0.0769
+#> 4   Jamal        temporal monitoring monitoring  0.1087
+#> 5   Jamal        temporal     effort     effort  0.0998
+#> 6   Jamal contemporaneous      value   efficacy  0.6310
 nodes(gimme_fit)
 #>            network       node strength out_strength in_strength self
-#> 1         temporal   efficacy    0.625        0.375       0.250    1
-#> 2         temporal      value    0.625        0.375       0.250    1
-#> 3         temporal   planning    0.750        0.250       0.500    1
-#> 4         temporal monitoring    0.500        0.250       0.250    1
-#> 5         temporal     effort    0.250        0.125       0.125    1
-#> 6  contemporaneous   efficacy    1.250        0.125       1.125    0
-#> 7  contemporaneous      value    1.500        1.375       0.125    0
-#> 8  contemporaneous   planning    1.750        0.875       0.875    0
-#> 9  contemporaneous monitoring    1.125        0.625       0.500    0
-#> 10 contemporaneous     effort    1.875        0.750       1.125    0
+#> 1         temporal   efficacy     0.50         0.25        0.25    1
+#> 2         temporal      value     1.00         0.50        0.50    1
+#> 3         temporal   planning     0.75         0.50        0.25    1
+#> 4         temporal monitoring     0.25         0.00        0.25    1
+#> 5         temporal     effort     0.50         0.25        0.25    1
+#> 6  contemporaneous   efficacy     1.75         0.00        1.75    0
+#> 7  contemporaneous      value     2.00         1.75        0.25    0
+#> 8  contemporaneous   planning     2.25         1.25        1.00    0
+#> 9  contemporaneous monitoring     1.50         1.00        0.50    0
+#> 10 contemporaneous     effort     1.50         0.50        1.00    0
 ```
 
 [`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
 supplies the person-specific estimates that the prevalence display
 abstracts away: one row per subject, layer, and path. The displayed rows
-begin with Cira and show why prevalence and coefficient magnitude are
+begin with Jamal and show why prevalence and coefficient magnitude are
 separate quantities. The
 [`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md)
-table sums prevalence over incident edges. Effort is the most connected
-contemporaneous node (strength 1.875), while planning is most connected
-temporally (strength 0.750); the `self` column separately records
-autoregressive prevalence 1 for every variable.
+table sums prevalence over incident edges. Planning is the most
+connected contemporaneous node (strength 2.25), while value is most
+connected temporally (strength 1.00); the `self` column separately
+records autoregressive prevalence 1 for every variable.
 
 ``` r
 
@@ -254,49 +246,49 @@ matrices(gimme_fit)
 #> 
 #> $temporal_counts
 #>            efficacy value planning monitoring effort
-#> efficacy          8     2        0          0      0
-#> value             0     8        1          0      1
-#> planning          2     0        8          2      0
-#> monitoring        1     0        1          8      0
-#> effort            0     1        0          0      8
+#> efficacy          4     1        0          0      0
+#> value             0     4        1          0      1
+#> planning          1     0        4          0      0
+#> monitoring        0     0        1          4      0
+#> effort            0     1        0          0      4
 #> 
 #> $temporal_avg
 #>            efficacy  value planning monitoring effort
-#> efficacy      0.024  0.081    0.000      0.000  0.000
-#> value         0.000  0.236    0.029      0.000 -0.025
-#> planning     -0.006  0.000    0.225      0.000  0.000
-#> monitoring    0.032  0.000   -0.039      0.236  0.000
-#> effort        0.000 -0.035    0.000      0.000  0.141
+#> efficacy      0.013  0.084    0.000      0.000  0.000
+#> value         0.000  0.142    0.058      0.000 -0.050
+#> planning     -0.070  0.000    0.182      0.000  0.000
+#> monitoring    0.000  0.000   -0.078      0.291  0.000
+#> effort        0.000 -0.070    0.000      0.000  0.131
 #> 
 #> $contemporaneous_counts
 #>            efficacy value planning monitoring effort
-#> efficacy          0     3        3          2      1
+#> efficacy          0     2        3          2      0
 #> value             0     0        0          1      0
-#> planning          0     3        0          2      2
-#> monitoring        0     1        0          0      3
-#> effort            1     4        4          0      0
+#> planning          0     2        0          1      1
+#> monitoring        0     1        0          0      1
+#> effort            0     2        2          0      0
 #> 
 #> $contemporaneous_avg
 #>            efficacy value planning monitoring effort
-#> efficacy      0.000 0.164    0.151      0.013  0.127
-#> value         0.000 0.000    0.000      0.059  0.000
-#> planning      0.000 0.184    0.000     -0.007  0.131
-#> monitoring    0.000 0.052    0.000      0.000  0.140
-#> effort       -0.126 0.241    0.165      0.000  0.000
+#> efficacy          0 0.241    0.302      0.027  0.000
+#> value             0 0.000    0.000      0.119  0.000
+#> planning          0 0.207    0.000     -0.083  0.140
+#> monitoring        0 0.104    0.000      0.000  0.121
+#> effort            0 0.213    0.155      0.000  0.000
 #> 
 #> $path_counts
 #>            efficacylag valuelag planninglag monitoringlag effortlag efficacy
-#> efficacy             8        2           0             0         0        0
-#> value                0        8           1             0         1        0
-#> planning             2        0           8             2         0        0
-#> monitoring           1        0           1             8         0        0
-#> effort               0        1           0             0         8        1
+#> efficacy             4        1           0             0         0        0
+#> value                0        4           1             0         1        0
+#> planning             1        0           4             0         0        0
+#> monitoring           0        0           1             4         0        0
+#> effort               0        1           0             0         4        0
 #>            value planning monitoring effort
-#> efficacy       3        3          2      1
+#> efficacy       2        3          2      0
 #> value          0        0          1      0
-#> planning       3        0          2      2
-#> monitoring     1        0          0      3
-#> effort         4        4          0      0
+#> planning       2        0          1      1
+#> monitoring     1        0          0      1
+#> effort         2        2          0      0
 #> 
 #> $contemp_cov
 #>            efficacy value planning monitoring effort
@@ -318,11 +310,11 @@ matrices(gimme_fit)
 [`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
 returns the count and sample-average coefficient matrices behind these
 tables, with outcomes on the rows and predictors on the columns. The
-temporal count matrix has 8 on its diagonal and at most 2 in an
-off-diagonal cell; the contemporaneous count matrix reaches 4. The
+temporal count matrix has 4 on its diagonal and at most 1 in an
+off-diagonal cell; the contemporaneous count matrix reaches 3. The
 average coefficient matrices put magnitude beside recurrence; for
-example, the planning-to-effort contemporaneous path appears in four
-students and averages 0.165 across all eight. A path can therefore be
+example, the planning-to-efficacy contemporaneous path appears in three
+students and averages 0.302 across all four. A path can therefore be
 common and weak, so prevalence and magnitude have to be read together,
 and neither should be mistaken for a standardized effect size.
 

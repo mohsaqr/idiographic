@@ -119,22 +119,22 @@ set.seed(1)
 y <- matrix(0, 200, 2)
 for (t in 2:200) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
 d <- data.frame(A = y[, 1], B = y[, 2])
-fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 2000, seed = 1)
+fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 500, seed = 1)
 print(fit)
 #> Bayesian VAR(1) result (unregularized, Mplus-targeted)
 #>   Variables:    2 (A, B)
 #>   Observations: 199
-#>   MCMC: 2 chains x 2000 iter, 2000 draws | max PSR = 1.000
+#>   MCMC: 2 chains x 500 iter, 500 draws | max PSR = 1.010
 #>   Temporal 95% CIs excluding 0: 2 / 4
 #> 
 #>   Temporal [directed]
-#>     weights [-0.062, 0.427]  |  +2 / -2 edges
+#>     weights [-0.057, 0.426]  |  +2 / -2 edges
 #>           A     B
 #>     A  0.43 -0.05
-#>     B -0.06  0.27
+#>     B -0.06  0.26
 #> 
 #>   Contemporaneous [undirected]
-#>     weights [-0.015, -0.015]  |  +0 / -1 edges
+#>     weights [-0.012, -0.012]  |  +0 / -1 edges
 #>           A     B
 #>     A  0.00 -0.01
 #>     B -0.01  0.00
@@ -142,10 +142,10 @@ print(fit)
 #>   coefs(x) | matrices(x) | edges(x) | nodes(x) | summary(x)
 coefs(fit)
 #>   outcome predictor    estimate posterior_sd   ci_lower   ci_upper     p
-#> 1       A         A  0.42710673   0.06610752  0.2910596 0.55296236 0.000
-#> 2       A         B -0.06167479   0.06497069 -0.1926188 0.06364944 0.178
-#> 3       B         A -0.05095663   0.07205346 -0.1961841 0.08994568 0.242
-#> 4       B         B  0.27067298   0.07000427  0.1327740 0.40495916 0.000
+#> 1       A         A  0.42622237   0.06617353  0.3038259 0.55781645 0.000
+#> 2       A         B -0.05725438   0.06822709 -0.1831618 0.08338037 0.194
+#> 3       B         A -0.05098612   0.07220854 -0.1865525 0.09368754 0.240
+#> 4       B         B  0.26411833   0.06976118  0.1318581 0.40487278 0.000
 #>   significant
 #> 1        TRUE
 #> 2       FALSE

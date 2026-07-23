@@ -100,37 +100,37 @@ of chains, and `seed` fixes the random state for reproducibility.
 
 var_bayes_fit <- fit_var_bayes(
   srl, vars = vars, id = "name", subject = "Grace",
-  n_iter = 4000, n_chains = 2, seed = 1
+  n_iter = 1000, n_chains = 2, seed = 1
 )
 var_bayes_fit
 #> Bayesian VAR(1) result (unregularized, Mplus-targeted)
 #>   Variables:    5 (efficacy, value, planning, monitoring, effort)
 #>   Observations: 155
-#>   MCMC: 2 chains x 4000 iter, 4000 draws | max PSR = 1.002
+#>   MCMC: 2 chains x 1000 iter, 1000 draws | max PSR = 1.008
 #>   Temporal 95% CIs excluding 0: 0 / 25
 #> 
 #>   Temporal [directed]
-#>     weights [-0.158, 0.159]  |  +12 / -13 edges
+#>     weights [-0.157, 0.160]  |  +12 / -13 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy      -0.13  0.04    -0.01      -0.05  -0.09
+#>     efficacy      -0.13  0.04     0.00      -0.05  -0.09
 #>     value         -0.10  0.10     0.09      -0.12   0.13
 #>     planning      -0.04 -0.11    -0.01      -0.05   0.16
 #>     monitoring     0.05 -0.16    -0.03       0.00   0.00
-#>     effort         0.07  0.07     0.11       0.01  -0.02
+#>     effort         0.06  0.07     0.11       0.01  -0.02
 #> 
 #>   Contemporaneous [undirected]
-#>     weights [-0.058, 0.467]  |  +6 / -4 edges
+#>     weights [-0.066, 0.465]  |  +6 / -4 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy       0.00  0.06    -0.06       0.38  -0.04
-#>     value          0.06  0.00     0.10       0.10  -0.01
-#>     planning      -0.06  0.10     0.00      -0.06   0.33
-#>     monitoring     0.38  0.10    -0.06       0.00   0.47
-#>     effort        -0.04 -0.01     0.33       0.47   0.00
+#>     efficacy       0.00  0.06    -0.05       0.38  -0.04
+#>     value          0.06  0.00     0.11       0.10  -0.01
+#>     planning      -0.05  0.11     0.00      -0.07   0.34
+#>     monitoring     0.38  0.10    -0.07       0.00   0.46
+#>     effort        -0.04 -0.01     0.34       0.46   0.00
 #> 
 #>   coefs(x) | matrices(x) | edges(x) | nodes(x) | summary(x)
 ```
 
-The evaluated fit uses two chains, retains 4,000 posterior draws after
+The evaluated fit uses two chains, retains 1,000 posterior draws after
 burn-in, and reports a maximum potential scale reduction statistic close
 to 1. No temporal 95% credible interval excludes zero in this run.
 
@@ -144,21 +144,21 @@ without subject-specific random deviations; `n_iter`, `n_chains`, and
 
 mlvar_bayes_fit <- fit_mlvar_bayes(
   srl, vars = vars, id = "name", temporal = "fixed",
-  n_iter = 4000, n_chains = 2, seed = 1
+  n_iter = 1000, n_chains = 2, seed = 1
 )
 mlvar_bayes_fit
 #> Bayesian mlVAR (Mplus DSEM-targeted, temporal = fixed): 36 subjects, 5548 observations, 5 variables
-#>   MCMC: 2 chains x 4000 iter (2000 burn-in), 4000 draws | max PSR = 1.000
-#>   Temporal 95% CIs excluding 0: 2 / 25
+#>   MCMC: 2 chains x 1000 iter (500 burn-in), 1000 draws | max PSR = 1.005
+#>   Temporal 95% CIs excluding 0: 3 / 25
 #> 
 #>   Temporal [directed]
 #>     weights [-0.042, 0.051]  |  +18 / -7 edges
 #>                efficacy value planning monitoring effort
 #>     efficacy      -0.04  0.01     0.01      -0.01   0.00
 #>     value          0.00  0.05     0.01      -0.01   0.03
-#>     planning       0.00 -0.01     0.00       0.01  -0.02
+#>     planning       0.00 -0.01     0.01       0.02  -0.02
 #>     monitoring     0.03  0.02     0.01       0.01   0.03
-#>     effort         0.01 -0.02     0.00       0.00   0.02
+#>     effort         0.01 -0.02     0.01       0.00   0.02
 #> 
 #>   Contemporaneous [undirected]
 #>     weights [0.026, 0.274]  |  +10 / -0 edges
@@ -170,20 +170,20 @@ mlvar_bayes_fit
 #>     effort         0.21  0.13     0.27       0.14   0.00
 #> 
 #>   Between [undirected]
-#>     weights [-0.075, 0.558]  |  +8 / -2 edges
+#>     weights [-0.075, 0.548]  |  +9 / -1 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy       0.00  0.26     0.56       0.11   0.24
-#>     value          0.26  0.00    -0.01      -0.08   0.42
-#>     planning       0.56 -0.01     0.00       0.01   0.22
-#>     monitoring     0.11 -0.08     0.01       0.00   0.17
-#>     effort         0.24  0.42     0.22       0.17   0.00
+#>     efficacy       0.00  0.25     0.55       0.10   0.26
+#>     value          0.25  0.00     0.02      -0.08   0.42
+#>     planning       0.55  0.02     0.00       0.01   0.21
+#>     monitoring     0.10 -0.08     0.01       0.00   0.17
+#>     effort         0.26  0.42     0.21       0.17   0.00
 #> 
 #>   coefs(x) posterior median/SD/CI | matrices(x) | edges(x) | summary(x)
 ```
 
-The evaluated multilevel fit also retains 4,000 posterior draws and has
-a maximum potential scale reduction statistic close to 1. Two of the 25
-temporal 95% credible intervals exclude zero.
+The evaluated multilevel fit also retains 1,000 posterior draws and has
+a maximum potential scale reduction statistic close to 1. Three of the
+25 temporal 95% credible intervals exclude zero.
 
 The Mplus backend call is shown but not evaluated, because it requires
 the suggested `mlVAR` and `MplusAutomation` packages plus a licensed
@@ -202,8 +202,8 @@ mplus_fit <- fit_mlvar_mplus(
 
 The single-person posterior medians reproduce the ordinary VAR pattern.
 Monitoring at occasion $`t-1`$ predicts lower value at occasion $`t`$
-(posterior median −0.158), planning predicts higher effort (0.159), and
-the largest contemporaneous edge is monitoring–effort (0.467). None of
+(posterior median −0.121), planning predicts higher effort (0.107), and
+the largest contemporaneous edge is monitoring–effort (0.465). None of
 the temporal credible intervals excludes zero, so these medians are
 descriptive rather than evidence of selected temporal paths. The same
 accessors that serve the point-estimate fits apply:
@@ -220,60 +220,60 @@ returns the underlying posterior-median matrices.
 
 summary(var_bayes_fit)
 #>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
-#> 1        temporal       5      20       1      0.07342064         10         10
-#> 2 contemporaneous       5      10       1      0.16003715          6          4
+#> 1        temporal       5      20       1       0.0732450         10         10
+#> 2 contemporaneous       5      10       1       0.1614563          6          4
 edges(var_bayes_fit, n = 12)
 #>     network       from         to      weight
-#> 1  temporal   planning     effort  0.15855702
-#> 2  temporal monitoring      value -0.15752088
-#> 3  temporal      value     effort  0.13341509
-#> 4  temporal      value monitoring -0.11957255
-#> 5  temporal   planning      value -0.10703952
-#> 6  temporal     effort   planning  0.10585644
-#> 7  temporal      value   efficacy -0.10050352
-#> 8  temporal   efficacy     effort -0.08773320
-#> 9  temporal      value   planning  0.08768917
-#> 10 temporal     effort      value  0.06738818
-#> 11 temporal     effort   efficacy  0.06590692
-#> 12 temporal   planning monitoring -0.05476234
+#> 1  temporal   planning     effort  0.15953567
+#> 2  temporal monitoring      value -0.15742877
+#> 3  temporal      value     effort  0.12944831
+#> 4  temporal      value monitoring -0.12057964
+#> 5  temporal   planning      value -0.11206296
+#> 6  temporal     effort   planning  0.10723652
+#> 7  temporal      value   efficacy -0.09825493
+#> 8  temporal      value   planning  0.09029697
+#> 9  temporal   efficacy     effort -0.08742151
+#> 10 temporal     effort      value  0.06741039
+#> 11 temporal     effort   efficacy  0.05951823
+#> 12 temporal   planning monitoring -0.05478317
 nodes(var_bayes_fit)
 #>            network       node  strength out_strength in_strength         self
-#> 1         temporal   efficacy 0.4399302    0.1835059   0.2564242 -0.130868483
-#> 2         temporal      value 0.8146126    0.4411803   0.3734323  0.103757343
-#> 3         temporal   planning 0.5893630    0.3576854   0.2316776 -0.006208376
-#> 4         temporal monitoring 0.4665718    0.2401494   0.2264224  0.001209551
-#> 5         temporal     effort 0.6263479    0.2458916   0.3804562 -0.024440733
-#> 6  contemporaneous   efficacy 0.5301826           NA          NA  0.000000000
-#> 7  contemporaneous      value 0.2733152           NA          NA  0.000000000
-#> 8  contemporaneous   planning 0.5516642           NA          NA  0.000000000
-#> 9  contemporaneous monitoring 1.0015677           NA          NA  0.000000000
-#> 10 contemporaneous     effort 0.8440133           NA          NA  0.000000000
+#> 1         temporal   efficacy 0.4278016    0.1806610   0.2471406 -0.129984766
+#> 2         temporal      value 0.8162971    0.4385799   0.3777173  0.104785889
+#> 3         temporal   planning 0.5969774    0.3638190   0.2331584 -0.006601233
+#> 4         temporal monitoring 0.4712370    0.2421910   0.2290460  0.002989445
+#> 5         temporal     effort 0.6174869    0.2396491   0.3778378 -0.022167789
+#> 6  contemporaneous   efficacy 0.5265997           NA          NA  0.000000000
+#> 7  contemporaneous      value 0.2802705           NA          NA  0.000000000
+#> 8  contemporaneous   planning 0.5586513           NA          NA  0.000000000
+#> 9  contemporaneous monitoring 1.0119863           NA          NA  0.000000000
+#> 10 contemporaneous     effort 0.8516183           NA          NA  0.000000000
 matrices(var_bayes_fit)
 #> 
 #> $temporal
 #>            efficacy  value planning monitoring effort
-#> efficacy     -0.131  0.041   -0.009     -0.045 -0.088
-#> value        -0.101  0.104    0.088     -0.120  0.133
-#> planning     -0.037 -0.107   -0.006     -0.055  0.159
-#> monitoring    0.053 -0.158   -0.029      0.001  0.001
-#> effort        0.066  0.067    0.106      0.007 -0.024
+#> efficacy     -0.130  0.041   -0.004     -0.048 -0.087
+#> value        -0.098  0.105    0.090     -0.121  0.129
+#> planning     -0.037 -0.112   -0.007     -0.055  0.160
+#> monitoring    0.052 -0.157   -0.031      0.003  0.001
+#> effort        0.060  0.067    0.107      0.005 -0.022
 #> 
 #> $contemporaneous
 #>            efficacy  value planning monitoring effort
-#> efficacy      0.000  0.059   -0.058      0.377 -0.036
-#> value         0.059  0.000    0.104      0.100 -0.010
-#> planning     -0.058  0.104    0.000     -0.058  0.331
-#> monitoring    0.377  0.100   -0.058      0.000  0.467
-#> effort       -0.036 -0.010    0.331      0.467  0.000
+#> efficacy      0.000  0.058   -0.050      0.380 -0.038
+#> value         0.058  0.000    0.108      0.101 -0.013
+#> planning     -0.050  0.108    0.000     -0.066  0.335
+#> monitoring    0.380  0.101   -0.066      0.000  0.465
+#> effort       -0.038 -0.013    0.335      0.465  0.000
 ```
 
-The Bayesian mlVAR fit gives a temporal mean absolute weight of 0.012, a
+The Bayesian mlVAR fit gives a temporal mean absolute weight of 0.015, a
 contemporaneous mean absolute weight of 0.165, and a between-person mean
-absolute weight of 0.206 in this panel. Monitoring at occasion $`t-1`$
+absolute weight of 0.205 in this panel. Monitoring at occasion $`t-1`$
 to effort at occasion $`t`$ is the largest average temporal edge
-(posterior median 0.032). Planning–effort is the largest contemporaneous
+(posterior median 0.033). Planning–effort is the largest contemporaneous
 edge (0.274), and efficacy–planning is the largest between-person edge
-(0.558) — a statement about which students report high efficacy and high
+(0.548) — a statement about which students report high efficacy and high
 planning on average, not about either process unfolding within any
 student.
 
@@ -281,65 +281,65 @@ student.
 
 summary(mlvar_bayes_fit)
 #>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
-#> 1        temporal       5      20       1       0.0123179         14          6
-#> 2 contemporaneous       5      10       1       0.1647556         10          0
-#> 3         between       5      10       1       0.2062346          8          2
+#> 1        temporal       5      20       1      0.01234895         14          6
+#> 2 contemporaneous       5      10       1      0.16469662         10          0
+#> 3         between       5      10       1      0.20470739          9          1
 edges(mlvar_bayes_fit, n = 12)
-#>     network       from         to      weight
-#> 1  temporal monitoring     effort  0.03219318
-#> 2  temporal      value     effort  0.02835559
-#> 3  temporal monitoring   efficacy  0.02741661
-#> 4  temporal     effort      value -0.02154632
-#> 5  temporal monitoring      value  0.01628370
-#> 6  temporal   planning     effort -0.01609616
-#> 7  temporal   planning monitoring  0.01456523
-#> 8  temporal   efficacy   planning  0.01361466
-#> 9  temporal      value   planning  0.01232276
-#> 10 temporal monitoring   planning  0.01125437
-#> 11 temporal   efficacy      value  0.01100432
-#> 12 temporal      value monitoring -0.00808864
+#>     network       from         to       weight
+#> 1  temporal monitoring     effort  0.032807015
+#> 2  temporal      value     effort  0.029170729
+#> 3  temporal monitoring   efficacy  0.028340115
+#> 4  temporal     effort      value -0.021695847
+#> 5  temporal monitoring      value  0.016088755
+#> 6  temporal   planning monitoring  0.015464195
+#> 7  temporal   planning     effort -0.015033523
+#> 8  temporal   efficacy   planning  0.013505247
+#> 9  temporal      value   planning  0.011991976
+#> 10 temporal   efficacy      value  0.010760533
+#> 11 temporal monitoring   planning  0.010302765
+#> 12 temporal      value monitoring -0.008491691
 nodes(mlvar_bayes_fit)
 #>            network       node   strength out_strength in_strength         self
-#> 1         temporal   efficacy 0.07111313   0.03328348  0.03782965 -0.042321793
-#> 2         temporal      value 0.10666673   0.05073933  0.05592740  0.051256016
-#> 3         temporal   planning 0.08095734   0.03933515  0.04162219  0.004545817
-#> 4         temporal monitoring 0.12031678   0.08714786  0.03316892  0.012794045
-#> 5         temporal     effort 0.11366219   0.03585226  0.07780993  0.016079869
-#> 6  contemporaneous   efficacy 0.81333100           NA          NA  0.000000000
-#> 7  contemporaneous      value 0.59864052           NA          NA  0.000000000
-#> 8  contemporaneous   planning 0.73179508           NA          NA  0.000000000
-#> 9  contemporaneous monitoring 0.40012171           NA          NA  0.000000000
-#> 10 contemporaneous     effort 0.75122467           NA          NA  0.000000000
-#> 11         between   efficacy 1.16801787           NA          NA  0.000000000
-#> 12         between      value 0.76459065           NA          NA  0.000000000
-#> 13         between   planning 0.79032247           NA          NA  0.000000000
-#> 14         between monitoring 0.35865695           NA          NA  0.000000000
-#> 15         between     effort 1.04310460           NA          NA  0.000000000
+#> 1         temporal   efficacy 0.07079707   0.03336966  0.03742741 -0.041577067
+#> 2         temporal      value 0.10589088   0.05087406  0.05501683  0.051165278
+#> 3         temporal   planning 0.08020999   0.03911112  0.04109887  0.005566967
+#> 4         temporal monitoring 0.12253127   0.08753865  0.03499262  0.012694945
+#> 5         temporal     effort 0.11452895   0.03608560  0.07844335  0.015813819
+#> 6  contemporaneous   efficacy 0.81438362           NA          NA  0.000000000
+#> 7  contemporaneous      value 0.59778025           NA          NA  0.000000000
+#> 8  contemporaneous   planning 0.73176750           NA          NA  0.000000000
+#> 9  contemporaneous monitoring 0.39903872           NA          NA  0.000000000
+#> 10 contemporaneous     effort 0.75096236           NA          NA  0.000000000
+#> 11         between   efficacy 1.15960010           NA          NA  0.000000000
+#> 12         between      value 0.75769103           NA          NA  0.000000000
+#> 13         between   planning 0.77745059           NA          NA  0.000000000
+#> 14         between monitoring 0.35009043           NA          NA  0.000000000
+#> 15         between     effort 1.04931570           NA          NA  0.000000000
 matrices(mlvar_bayes_fit)
 #> 
 #> $temporal
 #>            efficacy  value planning monitoring effort
-#> efficacy     -0.042  0.002    0.002      0.027  0.007
-#> value         0.011  0.051   -0.007      0.016 -0.022
-#> planning      0.014  0.012    0.005      0.011  0.004
-#> monitoring   -0.007 -0.008    0.015      0.013 -0.003
-#> effort        0.001  0.028   -0.016      0.032  0.016
+#> efficacy     -0.042  0.001    0.002      0.028  0.006
+#> value         0.011  0.051   -0.006      0.016 -0.022
+#> planning      0.014  0.012    0.006      0.010  0.005
+#> monitoring   -0.008 -0.008    0.015      0.013 -0.003
+#> effort        0.001  0.029   -0.015      0.033  0.016
 #> 
 #> $contemporaneous
 #>            efficacy value planning monitoring effort
-#> efficacy      0.000 0.206    0.240      0.158  0.209
-#> value         0.206 0.000    0.192      0.074  0.126
-#> planning      0.240 0.192    0.000      0.026  0.274
-#> monitoring    0.158 0.074    0.026      0.000  0.142
+#> efficacy      0.000 0.207    0.241      0.158  0.209
+#> value         0.207 0.000    0.192      0.073  0.126
+#> planning      0.241 0.192    0.000      0.026  0.274
+#> monitoring    0.158 0.073    0.026      0.000  0.142
 #> effort        0.209 0.126    0.274      0.142  0.000
 #> 
 #> $between
 #>            efficacy  value planning monitoring effort
-#> efficacy      0.000  0.264    0.558      0.105  0.240
-#> value         0.264  0.000   -0.007     -0.075  0.417
-#> planning      0.558 -0.007    0.000      0.008  0.216
-#> monitoring    0.105 -0.075    0.008      0.000  0.170
-#> effort        0.240  0.417    0.216      0.170  0.000
+#> efficacy      0.000  0.250    0.548      0.103  0.259
+#> value         0.250  0.000    0.016     -0.075  0.417
+#> planning      0.548  0.016    0.000      0.006  0.208
+#> monitoring    0.103 -0.075    0.006      0.000  0.166
+#> effort        0.259  0.417    0.208      0.166  0.000
 ```
 
 The [`plot()`](https://rdrr.io/r/graphics/plot.default.html) method
