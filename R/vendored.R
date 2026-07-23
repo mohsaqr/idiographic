@@ -665,7 +665,7 @@ extract_edges <- function(model, sort_by = "weight", include_self = FALSE) {
 #'   returns all edges.
 #' @param ... Passed to methods.
 #' @return A tidy `data.frame`, one row per edge.
-#' @examplesIf requireNamespace("graphicalVAR", quietly = TRUE)
+#' @examples
 #' \donttest{
 #' set.seed(1)
 #' d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))

@@ -117,12 +117,10 @@ edge with columns \code{network} (e.g. \code{"temporal"}, \code{"contemporaneous
 undirected networks (contemporaneous, between) report each pair once.
 }
 \examples{
-\dontshow{if (requireNamespace("graphicalVAR", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \donttest{
 set.seed(1)
 d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
 fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
 edges(fit)            # tidy: network / from / to / weight
 }
-\dontshow{\}) # examplesIf}
 }
