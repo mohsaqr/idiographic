@@ -4,7 +4,7 @@ An anonymized intensive longitudinal data set in which 41 students rated
 their momentary self-regulation, motivation, and anxiety several times
 per day over the course of a study, giving roughly 70 to 80 occasions
 each. Unlike the once-per-day
-[srl](https://mohsaqr.github.io/idiographic/reference/srl.md) panel, the
+[srl](https://pak.dynasite.org/idiographic/reference/srl.md) panel, the
 occasions here are within-day momentary assessments, so the series are
 well suited to person-specific (idiographic) VAR, graphical VAR, and
 unified SEM. The data are fully anonymized: the participant identifiers

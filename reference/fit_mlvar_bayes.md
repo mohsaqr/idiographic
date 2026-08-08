@@ -161,7 +161,7 @@ fit_mlvar_bayes(
 A `net_mlvar_bayes` object (also inheriting `net_mlvar`), a named list
 of three netobjects (`temporal`, `contemporaneous`, `between`) with
 posterior-summary attributes.
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
 returns a tidy table with `estimate` (posterior median), `posterior_sd`,
 `ci_lower`, `ci_upper`, `p` (one-tailed), and `significant` (95% CI
 excludes 0). Posterior draws and the max Gelman-Rubin PSR are kept in
@@ -186,9 +186,9 @@ SD.
 
 ## See also
 
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 (frequentist lmer path),
-[`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md)
+[`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md)
 (true-Mplus wrapper).
 
 ## Examples

@@ -1,13 +1,13 @@
 # 6. Bayesian VAR and DSEM
 
-[`fit_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_var_bayes.md)
+[`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md)
 estimates a single-person Bayesian vector autoregression of order one:
 an idiographic model, fitted to one individual’s multivariate series, in
 which each occasion’s measurements are predicted jointly by the values
 of all variables one occasion earlier and by the associations that
 remain among the variables within the same occasion. The estimands are
 the same two within-person networks the ordinary VAR of
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 returns. The temporal network is directed: an edge `from -> to` states
 that the value of `from` at occasion $`t-1`$ predicts the value of `to`
 at occasion $`t`$, holding the other lagged variables constant. The
@@ -22,9 +22,9 @@ autocovariance across the observation window — linear lag-one dynamics,
 approximately Gaussian fluctuations, and equally spaced measurement
 occasions.
 
-[`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
+[`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
 and
-[`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md)
+[`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md)
 estimate the multilevel analogue, the Bayesian multilevel VAR in its
 dynamic structural equation modelling (DSEM) formulation. Where the
 single-person model describes one individual, the multilevel model pools
@@ -38,10 +38,10 @@ individual differences, not a within-person process, and the two need
 not coincide; treating between-person associations as if they described
 anyone’s dynamics is the ergodicity error the idiographic literature
 warns against.
-[`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md)
+[`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md)
 targets the Mplus DSEM backend for laboratories with a licensed Mplus
 installation that require its syntax and diagnostics;
-[`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
+[`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
 estimates a native model whose explicitly documented slices are
 validated against frozen Mplus outputs without requiring the external
 dependency.
@@ -49,9 +49,9 @@ dependency.
 Bayesian estimation is appropriate when posterior intervals, prior
 regularization, or DSEM-style modelling is central to the analysis; when
 the goal is a fast point-estimate comparison,
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 and
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 provide that baseline. The native Bayesian chunks below are evaluated
 during the build, so every printed result comes from the displayed call.
 Only the external Mplus call remains unevaluated because it requires
@@ -135,7 +135,7 @@ burn-in, and reports a maximum potential scale reduction statistic close
 to 1. No temporal 95% credible interval excludes zero in this run.
 
 The multilevel Bayesian call uses the same panel structure as
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md).
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md).
 Setting `temporal = "fixed"` estimates the average lag-one matrix
 without subject-specific random deviations; `n_iter`, `n_chains`, and
 `seed` control the MCMC as before.
@@ -209,11 +209,11 @@ descriptive rather than evidence of selected temporal paths. The same
 accessors that serve the point-estimate fits apply:
 [`summary()`](https://rdrr.io/r/base/summary.html) reports one row per
 network layer,
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
 lists edges in decreasing magnitude,
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md)
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md)
 gives node-level strength, and
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
 returns the underlying posterior-median matrices.
 
 ``` r
@@ -402,7 +402,7 @@ output, but they are still examples rather than a universal MCMC
 prescription. Applied analyses require problem-specific chain lengths,
 convergence diagnostics, posterior predictive checks, and sensitivity
 analyses over the priors.
-[`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md)
+[`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md)
 additionally depends on an external Mplus installation, so it is
 demonstrated only as a call template.
 

@@ -27,7 +27,7 @@ edges are the partial correlations among these remainders, the
 within-occasion associations that lagged prediction does not account
 for.
 
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 estimates both networks jointly by a penalized two-step procedure: a
 lasso-penalized regression estimates the lagged effects, a graphical
 lasso estimates the within-occasion associations from the residuals of
@@ -36,7 +36,7 @@ stabilizes. The strength of the penalty is selected by the extended
 Bayesian information criterion, whose conservatism is governed by a
 parameter that charges for every retained edge. This is what
 distinguishes the graphical estimator from the ordinary VAR fitted by
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md),
 which returns a coefficient in every cell of both networks and leaves
 the analyst to judge which small values are noise. Under the penalty,
 weak edges are shrunk to exactly zero, so an absent edge is a
@@ -245,7 +245,7 @@ nodes(fit)
 #> 18 contemporaneous    anxiety 0.254827050           NA          NA  0.000000000
 ```
 
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md)
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md)
 separates each variable’s outgoing and incoming cross-lagged strength
 from its autoregression, and gives its total strength in the undirected
 contemporaneous layer. Enjoyment is the busiest node across both layers,

@@ -9,7 +9,7 @@ The package surface is closed under an explicit evidence contract:
 - all 17 registered estimators and workflows have a tested declaration;
 - all 315 current public method arguments occur exactly once in the
   executable
-  [`argument_coverage()`](https://mohsaqr.github.io/idiographic/reference/argument_coverage.md)
+  [`argument_coverage()`](https://pak.dynasite.org/idiographic/reference/argument_coverage.md)
   ledger;
 - no method or argument is `unknown`, `not_assessed`, or `unassessed`;
 - unsupported modes error or warn explicitly instead of silently
@@ -59,23 +59,23 @@ equivalent” without broader licensed runs would overstate the evidence.
 
 | Method | Closure | Reference | Committed boundary |
 |----|----|----|----|
-| [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md) | closed | [`stats::lm.fit`](https://rdrr.io/r/stats/lmfit.html) | Cell-level OLS engine equality, tolerance `1e-10`; preprocessing is package-defined. |
-| [`fit_var_each()`](https://mohsaqr.github.io/idiographic/reference/fit_var_each.md) | closed | [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md) | Exact per-subject wrapper contract. |
-| [`fit_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_var_bayes.md) | bounded | frozen Mplus BAYES | Three bivariate fixtures with parameter-dependent statistical tolerances `0.02`–`0.03`, plus OLS and MCMC-control checks. |
-| [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md) | closed | `graphicalVAR` 0.4.1 | Lag-1 beta/kappa option matrix, multi-ID centering, missing rows, and tolerance `1e-6`. Multi-lag/unequal-grid fits are labelled extensions. |
-| [`fit_graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var_each.md) | closed | `graphicalVAR` 0.4.1 | Every returned subject fit is compared with the same-data upstream subject fit at `1e-6`. |
-| [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md) | closed | `mlVAR` 0.7.3 | All 12 supported lag-1 lmer structure combinations, unique/lm modes, preparation and selected multi-lag controls, plus 20 real fixed/fixed panels at `1e-8`. |
-| [`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md) | bounded | frozen Mplus DSEM | Five fixed bivariate and one random-AR fixture; advanced random-residual and imputation modes are recovery-validated, not called Mplus-equivalent. |
-| [`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md) | conditional | delegated Mplus backend | Complete argument-forwarding and result-conversion contract is tested with a contract double; statistical execution requires a licensed Mplus installation. |
-| [`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md) | closed | `lavaan` | Fixed syntax, raw/standardized data, and ML/MLR engines at `1e-8`; trimming is a labelled native search extension. |
-| [`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md) | closed | `gimme` 10.0 | Exact search, syntax, count, coefficient, and psi agreement on bivariate and three-variable standard/hybrid/VAR panels; fit tables agree within `5e-5`. Includes exogenous variables, uneven panels, and interacting controls; unsupported upstream families reject explicitly. |
-| [`fit_rolling_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_var.md) | closed internal | [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md) | Direct-window equality, boundaries, and planted-change recovery. |
-| [`fit_rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_graphical_var.md) | closed internal | [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md) | Direct-window equality, boundaries, and planted-change recovery. |
-| [`fit_ml()`](https://mohsaqr.github.io/idiographic/reference/fit_ml.md) | closed native | base-R engines/closed forms | All model families and selectors exercised; linear/logistic cells equal `lm.fit`/`glm.fit`. |
-| [`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md) | closed internal | shared lag design | Exact design equality plus deterministic diagnostics, filtering, detrending, missingness, and threshold behavior. |
-| [`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md) | closed internal | registered estimators | Deterministic resampling, ordering, and five-estimator dispatch; no unrelated external target. |
-| [`compare_idiographic()`](https://mohsaqr.github.io/idiographic/reference/compare_idiographic.md) | closed internal | registered summaries | Exact stacking, routing, failure isolation, and retained-fit behavior. |
-| [`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md) | closed internal | direct fitted prediction | Split geometry, boundary lags, metrics, and direct matrix-prediction equality. |
+| [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md) | closed | [`stats::lm.fit`](https://rdrr.io/r/stats/lmfit.html) | Cell-level OLS engine equality, tolerance `1e-10`; preprocessing is package-defined. |
+| [`fit_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_var_each.md) | closed | [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md) | Exact per-subject wrapper contract. |
+| [`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md) | bounded | frozen Mplus BAYES | Three bivariate fixtures with parameter-dependent statistical tolerances `0.02`–`0.03`, plus OLS and MCMC-control checks. |
+| [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md) | closed | `graphicalVAR` 0.4.1 | Lag-1 beta/kappa option matrix, multi-ID centering, missing rows, and tolerance `1e-6`. Multi-lag/unequal-grid fits are labelled extensions. |
+| [`fit_graphical_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var_each.md) | closed | `graphicalVAR` 0.4.1 | Every returned subject fit is compared with the same-data upstream subject fit at `1e-6`. |
+| [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md) | closed | `mlVAR` 0.7.3 | All 12 supported lag-1 lmer structure combinations, unique/lm modes, preparation and selected multi-lag controls, plus 20 real fixed/fixed panels at `1e-8`. |
+| [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md) | bounded | frozen Mplus DSEM | Five fixed bivariate and one random-AR fixture; advanced random-residual and imputation modes are recovery-validated, not called Mplus-equivalent. |
+| [`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md) | conditional | delegated Mplus backend | Complete argument-forwarding and result-conversion contract is tested with a contract double; statistical execution requires a licensed Mplus installation. |
+| [`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md) | closed | `lavaan` | Fixed syntax, raw/standardized data, and ML/MLR engines at `1e-8`; trimming is a labelled native search extension. |
+| [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md) | closed | `gimme` 10.0 | Exact search, syntax, count, coefficient, and psi agreement on bivariate and three-variable standard/hybrid/VAR panels; fit tables agree within `5e-5`. Includes exogenous variables, uneven panels, and interacting controls; unsupported upstream families reject explicitly. |
+| [`fit_rolling_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_var.md) | closed internal | [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md) | Direct-window equality, boundaries, and planted-change recovery. |
+| [`fit_rolling_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_graphical_var.md) | closed internal | [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md) | Direct-window equality, boundaries, and planted-change recovery. |
+| [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md) | closed native | base-R engines/closed forms | All model families and selectors exercised; linear/logistic cells equal `lm.fit`/`glm.fit`. |
+| [`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md) | closed internal | shared lag design | Exact design equality plus deterministic diagnostics, filtering, detrending, missingness, and threshold behavior. |
+| [`estimate_stability()`](https://pak.dynasite.org/idiographic/reference/estimate_stability.md) | closed internal | registered estimators | Deterministic resampling, ordering, and five-estimator dispatch; no unrelated external target. |
+| [`compare_idiographic()`](https://pak.dynasite.org/idiographic/reference/compare_idiographic.md) | closed internal | registered summaries | Exact stacking, routing, failure isolation, and retained-fit behavior. |
+| [`validate_forecast()`](https://pak.dynasite.org/idiographic/reference/validate_forecast.md) | closed internal | direct fitted prediction | Split geometry, boundary lags, metrics, and direct matrix-prediction equality. |
 
 Summary: 14 declarations are closed directly or internally, two are
 bounded to their committed external fixtures, and one is conditional on
@@ -83,7 +83,7 @@ a licensed backend. There are zero open declarations.
 
 ## Argument-level result
 
-[`argument_coverage()`](https://mohsaqr.github.io/idiographic/reference/argument_coverage.md)
+[`argument_coverage()`](https://pak.dynasite.org/idiographic/reference/argument_coverage.md)
 derives its rows from the actual function formals, so the ledger
 currently contains exactly 315 cells. Evidence classes include direct
 oracle/engine equality, statistical fixtures, recovery, internal
@@ -117,7 +117,7 @@ The repository’s separate `validation/` lane contains 20 raw ESM panels
 and 20 frozen outputs generated directly with
 [`mlVAR::mlVAR()`](https://rdrr.io/pkg/mlVAR/man/mlVAR.html) 0.7.3.
 Native
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 refits each panel in the opt-in equivalence suite. These competitor
 fixtures are intentionally excluded from the offline CRAN tarball.
 
@@ -171,7 +171,7 @@ networks were regenerated with the actual competitor package.
 > direct, statistical, internal, delegated, extension, or
 > explicit-rejection contract. Numerical equivalence remains method- and
 > configuration-specific; use
-> [`equivalence()`](https://mohsaqr.github.io/idiographic/reference/equivalence.md)
+> [`equivalence()`](https://pak.dynasite.org/idiographic/reference/equivalence.md)
 > or
-> [`equivalence_table()`](https://mohsaqr.github.io/idiographic/reference/equivalence_table.md)
+> [`equivalence_table()`](https://pak.dynasite.org/idiographic/reference/equivalence_table.md)
 > to inspect the exact boundary.

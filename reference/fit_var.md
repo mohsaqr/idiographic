@@ -4,7 +4,7 @@ Fits a transparent VAR(1) baseline from intensive longitudinal data
 using ordinary least squares: current variables are regressed on an
 intercept and lag-1 predictors. The lag construction, scaling,
 within-person centring, and day-boundary behaviour match
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
 but no regularization or EBIC model selection is applied.
 
 ## Usage
@@ -81,9 +81,9 @@ fit_var(
 A `var_result` object with temporal OLS coefficients, residual
 covariance, residual precision, contemporaneous partial correlations,
 and tidy access through
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md),
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md),
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md),
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md),
 and [`summary()`](https://rdrr.io/r/base/summary.html).
 
 ## Examples

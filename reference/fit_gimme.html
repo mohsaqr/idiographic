@@ -282,18 +282,18 @@ paths even after fit is adequate.</p></dd>
 
 <dt id="arg-subgroup">subgroup<a class="anchor" aria-label="anchor" href="#arg-subgroup"></a></dt>
 <dd><p>Logical. Subgrouping (S-GIMME) is not implemented; <code>TRUE</code>
-raises an error pointing to <code><a href="https://rdrr.io/pkg/gimme/man/gimmeSEM.html" class="external-link">gimme::gimme()</a></code>. Default <code>FALSE</code>.</p></dd>
+raises an error pointing to <code>gimme::gimme()</code>. Default <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-outcome-conv-vars-mult-vars-lv-model-lasso-model-crit-ms-allow-ordered-dir-prop-cutoff">outcome, conv_vars, mult_vars, lv_model, lasso_model_crit, ms_allow, ordered, dir_prop_cutoff<a class="anchor" aria-label="anchor" href="#arg-outcome-conv-vars-mult-vars-lv-model-lasso-model-crit-ms-allow-ordered-dir-prop-cutoff"></a></dt>
-<dd><p>Accepted for <code><a href="https://rdrr.io/pkg/gimme/man/gimmeSEM.html" class="external-link">gimme::gimme()</a></code> API parity but not implemented (latent
+<dd><p>Accepted for <code>gimme::gimme()</code> API parity but not implemented (latent
 variable / fMRI-convolution / multiplied-term / LASSO / ordinal /
 multiple-solutions / directionality features). A non-default value raises an
-error pointing to <code><a href="https://rdrr.io/pkg/gimme/man/gimmeSEM.html" class="external-link">gimme::gimme()</a></code>.</p></dd>
+error pointing to <code>gimme::gimme()</code>.</p></dd>
 
 
 <dt id="arg-out-sep-header-plot">out, sep, header, plot<a class="anchor" aria-label="anchor" href="#arg-out-sep-header-plot"></a></dt>
-<dd><p>Accepted for <code><a href="https://rdrr.io/pkg/gimme/man/gimmeSEM.html" class="external-link">gimme::gimme()</a></code> API parity.
+<dd><p>Accepted for <code>gimme::gimme()</code> API parity.
 idiographic reads a <code>data.frame</code> (not a CSV directory), so non-default
 <code>out</code>, <code>sep</code>, and <code>header</code> values emit a warning and have no
 effect. It returns an object you plot with <code><a href="plot_gimme.html">plot_gimme()</a></code>;
@@ -301,7 +301,7 @@ effect. It returns an object you plot with <code><a href="plot_gimme.html">plot_
 
 
 <dt id="arg-sub-feature-sub-method-sub-sim-thresh-confirm-subgroup-conv-length-conv-interval-mean-center-mult-diagnos-ms-tol-lv-estimator-lv-scores-lv-miiv-scaling-lv-final-estimator">sub_feature, sub_method, sub_sim_thresh, confirm_subgroup, conv_length, conv_interval, mean_center_mult, diagnos, ms_tol, lv_estimator, lv_scores, lv_miiv_scaling, lv_final_estimator<a class="anchor" aria-label="anchor" href="#arg-sub-feature-sub-method-sub-sim-thresh-confirm-subgroup-conv-length-conv-interval-mean-center-mult-diagnos-ms-tol-lv-estimator-lv-scores-lv-miiv-scaling-lv-final-estimator"></a></dt>
-<dd><p>Accepted for <code><a href="https://rdrr.io/pkg/gimme/man/gimmeSEM.html" class="external-link">gimme::gimme()</a></code> API parity. These configure the
+<dd><p>Accepted for <code>gimme::gimme()</code> API parity. These configure the
 unsupported subgrouping / convolution / multiplied-term / multiple-solutions
 / latent-variable features and are inert here (their parent feature is
 guarded above).</p></dd>
@@ -325,7 +325,7 @@ path counts – entry <code>[i,j]</code> = number of individuals with path j(t)-
 <dd><p>List of per-person <code>q x (q + p)</code> standardized
 residual covariance matrices, with non-exogenous current variables in
 rows and
-<code>c(lag_names, varnames)</code> in columns, matching <code><a href="https://rdrr.io/pkg/gimme/man/gimmeSEM.html" class="external-link">gimme::gimme()</a></code>'s
+<code>c(lag_names, varnames)</code> in columns, matching <code>gimme::gimme()</code>'s
 returned <code>psi</code> contract.</p></dd>
 
 <dt><code>fit</code></dt>

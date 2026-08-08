@@ -7,11 +7,11 @@ around that mean, and fitting a first-order dynamic process to the
 deviations ([Epskamp et al. 2018](#ref-epskamp2018mlvar)). Its estimand
 differs from that of the single-subject estimators in this package:
 where
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 and
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 recover one individual’s dynamics,
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 pools across individuals and recovers the average within-person process
 — the lag-one structure a typical member of the panel follows — together
 with a separate description of how the stable person-level means covary.
@@ -49,7 +49,7 @@ that within-person dynamics need not match the structure of the group,
 the average process is a summary of the panel, not a portrait of any
 member: a fixed-effect temporal network can be weak or null while
 individual students carry strong, mutually cancelling dynamics.
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 accordingly complements rather than replaces the single-subject
 estimators — it is the appropriate tool when the question concerns the
 typical process and the panel is large, and the subject-by-subject fits
@@ -181,7 +181,7 @@ order of magnitude below the contemporaneous 0.165 and the
 between-person 0.209: on average, a student’s state one occasion earlier
 predicts little, while variables co-move within occasions and, above
 all, stable student averages covary. The
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
 accessor lists the edges of a layer in decreasing magnitude.
 
 ``` r
@@ -246,7 +246,7 @@ whose value is high on average tend to have lower average monitoring
 than their peers.
 
 Node-level structure follows from the edges through
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md),
 whose strength column sums the absolute weights incident to each node
 within a layer.
 
@@ -280,7 +280,7 @@ layer efficacy has the largest strength (1.176), driven by its
 associations with planning and value, followed by effort (1.054). The
 full coefficient tables are available from `coefs(mlvar_fit)`, and the
 three layer matrices from
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md).
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md).
 
 ``` r
 

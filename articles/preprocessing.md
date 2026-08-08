@@ -20,7 +20,7 @@ coefficient, so the resulting network misrepresents the dynamics rather
 than failing outright.
 
 The purpose of
-[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+[`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md)
 is to make these assumptions inspectable, and where necessary
 correctable, before a model is estimated and interpreted. It constructs
 the same lag-one design that the estimators use — applying the same
@@ -49,7 +49,7 @@ design is worth inspecting before fitting.
 ## Running preprocess and reading the diagnostics
 
 A call to
-[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+[`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md)
 takes the variables and the identifier column. Printing the returned
 object reports the retained design and, where an assumption is at risk,
 an explicit recommendation for addressing it.
@@ -152,7 +152,7 @@ counts as `n_flagged`.
 
 ## Cleaning non-stationary series with `detrend`
 
-[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+[`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md)
 standardizes and centres, but it does **not** remove trends on its own —
 detrending changes what a temporal edge means, so it is a modelling
 decision the analyst should make deliberately. The `detrend` argument

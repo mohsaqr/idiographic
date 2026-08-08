@@ -1,7 +1,7 @@
 # Report method-equivalence evidence
 
 Returns the equivalence declaration attached by
-[`fit_idiographic()`](https://mohsaqr.github.io/idiographic/reference/fit_idiographic.md).
+[`fit_idiographic()`](https://pak.dynasite.org/idiographic/reference/fit_idiographic.md).
 For a result created by a direct `fit_*()` call, the registry can infer
 the method from a unique registered result class. The declaration
 describes the scope of committed validation; it is not a new statistical

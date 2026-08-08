@@ -1,9 +1,9 @@
 # Preprocess and audit idiographic time-series data
 
 Builds the same lag-1 design used by
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 and
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md),
 optionally detrends or differences each series, and returns tidy
 diagnostics for missingness, day-boundary drops, simple linear trends,
 AR(1) persistence, split-half mean/variance drift, an ADF-style

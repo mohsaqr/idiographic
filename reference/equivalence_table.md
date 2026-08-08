@@ -1,7 +1,7 @@
 # Package-wide equivalence and validation ledger
 
 Returns one tidy row for every registered estimator and workflow. Unlike
-[`equivalence()`](https://mohsaqr.github.io/idiographic/reference/equivalence.md),
+[`equivalence()`](https://pak.dynasite.org/idiographic/reference/equivalence.md),
 which refines the declaration for one fitted object,
 `equivalence_table()` exposes the package-wide evidence boundary before
 a model is fitted. A `closed` evidence status means the declared scope

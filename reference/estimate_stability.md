@@ -49,15 +49,15 @@ estimate_stability(
 - estimator:
 
   `"var"` (default) for
-  [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
+  [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md),
   `"graphical_var"` for
-  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
   `"mlvar"` for
-  [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md),
+  [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md),
   `"usem"` for
-  [`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md),
+  [`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md),
   or `"gimme"` for
-  [`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md).
+  [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md).
 
 - id:
 

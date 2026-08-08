@@ -37,7 +37,7 @@ innovations of the others, and the contemporaneous edges are the partial
 correlations among these remainders, the within-occasion associations
 that lagged prediction does not account for.
 
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 estimates both networks by ordinary least squares, one regression per
 variable, without regularization. Each equation carries one coefficient
 per lagged predictor plus an intercept, so the size of the temporal
@@ -51,12 +51,12 @@ transparent unregularized baseline: the appropriate estimator when the
 number of occasions is large relative to the number of parameters and
 every estimate is wanted for inspection, and the reference against which
 the regularized
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 trades variance for sparsity by shrinking weak edges to exactly zero
 under an extended-BIC penalty. For several people,
-[`fit_var_each()`](https://mohsaqr.github.io/idiographic/reference/fit_var_each.md)
+[`fit_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_var_each.md)
 fits a separate ordinary VAR per person and
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 pools information across people through random effects.
 
 ## Data and preprocessing
@@ -67,7 +67,7 @@ bundled `srl` data hold self-regulated-learning indicators for 36
 students measured over 156 occasions each; this vignette fits a single
 student, Grace, on five indicators: `efficacy`, `value`, `planning`,
 `monitoring`, and `effort`.
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 standardizes each variable to unit variance (`scale = TRUE`), so that
 coefficients are comparable across indicators, and centres within person
 (`center_within = TRUE`), so that the intercept absorbs the person mean;
@@ -104,8 +104,8 @@ fitted on her series as they stand. Where a flagged series is to be
 modelled, `preprocess(..., detrend = )` constructs and rechecks the
 transformed lag design. The same transformation must then be applied to
 the long data supplied to
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md);
-[`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md);
+[`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md)
 does not mutate the source data. A persistent trend left in place can
 masquerade as lag-one structure.
 
@@ -179,8 +179,7 @@ weight of 0.160 is roughly twice the temporal 0.075. Within-occasion
 association is larger than lagged prediction in this fitted series; no
 claim of typicality is made from one participant.
 
-The
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
+The [`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
 accessor returns one row per edge in decreasing magnitude; `network =`
 selects a layer and `n =` keeps the strongest edges. For the temporal
 layer the `from` and `to` columns read as `from` at occasion $`t-1`$
@@ -206,7 +205,7 @@ value. At this magnitude, and with 155 occasions, the individual
 temporal coefficients can be high-variance, so the temporal layer is
 better read as a pattern than as a set of point claims. Where a sparse,
 multiplicity-controlled temporal network is required,
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 is the estimator of choice.
 
 ``` r
@@ -229,7 +228,7 @@ same three edges retained when the clean-room vignette applies graphical
 VAR to Grace, there with shrinkage-biased weights.
 
 Node-level structure follows from
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md),
 whose strength column sums the absolute weights incident to each node
 within a layer, split into out- and in-strength for the directed
 temporal network, with the self-loop reported separately.

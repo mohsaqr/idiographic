@@ -128,7 +128,7 @@ The original `mlVAR`/Mplus object is available as `attr(x, "mplus")`.
 
 ## See also
 
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 
 ## Examples
 

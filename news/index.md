@@ -2,6 +2,8 @@
 
 ## idiographic 0.3.2
 
+CRAN release: 2026-08-03
+
 - New package Title — “Idiographic Person-Specific and Heterogeneous
   Complex Networks” — and a rewritten Description with method references
   <doi:10.1007/978-3-031-95365-1_20> and
@@ -25,13 +27,13 @@
   excluded from the CRAN tarball.
 
 - Added a registry-backed
-  [`fit_idiographic()`](https://mohsaqr.github.io/idiographic/reference/fit_idiographic.md)
+  [`fit_idiographic()`](https://pak.dynasite.org/idiographic/reference/fit_idiographic.md)
   front door, estimator discovery, method-specific
-  [`equivalence()`](https://mohsaqr.github.io/idiographic/reference/equivalence.md)
+  [`equivalence()`](https://pak.dynasite.org/idiographic/reference/equivalence.md)
   declarations, package-wide
-  [`equivalence_table()`](https://mohsaqr.github.io/idiographic/reference/equivalence_table.md)
+  [`equivalence_table()`](https://pak.dynasite.org/idiographic/reference/equivalence_table.md)
   and argument-by-argument
-  [`argument_coverage()`](https://mohsaqr.github.io/idiographic/reference/argument_coverage.md)
+  [`argument_coverage()`](https://pak.dynasite.org/idiographic/reference/argument_coverage.md)
   ledgers, and common tidy accessors. All 17 registered methods and 315
   current public formals now have an executable evidence classification;
   new unassessed arguments fail the closure test.
@@ -63,31 +65,31 @@
 
 - **Uniform `fit_*` naming for all estimators (breaking).** Every
   model-fitting verb now uses a single `fit_` prefix:
-  [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
-  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
-  [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md),
-  [`fit_rolling_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_var.md),
+  [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md),
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
+  [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md),
+  [`fit_rolling_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_var.md),
   and so on for all estimators. Short model nicknames passed to
-  [`compare_idiographic()`](https://mohsaqr.github.io/idiographic/reference/compare_idiographic.md),
-  [`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md),
+  [`compare_idiographic()`](https://pak.dynasite.org/idiographic/reference/compare_idiographic.md),
+  [`estimate_stability()`](https://pak.dynasite.org/idiographic/reference/estimate_stability.md),
   and
-  [`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md)
+  [`validate_forecast()`](https://pak.dynasite.org/idiographic/reference/validate_forecast.md)
   (for example, `"var"` and `"graphical_var"`) are unchanged.
 
 - New native Bayesian estimators that statistically reproduce Mplus DSEM
   output without requiring Mplus:
 
-  - [`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
+  - [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
     — two-level Bayesian VAR(1) with latent mean centring.
     `temporal = "fixed"` is statistically validated against frozen Mplus
     DSEM fixed-temporal + random-intercept fixtures;
     `temporal = "random"` fits the full DSEM with person-specific
     temporal matrices and a random-effect covariance (reports
     random-slope SDs).
-  - [`fit_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_var_bayes.md)
+  - [`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md)
     — single-level Bayesian VAR(1), the unregularized Bayesian analogue
     of
-    [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md).
+    [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md).
 
 - Pure-R conjugate Gibbs sampler (hand-rolled inverse-Wishart draws; no
   new dependencies). Posterior median / SD / 95% CI / one-tailed p,
@@ -98,20 +100,20 @@
   Mplus 9 output with frozen ground-truth fixtures and parity tests.
 
 - Added
-  [`fit_ml()`](https://mohsaqr.github.io/idiographic/reference/fit_ml.md)
+  [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
   for idiographic supervised machine-learning: ordered within-person
   train/test splits, person-specific models, pooled baselines on the
   same held-out rows, regression/classification metrics, row-level
   predictions, and coefficient extraction via
-  [`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md).
+  [`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md).
   `model` names the statistical/ML model (for example, `"ridge"`), while
   `estimator` names the implementation/backend (default `"native"`). No
   new dependencies: native models include mean/majority baselines,
   OLS/logistic, ridge, lasso, elastic net, PCR, LDA, Gaussian naive
   Bayes, kNN, and one-split trees.
-  [`fit_idiographic_ml()`](https://mohsaqr.github.io/idiographic/reference/fit_ml.md)
+  [`fit_idiographic_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
   and
-  [`fit_individualized_ml()`](https://mohsaqr.github.io/idiographic/reference/fit_ml.md)
+  [`fit_individualized_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
   remain aliases.
 
 ## idiographic 0.1.0

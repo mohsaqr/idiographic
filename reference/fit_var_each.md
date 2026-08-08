@@ -1,10 +1,10 @@
 # Fit an ordinary least-squares VAR for every subject
 
 Applies
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 to each subject separately, returning one transparent person-specific
 OLS VAR result per individual. This is the unregularized companion to
-[`fit_graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var_each.md)
+[`fit_graphical_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var_each.md)
 and is useful as an equivalence baseline for checking lag construction,
 scaling, and temporal coefficient direction.
 
@@ -45,7 +45,7 @@ fit_var_each(data, vars, id, day = NULL, beep = NULL, min_obs = NULL, ...)
 - ...:
 
   Further arguments passed to
-  [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md).
+  [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md).
 
 ## Value
 

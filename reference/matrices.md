@@ -2,8 +2,8 @@
 
 `matrices()` is the matrix-oriented companion to
 [`summary()`](https://rdrr.io/r/base/summary.html) and
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md).
-It returns the core estimated matrices invisibly and prints each matrix
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md). It
+returns the core estimated matrices invisibly and prints each matrix
 compactly with rounding, so users can inspect coefficients without
 digging through object internals.
 

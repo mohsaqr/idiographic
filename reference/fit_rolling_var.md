@@ -1,12 +1,12 @@
 # Estimate rolling-window ordinary VAR networks
 
 Fits
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 over ordered, overlapping windows within each subject. This is a simple
 time-varying idiographic baseline: every window uses the same lag
 construction, scaling, within-person centring, and tidy coefficient
 access as
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md),
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md),
 but returns one coefficient table per window.
 
 ## Usage

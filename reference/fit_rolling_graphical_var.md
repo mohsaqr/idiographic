@@ -1,10 +1,10 @@
 # Estimate rolling-window graphical VAR networks
 
 Fits
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 over ordered, overlapping windows within each subject. This is the
 time-varying graphical VAR companion to
-[`fit_rolling_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_var.md):
+[`fit_rolling_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_var.md):
 every window uses graphical VAR's lag construction, EBIC/penalty
 settings, and tidy coefficient access, then returns one coefficient
 table per window.
@@ -92,7 +92,7 @@ fit_rolling_graphical_var(
 - ...:
 
   Further arguments passed to
-  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
   such as `n_lambda`, `gamma`, `lambda_beta`, or `lambda_kappa`.
 
 ## Value

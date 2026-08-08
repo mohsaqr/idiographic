@@ -26,11 +26,11 @@ and differences between windows are within-person variation in estimated
 dynamics, not differences between persons.
 
 Two rolling estimators are provided.
-[`fit_rolling_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_var.md)
+[`fit_rolling_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_var.md)
 refits the ordinary least-squares VAR in each window and is the
 unregularized, time-varying baseline: every window returns a dense
 temporal matrix and a dense contemporaneous matrix.
-[`fit_rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_graphical_var.md)
+[`fit_rolling_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_graphical_var.md)
 refits the penalized two-step estimator in each window — lasso-penalized
 lagged regressions, a graphical lasso on their residuals, the penalty
 selected per window by the extended Bayesian information criterion — so
@@ -84,7 +84,7 @@ silent. The window fits below pose that local question directly.
 `window_size` sets the number of occasions in each local fit, `step`
 sets how far the window advances, and `keep_fits = TRUE` stores each
 fitted window model so that
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
 and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) can inspect
 a selected window afterwards. With Grace’s 156 occasions, a 50-occasion
 window advancing by 20 gives six windows, starting at occasions 1, 21,
@@ -242,7 +242,7 @@ matrices(rolling_ols, fit = 1)
 #> effort        0.186 -0.059    0.136     -0.058 -0.084
 ```
 
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
 with `fit = 1` returns the first window’s coefficient matrices: the
 lag-one temporal matrix, the residual covariance and precision of the
 innovations, and the partial correlations derived from them. The

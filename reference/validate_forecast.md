@@ -7,9 +7,9 @@ interface, defaults, and reported metrics may change in a future
 release.
 
 Performs rolling-origin one-step prediction from
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 or
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md).
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md).
 Each split fits the estimator on earlier blocks and predicts current
 variables in the next block from their lag-1 values. Scaling and
 within-person centring parameters are learned from the training split
@@ -52,9 +52,9 @@ validate_forecast(
 - estimator:
 
   `"var"` (default) for
-  [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+  [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
   or `"graphical_var"` for
-  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md).
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md).
 
 - id:
 

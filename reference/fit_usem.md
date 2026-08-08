@@ -4,7 +4,7 @@ Fits person-specific unified Structural Equation Models (uSEM) for
 intensive longitudinal data. A uSEM combines lagged directed effects,
 optional contemporaneous directed effects, and optional residual
 covariances in one SEM. Unlike
-[`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md),
+[`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md),
 this function does no automated path search: the model is fixed by
 `temporal`, `contemporaneous`, `residual_cov`, and `paths`. With
 `trim = TRUE`, idiographic uses an independent clean-room
@@ -143,14 +143,14 @@ fit_usem(
 A `net_usem` object with average `$temporal`, `$contemporaneous`, and
 `$residual_cov` matrices, per-subject matrices in `$subjects`, a tidy
 coefficient table from
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md),
 fit indices, syntax, labels, and configuration metadata.
 
 ## See also
 
-[`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md),
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
-[`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+[`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md),
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
 
 ## Examples
 

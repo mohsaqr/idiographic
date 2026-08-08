@@ -14,7 +14,7 @@ summary(object, ...)
 - object:
 
   A `net_mlvar` object returned by
-  [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md).
+  [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md).
 
 - ...:
 

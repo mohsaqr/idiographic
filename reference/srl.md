@@ -74,9 +74,9 @@ attribution and transformation details.
 The columns have already been tidied for modelling: rows are ordered by
 `name` then `day`, and `day` is a within-person occasion index (1-156)
 you can pass as the `time` argument to
-[`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md)
+[`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md)
 and
-[`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md).
+[`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md).
 No further ordering, indexing, or column selection is needed before
 fitting a model.
 

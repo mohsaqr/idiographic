@@ -36,7 +36,7 @@ graphical-VAR contemporaneous network is the more conservative summary.
 GIMME, treated in the next vignette, extends the uSEM equation with a
 group-level search that recovers paths shared across people.
 
-[`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md)
+[`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md)
 estimates one SEM per selected person and returns temporal, directed
 contemporaneous, and residual-covariance networks. With one selected
 person, as below, every coefficient is idiographic. With multiple people
@@ -208,14 +208,13 @@ nodes(usem_fit)
 ```
 
 Because the contemporaneous layer is directed,
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md)
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md)
 separates outgoing from incoming weight. Monitoring has the largest
 total contemporaneous strength (0.880); it receives the efficacy path
 and sends the effort path. The full path and residual matrices are
 available from
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
-and
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md).
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md) and
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md).
 
 ``` r
 

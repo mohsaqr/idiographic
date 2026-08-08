@@ -3,14 +3,14 @@
 Native, pure-R Bayesian VAR(1) that reproduces Mplus's Bayesian
 (DSEM/time-series) estimates without needing Mplus. It is the
 unregularized Bayesian counterpart of
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md):
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md):
 instead of a graphical-lasso / EBIC sparse fit, it estimates a full
 VAR(1) with a flat prior on the temporal coefficients and an
 inverse-Wishart prior on the residual precision, then reports the
 temporal network `B` and the contemporaneous partial-correlation network
 derived from the residual covariance. With more than one subject the
 data are within-person centred and pooled (as in
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)).
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)).
 
 ## Usage
 
@@ -69,7 +69,7 @@ fit_var_bayes(
 
   Logical. Within-person centre when \>1 id (removes between-person
   variance, as in
-  [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)).
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)).
   Default `TRUE`.
 
 - n_iter, n_burnin, n_chains, thin:
@@ -98,17 +98,17 @@ fit_var_bayes(
 A `var_bayes_result` object (a cograph group with `temporal` and
 `contemporaneous` netobjects) carrying `beta`, `temporal`, `kappa`,
 `PCC`, `PDC`, posterior draws, and a tidy
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
 table (posterior median, SD, 95% CI, one-tailed p, significance by CI
 excluding 0).
 
 ## See also
 
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
 (regularized GLASSO/EBIC),
-[`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+[`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
 (OLS),
-[`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
+[`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
 (multilevel Bayesian VAR).
 
 ## Examples

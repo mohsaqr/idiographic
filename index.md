@@ -15,12 +15,12 @@ machine-learning models for individualized prediction). Every result has
 tidy [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) and
 [`summary()`](https://rdrr.io/r/base/summary.html) views. Network
 estimates additionally share
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md),
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md),
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md),
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md),
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md),
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md),
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md),
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html), and
-[`as_netobject()`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md).
+[`as_netobject()`](https://pak.dynasite.org/idiographic/reference/as_netobject.md).
 
 ## Clean-room by design
 
@@ -30,11 +30,11 @@ reference outputs where a reference implementation is available:
 
 | Estimator | Method | Validated against | Agreement |
 |----|----|----|----|
-| [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md) | Regularized graphical VAR (graphical lasso + EBIC) | `graphicalVAR` | committed tolerance 1e-6 across the supported lag-1 beta/kappa option matrix |
-| [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md) | Multilevel and person-specific VAR | `mlVAR` 0.7.3 | committed tolerance 1e-8 across 20 real ESM panels plus fixed `lmer` lag 1/1+2, preprocessing, and lag-1 `lm`/unique oracle slices |
-| [`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md) | Group and individual uSEM path search | `gimme` 10.0 | exact search/matrix agreement on bivariate and three-variable standard/hybrid/VAR panels, including exogenous and uneven-panel structures; fit tables within 5e-5 |
-| [`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md) | Native Bayesian multilevel VAR / **DSEM** | real **Mplus DSEM** + Stan/JAGS | Monte-Carlo error |
-| [`fit_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_var_bayes.md) | Native Bayesian VAR(1) | real **Mplus** `ESTIMATOR = BAYES` | committed statistical bounds 0.02-0.03 |
+| [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md) | Regularized graphical VAR (graphical lasso + EBIC) | `graphicalVAR` | committed tolerance 1e-6 across the supported lag-1 beta/kappa option matrix |
+| [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md) | Multilevel and person-specific VAR | `mlVAR` 0.7.3 | committed tolerance 1e-8 across 20 real ESM panels plus fixed `lmer` lag 1/1+2, preprocessing, and lag-1 `lm`/unique oracle slices |
+| [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md) | Group and individual uSEM path search | `gimme` 10.0 | exact search/matrix agreement on bivariate and three-variable standard/hybrid/VAR panels, including exogenous and uneven-panel structures; fit tables within 5e-5 |
+| [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md) | Native Bayesian multilevel VAR / **DSEM** | real **Mplus DSEM** + Stan/JAGS | Monte-Carlo error |
+| [`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md) | Native Bayesian VAR(1) | real **Mplus** `ESTIMATOR = BAYES` | committed statistical bounds 0.02-0.03 |
 
 The CRAN package is offline-first: its only imports are the standard R
 packages `stats`, `utils`, and `parallel`, which ship with R. It has
@@ -46,7 +46,7 @@ repository’s separate `validation/` lane and are not shipped in the CRAN
 tarball.
 
 The Bayesian DSEM sampler is a particular highlight:
-[`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
+[`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
 targets the output of `mlVAR::mlVAR(estimator = "Mplus")` — Mplus’s
 two-level Bayesian VAR with latent mean centring — **without Mplus
 installed**, using a pure-R conjugate Gibbs sampler with hand-rolled
@@ -127,15 +127,15 @@ argument_coverage("mlvar")
 ```
 
 All fitting functions use named, readable arguments.
-[`list_estimators()`](https://mohsaqr.github.io/idiographic/reference/list_estimators.md),
-[`estimator_info()`](https://mohsaqr.github.io/idiographic/reference/estimator_info.md),
+[`list_estimators()`](https://pak.dynasite.org/idiographic/reference/list_estimators.md),
+[`estimator_info()`](https://pak.dynasite.org/idiographic/reference/estimator_info.md),
 and
-[`get_estimator()`](https://mohsaqr.github.io/idiographic/reference/get_estimator.md)
+[`get_estimator()`](https://pak.dynasite.org/idiographic/reference/get_estimator.md)
 expose the registry; custom methods can be added with
-[`register_estimator()`](https://mohsaqr.github.io/idiographic/reference/register_estimator.md).
-[`equivalence_table()`](https://mohsaqr.github.io/idiographic/reference/equivalence_table.md)
+[`register_estimator()`](https://pak.dynasite.org/idiographic/reference/register_estimator.md).
+[`equivalence_table()`](https://pak.dynasite.org/idiographic/reference/equivalence_table.md)
 reports the package-wide evidence status, while
-[`argument_coverage()`](https://mohsaqr.github.io/idiographic/reference/argument_coverage.md)
+[`argument_coverage()`](https://pak.dynasite.org/idiographic/reference/argument_coverage.md)
 guarantees every current public formal is classified as
 oracle/engine/statistical/internal, delegated, extension, or an explicit
 rejection boundary.
@@ -166,48 +166,48 @@ fit_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
 
 **Estimators**
 
-- [`fit_var()`](https://mohsaqr.github.io/idiographic/reference/fit_var.md)
+- [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
   /
-  [`fit_var_each()`](https://mohsaqr.github.io/idiographic/reference/fit_var_each.md)
+  [`fit_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_var_each.md)
   — ordinary VAR(1) (OLS), pooled or per subject
-- [`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md)
+- [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
   /
-  [`fit_graphical_var_each()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var_each.md)
+  [`fit_graphical_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var_each.md)
   — regularized graphical VAR (GLASSO + EBIC), including explicit
   multi-lag layers
-- [`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md)
+- [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
   — frequentist multilevel VAR with fixed, correlated, orthogonal, or
   unique person-specific temporal/contemporaneous structures
-- [`fit_mlvar_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_bayes.md)
+- [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
   — native Bayesian multilevel VAR / DSEM (fixed or random slopes, fixed
   or random residual covariance, optional within-model imputation)
-- [`fit_var_bayes()`](https://mohsaqr.github.io/idiographic/reference/fit_var_bayes.md)
+- [`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md)
   — native Bayesian VAR(1)
-- [`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md)
+- [`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md)
   — true-Mplus backend (wraps `mlVAR(estimator = "Mplus")`)
-- [`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md)
+- [`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md)
   — unified Structural Equation Modeling (lavaan)
-- [`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md)
+- [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md)
   — Group Iterative Multiple Model Estimation with explicit
   Bonferroni/FDR corrections, alpha, and stopping criteria
-- [`fit_ml()`](https://mohsaqr.github.io/idiographic/reference/fit_ml.md)
+- [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
   — individualized supervised prediction models, comparing
   person-specific models against a pooled baseline on held-out
   within-person rows, with no new dependencies
 
 **Workflow & diagnostics**
 
-- [`preprocess()`](https://mohsaqr.github.io/idiographic/reference/preprocess.md)
+- [`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md)
   — preprocessing audit for ILD (compliance, variance, stationarity)
-- [`estimate_stability()`](https://mohsaqr.github.io/idiographic/reference/estimate_stability.md)
+- [`estimate_stability()`](https://pak.dynasite.org/idiographic/reference/estimate_stability.md)
   — bootstrap edge-stability diagnostics (*experimental*)
-- [`fit_rolling_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_var.md)
+- [`fit_rolling_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_var.md)
   /
-  [`fit_rolling_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_rolling_graphical_var.md)
+  [`fit_rolling_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_rolling_graphical_var.md)
   — rolling-window (time-varying) networks
-- [`validate_forecast()`](https://mohsaqr.github.io/idiographic/reference/validate_forecast.md)
+- [`validate_forecast()`](https://pak.dynasite.org/idiographic/reference/validate_forecast.md)
   — rolling out-of-sample forecast validation (*experimental*)
-- [`compare_idiographic()`](https://mohsaqr.github.io/idiographic/reference/compare_idiographic.md)
+- [`compare_idiographic()`](https://pak.dynasite.org/idiographic/reference/compare_idiographic.md)
   — model-comparison reports
 
 **Tidy contract**
@@ -218,14 +218,14 @@ Every result:
 [`print()`](https://rdrr.io/r/base/print.html)
 
 Network results:
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md) ·
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md) ·
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md) ·
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md) ·
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md) ·
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md) ·
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
 · [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
-[`plot_gimme()`](https://mohsaqr.github.io/idiographic/reference/plot_gimme.md)
+[`plot_gimme()`](https://pak.dynasite.org/idiographic/reference/plot_gimme.md)
 ·
-[`as_netobject()`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md)
+[`as_netobject()`](https://pak.dynasite.org/idiographic/reference/as_netobject.md)
 
 ### Idiographic machine learning
 

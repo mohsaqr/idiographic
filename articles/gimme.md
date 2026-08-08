@@ -28,12 +28,12 @@ nothing about the size or sign of the effect. The per-person
 coefficients live in the individual models and are reported separately.
 
 This placement distinguishes GIMME from its neighbours. Multilevel VAR
-([`fit_mlvar()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar.md))
+([`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md))
 pools all subjects into a single fixed-effect average temporal matrix
 and treats person-level departures as random effects around it; GIMME
 instead keeps one structural model per person and asks which paths
 replicate. Unified SEM
-([`fit_usem()`](https://mohsaqr.github.io/idiographic/reference/fit_usem.md))
+([`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md))
 fits the same person-specific model class for a single subject, with no
 group search; GIMME is the multi-subject extension that adds the
 replication rule. The method is appropriate when theory expects both
@@ -167,7 +167,7 @@ summary(gimme_fit)
 The temporal layer holds six cross-variable edges at density 0.30 and
 mean prevalence 0.250; the contemporaneous layer holds 11 directed edges
 at density 0.55 and mean prevalence 0.409. The
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
 accessor lists every retained path with its layer, prevalence, and
 level.
 
@@ -229,12 +229,12 @@ nodes(gimme_fit)
 #> 10 contemporaneous     effort     1.50         0.50        1.00    0
 ```
 
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
 supplies the person-specific estimates that the prevalence display
 abstracts away: one row per subject, layer, and path. The displayed rows
 begin with Jamal and show why prevalence and coefficient magnitude are
 separate quantities. The
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md)
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md)
 table sums prevalence over incident edges. Planning is the most
 connected contemporaneous node (strength 2.25), while value is most
 connected temporally (strength 1.00); the `self` column separately
@@ -307,7 +307,7 @@ matrices(gimme_fit)
 #> effort            0     0        0          0      0
 ```
 
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
 returns the count and sample-average coefficient matrices behind these
 tables, with outcomes on the rows and predictors on the columns. The
 temporal count matrix has 4 on its diagonal and at most 1 in an

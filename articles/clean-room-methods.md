@@ -21,13 +21,13 @@ al. 2018](#ref-epskamp2018mlvar)).
 The accessor contract is deliberately small.
 [`summary()`](https://rdrr.io/r/base/summary.html) reports network-level
 density and signed-edge counts.
-[`edges()`](https://mohsaqr.github.io/idiographic/reference/edges.md)
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
 returns one row per edge.
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md)
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
 includes full coefficient cells when available.
-[`nodes()`](https://mohsaqr.github.io/idiographic/reference/nodes.md)
+[`nodes()`](https://pak.dynasite.org/idiographic/reference/nodes.md)
 summarizes strength, out-strength, in-strength, and self-loops.
-[`matrices()`](https://mohsaqr.github.io/idiographic/reference/matrices.md)
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
 returns the estimator matrices. This common surface makes estimator
 differences visible without erasing them.
 

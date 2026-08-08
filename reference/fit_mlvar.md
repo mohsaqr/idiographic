@@ -131,7 +131,7 @@ fit_mlvar(
 
   Estimation engine: `"frequentist"` (native lme4/base R), `"bayes"`
   (the native DSEM sampler), `"mplus"` (licensed Mplus through
-  [`fit_mlvar_mplus()`](https://mohsaqr.github.io/idiographic/reference/fit_mlvar_mplus.md)),
+  [`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md)),
   or `"reference"` (direct
   [`mlVAR::mlVAR()`](https://rdrr.io/pkg/mlVAR/man/mlVAR.html) followed
   by conversion to idiographic's tidy result contract).
@@ -189,7 +189,7 @@ stored as attributes. Each element is a standard
 `c("netobject", "cograph_network")` weight-matrix wrapper (no raw
 `$data`), so [`print()`](https://rdrr.io/r/base/print.html),
 [`summary()`](https://rdrr.io/r/base/summary.html),
-[`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md),
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md),
 and `cograph::splot(fit$temporal)` work directly. The three constituents
 are matrix-wrapped and carry no underlying panel data, so any
 data-resampling workflow (bootstrap, reliability, stability) must start
@@ -220,7 +220,7 @@ from the original panel rather than from these wrappers. Structure:
   strict reference equivalence in the singular case.
 
 - `attr(fit, "coefs")` /
-  [`coefs()`](https://mohsaqr.github.io/idiographic/reference/coefs.md):
+  [`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md):
 
   Tidy `data.frame` with one row per `(outcome, predictor)` pair and
   columns `outcome`, `predictor`, `beta`, `se`, `t`, `p`, `ci_lower`,
@@ -274,7 +274,7 @@ The committed oracle matrix validates fixed temporal/contemporaneous
 and lag-1 `estimator = "lm"`, `temporal = "unique"` fits across every
 supported contemporaneous structure. Other configurations carry a
 narrower declaration available through
-[`equivalence()`](https://mohsaqr.github.io/idiographic/reference/equivalence.md).
+[`equivalence()`](https://pak.dynasite.org/idiographic/reference/equivalence.md).
 
 ## Observation keys
 
@@ -287,9 +287,9 @@ deduplicate the source data.
 
 ## See also
 
-[`fit_gimme()`](https://mohsaqr.github.io/idiographic/reference/fit_gimme.md),
-[`fit_graphical_var()`](https://mohsaqr.github.io/idiographic/reference/fit_graphical_var.md),
-[`as_netobject()`](https://mohsaqr.github.io/idiographic/reference/as_netobject.md)
+[`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md),
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
+[`as_netobject()`](https://pak.dynasite.org/idiographic/reference/as_netobject.md)
 
 ## Examples
 
