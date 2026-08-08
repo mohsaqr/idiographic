@@ -1,3 +1,7 @@
-url: https://mohsaqr.github.io/idiographic/
+# Served from pak.dynasite.org, not GitHub Pages: the mohsaqr.github.io user site
+# CNAMEs to saqr.me, so project pages resolve to saqr.me/<repo>/ — which 404s.
+# The gh-pages branch built below is mirrored to pak.dynasite.org by the
+# dynasite-infra cron (see dynasite-infra/PACKAGES.md).
+url: https://pak.dynasite.org/idiographic
 template:
   bootstrap: 5

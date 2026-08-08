@@ -27,7 +27,7 @@ License: GPL-3
 Encoding: UTF-8
 Language: en-GB
 LazyData: TRUE
-URL: https://github.com/mohsaqr/idiographic
+URL: https://pak.dynasite.org/idiographic, https://github.com/mohsaqr/idiographic
 BugReports: https://github.com/mohsaqr/idiographic/issues
 Depends:
     R (>= 4.1)
