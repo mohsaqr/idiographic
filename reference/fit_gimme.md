@@ -214,22 +214,27 @@ fit_gimme(
 - subgroup:
 
   Logical. Subgrouping (S-GIMME) is not implemented; `TRUE` raises an
-  error pointing to `gimme::gimme()`. Default `FALSE`.
+  error pointing to
+  [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html).
+  Default `FALSE`.
 
 - outcome, conv_vars, mult_vars, lv_model, lasso_model_crit, ms_allow,
   ordered, dir_prop_cutoff:
 
-  Accepted for `gimme::gimme()` API parity but not implemented (latent
-  variable / fMRI-convolution / multiplied-term / LASSO / ordinal /
-  multiple-solutions / directionality features). A non-default value
-  raises an error pointing to `gimme::gimme()`.
+  Accepted for
+  [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html) API
+  parity but not implemented (latent variable / fMRI-convolution /
+  multiplied-term / LASSO / ordinal / multiple-solutions /
+  directionality features). A non-default value raises an error pointing
+  to [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html).
 
 - out, sep, header, plot:
 
-  Accepted for `gimme::gimme()` API parity. idiographic reads a
-  `data.frame` (not a CSV directory), so non-default `out`, `sep`, and
-  `header` values emit a warning and have no effect. It returns an
-  object you plot with
+  Accepted for
+  [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html) API
+  parity. idiographic reads a `data.frame` (not a CSV directory), so
+  non-default `out`, `sep`, and `header` values emit a warning and have
+  no effect. It returns an object you plot with
   [`plot_gimme()`](https://pak.dynasite.org/idiographic/reference/plot_gimme.md);
   `plot = TRUE` emits a message.
 
@@ -237,10 +242,11 @@ fit_gimme(
   conv_length, conv_interval, mean_center_mult, diagnos, ms_tol,
   lv_estimator, lv_scores, lv_miiv_scaling, lv_final_estimator:
 
-  Accepted for `gimme::gimme()` API parity. These configure the
-  unsupported subgrouping / convolution / multiplied-term /
-  multiple-solutions / latent-variable features and are inert here
-  (their parent feature is guarded above).
+  Accepted for
+  [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html) API
+  parity. These configure the unsupported subgrouping / convolution /
+  multiplied-term / multiple-solutions / latent-variable features and
+  are inert here (their parent feature is guarded above).
 
 ## Value
 
@@ -265,7 +271,8 @@ An S3 object of class `"net_gimme"` containing:
 
   List of per-person `q x (q + p)` standardized residual covariance
   matrices, with non-exogenous current variables in rows and
-  `c(lag_names, varnames)` in columns, matching `gimme::gimme()`'s
+  `c(lag_names, varnames)` in columns, matching
+  [`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html)'s
   returned `psi` contract.
 
 - `fit`:
