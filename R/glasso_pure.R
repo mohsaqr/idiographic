@@ -93,6 +93,16 @@
       stop(".glasso_fit(): matrix 'rho' must be p x p, finite, non-negative.",
            call. = FALSE)
     }
+    # The penalty on edge (i, j) is a single scalar: the objective's L1 term is
+    # rho_ij * |Theta_ij| over an inherently symmetric Theta. An asymmetric Rho
+    # is therefore not a stricter model, it is ill-posed -- the column sweep
+    # would consume rho[i, j] going one way and rho[j, i] the other, and the
+    # forced symmetrisation of Theta afterwards would leave a solution that
+    # optimises neither. Reject rather than silently pick one triangle.
+    if (max(abs(rho - t(rho))) > 1e-12) {
+      stop(".glasso_fit(): matrix 'rho' must be symmetric; the penalty on ",
+           "edge (i, j) is a single scalar.", call. = FALSE)
+    }
     Rho <- rho
   } else {
     if (!(is.numeric(rho) && length(rho) == 1L && is.finite(rho) && rho >= 0)) {
@@ -213,20 +223,52 @@
 #' By strict convexity, a Theta with zero violation is the unique global
 #' optimum, so a near-zero return certifies correctness independently of glasso.
 #'
+#' When the diagonal IS penalised the diagonal condition becomes
+#'   W_ii - S_ii = rho_ii
+#' because Theta_ii > 0 always, so its subgradient is +1. Measuring the
+#' unpenalised condition against a penalised fit reports a spurious violation of
+#' exactly rho -- glasso's own Fortran output fails it identically -- so
+#' `penalize_diagonal` must be passed through, not assumed.
+#'
 #' @param Theta Precision matrix to test.
 #' @param S Covariance / correlation the model was fit to.
-#' @param rho Scalar penalty.
+#' @param rho Scalar penalty, or a p x p matrix of element-wise penalties.
 #' @param active_tol Magnitude above which an off-diagonal entry is "active".
+#' @param penalize_diagonal Logical; was the diagonal penalised in the fit?
+#' @param zero Optional two-column matrix of hard-constrained (row, col) index
+#'   pairs; those entries are excluded from the off-diagonal check.
 #' @return Maximum absolute stationarity violation (scalar).
 #' @noRd
-.glasso_kkt_violation <- function(Theta, S, rho, active_tol = 1e-8) {
+.glasso_kkt_violation <- function(Theta, S, rho, active_tol = 1e-8,
+                                  penalize_diagonal = FALSE, zero = NULL) {
+  p <- ncol(Theta)
+  Rho <- if (is.matrix(rho)) rho else matrix(rho, p, p)
   W <- solve(Theta)
-  diag_v <- max(abs(diag(W) - diag(S)))
+  diag_target <- if (isTRUE(penalize_diagonal)) diag(Rho) else 0
+  diag_v <- max(abs(diag(W) - diag(S) - diag_target))
   off <- upper.tri(Theta)
-  r  <- (W - S)[off]
-  th <- Theta[off]
+
+  # Hard-constrained entries are NOT governed by the inactive-edge inequality.
+  # Theta_ij = 0 there is imposed by an equality constraint whose Lagrange
+  # multiplier absorbs (W_ij - S_ij) entirely, so |W_ij - S_ij| may exceed
+  # rho_ij at a perfectly optimal solution. Including them turns a correct fit
+  # into a reported violation.
+  keep <- rep(TRUE, sum(off))
+  if (!is.null(zero) && nrow(zero) > 0L) {
+    zmask <- matrix(FALSE, p, p)
+    zmask[zero] <- TRUE
+    zmask[zero[, c(2L, 1L), drop = FALSE]] <- TRUE
+    diag(zmask) <- FALSE
+    keep <- !zmask[off]
+  }
+
+  r  <- (W - S)[off][keep]
+  th <- Theta[off][keep]
+  rh <- Rho[off][keep]
   active <- abs(th) > active_tol
-  v_active   <- if (any(active))  max(abs(r[active] - rho * sign(th[active]))) else 0
-  v_inactive <- if (any(!active)) max(pmax(abs(r[!active]) - rho, 0)) else 0
+  v_active   <- if (any(active))
+    max(abs(r[active] - rh[active] * sign(th[active]))) else 0
+  v_inactive <- if (any(!active))
+    max(pmax(abs(r[!active]) - rh[!active], 0)) else 0
   max(diag_v, v_active, v_inactive)
 }

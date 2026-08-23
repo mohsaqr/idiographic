@@ -1,3 +1,68 @@
+# idiographic 0.3.3
+
+## New features
+
+* The pure-R graphical-lasso kernel that powers `fit_graphical_var()` is now a
+  supported public API: `glasso_fit()`, `glasso_path()`, and `glasso_kkt()`.
+  `glasso_fit()` returns a `glasso_result` whose `$wi` and `$w` elements are
+  named exactly as `glasso::glasso()`'s, so existing call sites port unchanged,
+  and it supports element-wise penalty matrices and hard zero constraints in
+  addition to a scalar penalty. `glasso_kkt()` certifies a solution from the
+  graphical-lasso stationarity conditions rather than against another solver.
+  Both results have `print()` and tidy `as.data.frame()` methods. This exists so
+  sibling packages can drop their own copies of the same kernel and depend on
+  this one; see `OFFLOAD.md` in the repository.
+
+* `matrices()` gains a `print` argument. The default (`print = TRUE`) is
+  unchanged: it prints each matrix and returns the list invisibly. With
+  `print = FALSE` the function prints nothing and returns the list visibly,
+  which is the form dependent packages and resampling loops need. Threaded
+  through every `matrices()` method, including those that delegate to another
+  method. `print` follows `...` in every method, so it must be named in full
+  and can never be matched positionally or by partial name.
+
+## Bug fixes
+
+* `glasso_kkt()` no longer reports optimal zero-constrained fits as
+  non-optimal. At an entry hard-constrained by `zero`, the inactive-edge
+  condition `|W_ij - S_ij| <= rho_ij` does not apply: the equality constraint
+  carries its own Lagrange multiplier, which absorbs the residual. Constrained
+  pairs are now excluded from the check. A fit matching `glasso`'s Fortran
+  kernel to 2e-12 previously certified as violating optimality by 0.028.
+
+* `glasso_fit()` now rejects a covariance matrix that is not positive
+  semi-definite (classed condition `idiographic_not_psd`). A negative
+  eigenvalue produced a precision matrix with a negative diagonal, from which
+  every partial correlation was `NaN`. Singular but positive semi-definite
+  covariances remain valid input. The tidy accessor also refuses a precision
+  matrix with a non-positive diagonal (`idiographic_bad_precision`) rather than
+  letting `stats::cov2cor()` warn and emit `NaN` weights.
+
+* An asymmetric element-wise penalty matrix is now rejected by `glasso_fit()`
+  and by `fit_graphical_var()`'s `regularize_mat_kappa`. The penalty on edge
+  `(i, j)` is a single scalar over a symmetric `Theta`, so an asymmetric
+  penalty is ill-posed rather than stricter; previously it was accepted and
+  produced a fit that failed the package's own optimality check.
+
+* `glasso_kkt()` validates `penalize_diagonal` instead of letting `isTRUE()`
+  silently map `NA` and other invalid values to `FALSE`, and warns
+  (`idiographic_glasso_kkt_override`) when a supplied `rho` or
+  `penalize_diagonal` differs from the one the fit was made with, since the
+  returned violation then certifies a different problem.
+
+* The internal graphical-lasso optimality checker used to measure the
+  *unpenalised* diagonal stationarity condition (`W_ii = S_ii`) even for fits
+  made with `penalize.diagonal = TRUE`, whose condition is `W_ii - S_ii = rho`.
+  It therefore reported a spurious violation of exactly `rho` for every such
+  fit — including `glasso`'s own Fortran output, which is how this was found.
+  It now takes the diagonal-penalty flag into account. No estimator result and
+  no previously published number changes; only the diagnostic was wrong.
+
+## Documentation
+
+* `matrices()` now documents that it is a display verb by default, and points
+  at `print = FALSE` for programmatic extraction.
+
 # idiographic 0.3.2
 
 * New package Title — "Idiographic Person-Specific and Heterogeneous Complex

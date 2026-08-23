@@ -320,6 +320,7 @@ test_that("equivalence declarations distinguish validated and extension slices",
   expect_identical(equivalence(multi_gvar)$status, "supported_extension")
   expect_true(is.na(equivalence(multi_gvar)$tolerance))
 
+  skip_if_not_installed("lme4")   # the mlvar dispatch below uses estimator = "lmer"
   panel <- synth_panel(n_id = 8, days = 2, beeps = 10, seed = 503)
   random_mlvar <- suppressWarnings(fit_idiographic(
     panel, "mlvar", vars = c("A", "B", "C"), id = "id", day = "day",

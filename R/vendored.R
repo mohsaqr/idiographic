@@ -1014,75 +1014,91 @@ nodes.gvar_list <- function(x, ...) .ido_stack_subject_tables(x, nodes, ...)
 #' Print model matrices for idiographic results
 #'
 #' `matrices()` is the matrix-oriented companion to [summary()] and [edges()].
-#' It returns the core estimated matrices invisibly and prints each matrix
+#' It returns the core estimated matrices and, by default, prints each one
 #' compactly with rounding, so users can inspect coefficients without digging
 #' through object internals.
 #'
+#' Pass `print = FALSE` to suppress the console output and get the named list
+#' back visibly. That is the form other code should call: extracting matrices
+#' inside a loop, a bootstrap, or a dependent package should not write to the
+#' console.
+#'
 #' @param x An idiographic result or cograph network/group.
 #' @param digits Number of digits used for printing. Default `3`.
+#' @param print Logical. Print the matrices to the console? Default `TRUE`,
+#'   which also returns the list *invisibly*. Use `print = FALSE` for
+#'   programmatic extraction: the function itself prints nothing and returns the
+#'   list visibly (so a bare call at the console still auto-prints the returned
+#'   value -- assign it, or wrap in `invisible()`, to see nothing at all).
+#'   `print` follows `...` in every method, so it must be named in full;
+#'   it can never be matched positionally or by partial name.
 #' @param fit Stored fit name or index for result containers that optionally keep
 #'   fitted models, such as rolling results and model comparisons.
 #' @param subject Subject name or index for per-subject VAR/GVAR result lists.
 #' @param ... Passed to methods.
-#' @return Invisibly, a named list of matrices.
+#' @return A named list of matrices: invisibly when `print = TRUE` (the
+#'   default), visibly when `print = FALSE`.
 #' @examples
 #' W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
 #'             dimnames = list(c("A", "B"), c("A", "B")))
 #' x <- structure(list(weights = W, method = "relative", directed = TRUE),
 #'                class = "cograph_network")
 #' matrices(as_netobject(x))
+#'
+#' # programmatic extraction: silent, and returned visibly
+#' str(matrices(as_netobject(x), print = FALSE))
 #' @export
 matrices <- function(x, ...) UseMethod("matrices")
 
 #' @rdname matrices
 #' @export
-matrices.default <- function(x, digits = 3, ...) {
+matrices.default <- function(x, digits = 3, ..., print = TRUE) {
   stop("No matrices() method for <",
        paste(class(x), collapse = "/"), ">.", call. = FALSE)
 }
 
 #' @rdname matrices
 #' @export
-matrices.cograph_network <- function(x, digits = 3, ...) {
+matrices.cograph_network <- function(x, digits = 3, ..., print = TRUE) {
   out <- if (!is.null(x$weights) && is.matrix(x$weights)) {
     list(weights = x$weights)
   } else {
     list()
   }
-  .ido_print_matrices(out, digits = digits)
+  .ido_print_matrices(out, digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.netobject <- function(x, digits = 3, ...) {
-  matrices.cograph_network(x, digits = digits, ...)
+matrices.netobject <- function(x, digits = 3, ..., print = TRUE) {
+  matrices.cograph_network(x, digits = digits, print = print, ...)
 }
 
 #' @rdname matrices
 #' @export
-matrices.netobject_group <- function(x, digits = 3, ...) {
+matrices.netobject_group <- function(x, digits = 3, ..., print = TRUE) {
   out <- lapply(unclass(x), function(net) {
     if (!is.null(net$weights) && is.matrix(net$weights)) net$weights else NULL
   })
   out <- out[!vapply(out, is.null, logical(1))]
-  .ido_print_matrices(out, digits = digits)
+  .ido_print_matrices(out, digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.gvar_result <- function(x, digits = 3, ...) {
+matrices.gvar_result <- function(x, digits = 3, ..., print = TRUE) {
   .ido_print_matrices(list(
     beta = x$beta,
     temporal = x$temporal,
     kappa = x$kappa,
     PCC = x$PCC,
     PDC = x$PDC
-  ), digits = digits)
+  ), digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.var_result <- function(x, digits = 3, ...) {
+matrices.var_result <- function(x, digits = 3, ..., print = TRUE) {
   .ido_print_matrices(list(
     beta = x$beta,
     temporal = x$temporal,
@@ -1090,33 +1106,33 @@ matrices.var_result <- function(x, digits = 3, ...) {
     kappa = x$kappa,
     PCC = x$PCC,
     PDC = x$PDC
-  ), digits = digits)
+  ), digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.net_mlvar <- function(x, digits = 3, ...) {
+matrices.net_mlvar <- function(x, digits = 3, ..., print = TRUE) {
   temporal_names <- grep("^temporal($|_lag)", names(x), value = TRUE)
   mats <- lapply(temporal_names, function(nm) x[[nm]]$weights)
   names(mats) <- temporal_names
   mats$contemporaneous <- x$contemporaneous$weights
   mats$between <- x$between$weights
-  .ido_print_matrices(mats, digits = digits)
+  .ido_print_matrices(mats, digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.net_usem <- function(x, digits = 3, ...) {
+matrices.net_usem <- function(x, digits = 3, ..., print = TRUE) {
   .ido_print_matrices(list(
     temporal = x$temporal,
     contemporaneous = x$contemporaneous,
     residual_cov = x$residual_cov
-  ), digits = digits)
+  ), digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.net_gimme <- function(x, digits = 3, ...) {
+matrices.net_gimme <- function(x, digits = 3, ..., print = TRUE) {
   mats <- list(
     temporal_counts = x$temporal,
     temporal_avg = x$temporal_avg,
@@ -1126,49 +1142,49 @@ matrices.net_gimme <- function(x, digits = 3, ...) {
   )
   if (!is.null(x$contemp_cov)) mats$contemp_cov <- x$contemp_cov
   if (!is.null(x$contemp_cov_avg)) mats$contemp_cov_avg <- x$contemp_cov_avg
-  .ido_print_matrices(mats, digits = digits)
+  .ido_print_matrices(mats, digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.preprocess_result <- function(x, digits = 3, ...) {
-  .ido_print_matrices(x$matrices, digits = digits)
+matrices.preprocess_result <- function(x, digits = 3, ..., print = TRUE) {
+  .ido_print_matrices(x$matrices, digits = digits, print = print)
 }
 
 #' @rdname matrices
 #' @export
-matrices.rolling_var_result <- function(x, fit = 1L, digits = 3, ...) {
-  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
+matrices.rolling_var_result <- function(x, fit = 1L, digits = 3, ..., print = TRUE) {
+  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, print = print, ...)
 }
 
 #' @rdname matrices
 #' @export
-matrices.rolling_gvar_result <- function(x, fit = 1L, digits = 3, ...) {
-  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
+matrices.rolling_gvar_result <- function(x, fit = 1L, digits = 3, ..., print = TRUE) {
+  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, print = print, ...)
 }
 
 #' @rdname matrices
 #' @export
-matrices.stability_result <- function(x, digits = 3, ...) {
-  matrices(x$original, digits = digits, ...)
+matrices.stability_result <- function(x, digits = 3, ..., print = TRUE) {
+  matrices(x$original, digits = digits, print = print, ...)
 }
 
 #' @rdname matrices
 #' @export
-matrices.model_comparison <- function(x, fit = 1L, digits = 3, ...) {
-  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, ...)
+matrices.model_comparison <- function(x, fit = 1L, digits = 3, ..., print = TRUE) {
+  matrices(.ido_pick_fit(x$fits, fit, "fit"), digits = digits, print = print, ...)
 }
 
 #' @rdname matrices
 #' @export
-matrices.var_list <- function(x, subject = 1L, digits = 3, ...) {
-  matrices(.ido_pick_fit(x, subject, "subject"), digits = digits, ...)
+matrices.var_list <- function(x, subject = 1L, digits = 3, ..., print = TRUE) {
+  matrices(.ido_pick_fit(x, subject, "subject"), digits = digits, print = print, ...)
 }
 
 #' @rdname matrices
 #' @export
-matrices.gvar_list <- function(x, subject = 1L, digits = 3, ...) {
-  matrices(.ido_pick_fit(x, subject, "subject"), digits = digits, ...)
+matrices.gvar_list <- function(x, subject = 1L, digits = 3, ..., print = TRUE) {
+  matrices(.ido_pick_fit(x, subject, "subject"), digits = digits, print = print, ...)
 }
 
 #' @keywords internal
@@ -1238,14 +1254,15 @@ matrices.gvar_list <- function(x, subject = 1L, digits = 3, ...) {
 
 #' @keywords internal
 #' @noRd
-.ido_print_matrices <- function(x, digits = 3) {
+.ido_print_matrices <- function(x, digits = 3, print = TRUE) {
+  if (!isTRUE(print)) return(x)
   if (length(x) == 0L) {
     cat("No matrix payload available.\n")
     return(invisible(x))
   }
   for (nm in names(x)) {
     cat("\n$", nm, "\n", sep = "")
-    print(round(x[[nm]], digits))
+    base::print(round(x[[nm]], digits))
   }
   invisible(x)
 }

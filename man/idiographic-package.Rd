@@ -27,6 +27,7 @@ share \code{\link[=edges]{edges()}}, \code{\link[=coefs]{coefs()}}, \code{\link[
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://pak.dynasite.org/idiographic/}
   \item \url{https://github.com/mohsaqr/idiographic}
   \item Report bugs at \url{https://github.com/mohsaqr/idiographic/issues}
 }

@@ -22,37 +22,37 @@
 \usage{
 matrices(x, ...)
 
-\method{matrices}{default}(x, digits = 3, ...)
+\method{matrices}{default}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{cograph_network}(x, digits = 3, ...)
+\method{matrices}{cograph_network}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{netobject}(x, digits = 3, ...)
+\method{matrices}{netobject}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{netobject_group}(x, digits = 3, ...)
+\method{matrices}{netobject_group}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{gvar_result}(x, digits = 3, ...)
+\method{matrices}{gvar_result}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{var_result}(x, digits = 3, ...)
+\method{matrices}{var_result}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{net_mlvar}(x, digits = 3, ...)
+\method{matrices}{net_mlvar}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{net_usem}(x, digits = 3, ...)
+\method{matrices}{net_usem}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{net_gimme}(x, digits = 3, ...)
+\method{matrices}{net_gimme}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{preprocess_result}(x, digits = 3, ...)
+\method{matrices}{preprocess_result}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{rolling_var_result}(x, fit = 1L, digits = 3, ...)
+\method{matrices}{rolling_var_result}(x, fit = 1L, digits = 3, ..., print = TRUE)
 
-\method{matrices}{rolling_gvar_result}(x, fit = 1L, digits = 3, ...)
+\method{matrices}{rolling_gvar_result}(x, fit = 1L, digits = 3, ..., print = TRUE)
 
-\method{matrices}{stability_result}(x, digits = 3, ...)
+\method{matrices}{stability_result}(x, digits = 3, ..., print = TRUE)
 
-\method{matrices}{model_comparison}(x, fit = 1L, digits = 3, ...)
+\method{matrices}{model_comparison}(x, fit = 1L, digits = 3, ..., print = TRUE)
 
-\method{matrices}{var_list}(x, subject = 1L, digits = 3, ...)
+\method{matrices}{var_list}(x, subject = 1L, digits = 3, ..., print = TRUE)
 
-\method{matrices}{gvar_list}(x, subject = 1L, digits = 3, ...)
+\method{matrices}{gvar_list}(x, subject = 1L, digits = 3, ..., print = TRUE)
 }
 \arguments{
 \item{x}{An idiographic result or cograph network/group.}
@@ -61,19 +61,34 @@ matrices(x, ...)
 
 \item{digits}{Number of digits used for printing. Default \code{3}.}
 
+\item{print}{Logical. Print the matrices to the console? Default \code{TRUE},
+which also returns the list \emph{invisibly}. Use \code{print = FALSE} for
+programmatic extraction: the function itself prints nothing and returns the
+list visibly (so a bare call at the console still auto-prints the returned
+value -- assign it, or wrap in \code{invisible()}, to see nothing at all).
+\code{print} follows \code{...} in every method, so it must be named in full;
+it can never be matched positionally or by partial name.}
+
 \item{fit}{Stored fit name or index for result containers that optionally keep
 fitted models, such as rolling results and model comparisons.}
 
 \item{subject}{Subject name or index for per-subject VAR/GVAR result lists.}
 }
 \value{
-Invisibly, a named list of matrices.
+A named list of matrices: invisibly when \code{print = TRUE} (the
+default), visibly when \code{print = FALSE}.
 }
 \description{
 \code{matrices()} is the matrix-oriented companion to \code{\link[=summary]{summary()}} and \code{\link[=edges]{edges()}}.
-It returns the core estimated matrices invisibly and prints each matrix
+It returns the core estimated matrices and, by default, prints each one
 compactly with rounding, so users can inspect coefficients without digging
 through object internals.
+}
+\details{
+Pass \code{print = FALSE} to suppress the console output and get the named list
+back visibly. That is the form other code should call: extracting matrices
+inside a loop, a bootstrap, or a dependent package should not write to the
+console.
 }
 \examples{
 W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
@@ -81,4 +96,7 @@ W <- matrix(c(0, 0.3, -0.2, 0), 2, 2,
 x <- structure(list(weights = W, method = "relative", directed = TRUE),
                class = "cograph_network")
 matrices(as_netobject(x))
+
+# programmatic extraction: silent, and returned visibly
+str(matrices(as_netobject(x), print = FALSE))
 }

@@ -1,7 +1,7 @@
 Package: idiographic
 Type: Package
 Title: Person-Specific (Idiographic) and Heterogeneous Complex Networks
-Version: 0.3.2
+Version: 0.3.3
 Authors@R: c(
     person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
         email = "saqr@saqr.me"),
@@ -27,7 +27,7 @@ License: GPL-3
 Encoding: UTF-8
 Language: en-GB
 LazyData: TRUE
-URL: https://pak.dynasite.org/idiographic, https://github.com/mohsaqr/idiographic
+URL: https://pak.dynasite.org/idiographic/, https://github.com/mohsaqr/idiographic
 BugReports: https://github.com/mohsaqr/idiographic/issues
 Depends:
     R (>= 4.1)

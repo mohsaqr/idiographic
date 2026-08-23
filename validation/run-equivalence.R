@@ -14,7 +14,7 @@ testthat::test_local(
     c(
       "fixtures-equivalence", "expanded-equivalence", "package-closure",
       "registry", "hardening", "graphical-var", "mlvar$", "mlvar-real20",
-      "gimme$", "glasso", "usem-equivalence"
+      "gimme$", "glasso", "usem-equivalence", "offload-parity"
     ),
     collapse = "|"
   ),

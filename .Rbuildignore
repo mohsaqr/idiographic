@@ -31,3 +31,5 @@
 ^docs$
 ^pkgdown$
 ^tests/testthat/fixtures/mplus/validate-.*\.R$
+^OFFLOAD\.md$
+^tests/testthat/test-offload-parity\.R$

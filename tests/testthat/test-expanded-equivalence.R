@@ -588,3 +588,55 @@ test_that(".glasso_fit matches glasso when available", {
   ref  <- glasso::glasso(S, rho = rho, penalize.diagonal = FALSE)$wi
   expect_equal(ours, ref, tolerance = 1e-4, ignore_attr = TRUE)
 })
+
+
+# ---- moved from test-glasso-public.R (equivalence lane only) ----
+# These call glasso::glasso(). The shipped tarball does not Suggest `glasso`,
+# so competitor comparisons live here, not in the shipped test file.
+
+.glasso_random_cov <- function(p, n) {
+  x <- matrix(stats::rnorm(n * p), n, p)
+  s <- stats::cov(x)
+  s / mean(diag(s))
+}
+
+test_that("glasso_fit() matches the glasso Fortran kernel across a config grid", {
+  skip_unless_equivalence()
+  skip_if_not_installed("glasso")
+  set.seed(19)
+  grid <- expand.grid(p = c(3L, 6L, 10L), rho = c(0.01, 0.1, 0.35),
+                      pen_diag = c(FALSE, TRUE),
+                      KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+  worst <- vapply(seq_len(nrow(grid)), function(k) {
+    S <- .glasso_random_cov(grid$p[k], 150L)
+    ref <- glasso::glasso(S, rho = grid$rho[k],
+                          penalize.diagonal = grid$pen_diag[k],
+                          thr = 1e-12, maxit = 1e4)
+    mine <- glasso_fit(S, rho = grid$rho[k],
+                       penalize_diagonal = grid$pen_diag[k])
+    max(abs(mine$wi - ref$wi))
+  }, numeric(1))
+  expect_lt(max(worst), 1e-6)
+})
+
+test_that("glasso_fit() matches glasso for matrix penalties and zero constraints", {
+  skip_unless_equivalence()
+  skip_if_not_installed("glasso")
+  set.seed(20)
+  p <- 6L
+  S <- .glasso_random_cov(p, 150L)
+  R <- matrix(stats::runif(p * p, 0.02, 0.3), p, p)
+  R <- (R + t(R)) / 2
+  diag(R) <- 0
+  expect_equal(glasso_fit(S, rho = R, penalize_diagonal = TRUE)$wi,
+               glasso::glasso(S, rho = R, penalize.diagonal = TRUE,
+                              thr = 1e-12, maxit = 1e4)$wi,
+               tolerance = 1e-6, ignore_attr = TRUE)
+
+  ij <- which(upper.tri(S), arr.ind = TRUE)
+  z <- ij[seq_len(5L), , drop = FALSE]
+  expect_equal(glasso_fit(S, rho = 0, zero = z)$wi,
+               suppressWarnings(glasso::glasso(S, rho = 0, zero = z,
+                                               thr = 1e-12, maxit = 1e4))$wi,
+               tolerance = 1e-6, ignore_attr = TRUE)
+})

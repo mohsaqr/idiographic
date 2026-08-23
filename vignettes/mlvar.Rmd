@@ -19,6 +19,11 @@ knitr::opts_chunk$set(
 library(idiographic)
 data(srl)
 has_cograph <- requireNamespace("cograph", quietly = TRUE)
+# fit_mlvar(estimator = "lmer") needs lme4, which is only Suggested.
+# Every chunk that fits or inspects the model is gated on it so the
+# vignette still builds where lme4 is unavailable (CRAN's noSuggests
+# check flavour, for one).
+has_lme4 <- requireNamespace("lme4", quietly = TRUE)
 ```
 
 The multilevel vector autoregression models the intensive longitudinal series
@@ -103,7 +108,7 @@ average temporal network without random slopes, which keeps the model fast
 and estimable at the cost of any statement about how individual students
 deviate from the average.
 
-```{r fit}
+```{r fit, eval=has_lme4}
 mlvar_fit <- fit_mlvar(
   srl, vars = vars, id = "name",
   estimator = "lmer", temporal = "fixed", contemporaneous = "fixed",
@@ -125,7 +130,7 @@ three, spanning -0.086 to 0.553 with eight positive and two negative edges.
 The `summary()` method reports one row per network layer, with the edge
 count, density, and mean absolute weight.
 
-```{r summary}
+```{r summary, eval=has_lme4}
 summary(mlvar_fit)
 ```
 
@@ -138,7 +143,7 @@ variables co-move within occasions and, above all, stable student averages
 covary. The `edges()` accessor lists the edges of a layer in decreasing
 magnitude.
 
-```{r edges-temporal}
+```{r edges-temporal, eval=has_lme4}
 edges(mlvar_fit, network = "temporal", n = 5)
 ```
 
@@ -149,7 +154,7 @@ from effort to value (-0.022). Each is an average within-person effect — a
 claim about the typical student's occasion-to-occasion prediction, not a
 claim that holds for every student.
 
-```{r edges-contemporaneous}
+```{r edges-contemporaneous, eval=has_lme4}
 edges(mlvar_fit, network = "contemporaneous", n = 5)
 ```
 
@@ -160,7 +165,7 @@ student reports more planning than their own average, they also report more
 effort at the same occasion, over and above what the other indicators and the
 previous occasion explain.
 
-```{r edges-between}
+```{r edges-between, eval=has_lme4}
 edges(mlvar_fit, network = "between", n = 5)
 ```
 
@@ -179,7 +184,7 @@ have lower average monitoring than their peers.
 Node-level structure follows from the edges through `nodes()`, whose strength
 column sums the absolute weights incident to each node within a layer.
 
-```{r nodes}
+```{r nodes, eval=has_lme4}
 nodes(mlvar_fit)
 ```
 
@@ -192,7 +197,7 @@ largest strength (1.176), driven by its associations with planning and value,
 followed by effort (1.054). The full coefficient tables are available from
 `coefs(mlvar_fit)`, and the three layer matrices from `matrices()`.
 
-```{r matrices}
+```{r matrices, eval=has_lme4}
 matrices(mlvar_fit)
 ```
 
@@ -208,7 +213,7 @@ Plotting the fit draws the three layers side by side: arrows in the temporal
 panel denote average lag-one prediction, edge width scales with absolute
 weight, and colour encodes sign.
 
-```{r plot-all, eval=has_cograph}
+```{r plot-all, eval=has_cograph && has_lme4}
 plot(mlvar_fit)
 ```
 
@@ -216,14 +221,14 @@ The contrast between panels restates the summary graphically: thin, diffuse
 temporal arrows against dense undirected contemporaneous and between-person
 structure. Each layer can also be drawn alone.
 
-```{r plot-temporal, eval=has_cograph}
+```{r plot-temporal, eval=has_cograph && has_lme4}
 plot(mlvar_fit, layer = "temporal")
 ```
 
 The temporal layer is thin throughout; monitoring and value are the clearest
 lagged predictors of later effort.
 
-```{r plot-contemporaneous, eval=has_cograph}
+```{r plot-contemporaneous, eval=has_cograph && has_lme4}
 plot(mlvar_fit, layer = "contemporaneous")
 ```
 
@@ -235,11 +240,11 @@ lag-one effects and undirected average contemporaneous partial correlations —
 which `plot(mlvar_fit, mixed = TRUE)` draws in one graph, the temporal edges as
 curved arrows and the contemporaneous edges as straight lines.
 
-```{r plot-mixed, eval=has_cograph}
+```{r plot-mixed, eval=has_cograph && has_lme4}
 plot(mlvar_fit, mixed = TRUE)
 ```
 
-```{r plot-between, eval=has_cograph}
+```{r plot-between, eval=has_cograph && has_lme4}
 plot(mlvar_fit, layer = "between")
 ```
 

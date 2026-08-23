@@ -58,7 +58,7 @@ the evidence.
 | `fit_var()` | closed | `stats::lm.fit` | Cell-level OLS engine equality, tolerance `1e-10`; preprocessing is package-defined. |
 | `fit_var_each()` | closed | `fit_var()` | Exact per-subject wrapper contract. |
 | `fit_var_bayes()` | bounded | frozen Mplus BAYES | Three bivariate fixtures with parameter-dependent statistical tolerances `0.02`–`0.03`, plus OLS and MCMC-control checks. |
-| `fit_graphical_var()` | closed | `graphicalVAR` 0.4.1 | Lag-1 beta/kappa option matrix, multi-ID centering, missing rows, and tolerance `1e-6`. Multi-lag/unequal-grid fits are labelled extensions. |
+| `fit_graphical_var()` | closed | `graphicalVAR` 0.4.1 | Lag-1 beta/kappa option matrix, multi-ID centering, missing rows, at tolerance `1e-6` on the committed configurations. See the lambda-selection note below: `1e-6` is not a universal bound. Multi-lag/unequal-grid fits are labelled extensions. |
 | `fit_graphical_var_each()` | closed | `graphicalVAR` 0.4.1 | Every returned subject fit is compared with the same-data upstream subject fit at `1e-6`. |
 | `fit_mlvar()` | closed | `mlVAR` 0.7.3 | All 12 supported lag-1 lmer structure combinations, unique/lm modes, preparation and selected multi-lag controls, plus 20 real fixed/fixed panels at `1e-8`. |
 | `fit_mlvar_bayes()` | bounded | frozen Mplus DSEM | Five fixed bivariate and one random-AR fixture; advanced random-residual and imputation modes are recovery-validated, not called Mplus-equivalent. |
@@ -104,6 +104,42 @@ Important closures that were previously thin or absent include:
   directory behavior, executable discovery boundary, and output conversion;
 - standardized ML/MLR uSEM engine equality; and
 - native idiographic-ML linear and logistic engine equality.
+
+## Lambda-selection boundary for `fit_graphical_var()`
+
+Added 2026-08-23 after an independent Monte Carlo against live
+`graphicalVAR` 0.4.1 on 24 freshly simulated panels (not the committed
+fixtures).
+
+The `1e-6` tolerance recorded above holds comfortably at the median but is
+**not a universal bound**:
+
+| Panel | Median worst cell | Maximum worst cell |
+|---|---:|---:|
+| `p = 3`, 4 subjects | 6.7e-10 | 6.0e-06 |
+| `p = 4`, 6 subjects | 8.8e-11 | 1.5e-05 |
+
+Four of the 24 panels exceed `1e-6`, the worst at `1.5e-05`.
+
+The cause is lambda selection, not the estimator. Near the optimum the EBIC
+surface is flat — the two packages' EBIC values agree to about `0.015` across
+the 2,500-cell grid — so the `argmin` can land on **adjacent** `lambda_kappa`
+grid points. Three checks pin this down:
+
+- it is **not** a convergence artefact: the difference is bit-identical at
+  `maxit` 100, 500 and 2000;
+- it is **not** the `ebic_tol` tie-break: setting `ebic_tol = 0` (upstream's
+  plain `which.min`) moves the selection *further* from upstream, not closer;
+- the two implementations solve the inner graphical lasso to different
+  tolerances (`glasso`'s Fortran default is `thr = 1e-4`; idiographic's pure-R
+  kernel runs to `1e-8`/`1e-10`), so the EBIC surfaces are legitimately not
+  bit-identical.
+
+**The substantive conclusion is unaffected.** The recovered edge support — the
+zero pattern of both the temporal and kappa networks — is identical in
+**24 / 24** panels. Only coefficient magnitudes drift, and only at the fifth
+decimal place.
+
 
 ## Real-data mlVAR evidence
 

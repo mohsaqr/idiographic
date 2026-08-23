@@ -55,6 +55,7 @@ small_mlvar <- function() {
 }
 
 test_that("as_netobject transposes the temporal network (orientation the plot uses)", {
+  skip_if_not_installed("lme4")   # small_mlvar() uses estimator = "lmer"
   fit <- small_mlvar()
   # stored weights keep mlVAR's [outcome, predictor] layout (equivalence);
   # the plotting netobject is its transpose (predictor -> outcome).
@@ -63,6 +64,7 @@ test_that("as_netobject transposes the temporal network (orientation the plot us
 
 test_that("whole-object plot(net_mlvar) and single layers render without error", {
   skip_if_not_installed("cograph")
+  skip_if_not_installed("lme4")   # small_mlvar() uses estimator = "lmer"
   fit <- small_mlvar()
   on_null_device({
     expect_invisible(plot(fit))                       # whole result

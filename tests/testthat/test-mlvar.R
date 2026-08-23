@@ -1,4 +1,5 @@
 test_that("fit_mlvar returns three named cograph networks + tidy coefs", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   d <- synth_panel(n_id = 12, days = 4, beeps = 12, seed = 3)
   fit <- suppressWarnings(
     fit_mlvar(d, vars = c("A", "B", "C"), id = "id",
@@ -18,10 +19,12 @@ test_that("fit_mlvar returns three named cograph networks + tidy coefs", {
 })
 
 test_that("coefs() errors for unsupported classes", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   expect_error(coefs(1L), "No coefs")
 })
 
 test_that("mlVAR modes, multiple lags, and aliases work", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   d <- synth_panel(n_id = 10, days = 3, beeps = 12, seed = 4)
   vars <- c("A", "B", "C")
   correlated <- suppressWarnings(fit_mlvar(
@@ -54,6 +57,7 @@ test_that("mlVAR modes, multiple lags, and aliases work", {
 })
 
 test_that("conflicting scale/standardize warns and honours the canonical name", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   d <- synth_panel(n_id = 8, days = 3, beeps = 12, seed = 4)
   vars <- c("A", "B", "C")
   # standardize is a deprecated alias of scale; if both are set and disagree,
@@ -68,6 +72,7 @@ test_that("conflicting scale/standardize warns and honours the canonical name", 
 })
 
 test_that("easy mlVAR controls map to explicit native behavior", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   d <- synth_panel(n_id = 8, days = 3, beeps = 10, seed = 44)
   vars <- c("A", "B", "C")
 
@@ -129,6 +134,7 @@ test_that("easy mlVAR controls map to explicit native behavior", {
 })
 
 test_that("singular between-network returns zeros with a warning (convention)", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   # A zero random-intercept SD makes the between network non-estimable; idiographic
   # returns zeros (with a warning) by convention rather than NA like mlVAR.
   vars <- c("A", "B")
@@ -143,6 +149,7 @@ test_that("singular between-network returns zeros with a warning (convention)", 
 })
 
 test_that("defensive coefficient matchers fill missing names with NA", {
+  skip_if_not_installed("lme4")   # fit_mlvar() defaults to estimator = "lmer"
   fe <- c(L1_A = 0.3, L1_B = -0.1)
   expect_equal(idiographic:::.mlvar_vec(fe, c("L1_A", "L1_B", "L1_C")),
                c(0.3, -0.1, NA))

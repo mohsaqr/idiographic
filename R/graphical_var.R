@@ -278,6 +278,12 @@ fit_graphical_var <- function(data,
       stop("`regularize_mat_kappa` must be a finite, non-negative p x p numeric/logical matrix.",
            call. = FALSE)
     }
+    # The kappa penalty applies to an undirected edge, so an asymmetric mask is
+    # ill-posed rather than merely unusual.
+    if (max(abs(regularize_mat_kappa - t(regularize_mat_kappa))) > 1e-12) {
+      stop("`regularize_mat_kappa` must be symmetric; it penalises undirected ",
+           "contemporaneous edges.", call. = FALSE)
+    }
     regularize_mat_kappa <- regularize_mat_kappa * 1
   }
 
