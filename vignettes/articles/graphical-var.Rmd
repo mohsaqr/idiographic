@@ -3,7 +3,7 @@ title: "4. Graphical VAR"
 output:
   rmarkdown::html_vignette:
     toc: true
-bibliography: references.bib
+bibliography: ../references.bib
 link-citations: true
 vignette: >
   %\VignetteIndexEntry{4. Graphical VAR}

@@ -3,7 +3,7 @@ title: "6. Bayesian VAR and DSEM"
 output:
   rmarkdown::html_vignette:
     toc: true
-bibliography: references.bib
+bibliography: ../references.bib
 link-citations: true
 vignette: >
   %\VignetteIndexEntry{6. Bayesian VAR and DSEM}

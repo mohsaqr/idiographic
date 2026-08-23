@@ -6,7 +6,7 @@ output:
 bibliography: references.bib
 link-citations: true
 vignette: >
-  %\VignetteIndexEntry{5. Multilevel VAR}
+  %\VignetteIndexEntry{4. Multilevel VAR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

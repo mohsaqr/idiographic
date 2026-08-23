@@ -6,7 +6,7 @@ output:
 bibliography: references.bib
 link-citations: true
 vignette: >
-  %\VignetteIndexEntry{9. Rolling networks}
+  %\VignetteIndexEntry{6. Rolling networks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
