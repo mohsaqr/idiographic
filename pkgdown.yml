@@ -2,17 +2,17 @@ pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
-  bayesian-var-dsem: bayesian-var-dsem.html
+  articles/bayesian-var-dsem: bayesian-var-dsem.html
   clean-room-methods: clean-room-methods.html
-  gimme: gimme.html
-  graphical-var: graphical-var.html
+  articles/gimme: gimme.html
+  articles/graphical-var: graphical-var.html
   idiographic: idiographic.html
   mlvar: mlvar.html
   ordinary-var: ordinary-var.html
   preprocessing: preprocessing.html
   rolling-networks: rolling-networks.html
   usem: usem.html
-last_built: 2026-08-23T12:40Z
+last_built: 2026-08-23T12:52Z
 urls:
   reference: https://pak.dynasite.org/idiographic/reference
   article: https://pak.dynasite.org/idiographic/articles

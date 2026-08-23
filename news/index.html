@@ -62,8 +62,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-3-3">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-3-3"></a></h3>
-<ul><li>
-<code><a href="../reference/matrices.html">matrices()</a></code> now documents that it is a display verb by default, and points at <code>print = FALSE</code> for programmatic extraction.</li>
+<ul><li><p><code><a href="../reference/matrices.html">matrices()</a></code> now documents that it is a display verb by default, and points at <code>print = FALSE</code> for programmatic extraction.</p></li>
+<li><p>The three most computationally expensive vignettes – Graphical VAR, Bayesian VAR/DSEM, and GIMME – are now pkgdown articles rather than installed vignettes. Their content is unchanged and they remain published at <a href="https://pak.dynasite.org/idiographic/" class="uri">https://pak.dynasite.org/idiographic/</a>, but they are no longer rebuilt during <code>R CMD check</code>. Rebuilding all ten vignettes took 574 seconds on Windows R-devel (68% of the total check time, against CRAN’s 10-minute guideline); these three accounted for the large majority of it. The remaining seven vignettes are renumbered 1-7.</p></li>
 </ul></div>
 </div>
     <div class="section level2">

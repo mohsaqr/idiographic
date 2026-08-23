@@ -92,6 +92,15 @@
   now documents that it is a display verb by default, and points at
   `print = FALSE` for programmatic extraction.
 
+- The three most computationally expensive vignettes – Graphical VAR,
+  Bayesian VAR/DSEM, and GIMME – are now pkgdown articles rather than
+  installed vignettes. Their content is unchanged and they remain
+  published at <https://pak.dynasite.org/idiographic/>, but they are no
+  longer rebuilt during `R CMD check`. Rebuilding all ten vignettes took
+  574 seconds on Windows R-devel (68% of the total check time, against
+  CRAN’s 10-minute guideline); these three accounted for the large
+  majority of it. The remaining seven vignettes are renumbered 1-7.
+
 ## idiographic 0.3.2
 
 CRAN release: 2026-08-03
