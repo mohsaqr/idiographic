@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,27 @@
       <small>Source: <a href="https://github.com/mohsaqr/idiographic/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.3" id="idiographic-033">idiographic 0.3.3<a class="anchor" aria-label="anchor" href="#idiographic-033"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-3-3">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-3"></a></h3>
+<ul><li><p>The pure-R graphical-lasso kernel that powers <code><a href="../reference/fit_graphical_var.html">fit_graphical_var()</a></code> is now a supported public API: <code><a href="../reference/glasso_fit.html">glasso_fit()</a></code>, <code><a href="../reference/glasso_path.html">glasso_path()</a></code>, and <code><a href="../reference/glasso_kkt.html">glasso_kkt()</a></code>. <code><a href="../reference/glasso_fit.html">glasso_fit()</a></code> returns a <code>glasso_result</code> whose <code>$wi</code> and <code>$w</code> elements are named exactly as <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso::glasso()</a></code>’s, so existing call sites port unchanged, and it supports element-wise penalty matrices and hard zero constraints in addition to a scalar penalty. <code><a href="../reference/glasso_kkt.html">glasso_kkt()</a></code> certifies a solution from the graphical-lasso stationarity conditions rather than against another solver. Both results have <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and tidy <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> methods. This exists so sibling packages can drop their own copies of the same kernel and depend on this one; see <code>OFFLOAD.md</code> in the repository.</p></li>
+<li><p><code><a href="../reference/matrices.html">matrices()</a></code> gains a <code>print</code> argument. The default (<code>print = TRUE</code>) is unchanged: it prints each matrix and returns the list invisibly. With <code>print = FALSE</code> the function prints nothing and returns the list visibly, which is the form dependent packages and resampling loops need. Threaded through every <code><a href="../reference/matrices.html">matrices()</a></code> method, including those that delegate to another method. <code>print</code> follows <code>...</code> in every method, so it must be named in full and can never be matched positionally or by partial name.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-3-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-3"></a></h3>
+<ul><li><p><code><a href="../reference/glasso_kkt.html">glasso_kkt()</a></code> no longer reports optimal zero-constrained fits as non-optimal. At an entry hard-constrained by <code>zero</code>, the inactive-edge condition <code>|W_ij - S_ij| &lt;= rho_ij</code> does not apply: the equality constraint carries its own Lagrange multiplier, which absorbs the residual. Constrained pairs are now excluded from the check. A fit matching <code>glasso</code>’s Fortran kernel to 2e-12 previously certified as violating optimality by 0.028.</p></li>
+<li><p><code><a href="../reference/glasso_fit.html">glasso_fit()</a></code> now rejects a covariance matrix that is not positive semi-definite (classed condition <code>idiographic_not_psd</code>). A negative eigenvalue produced a precision matrix with a negative diagonal, from which every partial correlation was <code>NaN</code>. Singular but positive semi-definite covariances remain valid input. The tidy accessor also refuses a precision matrix with a non-positive diagonal (<code>idiographic_bad_precision</code>) rather than letting <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stats::cov2cor()</a></code> warn and emit <code>NaN</code> weights.</p></li>
+<li><p>An asymmetric element-wise penalty matrix is now rejected by <code><a href="../reference/glasso_fit.html">glasso_fit()</a></code> and by <code><a href="../reference/fit_graphical_var.html">fit_graphical_var()</a></code>’s <code>regularize_mat_kappa</code>. The penalty on edge <code>(i, j)</code> is a single scalar over a symmetric <code>Theta</code>, so an asymmetric penalty is ill-posed rather than stricter; previously it was accepted and produced a fit that failed the package’s own optimality check.</p></li>
+<li><p><code><a href="../reference/glasso_kkt.html">glasso_kkt()</a></code> validates <code>penalize_diagonal</code> instead of letting <code><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE()</a></code> silently map <code>NA</code> and other invalid values to <code>FALSE</code>, and warns (<code>idiographic_glasso_kkt_override</code>) when a supplied <code>rho</code> or <code>penalize_diagonal</code> differs from the one the fit was made with, since the returned violation then certifies a different problem.</p></li>
+<li><p>The internal graphical-lasso optimality checker used to measure the <em>unpenalised</em> diagonal stationarity condition (<code>W_ii = S_ii</code>) even for fits made with <code>penalize.diagonal = TRUE</code>, whose condition is <code>W_ii - S_ii = rho</code>. It therefore reported a spurious violation of exactly <code>rho</code> for every such fit — including <code>glasso</code>’s own Fortran output, which is how this was found. It now takes the diagonal-penalty flag into account. No estimator result and no previously published number changes; only the diagnostic was wrong.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-3-3">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-3-3"></a></h3>
+<ul><li>
+<code><a href="../reference/matrices.html">matrices()</a></code> now documents that it is a display verb by default, and points at <code>print = FALSE</code> for programmatic extraction.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.2" id="idiographic-032">idiographic 0.3.2<a class="anchor" aria-label="anchor" href="#idiographic-032"></a></h2><p class="text-muted">CRAN release: 2026-08-03</p>
 <ul><li>New package Title — “Idiographic Person-Specific and Heterogeneous Complex Networks” — and a rewritten Description with method references <a href="doi:10.1007/978-3-031-95365-1_20" class="uri">doi:10.1007/978-3-031-95365-1_20</a> and <a href="doi:10.1080/00273171.2018.1454823" class="uri">doi:10.1080/00273171.2018.1454823</a>.</li>

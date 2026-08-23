@@ -13,12 +13,12 @@ Source:
 
 Saqr M, López-Pernas S (2026). *idiographic: Person-Specific
 (Idiographic) and Heterogeneous Complex Networks*. R package version
-0.3.2, <https://pak.dynasite.org/idiographic>.
+0.3.3, <https://pak.dynasite.org/idiographic/>.
 
     @Manual{,
       title = {idiographic: Person-Specific (Idiographic) and Heterogeneous Complex Networks},
       author = {Mohammed Saqr and Sonsoles López-Pernas},
       year = {2026},
-      note = {R package version 0.3.2},
-      url = {https://pak.dynasite.org/idiographic},
+      note = {R package version 0.3.3},
+      url = {https://pak.dynasite.org/idiographic/},
     }

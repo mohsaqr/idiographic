@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://pak.dynasite.org/idiographic/404.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/METHOD_COVERAGE_REPORT.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/OFFLOAD.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/articles/bayesian-var-dsem.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/articles/clean-room-methods.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/articles/gimme.html</loc></url>
@@ -16,6 +17,8 @@
 <url><loc>https://pak.dynasite.org/idiographic/index.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/news/index.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/argument_coverage.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.glasso_path_result.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.glasso_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as_netobject.gvar_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as_netobject.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as_netobject.net_gimme.html</loc></url>
@@ -45,6 +48,9 @@
 <url><loc>https://pak.dynasite.org/idiographic/reference/fit_var_bayes.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/fit_var_each.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/get_estimator.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/glasso_fit.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/glasso_kkt.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/glasso_path.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/idiographic-package.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/index.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/list_estimators.html</loc></url>
@@ -55,6 +61,8 @@
 <url><loc>https://pak.dynasite.org/idiographic/reference/predict.idioml_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/preprocess.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/print.forecast_result.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/print.glasso_path_result.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/print.glasso_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/print.gvar_list.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/print.gvar_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/print.idioml_result.html</loc></url>

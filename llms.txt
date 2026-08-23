@@ -283,6 +283,12 @@ GPL-3.
 - [`argument_coverage()`](https://pak.dynasite.org/idiographic/reference/argument_coverage.md)
   : Argument-by-argument validation coverage
 
+- [`as.data.frame(`*`<glasso_path_result>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.glasso_path_result.md)
+  : Tidy a graphical-lasso path
+
+- [`as.data.frame(`*`<glasso_result>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.glasso_result.md)
+  : Tidy a graphical-lasso fit
+
 - [`as_netobject()`](https://pak.dynasite.org/idiographic/reference/as_netobject.md)
   : Coerce to a netobject
 
@@ -372,6 +378,15 @@ GPL-3.
 - [`get_estimator()`](https://pak.dynasite.org/idiographic/reference/get_estimator.md)
   : Get a registered estimator function
 
+- [`glasso_fit()`](https://pak.dynasite.org/idiographic/reference/glasso_fit.md)
+  : Fit a graphical lasso at a fixed penalty
+
+- [`glasso_kkt()`](https://pak.dynasite.org/idiographic/reference/glasso_kkt.md)
+  : Certify a graphical-lasso solution from its optimality conditions
+
+- [`glasso_path()`](https://pak.dynasite.org/idiographic/reference/glasso_path.md)
+  : Fit a graphical lasso over a path of penalties
+
 - [`idiographic`](https://pak.dynasite.org/idiographic/reference/idiographic-package.md)
   [`idiographic-package`](https://pak.dynasite.org/idiographic/reference/idiographic-package.md)
   : idiographic: Idiographic Network Estimation from Intensive
@@ -413,6 +428,12 @@ GPL-3.
 
 - [`print(`*`<forecast_result>`*`)`](https://pak.dynasite.org/idiographic/reference/print.forecast_result.md)
   : Print method for forecast validation results
+
+- [`print(`*`<glasso_path_result>`*`)`](https://pak.dynasite.org/idiographic/reference/print.glasso_path_result.md)
+  : Print a graphical-lasso path
+
+- [`print(`*`<glasso_result>`*`)`](https://pak.dynasite.org/idiographic/reference/print.glasso_result.md)
+  : Print a graphical-lasso fit
 
 - [`print(`*`<gvar_list>`*`)`](https://pak.dynasite.org/idiographic/reference/print.gvar_list.md)
   : Print a list of per-subject graphical VARs

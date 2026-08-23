@@ -44,6 +44,8 @@ reports the exact validation scope attached to each method.
 
 Useful links:
 
+- <https://pak.dynasite.org/idiographic/>
+
 - <https://github.com/mohsaqr/idiographic>
 
 - Report bugs at <https://github.com/mohsaqr/idiographic/issues>

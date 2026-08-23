@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,7 +105,7 @@
 <td>closed</td>
 <td>
 <code>graphicalVAR</code> 0.4.1</td>
-<td>Lag-1 beta/kappa option matrix, multi-ID centering, missing rows, and tolerance <code>1e-6</code>. Multi-lag/unequal-grid fits are labelled extensions.</td>
+<td>Lag-1 beta/kappa option matrix, multi-ID centering, missing rows, at tolerance <code>1e-6</code> on the committed configurations. See the lambda-selection note below: <code>1e-6</code> is not a universal bound. Multi-lag/unequal-grid fits are labelled extensions.</td>
 </tr><tr><td><code><a href="reference/fit_graphical_var_each.html">fit_graphical_var_each()</a></code></td>
 <td>closed</td>
 <td>
@@ -175,6 +175,29 @@
 <li>standardized ML/MLR uSEM engine equality; and</li>
 <li>native idiographic-ML linear and logistic engine equality.</li>
 </ul></div>
+<div class="section level2">
+<h2 id="lambda-selection-boundary-for-fit_graphical_var">Lambda-selection boundary for <code>fit_graphical_var()</code>
+<a class="anchor" aria-label="anchor" href="#lambda-selection-boundary-for-fit_graphical_var"></a></h2>
+<p>Added 2026-08-23 after an independent Monte Carlo against live <code>graphicalVAR</code> 0.4.1 on 24 freshly simulated panels (not the committed fixtures).</p>
+<p>The <code>1e-6</code> tolerance recorded above holds comfortably at the median but is <strong>not a universal bound</strong>:</p>
+<table class="table"><thead><tr><th>Panel</th>
+<th align="right">Median worst cell</th>
+<th align="right">Maximum worst cell</th>
+</tr></thead><tbody><tr><td>
+<code>p = 3</code>, 4 subjects</td>
+<td align="right">6.7e-10</td>
+<td align="right">6.0e-06</td>
+</tr><tr><td>
+<code>p = 4</code>, 6 subjects</td>
+<td align="right">8.8e-11</td>
+<td align="right">1.5e-05</td>
+</tr></tbody></table><p>Four of the 24 panels exceed <code>1e-6</code>, the worst at <code>1.5e-05</code>.</p>
+<p>The cause is lambda selection, not the estimator. Near the optimum the EBIC surface is flat — the two packages’ EBIC values agree to about <code>0.015</code> across the 2,500-cell grid — so the <code>argmin</code> can land on <strong>adjacent</strong> <code>lambda_kappa</code> grid points. Three checks pin this down:</p>
+<ul><li>it is <strong>not</strong> a convergence artefact: the difference is bit-identical at <code>maxit</code> 100, 500 and 2000;</li>
+<li>it is <strong>not</strong> the <code>ebic_tol</code> tie-break: setting <code>ebic_tol = 0</code> (upstream’s plain <code>which.min</code>) moves the selection <em>further</em> from upstream, not closer;</li>
+<li>the two implementations solve the inner graphical lasso to different tolerances (<code>glasso</code>’s Fortran default is <code>thr = 1e-4</code>; idiographic’s pure-R kernel runs to <code>1e-8</code>/<code>1e-10</code>), so the EBIC surfaces are legitimately not bit-identical.</li>
+</ul><p><strong>The substantive conclusion is unaffected.</strong> The recovered edge support — the zero pattern of both the temporal and kappa networks — is identical in <strong>24 / 24</strong> panels. Only coefficient magnitudes drift, and only at the fifth decimal place.</p>
+</div>
 <div class="section level2">
 <h2 id="real-data-mlvar-evidence">Real-data mlVAR evidence<a class="anchor" aria-label="anchor" href="#real-data-mlvar-evidence"></a></h2>
 <p>The repository’s separate <code>validation/</code> lane contains 20 raw ESM panels and 20 frozen outputs generated directly with <code><a href="https://rdrr.io/pkg/mlVAR/man/mlVAR.html" class="external-link">mlVAR::mlVAR()</a></code> 0.7.3. Native <code><a href="reference/fit_mlvar.html">fit_mlvar()</a></code> refits each panel in the opt-in equivalence suite. These competitor fixtures are intentionally excluded from the offline CRAN tarball.</p>
