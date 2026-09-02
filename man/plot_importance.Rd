@@ -4,7 +4,16 @@
 \alias{plot_importance}
 \title{Plot feature importance}
 \usage{
-plot_importance(x, model = NULL, scope = NULL, subject = NULL, n = 15, ...)
+plot_importance(
+  x,
+  model = NULL,
+  scope = NULL,
+  subject = NULL,
+  n = 15,
+  method = c("coefficient", "permutation"),
+  repeats = 5L,
+  ...
+)
 }
 \arguments{
 \item{x}{An idiographic fit.}
@@ -12,6 +21,12 @@ plot_importance(x, model = NULL, scope = NULL, subject = NULL, n = 15, ...)
 \item{model, scope, subject}{Optional filters.}
 
 \item{n}{Number of rows/variables to plot.}
+
+\item{method}{Importance method. \code{"coefficient"} uses absolute fitted
+coefficients where available; \code{"permutation"} measures the increase in
+held-out prediction error after shuffling a predictor.}
+
+\item{repeats}{Number of shuffles per predictor for permutation importance.}
 
 \item{...}{Passed to base plotting functions.}
 }

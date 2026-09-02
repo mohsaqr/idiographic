@@ -7,6 +7,8 @@
 #' time, so a person-specific treatment effect is estimable. `fit_effects()`
 #' reports one effect per scope: the pooled effect, the effect inside each
 #' subgroup, and the effect for each individual.
+#' Rows with a missing treatment are removed before temporal splitting. Missing
+#' outcome or predictor values are handled by the shared complete-case split.
 #'
 #' @section Treatment types:
 #' The treatment type is detected from the column and can be named outright
@@ -136,13 +138,19 @@ fit_effects <- function(data, y, treatment, x, id, time = NULL, scope = "both",
     stop("`treatment` must be one column name in `data`.", call. = FALSE)
   }
 
+  data <- .idio_check_data(data, y, id)
+  if (!treatment %in% names(data)) {
+    stop("`treatment` must be one column name in `data`.", call. = FALSE)
+  }
+  data <- data[!is.na(data[[treatment]]), , drop = FALSE]
+  if (!nrow(data)) {
+    stop("`treatment` is entirely missing.", call. = FALSE)
+  }
+
   prep <- .idio_prepare(data, y, x, id, time = time, scope = scope,
                         subgroup = subgroup, test_prop = test_prop,
                         min_train = min_train, min_test = min_test,
                         task = "auto", exclude = treatment)
-  if (!treatment %in% names(prep$data)) {
-    stop("`treatment` must be one column name in `data`.", call. = FALSE)
-  }
   t_info <- .idio_treatment_info(prep$data[[treatment]], treatment_type,
                                  reference)
   prep$data[[treatment]] <- t_info$code
@@ -739,26 +747,35 @@ plot_effects <- function(x, scope = "pooled", contrast = NULL, subject = NULL,
     tab <- tab[tab$contrast == tab$contrast[1L], , drop = FALSE]
   }
   if (!nrow(tab)) {
-    plot.new()
-    title("No sorted effect groups available")
+    .idio_plot_empty("No sorted effect groups available")
     return(invisible(tab))
   }
 
   at <- seq_len(nrow(tab))
-  ylim <- range(c(tab$conf_low, tab$conf_high), na.rm = TRUE)
-  op <- par(mar = c(5, 4, 3, 1))
+  xlim <- range(c(tab$conf_low, tab$conf_high, 0), na.rm = TRUE)
+  pad <- diff(xlim) * 0.08
+  if (!is.finite(pad) || pad == 0) pad <- 0.1
+  op <- .idio_plot_begin(mar = c(4.2, 7, 1.3, 1))
   on.exit(par(op), add = TRUE)
-  main <- if (x$spec$treatment_type == "multiarm") {
-    sprintf("Sorted group effects (GATES): %s", tab$contrast[1L])
-  } else {
-    "Sorted group effects (GATES)"
-  }
-  plot(at, tab$estimate, ylim = ylim, xaxt = "n", pch = 19,
-       xlab = "Sorted effect group (least helped to most helped)",
-       ylab = "Treatment effect", main = main, ...)
-  arrows(at, tab$conf_low, at, tab$conf_high, angle = 90, code = 3,
-         length = 0.05, col = "grey40")
-  axis(1, at = at, labels = sub("^GATES:", "", tab$effect))
-  abline(h = 0, col = "firebrick", lwd = 2, lty = 2)
+  labels <- paste("Group", sub("^GATES:g", "", tab$effect))
+  args <- .idio_plot_dots(list(
+    x = tab$estimate, y = at, xlim = xlim + c(-pad, pad),
+    ylim = c(0.5, nrow(tab) + 0.5), yaxt = "n", pch = 21,
+    bg = .idio_colours[["blue"]], col = "white", cex = 1.35,
+    xlab = "Estimated treatment effect (95% CI)", ylab = ""
+  ), list(...))
+  do.call(graphics::plot, args)
+  .idio_plot_grid(x = TRUE, y = FALSE)
+  graphics::abline(v = 0, col = .idio_colours[["orange"]], lwd = 1.5, lty = 2)
+  graphics::segments(tab$conf_low, at, tab$conf_high, at,
+                     col = .idio_colours[["blue"]], lwd = 2)
+  graphics::segments(tab$conf_low, at - 0.08, tab$conf_low, at + 0.08,
+                     col = .idio_colours[["blue"]], lwd = 1.4)
+  graphics::segments(tab$conf_high, at - 0.08, tab$conf_high, at + 0.08,
+                     col = .idio_colours[["blue"]], lwd = 1.4)
+  graphics::points(tab$estimate, at, pch = args$pch, bg = args$bg,
+                   col = args$col, cex = args$cex)
+  graphics::axis(2, at = at, labels = labels, tick = FALSE, las = 1,
+                 col.axis = .idio_colours[["ink"]])
   invisible(tab)
 }

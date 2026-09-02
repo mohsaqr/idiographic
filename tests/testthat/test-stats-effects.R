@@ -37,6 +37,26 @@ test_that("fit_effects finds nothing when there is nothing to find", {
   expect_gt(ate$conf_high, 0)     # the interval covers zero
 })
 
+test_that("fit_effects owns missing-treatment handling", {
+  d <- effect_panel(true_eff = 1)
+  d <- transform(d, drug = replace(drug, c(1L, 101L), NA_integer_))
+
+  with_missing <- fit_effects(d, y = "mood", treatment = "drug",
+                              x = c("x1", "x2"), id = "id", time = "day",
+                              scope = "pooled")
+  complete <- fit_effects(subset(d, !is.na(drug)), y = "mood",
+                          treatment = "drug", x = c("x1", "x2"), id = "id",
+                          time = "day", scope = "pooled")
+  expect_equal(effects(with_missing), effects(complete), tolerance = 1e-12)
+
+  empty <- transform(d, drug = NA_integer_)
+  expect_error(
+    fit_effects(empty, y = "mood", treatment = "drug", x = c("x1", "x2"),
+                id = "id", time = "day", scope = "pooled"),
+    "entirely missing"
+  )
+})
+
 test_that("GATES separates who the treatment helps", {
   # Truth: the drug gives +2 to people with x1 > 0 and nothing to anyone else.
   d <- effect_panel(hetero = TRUE)

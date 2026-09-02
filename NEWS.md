@@ -27,6 +27,19 @@
 * Consolidated statistical results use an `idiographic_*` primary class while
   retaining their `idiostats_*` compatibility class for downstream migration.
 
+* Added a statistical workflow index and 16 detailed, function-specific
+  vignettes for the complete non-network analysis layer. Each vignette uses
+  bundled data, prints tidy results, renders a decision-focused figure,
+  interprets the observed output, states assumptions and failure conditions,
+  and ends with guidance on method selection. The `fit_ml()` vignette includes
+  temporal validation, baselines, tuning, scope comparison, person-level
+  errors, prediction trajectories, and permutation importance.
+
+* Redesigned statistical plotting around ranked dot plots, interval displays,
+  binned calibration, direct labels, temporal trajectories, and consistent
+  colour-accessible styling. Plots now foreground uncertainty, reference
+  values, and person-level failures instead of relying on default bar charts.
+
 # idiographic 0.3.4
 
 ## New features

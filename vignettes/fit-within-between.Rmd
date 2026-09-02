@@ -1,0 +1,103 @@
+---
+title: "Within- and Between-Person Effects with fit_within_between()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Within- and Between-Person Effects with fit_within_between()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`fit_within_between()` estimates two coefficients for each time-varying
+predictor. The within-person coefficient asks whether a person's outcome is
+higher when the predictor is above that person's usual level. The
+between-person coefficient asks whether people with higher predictor means
+also have higher outcome means.
+
+`fit_within_between()` takes a repeated-measures panel and returns an
+`idiographic_wb` fit with component-labelled coefficients, predictions,
+metrics, contextual contrasts, and variance components. The decomposition
+follows the person-mean approach to panel models [@mundlak1978].
+
+## Fit the hybrid model
+
+`fit_within_between()` models effort from efficacy and monitoring at the
+pooled scope. Table 1 reports within-person, between-person, and contextual
+effects. The contextual effect is the between-person coefficient minus the
+within-person coefficient.
+
+```{r wb-fit}
+wb_fit <- fit_within_between(analysis_data, y = "effort", x = c("efficacy", "monitoring"), id = "name", time = "day", scope = "pooled")
+contextual(wb_fit)
+```
+
+`fit_within_between()` estimates a positive within-person efficacy coefficient
+of about 0.36 and a positive between-person coefficient of about 0.57 in Table
+1. Their contextual difference is about 0.21, and its confidence interval
+includes zero. Monitoring has a positive within-person estimate and a negative
+between-person estimate, but the contextual interval also includes zero.
+
+## Inspect all coefficient components
+
+`coefs()` retains the component and source-variable labels. Table 2 shows the
+pooled coefficient table.
+
+```{r wb-coefficients}
+coefs(wb_fit, scope = "pooled")
+```
+
+`coefs()` identifies efficacy's within-person coefficient as statistically
+different from zero in Table 2. The estimate describes daily deviations from a
+learner's own efficacy mean. It should not be reported as a contrast between
+learners.
+
+## Plot within and between estimates
+
+`plot_components()` draws component estimates and confidence intervals for
+each predictor. Figure 1 uses orange for within-person effects, blue for
+between-person effects, and green for contextual differences.
+
+```{r wb-plot, fig.cap="Figure 1. Within-person, between-person, and contextual coefficients with confidence intervals."}
+plot_components(wb_fit, scope = "pooled")
+```
+
+Figure 1 shows that efficacy has positive within-person and between-person
+coefficients. Monitoring changes sign across levels. The intervals convey
+greater uncertainty in the between-person and contextual quantities because
+they depend on 12 independent learner means.
+
+## Assumptions and failure checks
+
+`fit_within_between()` requires predictors that vary within people and across
+people. A person-constant predictor cannot identify a person-specific within
+effect. A predictor with identical person means cannot identify a between
+effect. The OLS estimator clusters inference by person. The optional mixed
+estimator delegates to `lme4`.
+
+`fit_within_between()` gives distinct names to decomposed columns and labels
+each returned coefficient by component. This prevents a raw-score coefficient
+from being interpreted at the wrong level. The model remains associational
+unless the research design and covariate assumptions identify a causal effect.
+
+## When to use which
+
+`fit_within_between()` is appropriate when a predictor varies at both levels
+and the distinction is substantively important. `preprocess_panel()` is
+appropriate when decomposed columns are needed for another modelling function.
+`fit_lm()` is appropriate when the predictor is already defined at the intended
+level or when a raw conditional association is the target.
+
+## References

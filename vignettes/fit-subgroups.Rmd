@@ -1,0 +1,96 @@
+---
+title: "Subgroup-Specific Models with fit_subgroups()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Subgroup-Specific Models with fit_subgroups()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+set.seed(20260902)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`fit_subgroups()` fits one model per discovered or supplied subgroup and can
+compare those models with pooled and individual alternatives. The function
+takes a panel, outcome, predictors, person identifier, subgroup mapping, and
+model family. It returns an `idiographic_fit` with the usual tidy accessors.
+
+`fit_subgroups()` defaults to `scope = "all"`. The pooled scope estimates one
+coefficient vector. The subgroup scope estimates one vector per group. The
+individual scope estimates one vector per person. All scopes predict the same
+ordered test rows.
+
+## Estimate subgroup assignments
+
+`find_subgroups()` supplies a two-group effect-clustering result. This first
+stage defines the subgroup mapping used by the fitted models.
+
+```{r subgroup-stage}
+subgroup_result <- find_subgroups(analysis_data, y = "effort", x = c("efficacy", "monitoring"), id = "name", method = "effect_clustering", k = 2, reps = 20, time = "day")
+groups(subgroup_result, sort_by = "subgroup")
+```
+
+`groups()` reports assignments and their resampling stability in Table 1.
+These labels are estimated quantities. Prediction comparisons should retain
+that first-stage uncertainty in their interpretation.
+
+## Fit and compare three scopes
+
+`fit_subgroups()` fits linear models for all three scopes. Table 2 reports
+aggregate held-out metrics.
+
+```{r subgroup-fit}
+subgroup_fit <- fit_subgroups(analysis_data, y = "effort", x = c("efficacy", "monitoring"), id = "name", subgroup = subgroup_result, method = "lm", time = "day")
+metrics(subgroup_fit, overall = TRUE)
+```
+
+`fit_subgroups()` gives the subgroup models an RMSE of about 22.8 in Table 2.
+The pooled RMSE is about 23.2, and the individual RMSE is about 19.8. The
+two-group model improves modestly over pooling but does not match the
+individual models on this split.
+
+## Plot the scope comparison
+
+`plot_metrics()` displays the common held-out metric for pooled, subgroup, and
+individual scopes. Position and colour distinguish the modelling scopes.
+
+```{r subgroup-fit-plot, fig.cap="Figure 1. Held-out RMSE for pooled, subgroup, and individual linear models."}
+plot_metrics(subgroup_fit, metric = "rmse")
+```
+
+Figure 1 shows the subgroup model between the pooled and individual models in
+prediction error. The result quantifies the compromise between one model for
+everyone and one model per person.
+
+## Assumptions and failure checks
+
+`fit_subgroups()` treats the supplied mapping as fixed during model fitting.
+Assignments estimated from the same outcome data can make subgroup performance
+optimistic. A confirmatory analysis should derive groups in separate data or
+repeat the complete discovery-and-fitting pipeline within resampling.
+
+`fit_subgroups()` requires at least one usable training and test set for each
+requested scope. Small groups can fail even when pooled and individual models
+succeed. The failure table identifies these cases. Subgroup prediction does
+not by itself show that discrete populations exist.
+
+## When to use which
+
+`fit_subgroups()` is appropriate when a defensible mapping exists and the
+question concerns group-specific prediction. `fit_lm()` or `fit_glm()` with a
+subgroup column provides the same lower-level fitting engine. `test_subgroups()`
+addresses existence. `find_subgroups()` addresses assignment.
+
+## References

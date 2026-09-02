@@ -90,6 +90,8 @@ In repeated-measures data the treatment usually varies \emph{within} a person ov
 time, so a person-specific treatment effect is estimable. \code{fit_effects()}
 reports one effect per scope: the pooled effect, the effect inside each
 subgroup, and the effect for each individual.
+Rows with a missing treatment are removed before temporal splitting. Missing
+outcome or predictor values are handled by the shared complete-case split.
 }
 \section{Treatment types}{
 

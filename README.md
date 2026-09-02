@@ -298,6 +298,29 @@ the former `idiostats_*` class as a compatibility bridge.
 
 Package page and binaries: **<https://mohsaqr.r-universe.dev/idiographic>**.
 
+Start with the [statistical workflow guide](vignettes/statistical-workflows.Rmd),
+which maps research questions to the 16 major non-network functions. Each
+function then has a detailed worked vignette:
+
+| Analysis | Function-specific vignette |
+|---|---|
+| Person-level description | [`describe_persons()`](vignettes/describe-persons.Rmd) |
+| Within-person correlation | [`correlate_persons()`](vignettes/correlate-persons.Rmd) |
+| Variance decomposition | [`variance_components()`](vignettes/variance-components.Rmd) |
+| Panel preparation | [`preprocess_panel()`](vignettes/preprocess-panel.Rmd) |
+| Linear modelling | [`fit_lm()`](vignettes/fit-lm.Rmd) |
+| Generalized linear modelling | [`fit_glm()`](vignettes/fit-glm.Rmd) |
+| Machine learning | [`fit_ml()`](vignettes/fit-ml.Rmd) |
+| Rolling-origin validation | [`fit_rolling()`](vignettes/fit-rolling.Rmd) |
+| Within-between modelling | [`fit_within_between()`](vignettes/fit-within-between.Rmd) |
+| Coefficient pooling | [`pool_coefs()`](vignettes/pool-coefs.Rmd) |
+| Coefficient shrinkage | [`shrink_coefs()`](vignettes/shrink-coefs.Rmd) |
+| Subgroup-existence testing | [`test_subgroups()`](vignettes/test-subgroups.Rmd) |
+| Subgroup discovery | [`find_subgroups()`](vignettes/find-subgroups.Rmd) |
+| Subgroup modelling | [`fit_subgroups()`](vignettes/fit-subgroups.Rmd) |
+| Treatment-effect estimation | [`fit_effects()`](vignettes/fit-effects.Rmd) |
+| General heterogeneity analysis | [`fit_heterogeneity()`](vignettes/fit-heterogeneity.Rmd) |
+
 ## Citation
 
 Saqr, M., & López-Pernas, S. (2026). *idiographic: Person-Specific Statistics

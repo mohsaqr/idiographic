@@ -48,8 +48,7 @@ plot_tuning <- function(x, model = NULL, scope = NULL, subject = NULL,
                         metric = NULL, ...) {
   tab <- tuning(x, model = model, scope = scope, subject = subject)
   if (!nrow(tab)) {
-    plot.new()
-    title("No tuning results available")
+    .idio_plot_empty("No tuning results available")
     return(invisible(tab))
   }
   metric <- metric %||% if ("rmse" %in% names(tab) && any(is.finite(tab$rmse))) {
@@ -60,11 +59,41 @@ plot_tuning <- function(x, model = NULL, scope = NULL, subject = NULL,
   if (!metric %in% names(tab)) {
     stop("`metric` must be one column in tuning(x).", call. = FALSE)
   }
-  labs <- paste(tab$model, tab$parameter, tab$value, sep = ":")
-  op <- par(mar = c(8, 4, 3, 1))
+  panels <- interaction(tab$model, tab$scope, drop = TRUE,
+                        sep = paste0(" ", "\u00b7", " "))
+  panel_levels <- levels(panels)
+  n_panels <- length(panel_levels)
+  op <- .idio_plot_begin(
+    mar = c(4.2, 4.4, 2.2, 1),
+    mfrow = c(ceiling(n_panels / 2), min(2, n_panels)),
+    oma = c(0, 0, 0.3, 0)
+  )
   on.exit(par(op), add = TRUE)
-  plot(seq_len(nrow(tab)), tab[[metric]], xaxt = "n", xlab = "",
-       ylab = metric, main = "Tuning results", pch = 19, ...)
-  axis(1, at = seq_len(nrow(tab)), labels = labs, las = 2, cex.axis = 0.8)
+
+  invisible(lapply(panel_levels, function(panel) {
+    shown <- tab[panels == panel, , drop = FALSE]
+    value <- suppressWarnings(as.numeric(shown$value))
+    if (any(!is.finite(value))) value <- seq_len(nrow(shown))
+    ord <- order(value)
+    shown <- shown[ord, , drop = FALSE]
+    value <- value[ord]
+    best <- which.min(shown[[metric]])
+    args <- .idio_plot_dots(list(
+      x = value, y = shown[[metric]], type = "o", pch = 21,
+      bg = .idio_colours[["blue"]], col = .idio_colours[["blue"]],
+      lwd = 2, cex = 1.1, xlab = shown$parameter[[1L]],
+      ylab = paste("Validation", tolower(.idio_pretty_metric(metric))),
+      main = panel, cex.main = 0.92
+    ), list(...))
+    do.call(graphics::plot, args)
+    .idio_plot_grid(x = FALSE, y = TRUE)
+    graphics::lines(value, shown[[metric]], col = .idio_colours[["blue"]], lwd = 2)
+    graphics::points(value, shown[[metric]], pch = 21,
+                     bg = .idio_colours[["blue"]], col = "white", cex = 1.1)
+    graphics::points(value[best], shown[[metric]][best], pch = 21,
+                     bg = .idio_colours[["orange"]], col = "white", cex = 1.55)
+    graphics::text(value[best], shown[[metric]][best], "selected",
+                   pos = 3, cex = 0.72, col = .idio_colours[["orange"]])
+  }))
   invisible(tab)
 }

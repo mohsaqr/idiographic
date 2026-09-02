@@ -1,0 +1,109 @@
+---
+title: "Person-Level Description with describe_persons()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Person-Level Description with describe_persons()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`describe_persons()` answers whether each person's repeated series contains
+enough variation, temporal coverage, and usable observations for an
+idiographic analysis. The function takes a long-format panel, variable names,
+a person identifier, and an optional ordering variable. It returns one tidy
+row per person and variable.
+
+`describe_persons()` separates overall dispersion from successive change.
+The standard deviation measures dispersion around a person's mean. The root
+mean square successive difference measures movement between adjacent
+occasions. These quantities describe different temporal patterns
+[@jahng2008]. The lag-one autocorrelation measures carry-over from one occasion
+to the next.
+
+## Estimate person-level summaries
+
+`describe_persons()` uses `time = "day"` to order observations within each
+learner. The `detail = "full"` setting adds floor and ceiling proportions,
+acute-change probability, skewness, kurtosis, linear trend, and the longest
+run of repeated values. Table 1 reports two learners and two variables so the
+full output remains readable.
+
+```{r description-table}
+descriptives <- describe_persons(analysis_data, id = "name", vars = c("efficacy", "effort"), time = "day", subject = c("Aisha", "Alice"), detail = "full")
+descriptives
+```
+
+`describe_persons()` reports 156 observations for each displayed series in
+Table 1. Aisha's efficacy mean is higher than Alice's, while their efficacy
+RMSSD values are similar. The result therefore distinguishes a difference in
+typical level from a difference in occasion-to-occasion movement. The gap
+columns equal one day for these learners, so a lag represents a consistent
+elapsed interval.
+
+## Plot dispersion against successive change
+
+The figure compares standard deviation with RMSSD and labels every series
+directly. Position, colour, and symbol jointly identify the variable and
+learner; the labels make the figure interpretable without a separate lookup.
+
+```{r description-plot, fig.cap="Figure 1. Overall dispersion and successive change for efficacy and effort in two learners."}
+point_col <- ifelse(descriptives$variable == "efficacy", fig_col["blue"], fig_col["orange"])
+point_pch <- ifelse(descriptives$subject == "Aisha", 21, 24)
+labels <- paste(descriptives$subject, descriptives$variable, sep = " · ")
+figure_begin(c(4.2, 4.8, 1, 2.2))
+plot(descriptives$sd, descriptives$rmssd,
+     xlim = range(descriptives$sd) + c(-1, 1) * diff(range(descriptives$sd)) * 0.12,
+     ylim = range(descriptives$rmssd) + c(-1, 1) * diff(range(descriptives$rmssd)) * 0.12,
+     pch = point_pch, bg = point_col, col = "white", cex = 1.5,
+     xlab = "Person-level standard deviation",
+     ylab = "Root mean square successive difference")
+figure_grid(x = TRUE, y = TRUE)
+points(descriptives$sd, descriptives$rmssd, pch = point_pch,
+       bg = point_col, col = "white", cex = 1.5)
+text(descriptives$sd, descriptives$rmssd, labels = labels, pos = 4,
+     offset = 0.65, cex = 0.76, col = fig_col["ink"], xpd = TRUE)
+```
+
+Figure 1 shows that overall spread and short-term movement do not occupy one
+common scale. A series can vary widely across the observation period without
+changing by the same amount between adjacent days. Both quantities should be
+reported when temporal instability is substantively relevant.
+
+## Assumptions and failure checks
+
+`describe_persons()` treats successive rows as adjacent only after ordering
+within person. The `time` argument is therefore required when row order is not
+the intended chronology. Missing values reduce the usable pair count for
+RMSSD and autocorrelation. A constant series has no estimable correlation and
+cannot support a person-specific slope.
+
+`describe_persons()` defines acute change relative to the pooled sample unless
+`pac_cutoff` is supplied. Analyses that compare acute-change rates across
+datasets should use a common substantive cutoff. The `trend` and `trend_p`
+columns describe a linear trend. They do not diagnose every form of
+nonstationarity.
+
+## When to use which
+
+`describe_persons()` is the first choice for person-level data sufficiency,
+location, variability, movement, and timing. `correlate_persons()` addresses
+pairwise within-person association. `variance_components()` quantifies how
+much sample variance lies within and between people. Model-fitting functions
+should follow these checks when the available variation supports the intended
+estimand.
+
+## References

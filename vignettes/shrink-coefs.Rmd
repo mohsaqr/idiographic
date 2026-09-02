@@ -1,0 +1,119 @@
+---
+title: "Stabilizing Person-Specific Coefficients with shrink_coefs()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Stabilizing Person-Specific Coefficients with shrink_coefs()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`shrink_coefs()` stabilizes each person's coefficient using the pooled
+coefficient distribution. The function takes a fit with individual estimates
+and standard errors. It returns one tidy row per person and term with the raw
+estimate, standard error, shrinkage weight, and shrunken estimate.
+
+`shrink_coefs()` uses an empirical-Bayes rule. The shrinkage weight is the
+estimated between-person variance divided by that variance plus the person's
+sampling variance. A weight near one retains most of the person's raw
+estimate. A weight near zero moves the estimate toward the pooled mean.
+
+## Estimate individual slopes
+
+`fit_lm()` estimates separate effort regressions for the 12 learners. The
+efficacy term is retained because its person-specific slopes and standard
+errors are the quantities of interest.
+
+```{r shrinkage-fit}
+individual_fit <- fit_lm(analysis_data, y = "effort", x = c("efficacy", "monitoring"), id = "name", time = "day", scope = "individual")
+coefs(individual_fit, scope = "individual", n = 8)
+```
+
+`coefs()` displays raw person-specific estimates in Table 1. Differences among
+these values contain both process heterogeneity and sampling error. Ranking
+learners by the raw values would treat both sources as substantive.
+
+## Apply empirical-Bayes shrinkage
+
+`shrink_coefs()` estimates the pooled distribution and applies a learner-specific
+weight. Table 2 retains only the efficacy term through a public argument.
+
+```{r shrinkage-table}
+shrunken_coefs <- shrink_coefs(individual_fit, term = "efficacy")
+shrunken_coefs
+```
+
+`shrink_coefs()` moves every efficacy slope toward the pooled efficacy effect
+in Table 2. Learners with larger standard errors receive smaller weights and
+move farther. The shrunken values preserve estimated heterogeneity while
+reducing the influence of measurement noise.
+
+## Plot raw and shrunken estimates
+
+The paired-dot display places learners on rows and coefficients on the
+horizontal axis. Each line begins at the raw estimate and ends at the shrunken
+estimate, making both the direction and size of shrinkage visible.
+
+```{r shrinkage-plot, fig.cap="Figure 1. Raw and empirical-Bayes efficacy coefficients for 12 learners."}
+shrunken_coefs <- shrunken_coefs[order(shrunken_coefs$shrunken), ]
+at <- seq_len(nrow(shrunken_coefs))
+limits <- range(c(shrunken_coefs$estimate, shrunken_coefs$shrunken, 0))
+figure_begin(c(4.2, 7, 1, 1))
+plot(shrunken_coefs$shrunken, at, xlim = limits,
+     ylim = c(0.5, length(at) + 0.5), yaxt = "n", pch = 21,
+     bg = fig_col["teal"], col = "white", cex = 1.3,
+     xlab = "Efficacy coefficient", ylab = "")
+figure_grid(x = TRUE, y = FALSE)
+abline(v = 0, col = fig_col["muted"], lty = 2)
+segments(shrunken_coefs$estimate, at, shrunken_coefs$shrunken, at,
+         col = fig_col["grid"], lwd = 2.4)
+points(shrunken_coefs$estimate, at, pch = 21, bg = "white",
+       col = fig_col["muted"], cex = 1.05)
+points(shrunken_coefs$shrunken, at, pch = 21, bg = fig_col["teal"],
+       col = "white", cex = 1.3)
+axis(2, at = at, labels = shrunken_coefs$subject, tick = FALSE,
+     col.axis = fig_col["ink"])
+legend("bottomright", c("Raw", "Shrunken"), pch = 21,
+       pt.bg = c("white", fig_col["teal"]),
+       col = c(fig_col["muted"], "white"), bty = "n", cex = 0.8)
+```
+
+Figure 1 shows the raw-to-shrunken movement explicitly. Extreme raw values
+move towards the pooled centre, while precise estimates move less. The plot
+should be interpreted with the weight column in Table 2: longer connecting
+lines indicate that the individual's estimate carried less weight.
+
+## Assumptions and failure checks
+
+`shrink_coefs()` inherits the random-effects assumptions of `pool_coefs()`.
+The method assumes independent people and a coefficient distribution that can
+be summarized by one mean and variance. A multimodal coefficient distribution
+can make one pooled centre inadequate.
+
+`shrink_coefs()` requires standard errors. It does not accept coefficient
+tables that assign equal certainty without evidence. Shrinkage estimates are
+appropriate for description and stabilized prediction. Their usual intervals
+require additional modelling if formal person-specific inference is the goal.
+
+## When to use which
+
+`shrink_coefs()` is appropriate for stabilized person-level estimates.
+`pool_coefs()` is appropriate for the population mean and between-person
+spread. `test_subgroups()` is appropriate before replacing one coefficient
+distribution with discrete classes. Raw individual coefficients remain useful
+when each person has enough information and minimal sampling error.
+
+## References

@@ -1,0 +1,100 @@
+---
+title: "Panel Preparation with preprocess_panel()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Panel Preparation with preprocess_panel()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`preprocess_panel()` prepares repeated measurements without crossing person
+boundaries. The function takes a long-format panel, person and time columns,
+and variables to transform. It returns the original data frame with requested
+centred, scaled, detrended, decomposed, or lagged columns.
+
+`preprocess_panel()` treats centring and decomposition as different analytic
+operations. Person centring replaces a variable with deviations from each
+person's mean. Decomposition retains both the deviation and the person mean.
+The latter supports separate within-person and between-person coefficients in
+one pooled model [@mundlak1978].
+
+## Create decomposition and lag columns
+
+`preprocess_panel()` orders rows by learner and day before constructing lags.
+The call below adds within-person and between-person components plus a
+one-occasion lag for efficacy and monitoring. Table 1 displays the returned
+columns directly.
+
+```{r preparation-table}
+prepared <- preprocess_panel(analysis_data, id = "name", time = "day", vars = c("efficacy", "monitoring"), decompose = TRUE, lag = 1)
+head(prepared)
+```
+
+`preprocess_panel()` sets the first lag of each learner to missing in Table 1.
+The second row for Aisha receives the first row's efficacy and monitoring
+values. The within-person efficacy column expresses each daily value as a
+deviation from Aisha's mean. The between-person column repeats that mean across
+Aisha's rows.
+
+## Plot the transformed series
+
+The time-series display uses the centred values returned by
+`preprocess_panel()`. A zero reference identifies Aisha's own mean, so the
+sign of each point has a direct within-person interpretation.
+
+```{r preparation-plot, fig.cap="Figure 1. Person-centred efficacy over time for Aisha."}
+aisha <- subset(prepared, name == "Aisha")
+figure_begin()
+plot(aisha$day, aisha$efficacy_within, type = "l", lwd = 1.8,
+     col = fig_col["blue"], xlab = "Day",
+     ylab = "Deviation from Aisha's mean")
+figure_grid(x = FALSE, y = TRUE)
+abline(h = 0, col = fig_col["orange"], lwd = 1.4, lty = 2)
+points(aisha$day, aisha$efficacy_within, pch = 21,
+       bg = fig_col["blue"], col = "white", cex = 0.62)
+```
+
+Figure 1 fluctuates around zero because the series is person-centred. Positive
+values mark days above Aisha's typical efficacy. Negative values mark days
+below her typical efficacy. The transformation changes the interpretation of
+a regression coefficient from a raw-score contrast to a within-person
+contrast.
+
+## Assumptions and failure checks
+
+`preprocess_panel()` requires a meaningful ordering variable for lagging and
+detrending. A lag represents the preceding recorded occasion. The
+`lag_max_gap` argument can invalidate lags that span an unacceptable elapsed
+time. No lag is carried from the final row of one learner to the first row of
+another learner.
+
+`preprocess_panel()` applies scaling parameters within the requested scope.
+Person scaling changes coefficients into person-specific standard-deviation
+units. Grand scaling uses a common scale. Detrending removes an estimated
+linear trend and requires a time column. Transformation choices should follow
+the estimand rather than a desire to improve model fit.
+
+## When to use which
+
+`preprocess_panel()` is appropriate for explicit centring, scaling,
+decomposition, detrending, and lag construction. `preprocess()` is the
+network-readiness audit for stationarity, compliance, and series variance.
+`fit_within_between()` performs decomposition inside the model and is preferred
+when the main question directly contrasts within-person and between-person
+effects.
+
+## References

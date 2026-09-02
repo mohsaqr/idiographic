@@ -1,0 +1,117 @@
+---
+title: "Repeated-Split Heterogeneity Analysis with fit_heterogeneity()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Repeated-Split Heterogeneity Analysis with fit_heterogeneity()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+set.seed(20260902)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`fit_heterogeneity()` tests whether a person-varying quantity differs
+systematically across people. The target can be a treatment effect, prediction
+error, or gain from individual rather than pooled modelling. The function
+returns repeated-split estimates, sorted groups, a heterogeneity slope,
+characteristics of extreme groups, and learner-selection criteria.
+
+`fit_heterogeneity()` separates proxy learning from inference. One sample
+learns a machine-learning proxy for the person-varying target. A held-out
+sample estimates average, grouped, and heterogeneity quantities. Repeating and
+aggregating the split reduces dependence on one random partition
+[@chernozhukov2020]. Standard errors cluster observations by person.
+
+## Study heterogeneity in prediction error
+
+`fit_heterogeneity()` asks whether effort prediction error varies predictably
+across learners. Linear and ridge proxies compete over ten person-level random
+splits. Three sorted groups range from lower to higher error.
+
+```{r heterogeneity-fit}
+heterogeneity_fit <- fit_heterogeneity(analysis_data, y = "effort", x = c("efficacy", "monitoring", "planning"), id = "name", target = "error", model = c("linear", "ridge"), num_splits = 10, n_groups = 3)
+heterogeneity(heterogeneity_fit)
+```
+
+`heterogeneity()` reports an average absolute prediction error of about 20.2
+in Table 1. The highest-minus-lowest group contrast is about 3.0, and its
+interval includes zero. The heterogeneity slope interval also includes zero.
+The analysis does not find stable, predictable error heterogeneity in this
+12-learner subset.
+
+## Describe and compare learned proxies
+
+`clan()` compares predictor means between extreme target groups. `learners()`
+reports the criterion used to select the proxy model.
+
+```{r heterogeneity-details}
+clan(heterogeneity_fit)
+learners(heterogeneity_fit)
+```
+
+`clan()` reports descriptive differences between extreme predicted-error
+groups in Table 2. These differences describe the fitted grouping and do not
+identify causes of prediction error. `learners()` selects ridge by a small
+criterion difference in Table 3.
+
+## Plot the heterogeneity estimates
+
+The coefficient-and-interval display includes the average, heterogeneity
+slope, sorted groups, and extreme-group contrast. Unlike a point-only plot, it
+keeps the uncertainty required for the substantive conclusion.
+
+```{r heterogeneity-plot, fig.cap="Figure 1. Repeated-split estimates for average error and error heterogeneity."}
+heterogeneity_table <- heterogeneity(heterogeneity_fit)
+heterogeneity_labels <- c(
+  average = "Average absolute error",
+  heterogeneity = "Heterogeneity slope",
+  `group:g1` = "Lowest-error group",
+  `group:g2` = "Middle-error group",
+  `group:g3` = "Highest-error group",
+  `group:top-bottom` = "Highest minus lowest"
+)
+labels <- unname(heterogeneity_labels[heterogeneity_table$effect])
+forest_plot(heterogeneity_table$estimate, heterogeneity_table$conf_low,
+            heterogeneity_table$conf_high, labels,
+            xlab = "Absolute-error target (95% CI)", colour = fig_col["purple"])
+```
+
+Figure 1 shows similar estimates for the three error groups and wide
+uncertainty for their contrast. The heterogeneity-slope and highest-minus-lowest
+intervals cross zero, so this analysis does not establish systematic error
+heterogeneity.
+
+## Assumptions and failure checks
+
+`fit_heterogeneity()` treats people as independent clusters for the default
+person split. The number of independent people limits precision even when each
+person contributes many rows. More random splits reduce split sensitivity but
+do not create additional independent units.
+
+`fit_heterogeneity()` uses random rather than time-ordered splits because its
+target is cross-person heterogeneity. The `gain` target changes to occasion
+splits so each person appears in both modelling samples. Forecast evaluation
+should use `fit_rolling()` instead. A causal interpretation of the `cate`
+target requires the same identification assumptions as `fit_effects()`.
+
+## When to use which
+
+`fit_heterogeneity()` is appropriate for repeated-split inference about a
+person-varying target. `fit_effects()` is appropriate for direct average and
+sorted treatment-effect estimation across model scopes. `test_subgroups()` is
+appropriate when the question concerns discrete coefficient populations.
+`fit_rolling()` is appropriate for change in prediction performance over time.
+
+## References

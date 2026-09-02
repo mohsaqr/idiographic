@@ -1,0 +1,117 @@
+---
+title: "Testing Whether Subgroups Exist with test_subgroups()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Testing Whether Subgroups Exist with test_subgroups()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`test_subgroups()` asks whether person-specific coefficient vectors are better
+represented by one population or by several discrete groups. The function
+takes a repeated-measures regression problem and a maximum group count. It
+returns a selected count, an evidence label, distribution-shape diagnostics,
+and a tidy BIC table.
+
+`test_subgroups()` fits person-specific regressions and compares Gaussian
+mixtures with one through `k_max` components. The search covers several
+covariance structures. Bayesian information criterion balances mixture fit
+against model complexity. A clustering algorithm always returns a partition
+when asked for one. This test allows one population to remain the selected
+answer.
+
+## Test one through three groups
+
+`test_subgroups()` assesses efficacy and monitoring slopes across 12 learners.
+The printed object states the selected group count and evidence relative to one
+group.
+
+```{r subgroup-test}
+subgroup_test <- test_subgroups(analysis_data, y = "effort", x = c("efficacy", "monitoring"), id = "name", time = "day", k_max = 3)
+subgroup_test
+```
+
+`test_subgroups()` selects three groups for this 12-learner subset. The printed
+verdict reports a BIC improvement of about 8.9 over the one-group model. This
+result supports further inspection of a three-group representation. It does
+not assign learners to groups.
+
+## Inspect the model-selection table
+
+`as.data.frame()` returns the BIC search as one row per fitted mixture. Table 1
+marks the selected row.
+
+```{r subgroup-selection-table}
+as.data.frame(subgroup_test)
+```
+
+`as.data.frame()` reports a minimum BIC of about 61.1 for the selected
+three-component model in Table 1. The best one-component model has a BIC of
+about 70.1. Model selection depends on the coefficient distribution and the
+number of learners.
+
+## Plot the BIC comparison
+
+The figure shows every fitted covariance model faintly and connects the best
+BIC at each candidate group count. This separates the group-count decision
+from the nuisance choice of covariance structure.
+
+```{r subgroup-test-plot, fig.cap="Figure 1. Bayesian information criterion across candidate subgroup models."}
+bic_table <- as.data.frame(subgroup_test)
+best_by_k <- aggregate(bic ~ k, data = bic_table, min)
+figure_begin()
+plot(bic_table$k, bic_table$bic, pch = 21, bg = fig_col["grid"],
+     col = "white", cex = 1.0, xaxt = "n",
+     xlab = "Candidate number of subgroups", ylab = "BIC")
+figure_grid(x = FALSE, y = TRUE)
+lines(best_by_k$k, best_by_k$bic, col = fig_col["blue"], lwd = 2)
+points(best_by_k$k, best_by_k$bic, pch = 21, bg = fig_col["blue"],
+       col = "white", cex = 1.35)
+selected <- subset(bic_table, selected)
+points(selected$k, selected$bic, pch = 21, bg = fig_col["orange"],
+       col = "white", cex = 1.65)
+text(selected$k, selected$bic, "selected", pos = 3, cex = 0.75,
+     col = fig_col["orange"])
+axis(1, at = sort(unique(bic_table$k)))
+```
+
+Figure 1 places the selected three-group solution at the global BIC minimum.
+The faint points show that covariance assumptions materially affect the score;
+the connected blue series shows the best available evidence for each group
+count. Lower BIC indicates the preferred fit-complexity trade-off.
+
+## Assumptions and failure checks
+
+`test_subgroups()` assumes that the person-specific coefficient distribution
+can be compared with Gaussian mixtures. Skewness and heavy tails can produce
+apparent classes when the population is continuous. Bauer and Curran describe
+this overextraction problem for mixture models [@bauer2003]. The returned shape
+diagnostics should therefore accompany the BIC result.
+
+`test_subgroups()` needs more people than candidate components and enough
+observations to estimate each person's slopes. A selected class count is
+sample-dependent. Replication or stability analysis is needed before treating
+classes as substantive categories.
+
+## When to use which
+
+`test_subgroups()` is appropriate for evidence about the number of coefficient
+populations. `find_subgroups()` is appropriate for assigning people to a
+requested or selected number of groups. `fit_subgroups()` is appropriate for
+comparing group-specific prediction with pooled and individual alternatives.
+
+## References

@@ -1049,8 +1049,7 @@ plot_variance <- function(x, sort_by = "icc", ...) {
   label <- if ("variable" %in% names(tab)) "variable" else "level"
   tab <- tab[is.finite(tab$icc), , drop = FALSE]
   if (!nrow(tab)) {
-    plot.new()
-    title("No variance components available")
+    .idio_plot_empty("No variance components available")
     return(invisible(tab))
   }
   if (!is.null(sort_by) && sort_by %in% names(tab)) {
@@ -1058,15 +1057,21 @@ plot_variance <- function(x, sort_by = "icc", ...) {
   }
 
   shares <- rbind(between = tab$icc, within = 1 - tab$icc)
-  op <- par(mar = c(5, 9, 3, 2))
+  op <- .idio_plot_begin(mar = c(4.2, 8, 1, 1))
   on.exit(par(op), add = TRUE)
-  barplot(shares, horiz = TRUE, names.arg = tab[[label]], las = 1,
-          col = c("#4C72B0", "#DD8452"), border = NA, xlim = c(0, 1),
-          xlab = "Share of variance",
-          main = "Where the variance lives", ...)
-  legend("topright", legend = c("between people", "within people"),
-         fill = c("#4C72B0", "#DD8452"), border = NA, bty = "n",
-         inset = c(0, -0.12), xpd = TRUE, horiz = TRUE)
+  at <- barplot(shares, horiz = TRUE, names.arg = tab[[label]], las = 1,
+                col = c(.idio_colours[["blue"]], .idio_colours[["pale_blue"]]),
+                border = NA, xlim = c(0, 1), xlab = "Share of observed variance",
+                axes = FALSE, ...)
+  graphics::axis(1, at = seq(0, 1, by = 0.25),
+                 labels = paste0(seq(0, 100, by = 25), "%"))
+  graphics::text(pmax(tab$icc / 2, 0.04), at,
+                 labels = paste0(round(100 * tab$icc), "%"),
+                 col = "white", cex = 0.76, font = 2)
+  graphics::legend("topright", legend = c("Between people", "Within people"),
+         fill = c(.idio_colours[["blue"]], .idio_colours[["pale_blue"]]),
+         border = NA, bty = "n", inset = c(0, -0.1), xpd = TRUE, horiz = TRUE,
+         text.col = .idio_colours[["ink"]])
   invisible(tab)
 }
 
@@ -1095,39 +1100,47 @@ plot_components <- function(x, scope = "pooled", subject = NULL,
   tab <- tab[tab$component %in% c("within", "between", "contextual") &
                is.finite(tab$estimate), , drop = FALSE]
   if (!nrow(tab)) {
-    plot.new()
-    title("No within/between coefficients available")
+    .idio_plot_empty("No within/between coefficients available")
     return(invisible(tab))
   }
 
   shown <- intersect(c("within", "between", "contextual"),
                      unique(tab$component))
-  colours <- c(within = "#DD8452", between = "#4C72B0",
-               contextual = "#55A868")
+  colours <- c(within = "#E69F00", between = "#0072B2",
+               contextual = "#009E73")
   vars <- unique(tab$variable)
   at <- seq_along(vars)
   offsets <- seq_along(shown)
   offsets <- (offsets - mean(offsets)) * 0.22
 
   xlim <- range(c(tab$conf_low, tab$conf_high, 0), na.rm = TRUE)
-  op <- par(mar = c(5, 9, 3, 2))
+  op <- .idio_plot_begin(mar = c(4.2, 8, 1, 1))
   on.exit(par(op), add = TRUE)
   plot(NA, xlim = xlim, ylim = c(0.5, length(vars) + 0.5), yaxt = "n",
-       xlab = "Coefficient", ylab = "",
-       main = "Within-person vs between-person effects", ...)
-  abline(v = 0, col = "grey60", lty = 2)
-  axis(2, at = at, labels = vars, las = 1)
+       xlab = "Coefficient estimate (95% CI)", ylab = "", ...)
+  .idio_plot_grid(x = TRUE, y = FALSE)
+  abline(v = 0, col = .idio_colours[["muted"]], lty = 2)
+  axis(2, at = at, labels = vars, las = 1, tick = FALSE,
+       col.axis = .idio_colours[["ink"]])
 
   for (i in seq_along(shown)) {
     rows <- tab[tab$component == shown[i], , drop = FALSE]
     rows <- rows[match(vars, rows$variable), , drop = FALSE]
     yy <- at + offsets[i]
-    arrows(rows$conf_low, yy, rows$conf_high, yy, angle = 90, code = 3,
-           length = 0.04, col = colours[[shown[i]]])
-    points(rows$estimate, yy, pch = 19, col = colours[[shown[i]]])
+    graphics::segments(rows$conf_low, yy, rows$conf_high, yy,
+                       col = colours[[shown[i]]], lwd = 2)
+    graphics::segments(rows$conf_low, yy - 0.035,
+                       rows$conf_low, yy + 0.035,
+                       col = colours[[shown[i]]])
+    graphics::segments(rows$conf_high, yy - 0.035,
+                       rows$conf_high, yy + 0.035,
+                       col = colours[[shown[i]]])
+    graphics::points(rows$estimate, yy, pch = 21,
+                     bg = colours[[shown[i]]], col = "white", cex = 1.2)
   }
-  legend("topright", legend = shown, pch = 19,
-         col = unname(colours[shown]), bty = "n", inset = c(0, -0.12),
-         xpd = TRUE, horiz = TRUE)
+  legend("topright", legend = tools::toTitleCase(shown), pch = 21,
+         pt.bg = unname(colours[shown]), col = "white", bty = "n",
+         inset = c(0, -0.1), xpd = TRUE, horiz = TRUE,
+         text.col = .idio_colours[["ink"]])
   invisible(tab)
 }

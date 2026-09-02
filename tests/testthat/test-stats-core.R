@@ -99,6 +99,13 @@ test_that("fit_ml supports native models and flexible selectors", {
   expect_true(any(tuning(a, model = "ridge")$rank == 1L))
   expect_true(nrow(diagnostics(a, model = "ridge", n = 5)) <= 5)
   expect_silent(plot_importance(a, model = "ridge", n = 3))
+  set.seed(42)
+  permutation_plot <- plot_importance(
+    a, model = "knn", scope = "pooled", n = 3,
+    method = "permutation", repeats = 2
+  )
+  expect_lte(nrow(permutation_plot), 3L)
+  expect_true(all(permutation_plot$subject == ".overall"))
   expect_silent(plot_diagnostics(a, model = "ridge", type = "residuals"))
   expect_silent(plot_tuning(a, model = "ridge"))
   expect_silent(plot_metrics(a))

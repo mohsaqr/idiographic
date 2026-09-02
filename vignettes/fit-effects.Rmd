@@ -1,0 +1,98 @@
+---
+title: "Treatment-Effect Estimation with fit_effects()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Treatment-Effect Estimation with fit_effects()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+analysis_data <- transform(analysis_data, high_monitoring = as.integer(monitoring > median(monitoring, na.rm = TRUE)))
+```
+
+## Analytic question
+
+`fit_effects()` estimates average and heterogeneous effects for binary,
+multi-arm, or continuous treatments. The function takes an outcome, treatment,
+covariates, person identifier, optional time order, and model controls. It
+returns an `idiographic_effects` object with tidy effect estimates,
+predictions, metrics, and failures.
+
+`fit_effects()` uses augmented inverse-probability weighting for binary and
+multi-arm treatments [@bang2005]. Outcome and propensity models are estimated
+on training rows and applied to held-out rows. Continuous treatments use a
+partially linear residualization score [@chernozhukov2018].
+
+## Define the illustrative contrast
+
+`fit_effects()` treats days above the median monitoring score as the exposed
+condition. The bundled data are observational and contain no randomized
+treatment. The example therefore illustrates estimation and diagnostics. It
+does not identify a causal effect of monitoring.
+
+`fit_effects()` adjusts for efficacy, planning, and control at the pooled
+scope. Three sorted effect groups summarize estimated heterogeneity.
+
+```{r effects-fit}
+effect_fit <- fit_effects(analysis_data, y = "effort", treatment = "high_monitoring", x = c("efficacy", "planning", "control"), id = "name", time = "day", scope = "pooled", n_groups = 3)
+effects(effect_fit)
+```
+
+`effects()` reports an average contrast of about -3.7 in Table 1. Its
+confidence interval includes zero. The top-minus-bottom sorted-group contrast
+is about 15.1, and its interval also includes zero. The BLP heterogeneity
+interval includes zero. This analysis does not provide evidence of a stable
+effect difference across the sorted groups.
+
+## Plot sorted effect groups
+
+`plot_effects()` draws each GATES estimate with its confidence interval.
+Figure 1 orders groups from the lowest to highest predicted effect and marks
+zero with an orange reference line.
+
+```{r effects-plot, fig.cap="Figure 1. Sorted high-monitoring contrasts and confidence intervals."}
+plot_effects(effect_fit, scope = "pooled")
+```
+
+Figure 1 shows overlapping intervals across the three groups. The ordering was
+learned from the data, while the displayed group estimates use held-out scores.
+Wide intervals reflect uncertainty across 12 learners.
+
+## Identification assumptions and failure checks
+
+`fit_effects()` requires consistency, positivity, and conditional exchangeability
+for a causal interpretation. Positivity requires both treatment conditions
+across relevant covariate patterns. Conditional exchangeability requires that
+the supplied covariates block treatment-outcome confounding. The observational
+teaching contrast cannot verify that condition.
+
+`fit_effects()` removes rows with a missing treatment before it constructs the
+temporal split. Missing outcomes and predictors are handled by the shared
+complete-case split. A person can still enter the failure table when too few
+usable training or test rows remain.
+
+`fit_effects()` trims estimated propensities away from zero and one. Severe
+trimming indicates poor overlap and changes the effective target population.
+AIPW tolerates misspecification of one nuisance model under its regularity
+conditions. Misspecifying both outcome and propensity models can bias the
+estimate.
+
+## When to use which
+
+`fit_effects()` is appropriate when the target is an average or
+person-varying treatment effect and the design supports causal identification.
+`fit_lm()` is appropriate for conditional association. `fit_heterogeneity()`
+is appropriate for repeated-split inference about treatment effects,
+prediction error, or the gain from individual modelling.
+
+## References

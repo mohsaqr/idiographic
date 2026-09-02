@@ -355,3 +355,28 @@ CI/release metadata, and run required-only plus optional-backend matrices.
 **Outcome:** `idiostats` is folded into `idiographic`; the surviving package
 has one documented identity, compatible migration bridges, complete donor test
 coverage, and a clean installed-package release gate on the `merged` branch.
+
+### 2026-09-02 — Function-specific statistical vignettes added
+
+- Added one detailed vignette for each of the 16 major non-network functions.
+- Each vignette uses bundled data, public tidy verbs, an Okabe-Ito plot,
+  observed-result interpretation, assumptions, failure conditions, primary
+  method citations, and a final method-selection section.
+- Corrected missing-treatment handling in `fit_effects()` after the rendered
+  example exposed the internal failure path. Added regression coverage.
+- Rebuilt the final tarball and all vignette outputs. The installed package
+  again completes `R CMD check --no-manual` with **Status: OK**.
+
+### 2026-09-02 — Statistical documentation and figures redesigned
+
+- Added `vignettes/statistical-workflows.Rmd` as the maintained index for all
+  16 non-network workflows, organised by research question and analytic stage.
+- Expanded the `fit_ml()` vignette into a full predictive-analysis workflow:
+  temporal validation, explicit baselines, hyperparameter auditing, scope
+  comparison, person-level error, held-out trajectories, and permutation
+  importance.
+- Replaced default bars and sparse point clouds with ranked dot plots,
+  coefficient-and-interval displays, binned calibration, direct labelling,
+  raw-to-shrunken coefficient paths, and BIC selection paths.
+- Added a shared colour-accessible base-graphics system so the public plotting
+  functions remain dependency-free and consistent across vignettes.

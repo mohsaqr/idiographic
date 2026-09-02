@@ -1,0 +1,97 @@
+---
+title: "Rolling-Origin Validation with fit_rolling()"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Rolling-Origin Validation with fit_rolling()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
+source("figure-style.R")
+library(idiographic)
+data(srl)
+analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
+```
+
+## Analytic question
+
+`fit_rolling()` estimates forecasting performance across several points in
+time. The function takes a panel, outcome, predictors, person and time columns,
+a model family, and a rolling schedule. It returns the standard
+`idiographic_fit` tables with a fold identifier added to predictions.
+
+`fit_rolling()` trains on observations before each origin and predicts the next
+assessment block. The origin then moves forward by `step` observations. This
+expanding-window design evaluates a model under repeated historical forecasts
+instead of one terminal hold-out [@tashman2000].
+
+## Define the rolling schedule
+
+`fit_rolling()` fits pooled linear models at four origins. Each fold predicts
+the next five observations per learner. The default initial window uses all
+earlier rows that can accommodate the requested schedule. Table 1 pools the
+forecast errors across folds.
+
+```{r rolling-fit}
+rolling_fit <- fit_rolling(analysis_data, y = "effort", x = c("efficacy", "monitoring"), id = "name", method = "lm", time = "day", scope = "pooled", folds = 4, assess = 5)
+metrics(rolling_fit, overall = TRUE)
+```
+
+`fit_rolling()` evaluates 240 forecasts in Table 1. This count equals four
+folds, five test occasions, and 12 learners. The pooled linear model has an
+RMSE of about 23.8 and a positive mean error of about 1.4. These metrics
+summarize repeated forward predictions rather than in-sample fit.
+
+## Inspect fold-level predictions
+
+`predictions()` returns one row per forecast with the original row identifier,
+person, observed value, predicted value, and fold. Table 2 limits printing
+through the accessor's `n` argument.
+
+```{r rolling-predictions}
+predictions(rolling_fit, n = 12)
+```
+
+`predictions()` shows that each row belongs to a specific forecast origin in
+Table 2. The fold column permits error review by historical period without
+reaching into the fitted object.
+
+## Plot forecast trajectories
+
+`plot_predictions()` draws observed and predicted values in row order for
+selected learners. Figure 1 uses three learner panels.
+
+```{r rolling-plot, fig.cap="Figure 1. Observed effort and pooled rolling-origin predictions for three learners."}
+plot_predictions(rolling_fit, scope = "pooled", n_subjects = 3)
+```
+
+Figure 1 shows where the pooled forecast follows or misses each learner's
+held-out trajectory. The plot retains person labels even though one coefficient
+vector is fitted at the pooled scope.
+
+## Assumptions and failure checks
+
+`fit_rolling()` requires ordered observations and a schedule that fits the
+shortest person series. The function stops when `initial`, `assess`, `step`,
+and `folds` require more rows than are available. Missing predictor or outcome
+values can reduce usable rows within a fold.
+
+`fit_rolling()` can tune machine-learning models inside each fold. Validation
+rows are taken from that fold's training period. The assessment block remains
+unseen during tuning. Overlapping assessment blocks occur when `step` is
+smaller than `assess`; metrics then count some time regions more than once.
+
+## When to use which
+
+`fit_rolling()` is appropriate for repeated prospective evaluation. `fit_lm()`,
+`fit_glm()`, and `fit_ml()` use one terminal hold-out and are appropriate for a
+single train-test comparison. Rolling network functions address time-varying
+multivariate systems and have a different result contract.
+
+## References
