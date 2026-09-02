@@ -419,7 +419,7 @@ argument_coverage <- function(method = NULL) {
     c("data", "id", "day", "beep", "...", "estimator", "standardize",
       "alpha", "outcome", "keep_fits", "predictors", "task", "model",
       "compare", "test_prop", "min_train", "min_test", "lambda", "k",
-      "n_components", "max_iter", "tol"), collapse = "|"),
+      "n_components", "max_iter", "tol", "y", "x"), collapse = "|"),
   mlvar = paste(
     c("data", "vars", "id", "day", "beep", "lags", "scale", "min_obs",
       "subject", "...", "verbose", "estimator", "temporal",

@@ -1,26 +1,25 @@
 Package: idiographic
 Type: Package
-Title: Person-Specific (Idiographic) and Heterogeneous Complex Networks
-Version: 0.3.4
+Title: Person-Specific Statistics and Heterogeneous Dynamic Networks
+Version: 0.4.0.9000
 Authors@R: c(
-    person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
+    utils::person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
         email = "saqr@saqr.me"),
-    person("Sonsoles", "López-Pernas", role = "aut",
+    utils::person("Sonsoles", "López-Pernas", role = "aut",
         email = "sonsoles.lopez@uef.fi"))
 Author: Mohammed Saqr [aut, cre, cph],
     Sonsoles López-Pernas [aut]
 Maintainer: Mohammed Saqr <saqr@saqr.me>
-Description: Person-specific and within-person network estimation from
-    intensive longitudinal and panel data. Estimators include ordinary
-    vector autoregression (VAR), graphical vector autoregression (graphical
-    VAR), multilevel vector autoregression (mlVAR), rolling ordinary and
-    graphical VAR, native Bayesian VAR and multilevel Bayesian VAR, unified
-    Structural Equation Modeling (uSEM), and Group Iterative Multiple Model
-    Estimation (GIMME). All estimators are native clean-room
-    implementations. All functions are validated against
-    authoritative literature. Also provides preprocessing audits,
-    edge-stability diagnostics, model-comparison reports, and rolling
-    forecast validation. Methods are described in
+Description: Person-specific and within-person statistical modelling for
+    intensive longitudinal and panel data. Provides descriptive statistics,
+    linear and generalized linear models, machine learning, within-between
+    decomposition, coefficient pooling and shrinkage, subgroup discovery,
+    treatment effects, heterogeneity analysis, and honest temporal validation.
+    Dynamic-network estimators include ordinary and graphical vector
+    autoregression, multilevel and Bayesian vector autoregression, unified
+    Structural Equation Modeling, and Group Iterative Multiple Model
+    Estimation. Core estimators use native clean-room implementations and are
+    validated against authoritative literature. Methods are described in
     <doi:10.1007/978-3-031-95365-1_20> and
     <doi:10.1080/00273171.2018.1454823>.
 License: GPL-3
@@ -33,13 +32,30 @@ Depends:
     R (>= 4.1)
 Roxygen: list(markdown = TRUE)
 Imports:
+    grDevices,
+    graphics,
     stats,
     utils,
     parallel
 Suggests:
     testthat (>= 3.0.0),
+    MASS,
+    flexmix,
+    kernlab,
     lme4,
     lavaan,
+    mboost,
+    mgcv,
+    nnet,
+    partykit,
+    pls,
+    quantreg,
+    randomForest,
+    rpart,
+    e1071,
+    glmnet,
+    ranger,
+    xgboost,
     cograph,
     mlVAR,
     MplusAutomation,

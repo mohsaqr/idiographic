@@ -78,8 +78,8 @@
 #'               model = c("linear", "ridge", "knn"))
 #' fit$metrics
 #' coefs(fit)
-#' @export
-fit_ml <- function(data, outcome, predictors, id,
+#' @noRd
+.fit_ml_legacy <- function(data, outcome, predictors, id,
                    day = NULL, beep = NULL,
                    task = c("auto", "regression", "classification"),
                    model = NULL,
@@ -309,11 +309,11 @@ fit_ml <- function(data, outcome, predictors, id,
 
 #' @rdname fit_ml
 #' @export
-fit_idiographic_ml <- fit_ml
+fit_idiographic_ml <- .fit_ml_legacy
 
 #' @rdname fit_ml
 #' @export
-fit_individualized_ml <- fit_ml
+fit_individualized_ml <- .fit_ml_legacy
 
 #' @noRd
 .idioml_check_count <- function(x, arg) {

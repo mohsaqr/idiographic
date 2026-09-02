@@ -52,7 +52,7 @@ test_that("argument ledger classifies every current public formal exactly once",
   expect_named(ledger, c("method", "kind", "argument", "status",
                          "reference", "scope"))
   expect_false(any(ledger$status == "unassessed"))
-  expect_identical(nrow(ledger), 315L)
+  expect_identical(nrow(ledger), 317L)
   expect_identical(anyDuplicated(ledger[c("method", "argument")]), 0L)
   expect_true(all(nzchar(ledger$scope)))
 

@@ -250,3 +250,33 @@ The consolidation is complete when:
 
 **Next:** complete the symbol-level ownership map, then integrate non-colliding
 shared infrastructure and descriptive modules with their donor tests.
+
+### 2026-09-02 — Donor engine integrated
+
+- Completed the top-level symbol scan. Only `%||%`, `coefs()`, `fit_ml()`, and
+  `preprocess()` collide across the two source trees.
+- Preserved the established `idiographic` owners for the shared generic and
+  helpers. Added the donor `coefs()` method to the existing generic.
+- Added compatibility dispatch to `fit_ml()`: historical
+  `outcome`/`predictors` calls retain the `idioml_result` contract, while
+  consolidated `y`/`x` calls and calls using panel controls route to the richer
+  scoped/tunable engine.
+- Preserved the network-oriented preprocessing audit as `preprocess()` and
+  exposed the donor transformation workflow explicitly as
+  `preprocess_panel()`.
+- Integrated donor preparation, splitting, units, formula models, LM, GLM, ML,
+  rolling validation, descriptions, diagnostics, pooling, within/between,
+  subgroup, effects, heterogeneity, registry, tuning, views, and plots.
+- Ported the complete donor test suite under `test-stats-*` filenames. Donor
+  source and tests remain untouched in their original repository.
+- Merged required and optional dependency metadata, regenerated `.Rd` files and
+  `NAMESPACE`, and corrected the `stats::effects()` namespace registration.
+- The full combined source-tree suite passes.
+- The built package installs, loads, passes namespace/dependency/S3/code/Rd
+  checks, and reaches **1,422 installed-package assertions passed**. Its only
+  remaining check error is the same five uSEM check-harness failures recorded
+  before the merge.
+
+**Next:** make `idiographic` the visible identity of all imported result
+classes and print methods, harmonize the public result contract, then rebuild
+the README and vignettes around the unified workflow.

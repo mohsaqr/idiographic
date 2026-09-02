@@ -18,6 +18,9 @@
 #' share [edges()], [coefs()], [nodes()], [matrices()], and plotting methods.
 #' [equivalence()] reports the exact validation scope attached to each method.
 #'
-#' @importFrom stats cov2cor median qlogis sd setNames
+#' @importFrom grDevices rgb
+#' @importFrom graphics abline arrows axis barplot legend lines par plot.new
+#'   points title
+#' @importFrom stats ave cov2cor effects median qlogis sd setNames
 #' @importFrom utils tail
 "_PACKAGE"
