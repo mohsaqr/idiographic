@@ -4,6 +4,35 @@
 # migrate gradually. Registering both names makes the surviving package
 # identity explicit to S3 discovery as well as to `class()`.
 
+#' Convert a consolidated fit to its prediction table
+#'
+#' @param x A consolidated `idiographic_fit`.
+#' @param row.names Ignored.
+#' @param optional Ignored.
+#' @param ... Filters passed to [predictions()].
+#' @return A prediction `data.frame`.
+#' @export
+as.data.frame.idiographic_fit <- function(x, row.names = NULL,
+                                          optional = FALSE, ...) {
+  predictions(x, ...)
+}
+
+#' @rdname as.data.frame.idiographic_fit
+#' @export
+as.data.frame.idiostats_fit <- as.data.frame.idiographic_fit
+
+#' Summarise a consolidated fit
+#'
+#' @param object A consolidated `idiographic_fit`.
+#' @param ... Filters passed to [metrics()].
+#' @return A model-metrics `data.frame`.
+#' @export
+summary.idiographic_fit <- function(object, ...) metrics(object, ...)
+
+#' @rdname summary.idiographic_fit
+#' @export
+summary.idiostats_fit <- summary.idiographic_fit
+
 #' @export
 as.data.frame.idiographic_subgroup_test <-
   as.data.frame.idiostats_subgroup_test

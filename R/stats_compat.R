@@ -86,3 +86,27 @@ fit_ml <- function(data, outcome, predictors, id,
   )
   do.call(.fit_ml_legacy, c(legacy_args, dots))
 }
+
+#' Fit machine learning with the consolidated scoped result contract
+#'
+#' `fit_ml_panel()` is the unambiguous positional entry point for code migrated
+#' from `idiostats`. It always returns the consolidated scoped result used by
+#' `metrics()`, `predictions()`, `tuning()`, and the result-view functions.
+#' Named `fit_ml(data, y = ..., x = ..., id = ...)` calls are equivalent.
+#'
+#' @param data A data frame or matrix.
+#' @param y Outcome column name.
+#' @param x Predictor selector.
+#' @param id Person identifier column.
+#' @param ... Consolidated ML controls; see [fit_ml()].
+#'
+#' @return An `idiographic_fit` retaining the `idiostats_fit` compatibility
+#'   class.
+#' @examples
+#' fit <- fit_ml_panel(srl, "effort", "efficacy:monitoring", "name",
+#'                     time = "day", scope = "pooled", model = "ridge")
+#' metrics(fit, overall = TRUE)
+#' @export
+fit_ml_panel <- function(data, y, x, id, ...) {
+  .fit_ml_stats(data = data, y = y, x = x, id = id, ...)
+}

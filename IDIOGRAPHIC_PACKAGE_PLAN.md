@@ -311,3 +311,47 @@ the README and vignettes around the unified workflow.
 **Next:** audit the dual result contracts and function vocabulary, expand the
 general estimator registry or document its network/workflow boundary, update
 CI/release metadata, and run required-only plus optional-backend matrices.
+
+### 2026-09-02 — Compatibility and result contracts completed
+
+- Audited the donor surface after integration: every `idiostats` export is
+  present in the consolidated namespace, every donor test file has a ported
+  counterpart, and the destination has no duplicate top-level definitions.
+- Added `fit_ml_panel()` as an unambiguous positional migration bridge for the
+  former `idiostats` ML API. Named `fit_ml(y = ..., x = ...)` calls retain the
+  same consolidated behavior, while historical `idiographic` positional calls
+  retain the original result contract.
+- Added a shared structural validator for scoped `idiographic_fit` results and
+  applied it to ordinary and rolling constructors.
+- Added primary and compatibility `summary()` and `as.data.frame()` methods so
+  users can inspect consolidated fits without reaching into their internals.
+- Documented the estimator-registry boundary: dynamic/network estimators keep
+  the existing package registry, ML algorithms use `models()`, and classical
+  LM/GLM/effects workflows remain explicit verbs rather than synthetic registry
+  entries.
+- Expanded consolidation tests for primary identity, both ML calling
+  conventions, malformed result detection, and predictable result coercion.
+- Re-ran the complete combined source suite. All imported and pre-existing
+  sections pass outside the previously documented managed-sandbox limitation;
+  external oracle-equivalence tests remain opt-in by design.
+
+### 2026-09-02 — Final release gate passed
+
+- The complete combined source-tree suite passes outside the managed sandbox.
+  This includes the original Bayesian, GIMME, uSEM, recovery, stability, and
+  network tests plus the complete ported `idiostats` suite. The 32 external
+  oracle-equivalence cases remain intentionally gated by
+  `IDIOGRAPHIC_RUN_EQUIVALENCE=true`.
+- Built the final `idiographic_0.4.0.9000.tar.gz` from `merged`, including all
+  vignette outputs.
+- Ran `R CMD check --no-manual` on that exact tarball outside the sandbox. The
+  package installed, loaded, ran examples and packaged tests, validated code,
+  namespace, dependencies, datasets, and documentation, and rebuilt every
+  vignette with **Status: OK**.
+- A PDF-manual check remains unavailable on this machine because `pdflatex` is
+  not installed; the cross-platform CI matrix is configured to cover supported
+  required-only and optional-backend environments after the branch is pushed.
+
+**Outcome:** `idiostats` is folded into `idiographic`; the surviving package
+has one documented identity, compatible migration bridges, complete donor test
+coverage, and a clean installed-package release gate on the `merged` branch.

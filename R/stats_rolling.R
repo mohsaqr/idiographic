@@ -90,12 +90,14 @@ fit_rolling <- function(data, y, x, id, method = c("lm", "glm", "ml"),
   spec$assess <- assess
   spec$step <- step
 
-  structure(list(
+  out <- structure(list(
     spec = spec,
     fits = unlist(lapply(per_fold, `[[`, "fits"), recursive = FALSE),
     predictions = preds, metrics = mets, coefs = coefs, tuning = tune_tab,
     failures = failures
   ), class = c("idiographic_fit", "idiostats_fit"))
+  .idio_validate_fit(out, require_spec = TRUE)
+  out
 }
 
 #' Fit one rolling fold, returning its raw pieces

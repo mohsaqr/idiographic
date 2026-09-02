@@ -64,7 +64,36 @@
        groups = groups, units = units, failures = roles$failures)
 }
 
-#' Assemble a fitted idiostats object from per-unit results
+#' Validate the shared scoped-fit structure
+#' @noRd
+.idio_validate_fit <- function(x, require_spec = FALSE) {
+  required <- c("spec", "fits", "predictions", "metrics", "coefs", "tuning",
+                "failures")
+  missing <- setdiff(required, names(x))
+  if (length(missing)) {
+    stop("Invalid idiographic fit: missing field(s): ",
+         paste(missing, collapse = ", "), ".", call. = FALSE)
+  }
+  if (!inherits(x, "idiographic_fit") || !inherits(x, "idiostats_fit")) {
+    stop("Invalid idiographic fit: compatibility classes are incomplete.",
+         call. = FALSE)
+  }
+  if (!is.list(x$fits)) {
+    stop("Invalid idiographic fit: `fits` must be a list.", call. = FALSE)
+  }
+  tables <- c("predictions", "metrics", "coefs", "tuning", "failures")
+  bad_tables <- tables[!vapply(x[tables], is.data.frame, logical(1))]
+  if (length(bad_tables)) {
+    stop("Invalid idiographic fit: table field(s) are not data frames: ",
+         paste(bad_tables, collapse = ", "), ".", call. = FALSE)
+  }
+  if (isTRUE(require_spec) && !is.list(x$spec)) {
+    stop("Invalid idiographic fit: `spec` must be a list.", call. = FALSE)
+  }
+  invisible(x)
+}
+
+#' Assemble a fitted idiographic object from per-unit results
 #' @noRd
 .idio_assemble <- function(results, failures, task, y_info, spec,
                            tuning = NULL, data = NULL) {
@@ -108,10 +137,14 @@
     .idio_regression_metrics(preds)
   }
 
-  structure(list(spec = spec, fits = fits, predictions = preds, metrics = mets,
-                 coefs = coefs, tuning = tuning %||% .idio_empty_tuning(),
-                 failures = failures, y_info = y_info, data = data),
-            class = c("idiographic_fit", "idiostats_fit"))
+  out <- structure(
+    list(spec = spec, fits = fits, predictions = preds, metrics = mets,
+         coefs = coefs, tuning = tuning %||% .idio_empty_tuning(),
+         failures = failures, y_info = y_info, data = data),
+    class = c("idiographic_fit", "idiostats_fit")
+  )
+  .idio_validate_fit(out, require_spec = !is.null(spec))
+  out
 }
 
 #' Key a fitted unit for the `fits` list

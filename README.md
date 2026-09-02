@@ -274,6 +274,21 @@ logistic, LDA, Gaussian naive Bayes, kNN, and a one-split tree. Use
 optional package backends live behind the same model name. Historical calls
 using `outcome`, `predictors`, `day`, and `beep` remain supported.
 
+## Migrating from idiostats
+
+Use `library(idiographic)` in place of `library(idiostats)`. Almost all public
+analysis verbs retain their names. Two collision bridges are explicit:
+
+- Use `preprocess_panel()` for the former `idiostats::preprocess()` transforms;
+  `preprocess()` remains the established network-readiness audit.
+- Named `fit_ml(y = ..., x = ...)` calls use the consolidated scoped engine.
+  Use `fit_ml_panel(data, y, x, id, ...)` when retaining the former positional
+  calling style. Positional `fit_ml(data, outcome, predictors, id)` remains the
+  historical `idiographic` interface for backward compatibility.
+
+Consolidated results report `idiographic_*` as their primary class and retain
+the former `idiostats_*` class as a compatibility bridge.
+
 ## Bundled data
 
 - `srl` — a self-regulated-learning ESM dataset (`data(srl)`)
