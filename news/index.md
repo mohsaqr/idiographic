@@ -1,6 +1,72 @@
 # Changelog
 
+## idiographic 0.4.0.9000
+
+### Unified idiographic statistics
+
+- Folded the `idiostats` analytical engine into `idiographic`. The
+  package now covers person-level descriptions and correlations, LM/GLM
+  and expanded ML, rolling-origin validation, within-between effects,
+  coefficient pooling and shrinkage, subgroup
+  existence/discovery/modelling, treatment effects, and heterogeneity
+  analysis alongside all existing dynamic-network estimators.
+
+- Added
+  [`describe_persons()`](https://pak.dynasite.org/idiographic/reference/describe_persons.md),
+  [`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md),
+  [`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md),
+  [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md),
+  [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md),
+  [`fit_rolling()`](https://pak.dynasite.org/idiographic/reference/fit_rolling.md),
+  [`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md),
+  [`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md),
+  [`shrink_coefs()`](https://pak.dynasite.org/idiographic/reference/shrink_coefs.md),
+  [`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md),
+  [`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md),
+  [`fit_subgroups()`](https://pak.dynasite.org/idiographic/reference/fit_subgroups.md),
+  [`fit_effects()`](https://pak.dynasite.org/idiographic/reference/fit_effects.md),
+  and
+  [`fit_heterogeneity()`](https://pak.dynasite.org/idiographic/reference/fit_heterogeneity.md)
+  with their tidy accessors, views, diagnostics, and plots.
+
+- Added
+  [`preprocess_panel()`](https://pak.dynasite.org/idiographic/reference/preprocess_panel.md)
+  for person/grand centring and scaling, detrending, within-between
+  decomposition, and lags that never cross person boundaries. The
+  established
+  [`preprocess()`](https://pak.dynasite.org/idiographic/reference/preprocess.md)
+  network audit remains unchanged.
+
+- [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
+  now supports both interfaces. Existing `outcome`/`predictors` calls
+  retain the original `idioml_result`; consolidated `y`/`x` calls
+  support pooled, subgroup, and individual scopes, richer native and
+  optional model registries, tuning, diagnostics, and rolling
+  validation.
+
+- Consolidated statistical results use an `idiographic_*` primary class
+  while retaining their `idiostats_*` compatibility class for downstream
+  migration.
+
+- Added a statistical workflow index and 16 detailed, function-specific
+  vignettes for the complete non-network analysis layer. Each vignette
+  uses bundled data, prints tidy results, renders a decision-focused
+  figure, interprets the observed output, states assumptions and failure
+  conditions, and ends with guidance on method selection. The
+  [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
+  vignette includes temporal validation, baselines, tuning, scope
+  comparison, person-level errors, prediction trajectories, and
+  permutation importance.
+
+- Redesigned statistical plotting around ranked dot plots, interval
+  displays, binned calibration, direct labels, temporal trajectories,
+  and consistent colour-accessible styling. Plots now foreground
+  uncertainty, reference values, and person-level failures instead of
+  relying on default bar charts.
+
 ## idiographic 0.3.4
+
+CRAN release: 2026-08-24
 
 ### New features
 

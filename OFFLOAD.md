@@ -90,10 +90,9 @@ With upstream `gimme` 10.0 as the arbiter, on the same 5-subject panel:
 | `Nestimate::build_gimme` | 1 | FALSE | 0.276 |
 
 [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md)
-also covers the complete
-[`gimme::gimme()`](https://rdrr.io/pkg/gimme/man/gimmeSEM.html)
-formal-argument surface (asserted in the test suite); `build_gimme()`
-covers a 17-argument subset.
+also covers the complete `gimme::gimme()` formal-argument surface
+(asserted in the test suite); `build_gimme()` covers a 17-argument
+subset.
 
 **This offload changes Nestimate’s numbers.** It needs a NEWS entry on
 the Nestimate side, not a silent swap. The parity test asserts the

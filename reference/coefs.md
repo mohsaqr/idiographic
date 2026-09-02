@@ -23,6 +23,19 @@ coefs(x, ...)
 # S3 method for class 'net_mlvar_bayes'
 coefs(x, ...)
 
+# S3 method for class 'idiostats_fit'
+coefs(
+  x,
+  model = NULL,
+  scope = NULL,
+  subject = NULL,
+  n = NULL,
+  overall = FALSE,
+  sort_by = NULL,
+  decreasing = FALSE,
+  ...
+)
+
 # S3 method for class 'net_usem'
 coefs(x, ...)
 
@@ -54,6 +67,26 @@ coefs(x, ...)
 - ...:
 
   Unused.
+
+- model, scope, subject:
+
+  Optional filters for consolidated model fits.
+
+- n:
+
+  Optional maximum number of returned rows.
+
+- overall:
+
+  Return only aggregate rows when available?
+
+- sort_by:
+
+  Optional output column used for sorting.
+
+- decreasing:
+
+  Sort in descending order?
 
 ## Value
 

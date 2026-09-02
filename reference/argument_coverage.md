@@ -139,6 +139,8 @@ argument_coverage()
 #> 256                    ml estimator         n_components
 #> 257                    ml estimator             max_iter
 #> 258                    ml estimator                  tol
+#> 262                    ml estimator                    y
+#> 263                    ml estimator                    x
 #> 69                  mlvar estimator                 data
 #> 70                  mlvar estimator                 vars
 #> 71                  mlvar estimator                   id
@@ -292,60 +294,60 @@ argument_coverage()
 #> 16               var_each estimator                 beep
 #> 17               var_each estimator              min_obs
 #> 18               var_each estimator                  ...
-#> 292               compare  workflow                 data
-#> 293               compare  workflow                 vars
-#> 295               compare  workflow                   id
-#> 296               compare  workflow                  day
-#> 297               compare  workflow                 beep
-#> 299               compare  workflow            keep_fits
-#> 294               compare  workflow           estimators
-#> 298               compare  workflow       estimator_args
-#> 300              forecast  workflow                 data
-#> 301              forecast  workflow                 vars
-#> 303              forecast  workflow                   id
-#> 304              forecast  workflow                  day
-#> 305              forecast  workflow                 beep
-#> 311              forecast  workflow                scale
-#> 312              forecast  workflow        center_within
-#> 313              forecast  workflow      delete_missings
-#> 315              forecast  workflow                  ...
-#> 302              forecast  workflow            estimator
-#> 308              forecast  workflow                 step
-#> 314              forecast  workflow            keep_fits
-#> 310              forecast  workflow           block_size
-#> 306              forecast  workflow              initial
-#> 307              forecast  workflow               assess
-#> 309              forecast  workflow             n_splits
-#> 262            preprocess  workflow                 data
-#> 263            preprocess  workflow                 vars
-#> 264            preprocess  workflow                   id
-#> 265            preprocess  workflow                  day
-#> 266            preprocess  workflow                 beep
-#> 267            preprocess  workflow                scale
-#> 268            preprocess  workflow        center_within
-#> 271            preprocess  workflow      delete_missings
-#> 272            preprocess  workflow              min_obs
-#> 273            preprocess  workflow              subject
-#> 269            preprocess  workflow              detrend
-#> 270            preprocess  workflow               checks
-#> 274            preprocess  workflow          trend_alpha
-#> 275            preprocess  workflow         ar_threshold
-#> 276            preprocess  workflow mean_shift_threshold
-#> 277            preprocess  workflow   sd_ratio_threshold
-#> 278            preprocess  workflow   unit_root_t_cutoff
-#> 279             stability  workflow                 data
-#> 280             stability  workflow                 vars
-#> 282             stability  workflow                   id
-#> 283             stability  workflow                  day
-#> 284             stability  workflow                 beep
-#> 291             stability  workflow                  ...
-#> 289             stability  workflow                 seed
-#> 281             stability  workflow            estimator
-#> 290             stability  workflow            keep_fits
-#> 285             stability  workflow          n_resamples
-#> 286             stability  workflow             resample
-#> 287             stability  workflow           block_size
-#> 288             stability  workflow            threshold
+#> 294               compare  workflow                 data
+#> 295               compare  workflow                 vars
+#> 297               compare  workflow                   id
+#> 298               compare  workflow                  day
+#> 299               compare  workflow                 beep
+#> 301               compare  workflow            keep_fits
+#> 296               compare  workflow           estimators
+#> 300               compare  workflow       estimator_args
+#> 302              forecast  workflow                 data
+#> 303              forecast  workflow                 vars
+#> 305              forecast  workflow                   id
+#> 306              forecast  workflow                  day
+#> 307              forecast  workflow                 beep
+#> 313              forecast  workflow                scale
+#> 314              forecast  workflow        center_within
+#> 315              forecast  workflow      delete_missings
+#> 317              forecast  workflow                  ...
+#> 304              forecast  workflow            estimator
+#> 310              forecast  workflow                 step
+#> 316              forecast  workflow            keep_fits
+#> 312              forecast  workflow           block_size
+#> 308              forecast  workflow              initial
+#> 309              forecast  workflow               assess
+#> 311              forecast  workflow             n_splits
+#> 264            preprocess  workflow                 data
+#> 265            preprocess  workflow                 vars
+#> 266            preprocess  workflow                   id
+#> 267            preprocess  workflow                  day
+#> 268            preprocess  workflow                 beep
+#> 269            preprocess  workflow                scale
+#> 270            preprocess  workflow        center_within
+#> 273            preprocess  workflow      delete_missings
+#> 274            preprocess  workflow              min_obs
+#> 275            preprocess  workflow              subject
+#> 271            preprocess  workflow              detrend
+#> 272            preprocess  workflow               checks
+#> 276            preprocess  workflow          trend_alpha
+#> 277            preprocess  workflow         ar_threshold
+#> 278            preprocess  workflow mean_shift_threshold
+#> 279            preprocess  workflow   sd_ratio_threshold
+#> 280            preprocess  workflow   unit_root_t_cutoff
+#> 281             stability  workflow                 data
+#> 282             stability  workflow                 vars
+#> 284             stability  workflow                   id
+#> 285             stability  workflow                  day
+#> 286             stability  workflow                 beep
+#> 293             stability  workflow                  ...
+#> 291             stability  workflow                 seed
+#> 283             stability  workflow            estimator
+#> 292             stability  workflow            keep_fits
+#> 287             stability  workflow          n_resamples
+#> 288             stability  workflow             resample
+#> 289             stability  workflow           block_size
+#> 290             stability  workflow            threshold
 #>                         status                       reference
 #> 161    validated_oracle_matrix               gimme::gimme 10.0
 #> 162    validated_oracle_matrix               gimme::gimme 10.0
@@ -455,6 +457,8 @@ argument_coverage()
 #> 256           validated_native base-R engines and closed forms
 #> 257           validated_native base-R engines and closed forms
 #> 258           validated_native base-R engines and closed forms
+#> 262           validated_native base-R engines and closed forms
+#> 263           validated_native base-R engines and closed forms
 #> 69            validated_oracle                    mlVAR::mlVAR
 #> 70            validated_oracle                    mlVAR::mlVAR
 #> 71            validated_oracle                    mlVAR::mlVAR
@@ -608,60 +612,60 @@ argument_coverage()
 #> 16            validated_engine            idiographic::fit_var
 #> 17            validated_engine            idiographic::fit_var
 #> 18            validated_engine            idiographic::fit_var
-#> 292         validated_internal  registered estimator summaries
-#> 293         validated_internal  registered estimator summaries
-#> 295         validated_internal  registered estimator summaries
-#> 296         validated_internal  registered estimator summaries
-#> 297         validated_internal  registered estimator summaries
-#> 299         validated_internal  registered estimator summaries
 #> 294         validated_internal  registered estimator summaries
+#> 295         validated_internal  registered estimator summaries
+#> 297         validated_internal  registered estimator summaries
 #> 298         validated_internal  registered estimator summaries
-#> 300         validated_internal  direct fitted-model prediction
-#> 301         validated_internal  direct fitted-model prediction
-#> 303         validated_internal  direct fitted-model prediction
-#> 304         validated_internal  direct fitted-model prediction
-#> 305         validated_internal  direct fitted-model prediction
-#> 311         validated_internal  direct fitted-model prediction
-#> 312         validated_internal  direct fitted-model prediction
-#> 313         validated_internal  direct fitted-model prediction
-#> 315         validated_internal  direct fitted-model prediction
+#> 299         validated_internal  registered estimator summaries
+#> 301         validated_internal  registered estimator summaries
+#> 296         validated_internal  registered estimator summaries
+#> 300         validated_internal  registered estimator summaries
 #> 302         validated_internal  direct fitted-model prediction
-#> 308         validated_internal  direct fitted-model prediction
-#> 314         validated_internal  direct fitted-model prediction
-#> 310         validated_internal  direct fitted-model prediction
+#> 303         validated_internal  direct fitted-model prediction
+#> 305         validated_internal  direct fitted-model prediction
 #> 306         validated_internal  direct fitted-model prediction
 #> 307         validated_internal  direct fitted-model prediction
+#> 313         validated_internal  direct fitted-model prediction
+#> 314         validated_internal  direct fitted-model prediction
+#> 315         validated_internal  direct fitted-model prediction
+#> 317         validated_internal  direct fitted-model prediction
+#> 304         validated_internal  direct fitted-model prediction
+#> 310         validated_internal  direct fitted-model prediction
+#> 316         validated_internal  direct fitted-model prediction
+#> 312         validated_internal  direct fitted-model prediction
+#> 308         validated_internal  direct fitted-model prediction
 #> 309         validated_internal  direct fitted-model prediction
-#> 262         validated_internal       shared lag-design engines
-#> 263         validated_internal       shared lag-design engines
+#> 311         validated_internal  direct fitted-model prediction
 #> 264         validated_internal       shared lag-design engines
 #> 265         validated_internal       shared lag-design engines
 #> 266         validated_internal       shared lag-design engines
 #> 267         validated_internal       shared lag-design engines
 #> 268         validated_internal       shared lag-design engines
-#> 271         validated_internal       shared lag-design engines
-#> 272         validated_internal       shared lag-design engines
-#> 273         validated_internal       shared lag-design engines
 #> 269         validated_internal       shared lag-design engines
 #> 270         validated_internal       shared lag-design engines
+#> 273         validated_internal       shared lag-design engines
 #> 274         validated_internal       shared lag-design engines
 #> 275         validated_internal       shared lag-design engines
+#> 271         validated_internal       shared lag-design engines
+#> 272         validated_internal       shared lag-design engines
 #> 276         validated_internal       shared lag-design engines
 #> 277         validated_internal       shared lag-design engines
 #> 278         validated_internal       shared lag-design engines
-#> 279         validated_internal      registered base estimators
-#> 280         validated_internal      registered base estimators
-#> 282         validated_internal      registered base estimators
-#> 283         validated_internal      registered base estimators
-#> 284         validated_internal      registered base estimators
-#> 291         validated_internal      registered base estimators
-#> 289         validated_internal      registered base estimators
+#> 279         validated_internal       shared lag-design engines
+#> 280         validated_internal       shared lag-design engines
 #> 281         validated_internal      registered base estimators
-#> 290         validated_internal      registered base estimators
+#> 282         validated_internal      registered base estimators
+#> 284         validated_internal      registered base estimators
 #> 285         validated_internal      registered base estimators
 #> 286         validated_internal      registered base estimators
+#> 293         validated_internal      registered base estimators
+#> 291         validated_internal      registered base estimators
+#> 283         validated_internal      registered base estimators
+#> 292         validated_internal      registered base estimators
 #> 287         validated_internal      registered base estimators
 #> 288         validated_internal      registered base estimators
+#> 289         validated_internal      registered base estimators
+#> 290         validated_internal      registered base estimators
 #>                                                                                                                                                                                                                                                                                                                                                                                                           scope
 #> 161                                                                                          `data`: Evidence class: validated_oracle_matrix. Direct bivariate and three-variable standard/hybrid/VAR oracle matrix covering search outputs, fit statistics, corrections, alpha, stopping rules, standardization, fit/group cutoffs, forced paths, exogenous variables, and uneven panels, plus recovery tests.
 #> 162                                                                                          `vars`: Evidence class: validated_oracle_matrix. Direct bivariate and three-variable standard/hybrid/VAR oracle matrix covering search outputs, fit statistics, corrections, alpha, stopping rules, standardization, fit/group cutoffs, forced paths, exogenous variables, and uneven panels, plus recovery tests.
@@ -771,6 +775,8 @@ argument_coverage()
 #> 256                                                                                                                                                                                     `n_components`: Evidence class: validated_native. All regression/classification model families, selectors, prediction, and tuning controls are exercised; linear and logistic engines are cell-equal to lm.fit/glm.fit.
 #> 257                                                                                                                                                                                         `max_iter`: Evidence class: validated_native. All regression/classification model families, selectors, prediction, and tuning controls are exercised; linear and logistic engines are cell-equal to lm.fit/glm.fit.
 #> 258                                                                                                                                                                                              `tol`: Evidence class: validated_native. All regression/classification model families, selectors, prediction, and tuning controls are exercised; linear and logistic engines are cell-equal to lm.fit/glm.fit.
+#> 262                                                                                                                                                                                                `y`: Evidence class: validated_native. All regression/classification model families, selectors, prediction, and tuning controls are exercised; linear and logistic engines are cell-equal to lm.fit/glm.fit.
+#> 263                                                                                                                                                                                                `x`: Evidence class: validated_native. All regression/classification model families, selectors, prediction, and tuning controls are exercised; linear and logistic engines are cell-equal to lm.fit/glm.fit.
 #> 69                                                                                                                                                                                                                                   `data`: Evidence class: validated_oracle. Direct oracle matrix for every supported lag-1 lmer temporal and contemporaneous structure, plus 20 real ESM fixed/fixed panels.
 #> 70                                                                                                                                                                                                                                   `vars`: Evidence class: validated_oracle. Direct oracle matrix for every supported lag-1 lmer temporal and contemporaneous structure, plus 20 real ESM fixed/fixed panels.
 #> 71                                                                                                                                                                                                                                     `id`: Evidence class: validated_oracle. Direct oracle matrix for every supported lag-1 lmer temporal and contemporaneous structure, plus 20 real ESM fixed/fixed panels.
@@ -924,60 +930,60 @@ argument_coverage()
 #> 16                                                                                                                                                                                                                                                                                                                                `beep`: Evidence class: validated_engine. Exact per-subject wrapper behavior.
 #> 17                                                                                                                                                                                                                                                                                                                             `min_obs`: Evidence class: validated_engine. Exact per-subject wrapper behavior.
 #> 18                                                                                                                                                                                                                                                                                                                                 `...`: Evidence class: validated_engine. Exact per-subject wrapper behavior.
-#> 292                                                                                                                                                                                                                                                                                              `data`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 293                                                                                                                                                                                                                                                                                              `vars`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 295                                                                                                                                                                                                                                                                                                `id`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 296                                                                                                                                                                                                                                                                                               `day`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 297                                                                                                                                                                                                                                                                                              `beep`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 299                                                                                                                                                                                                                                                                                         `keep_fits`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 294                                                                                                                                                                                                                                                                                        `estimators`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 298                                                                                                                                                                                                                                                                                    `estimator_args`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
-#> 300                                                                                                                                                                                                                               `data`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 301                                                                                                                                                                                                                               `vars`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 303                                                                                                                                                                                                                                 `id`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 304                                                                                                                                                                                                                                `day`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 305                                                                                                                                                                                                                               `beep`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 311                                                                                                                                                                                                                              `scale`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 312                                                                                                                                                                                                                      `center_within`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 313                                                                                                                                                                                                                    `delete_missings`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 315                                                                                                                                                                                                                                `...`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 302                                                                                                                                                                                                                          `estimator`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 308                                                                                                                                                                                                                               `step`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 314                                                                                                                                                                                                                          `keep_fits`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 310                                                                                                                                                                                                                         `block_size`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 306                                                                                                                                                                                                                            `initial`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 307                                                                                                                                                                                                                             `assess`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 309                                                                                                                                                                                                                           `n_splits`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
-#> 262                                                                                                                                                                                                                               `data`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 263                                                                                                                                                                                                                               `vars`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 264                                                                                                                                                                                                                                 `id`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 265                                                                                                                                                                                                                                `day`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 266                                                                                                                                                                                                                               `beep`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 267                                                                                                                                                                                                                              `scale`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 268                                                                                                                                                                                                                      `center_within`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 271                                                                                                                                                                                                                    `delete_missings`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 272                                                                                                                                                                                                                            `min_obs`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 273                                                                                                                                                                                                                            `subject`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 269                                                                                                                                                                                                                            `detrend`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 270                                                                                                                                                                                                                             `checks`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 274                                                                                                                                                                                                                        `trend_alpha`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 275                                                                                                                                                                                                                       `ar_threshold`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 276                                                                                                                                                                                                               `mean_shift_threshold`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 277                                                                                                                                                                                                                 `sd_ratio_threshold`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 278                                                                                                                                                                                                                 `unit_root_t_cutoff`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
-#> 279                                                                                                                                                                                                                            `data`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 280                                                                                                                                                                                                                            `vars`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 282                                                                                                                                                                                                                              `id`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 283                                                                                                                                                                                                                             `day`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 284                                                                                                                                                                                                                            `beep`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 291                                                                                                                                                                                                                             `...`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 289                                                                                                                                                                                                                            `seed`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 281                                                                                                                                                                                                                       `estimator`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 290                                                                                                                                                                                                                       `keep_fits`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 285                                                                                                                                                                                                                     `n_resamples`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 286                                                                                                                                                                                                                        `resample`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 287                                                                                                                                                                                                                      `block_size`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
-#> 288                                                                                                                                                                                                                       `threshold`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 294                                                                                                                                                                                                                                                                                              `data`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 295                                                                                                                                                                                                                                                                                              `vars`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 297                                                                                                                                                                                                                                                                                                `id`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 298                                                                                                                                                                                                                                                                                               `day`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 299                                                                                                                                                                                                                                                                                              `beep`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 301                                                                                                                                                                                                                                                                                         `keep_fits`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 296                                                                                                                                                                                                                                                                                        `estimators`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 300                                                                                                                                                                                                                                                                                    `estimator_args`: Evidence class: validated_internal. Exact stacking, dispatch, argument routing, and failure isolation.
+#> 302                                                                                                                                                                                                                               `data`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 303                                                                                                                                                                                                                               `vars`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 305                                                                                                                                                                                                                                 `id`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 306                                                                                                                                                                                                                                `day`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 307                                                                                                                                                                                                                               `beep`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 313                                                                                                                                                                                                                              `scale`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 314                                                                                                                                                                                                                      `center_within`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 315                                                                                                                                                                                                                    `delete_missings`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 317                                                                                                                                                                                                                                `...`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 304                                                                                                                                                                                                                          `estimator`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 310                                                                                                                                                                                                                               `step`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 316                                                                                                                                                                                                                          `keep_fits`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 312                                                                                                                                                                                                                         `block_size`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 308                                                                                                                                                                                                                            `initial`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 309                                                                                                                                                                                                                             `assess`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 311                                                                                                                                                                                                                           `n_splits`: Evidence class: validated_internal. Rolling-origin split geometry, boundary lags, deterministic metrics, and predictions equal direct fitted-model matrix prediction.
+#> 264                                                                                                                                                                                                                               `data`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 265                                                                                                                                                                                                                               `vars`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 266                                                                                                                                                                                                                                 `id`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 267                                                                                                                                                                                                                                `day`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 268                                                                                                                                                                                                                               `beep`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 269                                                                                                                                                                                                                              `scale`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 270                                                                                                                                                                                                                      `center_within`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 273                                                                                                                                                                                                                    `delete_missings`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 274                                                                                                                                                                                                                            `min_obs`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 275                                                                                                                                                                                                                            `subject`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 271                                                                                                                                                                                                                            `detrend`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 272                                                                                                                                                                                                                             `checks`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 276                                                                                                                                                                                                                        `trend_alpha`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 277                                                                                                                                                                                                                       `ar_threshold`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 278                                                                                                                                                                                                               `mean_shift_threshold`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 279                                                                                                                                                                                                                 `sd_ratio_threshold`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 280                                                                                                                                                                                                                 `unit_root_t_cutoff`: Evidence class: validated_internal. Exact shared GVAR lag-design equality plus deterministic diagnostic, filtering, detrending, missingness, and threshold contracts.
+#> 281                                                                                                                                                                                                                            `data`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 282                                                                                                                                                                                                                            `vars`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 284                                                                                                                                                                                                                              `id`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 285                                                                                                                                                                                                                             `day`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 286                                                                                                                                                                                                                            `beep`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 293                                                                                                                                                                                                                             `...`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 291                                                                                                                                                                                                                            `seed`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 283                                                                                                                                                                                                                       `estimator`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 292                                                                                                                                                                                                                       `keep_fits`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 287                                                                                                                                                                                                                     `n_resamples`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 288                                                                                                                                                                                                                        `resample`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 289                                                                                                                                                                                                                      `block_size`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
+#> 290                                                                                                                                                                                                                       `threshold`: Evidence class: validated_internal. Deterministic block/split-half resampling, ordering invariants, and five-estimator dispatch contracts; no unrelated external target.
 argument_coverage("mlvar")
 #>    method      kind         argument                status    reference
 #> 1   mlvar estimator             data      validated_oracle mlVAR::mlVAR

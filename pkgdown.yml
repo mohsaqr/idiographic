@@ -4,15 +4,33 @@ pkgdown_sha: ~
 articles:
   articles/bayesian-var-dsem: bayesian-var-dsem.html
   clean-room-methods: clean-room-methods.html
+  correlate-persons: correlate-persons.html
+  describe-persons: describe-persons.html
+  find-subgroups: find-subgroups.html
+  fit-effects: fit-effects.html
+  fit-glm: fit-glm.html
+  fit-heterogeneity: fit-heterogeneity.html
+  fit-lm: fit-lm.html
+  fit-ml: fit-ml.html
+  fit-rolling: fit-rolling.html
+  fit-subgroups: fit-subgroups.html
+  fit-within-between: fit-within-between.html
   articles/gimme: gimme.html
   articles/graphical-var: graphical-var.html
   idiographic: idiographic.html
   mlvar: mlvar.html
   ordinary-var: ordinary-var.html
+  pool-coefs: pool-coefs.html
+  preprocess-panel: preprocess-panel.html
   preprocessing: preprocessing.html
   rolling-networks: rolling-networks.html
+  shrink-coefs: shrink-coefs.html
+  statistical-workflows: statistical-workflows.html
+  test-subgroups: test-subgroups.html
+  unified-workflow: unified-workflow.html
   usem: usem.html
-last_built: 2026-08-23T16:50Z
+  variance-components: variance-components.html
+last_built: 2026-09-02T21:15Z
 urls:
   reference: https://pak.dynasite.org/idiographic/reference
   article: https://pak.dynasite.org/idiographic/articles

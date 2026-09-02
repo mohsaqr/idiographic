@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Person-Specific (Idiographic) and Heterogeneous Complex Networks • idiographic</title>
+<title>Person-Specific Statistics and Heterogeneous Dynamic Networks • idiographic</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Person-Specific (Idiographic) and Heterogeneous Complex Networks">
-<meta name="description" content="Person-specific and within-person network estimation from intensive longitudinal and panel data. Estimators include ordinary vector autoregression (VAR), graphical vector autoregression (graphical VAR), multilevel vector autoregression (mlVAR), rolling ordinary and graphical VAR, native Bayesian VAR and multilevel Bayesian VAR, unified Structural Equation Modeling (uSEM), and Group Iterative Multiple Model Estimation (GIMME). All estimators are native clean-room implementations. All functions are validated against authoritative literature. Also provides preprocessing audits, edge-stability diagnostics, model-comparison reports, and rolling forecast validation. Methods are described in &lt;doi:10.1007/978-3-031-95365-1_20&gt; and &lt;doi:10.1080/00273171.2018.1454823&gt;.">
-<meta property="og:description" content="Person-specific and within-person network estimation from intensive longitudinal and panel data. Estimators include ordinary vector autoregression (VAR), graphical vector autoregression (graphical VAR), multilevel vector autoregression (mlVAR), rolling ordinary and graphical VAR, native Bayesian VAR and multilevel Bayesian VAR, unified Structural Equation Modeling (uSEM), and Group Iterative Multiple Model Estimation (GIMME). All estimators are native clean-room implementations. All functions are validated against authoritative literature. Also provides preprocessing audits, edge-stability diagnostics, model-comparison reports, and rolling forecast validation. Methods are described in &lt;doi:10.1007/978-3-031-95365-1_20&gt; and &lt;doi:10.1080/00273171.2018.1454823&gt;.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Person-Specific Statistics and Heterogeneous Dynamic Networks">
+<meta name="description" content="Person-specific and within-person statistical modelling for intensive longitudinal and panel data. Provides descriptive statistics, linear and generalized linear models, machine learning, within-between decomposition, coefficient pooling and shrinkage, subgroup discovery, treatment effects, heterogeneity analysis, and honest temporal validation. Dynamic-network estimators include ordinary and graphical vector autoregression, multilevel and Bayesian vector autoregression, unified Structural Equation Modeling, and Group Iterative Multiple Model Estimation. Core estimators use native clean-room implementations and are validated against authoritative literature. Methods are described in &lt;doi:10.1007/978-3-031-95365-1_20&gt; and &lt;doi:10.1080/00273171.2018.1454823&gt;.">
+<meta property="og:description" content="Person-specific and within-person statistical modelling for intensive longitudinal and panel data. Provides descriptive statistics, linear and generalized linear models, machine learning, within-between decomposition, coefficient pooling and shrinkage, subgroup discovery, treatment effects, heterogeneity analysis, and honest temporal validation. Dynamic-network estimators include ordinary and graphical vector autoregression, multilevel and Bayesian vector autoregression, unified Structural Equation Modeling, and Group Iterative Multiple Model Estimation. Core estimators use native clean-room implementations and are validated against authoritative literature. Methods are described in &lt;doi:10.1007/978-3-031-95365-1_20&gt; and &lt;doi:10.1080/00273171.2018.1454823&gt;.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,13 +38,31 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/bayesian-var-dsem.html">6. Bayesian VAR and DSEM</a></li>
     <li><a class="dropdown-item" href="articles/clean-room-methods.html">10. Clean-room design</a></li>
+    <li><a class="dropdown-item" href="articles/correlate-persons.html">Within-Person Correlation with correlate_persons()</a></li>
+    <li><a class="dropdown-item" href="articles/describe-persons.html">Person-Level Description with describe_persons()</a></li>
+    <li><a class="dropdown-item" href="articles/find-subgroups.html">Discovering Person Subgroups with find_subgroups()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-effects.html">Treatment-Effect Estimation with fit_effects()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-glm.html">Generalized Linear Models with fit_glm()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-heterogeneity.html">Repeated-Split Heterogeneity Analysis with fit_heterogeneity()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-lm.html">Pooled and Person-Specific Linear Models with fit_lm()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-ml.html">Idiographic Machine Learning with fit_ml()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-rolling.html">Rolling-Origin Validation with fit_rolling()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-subgroups.html">Subgroup-Specific Models with fit_subgroups()</a></li>
+    <li><a class="dropdown-item" href="articles/fit-within-between.html">Within- and Between-Person Effects with fit_within_between()</a></li>
     <li><a class="dropdown-item" href="articles/gimme.html">8. GIMME</a></li>
     <li><a class="dropdown-item" href="articles/graphical-var.html">4. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="articles/mlvar.html">5. Multilevel VAR</a></li>
     <li><a class="dropdown-item" href="articles/ordinary-var.html">3. Ordinary VAR</a></li>
+    <li><a class="dropdown-item" href="articles/pool-coefs.html">Pooling Person-Specific Coefficients with pool_coefs()</a></li>
+    <li><a class="dropdown-item" href="articles/preprocess-panel.html">Panel Preparation with preprocess_panel()</a></li>
     <li><a class="dropdown-item" href="articles/preprocessing.html">2. Preprocessing</a></li>
     <li><a class="dropdown-item" href="articles/rolling-networks.html">9. Rolling networks</a></li>
+    <li><a class="dropdown-item" href="articles/shrink-coefs.html">Stabilizing Person-Specific Coefficients with shrink_coefs()</a></li>
+    <li><a class="dropdown-item" href="articles/statistical-workflows.html">Guide to Idiographic Statistical Workflows</a></li>
+    <li><a class="dropdown-item" href="articles/test-subgroups.html">Testing Whether Subgroups Exist with test_subgroups()</a></li>
+    <li><a class="dropdown-item" href="articles/unified-workflow.html">From Raw Panel Data to Person-Specific Conclusions</a></li>
     <li><a class="dropdown-item" href="articles/usem.html">7. Unified SEM</a></li>
+    <li><a class="dropdown-item" href="articles/variance-components.html">Within- and Between-Person Variance with variance_components()</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -67,9 +85,10 @@
 <!-- badges: start -->
 
 <blockquote>
-<p><strong>Network estimation from intensive longitudinal data</strong> — person-specific and within-person temporal, contemporaneous, and between-subject networks from ESM / EMA / diary panels, through one tidy verb per method.</p>
+<p><strong>Person-specific statistics and dynamic networks for intensive longitudinal data</strong> — from raw repeated observations to within-person conclusions.</p>
 </blockquote>
-<p><code>idiographic</code> estimates dynamic networks from intensive longitudinal data (ILD): ordinary and regularized vector autoregression, multilevel VAR, native Bayesian multilevel VAR validated against selected Mplus DSEM fixtures, unified SEM, and GIMME — plus the supporting workflow (preprocessing audits, edge-stability diagnostics, rolling windows, forecast validation, model comparison, and idiographic supervised machine-learning models for individualized prediction). Every result has tidy <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> views. Network estimates additionally share <code><a href="reference/edges.html">edges()</a></code>, <code><a href="reference/nodes.html">nodes()</a></code>, <code><a href="reference/coefs.html">coefs()</a></code>, <code><a href="reference/matrices.html">matrices()</a></code>, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, and <code><a href="reference/as_netobject.html">as_netobject()</a></code>.</p>
+<p><code>idiographic</code> describes, prepares, models, validates, compares, and explains person-specific processes in ESM, EMA, diary, and other panel data. It combines person-level descriptions, LM/GLM and machine-learning prediction, within-between decomposition, coefficient pooling and shrinkage, subgroup discovery, treatment effects, and heterogeneity analysis with the package’s established VAR, graphical VAR, mlVAR, Bayesian DSEM, uSEM, and GIMME methods.</p>
+<p>People and time order are first-class throughout: lags and validation splits do not cross person boundaries, future observations are kept out of training, and within-person quantities are not silently substituted for between-person ones. Pooled and subgroup models are available for comparison and stabilization of individual results.</p>
 <div class="section level2">
 <h2 id="clean-room-by-design">Clean-room by design<a class="anchor" aria-label="anchor" href="#clean-room-by-design"></a>
 </h2>
@@ -124,7 +143,7 @@
 </tr>
 </tbody>
 </table>
-<p>The CRAN package is offline-first: its only imports are the standard R packages <code>stats</code>, <code>utils</code>, and <code>parallel</code>, which ship with R. It has <strong>no mandatory third-party package dependency</strong>. <code>lme4</code> and <code>lavaan</code> are optional engines for multilevel frequentist VAR and SEM/GIMME respectively; plotting and the licensed Mplus bridge are optional too. Competitor packages and the 20-panel oracle corpus live in the repository’s separate <code>validation/</code> lane and are not shipped in the CRAN tarball.</p>
+<p>The CRAN package is offline-first: its imports are standard R packages that ship with R. It has <strong>no mandatory third-party package dependency</strong>. <code>lme4</code> and <code>lavaan</code> are optional engines for multilevel frequentist VAR and SEM/GIMME respectively; plotting and the licensed Mplus bridge are optional too. Competitor packages and the 20-panel oracle corpus live in the repository’s separate <code>validation/</code> lane and are not shipped in the CRAN tarball.</p>
 <p>The Bayesian DSEM sampler is a particular highlight: <code><a href="reference/fit_mlvar_bayes.html">fit_mlvar_bayes()</a></code> targets the output of <code>mlVAR::mlVAR(estimator = "Mplus")</code> — Mplus’s two-level Bayesian VAR with latent mean centring — <strong>without Mplus installed</strong>, using a pure-R conjugate Gibbs sampler with hand-rolled inverse-Wishart draws (no <code>MCMCpack</code>/<code>rstan</code>). The committed evidence consists of fixed bivariate Mplus fixtures, one univariate random-AR fixture, and parameter-recovery tests; use <code>equivalence(fit)</code> to inspect the precise scope rather than assuming blanket DSEM equivalence.</p>
 </div>
 <div class="section level2">
@@ -146,61 +165,119 @@
 <p>Plotting uses the <a href="https://github.com/mohsaqr/cograph" class="external-link"><code>cograph</code></a> package; it stays optional and is offered for on-demand install the first time you call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p>
 </div>
 <div class="section level2">
-<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+<h2 id="quick-start-one-idiographic-workflow">Quick start: one idiographic workflow<a class="anchor" aria-label="anchor" href="#quick-start-one-idiographic-workflow"></a>
 </h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pak.dynasite.org/idiographic/">idiographic</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## simulate an ESM panel: 30 people, 40 beeps, 3 items</span></span>
+<span><span class="co">## simulate an ESM panel: 30 people, 40 occasions, 3 predictors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">40</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span> <span class="va">y</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.35</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span><span class="op">)</span> <span class="op">*</span> <span class="va">y</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span>, <span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span>, beep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, A <span class="op">=</span> <span class="va">y</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, B <span class="op">=</span> <span class="va">y</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, C <span class="op">=</span> <span class="va">y</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">120</span><span class="op">)</span>, <span class="fl">40</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span>, time <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, A <span class="op">=</span> <span class="va">x</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, B <span class="op">=</span> <span class="va">x</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, C <span class="op">=</span> <span class="va">x</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">panel</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fl">0.7</span> <span class="op">*</span> <span class="va">panel</span><span class="op">$</span><span class="va">A</span> <span class="op">-</span> <span class="fl">0.3</span> <span class="op">*</span> <span class="va">panel</span><span class="op">$</span><span class="va">B</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">30</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">40</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">panel</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## multilevel VAR: temporal, contemporaneous, and between networks</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_mlvar.html">fit_mlvar</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span><span class="op">)</span></span>
+<span><span class="co">## 1. inspect variation and dependence person by person</span></span>
+<span><span class="fu"><a href="reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">panel</span>, id <span class="op">=</span> <span class="st">"id"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"Y"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/correlate_persons.html">correlate_persons</a></span><span class="op">(</span><span class="va">panel</span>, id <span class="op">=</span> <span class="st">"id"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/variance_components.html">variance_components</a></span><span class="op">(</span><span class="va">panel</span>, id <span class="op">=</span> <span class="st">"id"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">fit</span>                 <span class="co"># tidy printout of all three networks</span></span>
-<span><span class="fu"><a href="reference/edges.html">edges</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>          <span class="co"># one row per edge (network, from, to, weight)</span></span>
-<span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>          <span class="co"># fixed-effect estimates with SE / p / CI</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>           <span class="co"># draw all layers with cograph</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, layer <span class="op">=</span> <span class="st">"temporal"</span><span class="op">)</span></span>
+<span><span class="co">## 2. prepare within-person predictors and honest lags</span></span>
+<span><span class="va">prepared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preprocess_panel.html">preprocess_panel</a></span><span class="op">(</span></span>
+<span>  <span class="va">panel</span>, id <span class="op">=</span> <span class="st">"id"</span>, time <span class="op">=</span> <span class="st">"time"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>  decompose <span class="op">=</span> <span class="cn">TRUE</span>, lag <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 3. compare pooled and person-specific regression on later observations</span></span>
+<span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_lm.html">fit_lm</a></span><span class="op">(</span><span class="va">prepared</span>, y <span class="op">=</span> <span class="st">"Y"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>              time <span class="op">=</span> <span class="st">"time"</span>, scope <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/metrics.html">metrics</a></span><span class="op">(</span><span class="va">reg</span>, overall <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">reg</span>, scope <span class="op">=</span> <span class="st">"individual"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 4. separate within-person and between-person effects directly</span></span>
+<span><span class="va">wb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_within_between.html">fit_within_between</a></span><span class="op">(</span><span class="va">panel</span>, y <span class="op">=</span> <span class="st">"Y"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>                         time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/contextual.html">contextual</a></span><span class="op">(</span><span class="va">wb</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 5. stabilize noisy individual coefficients</span></span>
+<span><span class="fu"><a href="reference/pool_coefs.html">pool_coefs</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/shrink_coefs.html">shrink_coefs</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 6. fit and tune scoped machine-learning models</span></span>
+<span><span class="va">ml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_ml.html">fit_ml</a></span><span class="op">(</span><span class="va">panel</span>, y <span class="op">=</span> <span class="st">"Y"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>             time <span class="op">=</span> <span class="st">"time"</span>, scope <span class="op">=</span> <span class="st">"both"</span>,</span>
+<span>             model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ridge"</span>, <span class="st">"knn"</span><span class="op">)</span>, tune <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/best_model.html">best_model</a></span><span class="op">(</span><span class="va">ml</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/predictions.html">predictions</a></span><span class="op">(</span><span class="va">ml</span>, scope <span class="op">=</span> <span class="st">"individual"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="dynamic-network-workflow">Dynamic-network workflow<a class="anchor" aria-label="anchor" href="#dynamic-network-workflow"></a>
+</h2>
+<p>The statistical workflow and network estimators live in the same package and operate on the same person-by-time panels.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## multilevel VAR: temporal, contemporaneous, and between networks</span></span>
+<span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_mlvar.html">fit_mlvar</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
+<span>                 id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">net</span>                 <span class="co"># tidy printout of all three networks</span></span>
+<span><span class="fu"><a href="reference/edges.html">edges</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span>          <span class="co"># one row per edge (network, from, to, weight)</span></span>
+<span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span>          <span class="co"># fixed-effect estimates with SE / p / CI</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">net</span>, layer <span class="op">=</span> <span class="st">"temporal"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## the same call through the registry-driven front door</span></span>
 <span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_idiographic.html">fit_idiographic</a></span><span class="op">(</span></span>
 <span>  <span class="va">panel</span>, method <span class="op">=</span> <span class="st">"mlvar"</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span><span class="op">)</span></span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/equivalence.html">equivalence</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span>  <span class="co"># exact validation scope and tolerance declaration</span></span>
 <span></span>
 <span><span class="co">## inspect the complete package and argument-by-argument evidence ledgers</span></span>
 <span><span class="fu"><a href="reference/equivalence_table.html">equivalence_table</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/argument_coverage.html">argument_coverage</a></span><span class="op">(</span><span class="st">"mlvar"</span><span class="op">)</span></span></code></pre></div>
-<p>All fitting functions use named, readable arguments. <code><a href="reference/list_estimators.html">list_estimators()</a></code>, <code><a href="reference/estimator_info.html">estimator_info()</a></code>, and <code><a href="reference/get_estimator.html">get_estimator()</a></code> expose the registry; custom methods can be added with <code><a href="reference/register_estimator.html">register_estimator()</a></code>. <code><a href="reference/equivalence_table.html">equivalence_table()</a></code> reports the package-wide evidence status, while <code><a href="reference/argument_coverage.html">argument_coverage()</a></code> guarantees every current public formal is classified as oracle/engine/statistical/internal, delegated, extension, or an explicit rejection boundary.</p>
-<p>Together these ledgers provide complete package-wide evidence closure: there are no unassessed registered methods or arguments. Numerical equivalence remains method- and configuration-specific rather than a blanket package claim.</p>
+<p>All fitting functions use named, readable arguments. <code><a href="reference/list_estimators.html">list_estimators()</a></code>, <code><a href="reference/estimator_info.html">estimator_info()</a></code>, and <code><a href="reference/get_estimator.html">get_estimator()</a></code> expose the dynamic-network and legacy ML registry; custom methods can be added with <code><a href="reference/register_estimator.html">register_estimator()</a></code>. <code><a href="reference/models.html">models()</a></code> is the separate algorithm/backend registry used by the consolidated ML engine. Classical scoped fitters (<code><a href="reference/fit_lm.html">fit_lm()</a></code>, <code><a href="reference/fit_glm.html">fit_glm()</a></code>, effects, within-between, and subgroup methods) remain explicit verbs because their results and inferential contracts are not interchangeable with network estimators. <code><a href="reference/equivalence_table.html">equivalence_table()</a></code> and <code><a href="reference/argument_coverage.html">argument_coverage()</a></code> report evidence for the methods in the dynamic estimator registry.</p>
+<p>Together these ledgers provide complete evidence closure for registered methods: there are no unassessed registered methods or arguments. Numerical equivalence remains method- and configuration-specific rather than a blanket package claim.</p>
 <div class="section level3">
 <h3 id="native-bayesian-dsem-no-mplus-needed">Native Bayesian DSEM (no Mplus needed)<a class="anchor" aria-label="anchor" href="#native-bayesian-dsem-no-mplus-needed"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bayes</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_mlvar_bayes.html">fit_mlvar_bayes</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
-<span>                           id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span>,</span>
-<span>                           n_iter <span class="op">=</span> <span class="fl">4000</span>, n_chains <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>                         id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"time"</span>,</span>
+<span>                         n_iter <span class="op">=</span> <span class="fl">4000</span>, n_chains <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">bayes</span>               <span class="co"># posterior medians, SDs, 95% CIs, convergence (max PSR)</span></span>
 <span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">bayes</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## full DSEM with person-specific slopes, random residuals, and</span></span>
 <span><span class="co">## within-model imputation of missing observations (needs enough subjects to</span></span>
 <span><span class="co">## identify the random-effect covariance: at least 2 * (p + p^2) + 1):</span></span>
-<span><span class="fu"><a href="reference/fit_mlvar_bayes.html">fit_mlvar_bayes</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"beep"</span>,</span>
-<span>                  temporal <span class="op">=</span> <span class="st">"random"</span>, residual <span class="op">=</span> <span class="st">"random"</span>, impute <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/fit_mlvar_bayes.html">fit_mlvar_bayes</a></span><span class="op">(</span><span class="va">panel</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span>, beep <span class="op">=</span> <span class="st">"time"</span>,</span>
+<span>                temporal <span class="op">=</span> <span class="st">"random"</span>, residual <span class="op">=</span> <span class="st">"random"</span>, impute <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="whats-included">What’s included<a class="anchor" aria-label="anchor" href="#whats-included"></a>
 </h2>
-<p><strong>Estimators</strong></p>
+<p><strong>Descriptions, regression, and explanation</strong></p>
+<ul>
+<li>
+<code><a href="reference/describe_persons.html">describe_persons()</a></code> / <code><a href="reference/correlate_persons.html">correlate_persons()</a></code> / <code><a href="reference/variance_components.html">variance_components()</a></code> — person-level distributions, dependence, and variance allocation</li>
+<li>
+<code><a href="reference/fit_lm.html">fit_lm()</a></code> / <code><a href="reference/fit_glm.html">fit_glm()</a></code> — pooled, subgroup, and person-specific models</li>
+<li>
+<code><a href="reference/fit_ml.html">fit_ml()</a></code> — native and optional-backend machine learning with ordered hold-out validation and tuning</li>
+<li>
+<code><a href="reference/fit_rolling.html">fit_rolling()</a></code> — rolling-origin validation for LM, GLM, and ML</li>
+<li>
+<code><a href="reference/fit_within_between.html">fit_within_between()</a></code> / <code><a href="reference/contextual.html">contextual()</a></code> — explicit within-person and between-person effects</li>
+<li>
+<code><a href="reference/pool_coefs.html">pool_coefs()</a></code> / <code><a href="reference/shrink_coefs.html">shrink_coefs()</a></code> — heterogeneity-aware pooling and empirical Bayes stabilization</li>
+<li>
+<code><a href="reference/test_subgroups.html">test_subgroups()</a></code> / <code><a href="reference/find_subgroups.html">find_subgroups()</a></code> / <code><a href="reference/fit_subgroups.html">fit_subgroups()</a></code> — subgroup existence, discovery, and modelling</li>
+<li>
+<code><a href="reference/fit_effects.html">fit_effects()</a></code> / <code><a href="reference/fit_heterogeneity.html">fit_heterogeneity()</a></code> — treatment effects and general heterogeneity analysis</li>
+</ul>
+<p><strong>Dynamic-network estimators</strong></p>
 <ul>
 <li>
 <code><a href="reference/fit_var.html">fit_var()</a></code> / <code><a href="reference/fit_var_each.html">fit_var_each()</a></code> — ordinary VAR(1) (OLS), pooled or per subject</li>
@@ -218,13 +295,13 @@
 <code><a href="reference/fit_usem.html">fit_usem()</a></code> — unified Structural Equation Modeling (lavaan)</li>
 <li>
 <code><a href="reference/fit_gimme.html">fit_gimme()</a></code> — Group Iterative Multiple Model Estimation with explicit Bonferroni/FDR corrections, alpha, and stopping criteria</li>
-<li>
-<code><a href="reference/fit_ml.html">fit_ml()</a></code> — individualized supervised prediction models, comparing person-specific models against a pooled baseline on held-out within-person rows, with no new dependencies</li>
 </ul>
 <p><strong>Workflow &amp; diagnostics</strong></p>
 <ul>
 <li>
-<code><a href="reference/preprocess.html">preprocess()</a></code> — preprocessing audit for ILD (compliance, variance, stationarity)</li>
+<code><a href="reference/preprocess.html">preprocess()</a></code> — network-oriented ILD audit (compliance, variance, stationarity)</li>
+<li>
+<code><a href="reference/preprocess_panel.html">preprocess_panel()</a></code> — centring, scaling, detrending, decomposition, and within-person lag construction</li>
 <li>
 <code><a href="reference/estimate_stability.html">estimate_stability()</a></code> — bootstrap edge-stability diagnostics (<em>experimental</em>)</li>
 <li>
@@ -235,28 +312,40 @@
 <code><a href="reference/compare_idiographic.html">compare_idiographic()</a></code> — model-comparison reports</li>
 </ul>
 <p><strong>Tidy contract</strong></p>
-<p>Every result: <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> · <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> · <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code></p>
+<p>Scoped statistical results: <code><a href="reference/metrics.html">metrics()</a></code> · <code><a href="reference/predictions.html">predictions()</a></code> · <code><a href="reference/coefs.html">coefs()</a></code> · <code><a href="reference/diagnostics.html">diagnostics()</a></code> · <code><a href="reference/importance.html">importance()</a></code> · <code><a href="reference/tuning.html">tuning()</a></code> · <code><a href="reference/person.html">person()</a></code> · <code><a href="reference/individuals.html">individuals()</a></code> · <code><a href="reference/pooled.html">pooled()</a></code> · <code><a href="reference/subgroups.html">subgroups()</a></code> · <code><a href="reference/overall.html">overall()</a></code></p>
+<p>Every result: <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> · <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> · <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> where meaningful</p>
 <p>Network results: <code><a href="reference/edges.html">edges()</a></code> · <code><a href="reference/nodes.html">nodes()</a></code> · <code><a href="reference/coefs.html">coefs()</a></code> · <code><a href="reference/matrices.html">matrices()</a></code> · <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="reference/plot_gimme.html">plot_gimme()</a></code> · <code><a href="reference/as_netobject.html">as_netobject()</a></code></p>
 <div class="section level3">
 <h3 id="idiographic-machine-learning">Idiographic machine learning<a class="anchor" aria-label="anchor" href="#idiographic-machine-learning"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_ml.html">fit_ml</a></span><span class="op">(</span></span>
 <span>  <span class="va">panel</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
+<span>  y <span class="op">=</span> <span class="st">"Y"</span>,</span>
+<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
 <span>  id <span class="op">=</span> <span class="st">"id"</span>,</span>
-<span>  beep <span class="op">=</span> <span class="st">"beep"</span>,</span>
-<span>  compare <span class="op">=</span> <span class="st">"both"</span>,</span>
-<span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"ridge"</span>, <span class="st">"knn"</span><span class="op">)</span></span>
+<span>  time <span class="op">=</span> <span class="st">"time"</span>,</span>
+<span>  scope <span class="op">=</span> <span class="st">"both"</span>,</span>
+<span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"ridge"</span>, <span class="st">"knn"</span><span class="op">)</span>,</span>
+<span>  tune <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ml</span>                 <span class="co"># per-person and pooled held-out performance</span></span>
-<span><span class="va">ml</span><span class="op">$</span><span class="va">metrics</span>         <span class="co"># MAE / RMSE / bias / R-squared by subject and overall</span></span>
+<span><span class="fu"><a href="reference/metrics.html">metrics</a></span><span class="op">(</span><span class="va">ml</span><span class="op">)</span>        <span class="co"># MAE / RMSE / bias / R-squared by subject and overall</span></span>
 <span><span class="fu"><a href="reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">ml</span><span class="op">)</span>          <span class="co"># coefficients for each individualized and pooled model</span></span>
-<span><span class="va">ml</span><span class="op">$</span><span class="va">predictions</span>     <span class="co"># row-level held-out predictions</span></span></code></pre></div>
-<p>Use <code>model = "all"</code> to run all native models for the selected task. For regression this includes mean baseline, OLS (<code>linear</code>), ridge, lasso, elastic net, PCR, kNN, and a one-split tree. For binary classification this includes majority baseline, logistic regression, ridge/lasso/elastic-net logistic, LDA, Gaussian naive Bayes, kNN, and a one-split tree. Use <code>estimator = "native"</code> explicitly only when you want to pin the implementation; future package backends should live behind the same model name.</p>
+<span><span class="fu"><a href="reference/predictions.html">predictions</a></span><span class="op">(</span><span class="va">ml</span><span class="op">)</span>    <span class="co"># row-level held-out predictions</span></span></code></pre></div>
+<p>Use <code>model = "all"</code> to run all native models for the selected task. For regression this includes mean baseline, OLS (<code>linear</code>), ridge, lasso, elastic net, PCR, kNN, and a one-split tree. For binary classification this includes majority baseline, logistic regression, ridge/lasso/elastic-net logistic, LDA, Gaussian naive Bayes, kNN, and a one-split tree. Use <code>estimator = "native"</code> explicitly only when you want to pin the implementation; optional package backends live behind the same model name. Historical calls using <code>outcome</code>, <code>predictors</code>, <code>day</code>, and <code>beep</code> remain supported.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="migrating-from-idiostats">Migrating from idiostats<a class="anchor" aria-label="anchor" href="#migrating-from-idiostats"></a>
+</h2>
+<p>Use <code><a href="https://pak.dynasite.org/idiographic/">library(idiographic)</a></code> in place of <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library(idiostats)</a></code>. Almost all public analysis verbs retain their names. Two collision bridges are explicit:</p>
+<ul>
+<li>Use <code><a href="reference/preprocess_panel.html">preprocess_panel()</a></code> for the former <code>idiostats::preprocess()</code> transforms; <code><a href="reference/preprocess.html">preprocess()</a></code> remains the established network-readiness audit.</li>
+<li>Named <code>fit_ml(y = ..., x = ...)</code> calls use the consolidated scoped engine. Use <code>fit_ml_panel(data, y, x, id, ...)</code> when retaining the former positional calling style. Positional <code>fit_ml(data, outcome, predictors, id)</code> remains the historical <code>idiographic</code> interface for backward compatibility.</li>
+</ul>
+<p>Consolidated results report <code>idiographic_*</code> as their primary class and retain the former <code>idiostats_*</code> class as a compatibility bridge.</p>
 </div>
 <div class="section level2">
 <h2 id="bundled-data">Bundled data<a class="anchor" aria-label="anchor" href="#bundled-data"></a>
@@ -272,11 +361,88 @@
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
 <p>Package page and binaries: <strong><a href="https://mohsaqr.r-universe.dev/idiographic" class="external-link uri">https://mohsaqr.r-universe.dev/idiographic</a></strong>.</p>
+<p>Start with the <a href="vignettes/statistical-workflows.Rmd">statistical workflow guide</a>, which maps research questions to the 16 major non-network functions. Each function then has a detailed worked vignette:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Analysis</th>
+<th>Function-specific vignette</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Person-level description</td>
+<td><a href="vignettes/describe-persons.Rmd"><code>describe_persons()</code></a></td>
+</tr>
+<tr>
+<td>Within-person correlation</td>
+<td><a href="vignettes/correlate-persons.Rmd"><code>correlate_persons()</code></a></td>
+</tr>
+<tr>
+<td>Variance decomposition</td>
+<td><a href="vignettes/variance-components.Rmd"><code>variance_components()</code></a></td>
+</tr>
+<tr>
+<td>Panel preparation</td>
+<td><a href="vignettes/preprocess-panel.Rmd"><code>preprocess_panel()</code></a></td>
+</tr>
+<tr>
+<td>Linear modelling</td>
+<td><a href="vignettes/fit-lm.Rmd"><code>fit_lm()</code></a></td>
+</tr>
+<tr>
+<td>Generalized linear modelling</td>
+<td><a href="vignettes/fit-glm.Rmd"><code>fit_glm()</code></a></td>
+</tr>
+<tr>
+<td>Machine learning</td>
+<td><a href="vignettes/fit-ml.Rmd"><code>fit_ml()</code></a></td>
+</tr>
+<tr>
+<td>Rolling-origin validation</td>
+<td><a href="vignettes/fit-rolling.Rmd"><code>fit_rolling()</code></a></td>
+</tr>
+<tr>
+<td>Within-between modelling</td>
+<td><a href="vignettes/fit-within-between.Rmd"><code>fit_within_between()</code></a></td>
+</tr>
+<tr>
+<td>Coefficient pooling</td>
+<td><a href="vignettes/pool-coefs.Rmd"><code>pool_coefs()</code></a></td>
+</tr>
+<tr>
+<td>Coefficient shrinkage</td>
+<td><a href="vignettes/shrink-coefs.Rmd"><code>shrink_coefs()</code></a></td>
+</tr>
+<tr>
+<td>Subgroup-existence testing</td>
+<td><a href="vignettes/test-subgroups.Rmd"><code>test_subgroups()</code></a></td>
+</tr>
+<tr>
+<td>Subgroup discovery</td>
+<td><a href="vignettes/find-subgroups.Rmd"><code>find_subgroups()</code></a></td>
+</tr>
+<tr>
+<td>Subgroup modelling</td>
+<td><a href="vignettes/fit-subgroups.Rmd"><code>fit_subgroups()</code></a></td>
+</tr>
+<tr>
+<td>Treatment-effect estimation</td>
+<td><a href="vignettes/fit-effects.Rmd"><code>fit_effects()</code></a></td>
+</tr>
+<tr>
+<td>General heterogeneity analysis</td>
+<td><a href="vignettes/fit-heterogeneity.Rmd"><code>fit_heterogeneity()</code></a></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>Saqr, M., &amp; López-Pernas, S. (2026). <em>idiographic: Person-Specific (Idiographic) and Heterogeneous Complex Networks</em>. R package. <a href="https://github.com/mohsaqr/idiographic" class="external-link uri">https://github.com/mohsaqr/idiographic</a></p>
+<p>Saqr, M., &amp; López-Pernas, S. (2026). <em>idiographic: Person-Specific Statistics and Heterogeneous Dynamic Networks</em>. R package. <a href="https://github.com/mohsaqr/idiographic" class="external-link uri">https://github.com/mohsaqr/idiographic</a></p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
