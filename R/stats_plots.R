@@ -4,7 +4,7 @@
 #' rows, which is the comparison people usually want: pooled versus subgroup
 #' versus individual.
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param metric Metric column to plot. Defaults to `rmse` for regression and
 #'   `accuracy` for classification.
 #' @param model,scope Optional filters.
@@ -43,7 +43,7 @@ plot_metrics <- function(x, metric = NULL, model = NULL, scope = NULL,
 
 #' Plot feature importance
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param n Number of rows/variables to plot.
 #' @param ... Passed to base plotting functions.
@@ -71,7 +71,7 @@ plot_importance <- function(x, model = NULL, scope = NULL, subject = NULL,
 
 #' Plot model diagnostics
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param type Diagnostic plot type: `"residuals"`, `"observed"`, or
 #'   `"calibration"`.
@@ -117,7 +117,7 @@ plot_diagnostics <- function(x, model = NULL, scope = NULL, subject = NULL,
 #' happen, over the held-out occasions. This is the plot that shows whether a
 #' model tracks a person, which a scatter of everyone pooled together hides.
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param n_subjects Maximum number of people to draw.
 #' @param ... Passed to base plotting functions.
@@ -166,7 +166,7 @@ plot_predictions <- function(x, model = NULL, scope = NULL, subject = NULL,
 #' The people whose bars sit the wrong side of that line are the ones the model
 #' is failing -- which is the question idiographic work exists to ask.
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param metric Metric column. Defaults to `rmse`, or `accuracy` when the
 #'   outcome is a class.
 #' @param model,scope Optional filters.

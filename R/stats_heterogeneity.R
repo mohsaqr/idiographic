@@ -78,7 +78,7 @@
 #'   person needs rows in both halves to have a model of their own.
 #' @param conf_level Confidence level.
 #' @param ... Passed to the proxy models.
-#' @return An `idiostats_heterogeneity` object. See [heterogeneity()], [clan()],
+#' @return An `idiographic_heterogeneity` object. See [heterogeneity()], [clan()],
 #'   and [learners()].
 #' @references Chernozhukov, V., Demirer, M., Duflo, E., & Fernandez-Val, I.
 #'   (2020). Generic Machine Learning Inference on Heterogeneous Treatment
@@ -184,7 +184,7 @@ fit_heterogeneity <- function(data, y, x, id,
     heterogeneity = het,
     clan = cla,
     lambda = lambda
-  ), class = "idiostats_heterogeneity")
+  ), class = c("idiographic_heterogeneity", "idiostats_heterogeneity"))
 }
 
 # ------------------------------------------------------------------ splits ----
@@ -705,7 +705,7 @@ print.idiostats_heterogeneity <- function(x, ...) {
                  cate = "treatment effect",
                  error = "predictability (held-out error)",
                  gain = "gain from person-specific modelling")
-  cat("Idiostats Heterogeneity\n")
+  cat("Idiographic Heterogeneity\n")
   cat(sprintf("  Varies:      %s\n", what))
   cat(sprintf("  Outcome:     %s\n", x$spec$y))
   if (!is.null(x$spec$treatment)) {

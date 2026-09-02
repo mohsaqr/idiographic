@@ -2,16 +2,16 @@
 % Please edit documentation in R/stats_generics.R
 \name{compare}
 \alias{compare}
-\title{Compare idiostats fits}
+\title{Compare idiographic fits}
 \usage{
 compare(...)
 }
 \arguments{
-\item{...}{One or more idiostats fits.}
+\item{...}{One or more idiographic fits.}
 }
 \value{
 A tidy data frame formed from each fit's overall metrics.
 }
 \description{
-Compare idiostats fits
+Compare idiographic fits
 }

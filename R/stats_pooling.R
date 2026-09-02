@@ -61,13 +61,13 @@
 #' them and is refused rather than silently pooled as if every person were
 #' measured equally well.
 #'
-#' @param x An `idiostats_fit` with individual-scope coefficients.
+#' @param x An `idiographic_fit` with individual-scope coefficients.
 #' @param term Optional filter on the coefficient name.
 #' @param scope Which scope's coefficients to pool. Individual, necessarily.
 #' @param model,subgroup Optional filters.
 #' @param conf_level Confidence level for the pooled interval.
 #' @return A `data.frame` of one row per term, with class
-#'   `idiostats_pooled`.
+#'   `idiographic_pooled`.
 #' @examples
 #' fit <- fit_lm(srl, y = "effort", x = c("efficacy", "planning"),
 #'               id = "name", time = "day", scope = "individual")
@@ -96,7 +96,8 @@ pool_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
          call. = FALSE)
   }
   rownames(out) <- NULL
-  structure(out, class = c("idiostats_pooled", "data.frame"),
+  structure(out, class = c("idiographic_pooled", "idiostats_pooled",
+                           "data.frame"),
             conf_level = conf_level)
 }
 
@@ -120,7 +121,7 @@ pool_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
 #'
 #' @inheritParams pool_coefs
 #' @return A `data.frame` of one row per person per term, with class
-#'   `idiostats_shrunk`.
+#'   `idiographic_shrunk`.
 #' @examples
 #' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name",
 #'               time = "day", scope = "individual")
@@ -152,14 +153,15 @@ shrink_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
          call. = FALSE)
   }
   rownames(out) <- NULL
-  structure(out, class = c("idiostats_shrunk", "data.frame"))
+  structure(out, class = c("idiographic_shrunk", "idiostats_shrunk",
+                           "data.frame"))
 }
 
 #' Coefficients to pool, with the checks that make pooling meaningful
 #' @noRd
 .idio_pool_input <- function(x, term, scope, model, subgroup) {
   if (!inherits(x, "idiostats_fit")) {
-    stop("`x` must be an idiostats fit.", call. = FALSE)
+    stop("`x` must be a consolidated idiographic fit.", call. = FALSE)
   }
   tab <- coefs(x, model = model, scope = scope, subgroup = subgroup)
   if (!is.null(term)) tab <- tab[tab$term %in% term, , drop = FALSE]

@@ -14,7 +14,7 @@ pool_coefs(
 )
 }
 \arguments{
-\item{x}{An \code{idiostats_fit} with individual-scope coefficients.}
+\item{x}{An \code{idiographic_fit} with individual-scope coefficients.}
 
 \item{term}{Optional filter on the coefficient name.}
 
@@ -26,7 +26,7 @@ pool_coefs(
 }
 \value{
 A \code{data.frame} of one row per term, with class
-\code{idiostats_pooled}.
+\code{idiographic_pooled}.
 }
 \description{
 Runs a random-effects meta-analysis across people, one per term, treating

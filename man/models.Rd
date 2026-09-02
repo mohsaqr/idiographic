@@ -12,7 +12,7 @@ models(task = NULL, available = FALSE)
 \item{available}{Only models whose package is installed here.}
 }
 \value{
-A \code{data.frame} with class \code{idiostats_models}.
+A \code{data.frame} with class \code{idiographic_models}.
 }
 \description{
 One row per model per backend: what task it can do, which package provides

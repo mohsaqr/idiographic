@@ -68,7 +68,7 @@
 #' @param time Optional ordering column.
 #' @param k_max Largest `k` considered when `k = "auto"`.
 #' @param ... Ignored.
-#' @return An `idiostats_groups` object. Use [groups()] for the tidy table.
+#' @return An `idiographic_groups` object. Use [groups()] for the tidy table.
 #' @examples
 #' g <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",
 #'                     id = "name", k = 2, reps = 10)
@@ -179,7 +179,7 @@ find_subgroups <- function(data, y, x, id,
     mixture = run$mixture,
     mixture_bic = mixture_bic,
     failures = run$failures
-  ), class = "idiostats_groups")
+  ), class = c("idiographic_groups", "idiostats_groups"))
 }
 
 #' One (method, k) run: label people, then score how stably they stay together
@@ -610,7 +610,7 @@ find_subgroups <- function(data, y, x, id,
 #' @export
 print.idiostats_groups <- function(x, ...) {
   tab <- x$groups
-  cat("Idiostats Subgroups\n")
+  cat("Idiographic Subgroups\n")
   cat(sprintf("  Method:      %s\n", x$spec$method))
   if (!is.null(x$spec$moderators)) {
     cat(sprintf("  Moderators:  %s\n",
@@ -706,7 +706,7 @@ groups.idiostats_fit <- function(x, subgroup = NULL, subject = NULL,
 #' @param method Which family to fit: `"lm"`, `"glm"`, or `"ml"`.
 #' @param scope Defaults to `"all"` (pooled + subgroup + individual).
 #' @param ... Passed to the underlying fitter, e.g. `model` or `family`.
-#' @return An `idiostats_fit`.
+#' @return An `idiographic_fit`.
 #' @examples
 #' g <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",
 #'                     id = "name", k = 2, reps = 10)

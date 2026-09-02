@@ -166,7 +166,7 @@
 #'
 #' @param task Optional `"regression"` or `"classification"` filter.
 #' @param available Only models whose package is installed here.
-#' @return A `data.frame` with class `idiostats_models`.
+#' @return A `data.frame` with class `idiographic_models`.
 #' @examples
 #' models()
 #' models(task = "classification", available = TRUE)
@@ -184,7 +184,8 @@ models <- function(task = NULL, available = FALSE) {
   reg$package[is.na(reg$package)] <- "base"
   if (available) reg <- reg[reg$installed, , drop = FALSE]
   rownames(reg) <- NULL
-  structure(reg, class = c("idiostats_models", "data.frame"))
+  structure(reg, class = c("idiographic_models", "idiostats_models",
+                           "data.frame"))
 }
 
 #' @export

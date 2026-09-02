@@ -6,7 +6,7 @@
 #'   binomial via `MASS::glm.nb()`, which is what overdispersed counts need --
 #'   Poisson would report standard errors that are too small.
 #' @param ... Passed to the underlying fitter.
-#' @return An `idiostats_fit`.
+#' @return An `idiographic_fit`.
 #' @examples
 #' # `srl` carries some missing values, so na.rm is needed to derive an outcome.
 #' srl$high <- ifelse(srl$effort > median(srl$effort, na.rm = TRUE),

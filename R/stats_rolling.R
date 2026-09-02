@@ -22,7 +22,7 @@
 #'   fold's training rows, so no fold's test rows influence its own settings.
 #' @param valid_prop Proportion of each fold's training rows used for tuning.
 #' @param ... Passed to the underlying fitter, e.g. `model` or `family`.
-#' @return An `idiostats_fit` whose `predictions` carry a `fold` column.
+#' @return An `idiographic_fit` whose `predictions` carry a `fold` column.
 #' @examples
 #' fit <- fit_rolling(srl, y = "effort", x = "efficacy:monitoring", id = "name",
 #'                    time = "day", method = "ml", model = "ridge", folds = 3)
@@ -95,7 +95,7 @@ fit_rolling <- function(data, y, x, id, method = c("lm", "glm", "ml"),
     fits = unlist(lapply(per_fold, `[[`, "fits"), recursive = FALSE),
     predictions = preds, metrics = mets, coefs = coefs, tuning = tune_tab,
     failures = failures
-  ), class = "idiostats_fit")
+  ), class = c("idiographic_fit", "idiostats_fit"))
 }
 
 #' Fit one rolling fold, returning its raw pieces

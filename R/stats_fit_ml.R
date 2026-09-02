@@ -32,7 +32,7 @@
 #' @param grid Optional named list overriding tuning grids, for example
 #'   `list(ridge = list(lambda = c(0.1, 1)), knn = list(k = c(3, 5)))`.
 #' @param ... Ignored.
-#' @return An `idiostats_fit`.
+#' @return An `idiographic_fit`.
 #' @examples
 #' fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
 #'               time = "day", model = c("ridge", "knn"), tune = TRUE)

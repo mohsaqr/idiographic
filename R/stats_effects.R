@@ -87,7 +87,7 @@
 #' @param n_groups Number of sorted effect groups for GATES.
 #' @param conf_level Confidence level for the reported intervals.
 #' @param ... Passed to the outcome models, e.g. `lambda` or `k`.
-#' @return An `idiostats_effects` object, which is also an `idiostats_fit`: the
+#' @return An `idiographic_effects` object, which is also an `idiographic_fit`: the
 #'   usual accessors work, and [effects()] returns the effect table.
 #' @examples
 #' set.seed(1)
@@ -194,7 +194,8 @@ fit_effects <- function(data, y, treatment, x, id, time = NULL, scope = "both",
   out$spec$reference <- t_info$reference
   out$spec$propensity <- prop_model
   out$spec$n_groups <- as.integer(n_groups)
-  class(out) <- c("idiostats_effects", "idiostats_fit")
+  class(out) <- c("idiographic_effects", "idiostats_effects",
+                  "idiographic_fit", "idiostats_fit")
   out
 }
 
@@ -660,7 +661,7 @@ effects.idiostats_effects <- function(object, effect = NULL, contrast = NULL,
 
 #' @export
 print.idiostats_effects <- function(x, ...) {
-  cat("Idiostats Treatment Effects\n")
+  cat("Idiographic Treatment Effects\n")
   cat(sprintf("  Outcome:     %s\n", x$spec$y))
   treat <- switch(x$spec$treatment_type,
     binary = sprintf("%s (treated = %s)", x$spec$treatment, x$spec$treated),

@@ -2,18 +2,18 @@
 % Please edit documentation in R/stats_views.R
 \name{people}
 \alias{people}
-\title{Focus an idiostats fit on selected people}
+\title{Focus an idiographic fit on selected people}
 \usage{
 people(x, ids)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{ids}{Person IDs.}
 }
 \value{
-An idiostats fit view.
+An idiographic fit view.
 }
 \description{
-Focus an idiostats fit on selected people
+Focus an idiographic fit on selected people
 }

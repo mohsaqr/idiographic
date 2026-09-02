@@ -1,6 +1,6 @@
 #' Tuning results
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param n Optional number of rows.
 #' @param ... Ignored.
@@ -37,7 +37,7 @@ tuning.idiostats_fit <- function(x, model = NULL, scope = NULL,
 
 #' Plot tuning results
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param metric Metric to plot. Defaults to `rmse` when present, otherwise
 #'   `accuracy`.

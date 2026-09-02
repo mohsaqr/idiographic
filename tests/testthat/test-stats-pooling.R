@@ -94,7 +94,7 @@ test_that("pooling refuses fits that cannot support it", {
   # Pooling is across people, so a pooled-only fit has nothing to pool.
   only_pooled <- fit_lm(d, y = "y", x = "x", id = "id", scope = "pooled")
   expect_error(pool_coefs(only_pooled), "scope = \\\"individual\\\"")
-  expect_error(pool_coefs(d), "must be an idiostats fit")
+  expect_error(pool_coefs(d), "must be a consolidated idiographic fit")
 })
 
 test_that("pooled output keeps a readable shape", {

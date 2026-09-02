@@ -61,7 +61,7 @@ person needs rows in both halves to have a model of their own.}
 \item{...}{Passed to the proxy models.}
 }
 \value{
-An \code{idiostats_heterogeneity} object. See \code{\link[=heterogeneity]{heterogeneity()}}, \code{\link[=clan]{clan()}},
+An \code{idiographic_heterogeneity} object. See \code{\link[=heterogeneity]{heterogeneity()}}, \code{\link[=clan]{clan()}},
 and \code{\link[=learners]{learners()}}.
 }
 \description{

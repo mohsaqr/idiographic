@@ -49,7 +49,7 @@
 
 #' Resolve a subgroup specification to a named subject -> label vector
 #'
-#' Accepts an `idiostats_groups` object, a grouping column in `data`, a named
+#' Accepts an `idiographic_groups` object, a grouping column in `data`, a named
 #' vector, or a two-column data frame. The caller never has to assemble the
 #' mapping by hand.
 #'

@@ -53,7 +53,7 @@ grouping column in \code{data}, or a named vector of labels per person.}
 \item{...}{Passed to the underlying fitter.}
 }
 \value{
-An \code{idiostats_fit}.
+An \code{idiographic_fit}.
 }
 \description{
 Fit pooled, subgroup and person-specific generalized linear models

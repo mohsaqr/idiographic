@@ -78,7 +78,7 @@ near-zero denominator cannot dominate the score.}
 \item{...}{Passed to the outcome models, e.g. \code{lambda} or \code{k}.}
 }
 \value{
-An \code{idiostats_effects} object, which is also an \code{idiostats_fit}: the
+An \code{idiographic_effects} object, which is also an \code{idiographic_fit}: the
 usual accessors work, and \code{\link[=effects]{effects()}} returns the effect table.
 }
 \description{

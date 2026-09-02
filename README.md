@@ -6,19 +6,21 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
-> **Network estimation from intensive longitudinal data** — person-specific and
-> within-person temporal, contemporaneous, and between-subject networks from
-> ESM / EMA / diary panels, through one tidy verb per method.
+> **Person-specific statistics and dynamic networks for intensive longitudinal
+> data** — from raw repeated observations to within-person conclusions.
 
-`idiographic` estimates dynamic networks from intensive longitudinal data (ILD):
-ordinary and regularized vector autoregression, multilevel VAR, native Bayesian
-multilevel VAR validated against selected Mplus DSEM fixtures, unified SEM, and
-GIMME — plus the
-supporting workflow (preprocessing audits, edge-stability diagnostics, rolling
-windows, forecast validation, model comparison, and idiographic supervised
-machine-learning models for individualized prediction). Every result has tidy
-`as.data.frame()` and `summary()` views. Network estimates additionally share
-`edges()`, `nodes()`, `coefs()`, `matrices()`, `plot()`, and `as_netobject()`.
+`idiographic` describes, prepares, models, validates, compares, and explains
+person-specific processes in ESM, EMA, diary, and other panel data. It combines
+person-level descriptions, LM/GLM and machine-learning prediction,
+within-between decomposition, coefficient pooling and shrinkage, subgroup
+discovery, treatment effects, and heterogeneity analysis with the package's
+established VAR, graphical VAR, mlVAR, Bayesian DSEM, uSEM, and GIMME methods.
+
+People and time order are first-class throughout: lags and validation splits do
+not cross person boundaries, future observations are kept out of training, and
+within-person quantities are not silently substituted for between-person ones.
+Pooled and subgroup models are available for comparison and stabilization of
+individual results.
 
 ## Clean-room by design
 
@@ -34,9 +36,9 @@ where a reference implementation is available:
 | `fit_mlvar_bayes()` | Native Bayesian multilevel VAR / **DSEM** | real **Mplus DSEM** + Stan/JAGS | Monte-Carlo error |
 | `fit_var_bayes()` | Native Bayesian VAR(1) | real **Mplus** `ESTIMATOR = BAYES` | committed statistical bounds 0.02-0.03 |
 
-The CRAN package is offline-first: its only imports are the standard R packages
-`stats`, `utils`, and `parallel`, which ship with R. It has **no mandatory
-third-party package dependency**. `lme4` and `lavaan` are optional engines for
+The CRAN package is offline-first: its imports are standard R packages that ship
+with R. It has **no mandatory third-party package dependency**. `lme4` and
+`lavaan` are optional engines for
 multilevel frequentist VAR and SEM/GIMME respectively; plotting and the licensed
 Mplus bridge are optional too. Competitor packages and the 20-panel oracle
 corpus live in the repository's separate `validation/` lane and are not shipped
@@ -81,32 +83,73 @@ pak::pak("mohsaqr/idiographic")
 Plotting uses the [`cograph`](https://github.com/mohsaqr/cograph) package; it stays
 optional and is offered for on-demand install the first time you call `plot()`.
 
-## Quick start
+## Quick start: one idiographic workflow
 
 ```r
 library(idiographic)
 
-## simulate an ESM panel: 30 people, 40 beeps, 3 items
+## simulate an ESM panel: 30 people, 40 occasions, 3 predictors
 set.seed(1)
 panel <- do.call(rbind, lapply(1:30, function(id) {
-  y <- matrix(0, 40, 3)
-  for (t in 2:40) y[t, ] <- c(0.35, 0.30, 0.25) * y[t - 1, ] + rnorm(3)
-  data.frame(id = id, beep = 1:40, A = y[, 1], B = y[, 2], C = y[, 3])
+  x <- matrix(rnorm(120), 40, 3)
+  data.frame(id = id, time = 1:40, A = x[, 1], B = x[, 2], C = x[, 3])
 }))
+panel$Y <- 0.7 * panel$A - 0.3 * panel$B +
+  rep(rnorm(30, sd = 0.5), each = 40) + rnorm(nrow(panel), sd = 0.4)
 
+## 1. inspect variation and dependence person by person
+describe_persons(panel, id = "id", vars = c("A", "B", "Y"), time = "time")
+correlate_persons(panel, id = "id", vars = c("A", "B", "Y"))
+variance_components(panel, id = "id", vars = c("A", "B", "Y"))
+
+## 2. prepare within-person predictors and honest lags
+prepared <- preprocess_panel(
+  panel, id = "id", time = "time", vars = c("A", "B"),
+  decompose = TRUE, lag = 1
+)
+
+## 3. compare pooled and person-specific regression on later observations
+reg <- fit_lm(prepared, y = "Y", x = c("A", "B"), id = "id",
+              time = "time", scope = "both")
+metrics(reg, overall = TRUE)
+coefs(reg, scope = "individual")
+
+## 4. separate within-person and between-person effects directly
+wb <- fit_within_between(panel, y = "Y", x = c("A", "B"), id = "id",
+                         time = "time")
+contextual(wb)
+
+## 5. stabilize noisy individual coefficients
+pool_coefs(reg)
+shrink_coefs(reg)
+
+## 6. fit and tune scoped machine-learning models
+ml <- fit_ml(panel, y = "Y", x = c("A", "B", "C"), id = "id",
+             time = "time", scope = "both",
+             model = c("ridge", "knn"), tune = TRUE)
+best_model(ml)
+predictions(ml, scope = "individual")
+```
+
+## Dynamic-network workflow
+
+The statistical workflow and network estimators live in the same package and
+operate on the same person-by-time panels.
+
+```r
 ## multilevel VAR: temporal, contemporaneous, and between networks
-fit <- fit_mlvar(panel, vars = c("A", "B", "C"), id = "id", beep = "beep")
+net <- fit_mlvar(panel, vars = c("A", "B", "C"),
+                 id = "id", beep = "time")
 
-fit                 # tidy printout of all three networks
-edges(fit)          # one row per edge (network, from, to, weight)
-coefs(fit)          # fixed-effect estimates with SE / p / CI
-plot(fit)           # draw all layers with cograph
-plot(fit, layer = "temporal")
+net                 # tidy printout of all three networks
+edges(net)          # one row per edge (network, from, to, weight)
+coefs(net)          # fixed-effect estimates with SE / p / CI
+plot(net, layer = "temporal")
 
 ## the same call through the registry-driven front door
 fit2 <- fit_idiographic(
   panel, method = "mlvar",
-  params = list(vars = c("A", "B", "C"), id = "id", beep = "beep")
+  params = list(vars = c("A", "B", "C"), id = "id", beep = "time")
 )
 equivalence(fit2)  # exact validation scope and tolerance declaration
 
@@ -116,35 +159,56 @@ argument_coverage("mlvar")
 ```
 
 All fitting functions use named, readable arguments. `list_estimators()`,
-`estimator_info()`, and `get_estimator()` expose the registry; custom methods
-can be added with `register_estimator()`. `equivalence_table()` reports the
-package-wide evidence status, while `argument_coverage()` guarantees every
-current public formal is classified as oracle/engine/statistical/internal,
-delegated, extension, or an explicit rejection boundary.
+`estimator_info()`, and `get_estimator()` expose the dynamic-network and legacy
+ML registry; custom methods can be added with `register_estimator()`.
+`models()` is the separate algorithm/backend registry used by the consolidated
+ML engine. Classical scoped fitters (`fit_lm()`, `fit_glm()`, effects,
+within-between, and subgroup methods) remain explicit verbs because their
+results and inferential contracts are not interchangeable with network
+estimators. `equivalence_table()` and `argument_coverage()` report evidence for
+the methods in the dynamic estimator registry.
 
-Together these ledgers provide complete package-wide evidence closure: there
-are no unassessed registered methods or arguments. Numerical equivalence remains
-method- and configuration-specific rather than a blanket package claim.
+Together these ledgers provide complete evidence closure for registered
+methods: there are no unassessed registered methods or arguments. Numerical
+equivalence remains method- and configuration-specific rather than a blanket
+package claim.
 
 ### Native Bayesian DSEM (no Mplus needed)
 
 ```r
 bayes <- fit_mlvar_bayes(panel, vars = c("A", "B", "C"),
-                           id = "id", beep = "beep",
-                           n_iter = 4000, n_chains = 2)
+                         id = "id", beep = "time",
+                         n_iter = 4000, n_chains = 2)
 bayes               # posterior medians, SDs, 95% CIs, convergence (max PSR)
 coefs(bayes)
 
 ## full DSEM with person-specific slopes, random residuals, and
 ## within-model imputation of missing observations (needs enough subjects to
 ## identify the random-effect covariance: at least 2 * (p + p^2) + 1):
-fit_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
-                  temporal = "random", residual = "random", impute = TRUE)
+fit_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "time",
+                temporal = "random", residual = "random", impute = TRUE)
 ```
 
 ## What's included
 
-**Estimators**
+**Descriptions, regression, and explanation**
+
+- `describe_persons()` / `correlate_persons()` / `variance_components()` —
+  person-level distributions, dependence, and variance allocation
+- `fit_lm()` / `fit_glm()` — pooled, subgroup, and person-specific models
+- `fit_ml()` — native and optional-backend machine learning with ordered
+  hold-out validation and tuning
+- `fit_rolling()` — rolling-origin validation for LM, GLM, and ML
+- `fit_within_between()` / `contextual()` — explicit within-person and
+  between-person effects
+- `pool_coefs()` / `shrink_coefs()` — heterogeneity-aware pooling and empirical
+  Bayes stabilization
+- `test_subgroups()` / `find_subgroups()` / `fit_subgroups()` — subgroup
+  existence, discovery, and modelling
+- `fit_effects()` / `fit_heterogeneity()` — treatment effects and general
+  heterogeneity analysis
+
+**Dynamic-network estimators**
 
 - `fit_var()` / `fit_var_each()` — ordinary VAR(1) (OLS), pooled or per subject
 - `fit_graphical_var()` / `fit_graphical_var_each()` — regularized graphical VAR
@@ -158,13 +222,13 @@ fit_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
 - `fit_usem()` — unified Structural Equation Modeling (lavaan)
 - `fit_gimme()` — Group Iterative Multiple Model Estimation with explicit
   Bonferroni/FDR corrections, alpha, and stopping criteria
-- `fit_ml()` — individualized supervised prediction models, comparing
-  person-specific models against a pooled baseline on held-out within-person
-  rows, with no new dependencies
 
 **Workflow & diagnostics**
 
-- `preprocess()` — preprocessing audit for ILD (compliance, variance, stationarity)
+- `preprocess()` — network-oriented ILD audit (compliance, variance,
+  stationarity)
+- `preprocess_panel()` — centring, scaling, detrending, decomposition, and
+  within-person lag construction
 - `estimate_stability()` — bootstrap edge-stability diagnostics (*experimental*)
 - `fit_rolling_var()` / `fit_rolling_graphical_var()` — rolling-window (time-varying) networks
 - `validate_forecast()` — rolling out-of-sample forecast validation (*experimental*)
@@ -172,7 +236,11 @@ fit_mlvar_bayes(panel, vars = c("A", "B", "C"), id = "id", beep = "beep",
 
 **Tidy contract**
 
-Every result: `as.data.frame()` · `summary()` · `print()`
+Scoped statistical results: `metrics()` · `predictions()` · `coefs()` ·
+`diagnostics()` · `importance()` · `tuning()` · `person()` · `individuals()` ·
+`pooled()` · `subgroups()` · `overall()`
+
+Every result: `as.data.frame()` · `summary()` · `print()` where meaningful
 
 Network results: `edges()` · `nodes()` · `coefs()` · `matrices()` · `plot()` /
 `plot_gimme()` · `as_netobject()`
@@ -182,18 +250,19 @@ Network results: `edges()` · `nodes()` · `coefs()` · `matrices()` · `plot()`
 ```r
 ml <- fit_ml(
   panel,
-  outcome = "A",
-  predictors = c("B", "C"),
+  y = "Y",
+  x = c("A", "B", "C"),
   id = "id",
-  beep = "beep",
-  compare = "both",
-  model = c("linear", "ridge", "knn")
+  time = "time",
+  scope = "both",
+  model = c("linear", "ridge", "knn"),
+  tune = TRUE
 )
 
 ml                 # per-person and pooled held-out performance
-ml$metrics         # MAE / RMSE / bias / R-squared by subject and overall
+metrics(ml)        # MAE / RMSE / bias / R-squared by subject and overall
 coefs(ml)          # coefficients for each individualized and pooled model
-ml$predictions     # row-level held-out predictions
+predictions(ml)    # row-level held-out predictions
 ```
 
 Use `model = "all"` to run all native models for the selected task. For
@@ -202,7 +271,8 @@ lasso, elastic net, PCR, kNN, and a one-split tree. For binary classification
 this includes majority baseline, logistic regression, ridge/lasso/elastic-net
 logistic, LDA, Gaussian naive Bayes, kNN, and a one-split tree. Use
 `estimator = "native"` explicitly only when you want to pin the implementation;
-future package backends should live behind the same model name.
+optional package backends live behind the same model name. Historical calls
+using `outcome`, `predictors`, `day`, and `beep` remain supported.
 
 ## Bundled data
 
@@ -215,8 +285,8 @@ Package page and binaries: **<https://mohsaqr.r-universe.dev/idiographic>**.
 
 ## Citation
 
-Saqr, M., & López-Pernas, S. (2026). *idiographic: Person-Specific
-(Idiographic) and Heterogeneous Complex Networks*. R package.
+Saqr, M., & López-Pernas, S. (2026). *idiographic: Person-Specific Statistics
+and Heterogeneous Dynamic Networks*. R package.
 <https://github.com/mohsaqr/idiographic>
 
 ## License

@@ -44,7 +44,7 @@ find_subgroups(
 \item{...}{Ignored.}
 }
 \value{
-An \code{idiostats_groups} object. Use \code{\link[=groups]{groups()}} for the tidy table.
+An \code{idiographic_groups} object. Use \code{\link[=groups]{groups()}} for the tidy table.
 }
 \description{
 Groups people who behave alike, so that a model can be fitted per subgroup

@@ -2,16 +2,16 @@
 % Please edit documentation in R/stats_views.R
 \name{overall}
 \alias{overall}
-\title{Focus an idiostats fit on overall metric rows}
+\title{Focus an idiographic fit on overall metric rows}
 \usage{
 overall(x)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 }
 \value{
-An idiostats fit view.
+An idiographic fit view.
 }
 \description{
-Focus an idiostats fit on overall metric rows
+Focus an idiographic fit on overall metric rows
 }

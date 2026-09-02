@@ -7,7 +7,7 @@
 plot_metrics(x, metric = NULL, model = NULL, scope = NULL, overall = TRUE, ...)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{metric}{Metric column to plot. Defaults to \code{rmse} for regression and
 \code{accuracy} for classification.}

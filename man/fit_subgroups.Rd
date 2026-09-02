@@ -34,7 +34,7 @@ column in \code{data}, or a named vector of labels per person.}
 \item{...}{Passed to the underlying fitter, e.g. \code{model} or \code{family}.}
 }
 \value{
-An \code{idiostats_fit}.
+An \code{idiographic_fit}.
 }
 \description{
 Fits pooled, subgroup and person-specific models together so all three levels

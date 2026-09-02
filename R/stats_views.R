@@ -1,9 +1,9 @@
-#' Focus an idiostats fit on one person
+#' Focus an idiographic fit on one person
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param id Person ID.
 #' @param ... Ignored.
-#' @return An idiostats fit view.
+#' @return An idiographic fit view.
 #' @export
 person <- function(x, id, ...) UseMethod("person")
 
@@ -12,39 +12,39 @@ person.idiostats_fit <- function(x, id, ...) {
   people(x, id)
 }
 
-#' Focus an idiostats fit on selected people
+#' Focus an idiographic fit on selected people
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param ids Person IDs.
-#' @return An idiostats fit view.
+#' @return An idiographic fit view.
 #' @export
 people <- function(x, ids) {
   .idio_view(x, subject = ids, scope = "individual")
 }
 
-#' Focus an idiostats fit on all individual models
+#' Focus an idiographic fit on all individual models
 #'
-#' @param x An idiostats fit.
-#' @return An idiostats fit view.
+#' @param x An idiographic fit.
+#' @return An idiographic fit view.
 #' @export
 individuals <- function(x) {
   .idio_view(x, scope = "individual")
 }
 
-#' Focus an idiostats fit on pooled models
+#' Focus an idiographic fit on pooled models
 #'
-#' @param x An idiostats fit.
-#' @return An idiostats fit view.
+#' @param x An idiographic fit.
+#' @return An idiographic fit view.
 #' @export
 pooled <- function(x) {
   .idio_view(x, scope = "pooled")
 }
 
-#' Focus an idiostats fit on subgroup models
+#' Focus an idiographic fit on subgroup models
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param label Optional subgroup label(s). Defaults to every subgroup.
-#' @return An idiostats fit view.
+#' @return An idiographic fit view.
 #' @examples
 #' g <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",
 #'                     id = "name", k = 2, reps = 10)
@@ -56,10 +56,10 @@ subgroups <- function(x, label = NULL) {
   .idio_view(x, scope = "subgroup", subgroup = label)
 }
 
-#' Focus an idiostats fit on overall metric rows
+#' Focus an idiographic fit on overall metric rows
 #'
-#' @param x An idiostats fit.
-#' @return An idiostats fit view.
+#' @param x An idiographic fit.
+#' @return An idiographic fit view.
 #' @export
 overall <- function(x) {
   .idio_view(x, overall = TRUE)
@@ -68,7 +68,7 @@ overall <- function(x) {
 .idio_view <- function(x, scope = NULL, subject = NULL, subgroup = NULL,
                        overall = FALSE) {
   if (!inherits(x, "idiostats_fit")) {
-    stop("Expected an idiostats fit.", call. = FALSE)
+    stop("Expected a consolidated idiographic fit.", call. = FALSE)
   }
   out <- x
   out$metrics <- .idio_filter_table(out$metrics, scope = scope,

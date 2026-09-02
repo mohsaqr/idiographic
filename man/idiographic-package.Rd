@@ -4,25 +4,28 @@
 \name{idiographic-package}
 \alias{idiographic}
 \alias{idiographic-package}
-\title{idiographic: Idiographic Network Estimation from Intensive Longitudinal Data}
+\title{idiographic: Person-Specific Statistics and Dynamic Networks}
 \description{
-Person-specific and within-person network estimation from intensive
-longitudinal / ESM panel data: preprocessing audits
-(\code{\link[=preprocess]{preprocess()}}), edge-stability diagnostics
-(\code{\link[=estimate_stability]{estimate_stability()}}), model-comparison reports
-(\code{\link[=compare_idiographic]{compare_idiographic()}}), rolling forecast validation
-(\code{\link[=validate_forecast]{validate_forecast()}}), rolling ordinary vector autoregression
-(\code{\link[=fit_rolling_var]{fit_rolling_var()}}), rolling graphical vector autoregression
-(\code{\link[=fit_rolling_graphical_var]{fit_rolling_graphical_var()}}), ordinary vector autoregression (\code{\link[=fit_var]{fit_var()}}),
-graphical vector autoregression (\code{\link[=fit_graphical_var]{fit_graphical_var()}}), multilevel vector
-autoregression (\code{\link[=fit_mlvar]{fit_mlvar()}}), unified SEM (\code{\link[=fit_usem]{fit_usem()}}), Group
-Iterative Multiple Model Estimation (\code{\link[=fit_gimme]{fit_gimme()}}), and idiographic
-supervised machine-learning models (\code{\link[=fit_ml]{fit_ml()}}) for
-individualized prediction. Use \code{\link[=fit_idiographic]{fit_idiographic()}} for registry-driven
-dispatch or the direct \verb{fit_*()} functions. Every result has tidy
-\code{as.data.frame()}, \code{\link[=summary]{summary()}}, and print methods; network estimators also
-share \code{\link[=edges]{edges()}}, \code{\link[=coefs]{coefs()}}, \code{\link[=nodes]{nodes()}}, \code{\link[=matrices]{matrices()}}, and plotting methods.
-\code{\link[=equivalence]{equivalence()}} reports the exact validation scope attached to each method.
+Person-specific and within-person analysis of intensive longitudinal and ESM
+panel data. The statistical workflow includes person-level descriptions
+(\code{\link[=describe_persons]{describe_persons()}}), centring, decomposition, and lagging
+(\code{\link[=preprocess_panel]{preprocess_panel()}}), scoped regression (\code{\link[=fit_lm]{fit_lm()}}, \code{\link[=fit_glm]{fit_glm()}}), machine
+learning (\code{\link[=fit_ml]{fit_ml()}}), within-between effects (\code{\link[=fit_within_between]{fit_within_between()}}),
+coefficient pooling (\code{\link[=pool_coefs]{pool_coefs()}}), subgroup analysis
+(\code{\link[=test_subgroups]{test_subgroups()}}, \code{\link[=find_subgroups]{find_subgroups()}}), treatment effects
+(\code{\link[=fit_effects]{fit_effects()}}), and heterogeneity (\code{\link[=fit_heterogeneity]{fit_heterogeneity()}}).
+}
+\details{
+Dynamic-network methods include network preprocessing audits
+(\code{\link[=preprocess]{preprocess()}}), edge-stability diagnostics (\code{\link[=estimate_stability]{estimate_stability()}}),
+rolling forecast validation (\code{\link[=validate_forecast]{validate_forecast()}}), ordinary and graphical
+vector autoregression (\code{\link[=fit_var]{fit_var()}}, \code{\link[=fit_graphical_var]{fit_graphical_var()}}), multilevel and
+Bayesian VAR (\code{\link[=fit_mlvar]{fit_mlvar()}}, \code{\link[=fit_mlvar_bayes]{fit_mlvar_bayes()}}), unified SEM
+(\code{\link[=fit_usem]{fit_usem()}}), and GIMME (\code{\link[=fit_gimme]{fit_gimme()}}). Use \code{\link[=fit_idiographic]{fit_idiographic()}} for
+registry-driven dispatch or the direct \verb{fit_*()} functions. Results provide
+tidy accessors, readable print methods, diagnostics, and plots appropriate
+to their analytical level. \code{\link[=equivalence]{equivalence()}} reports the exact validation
+scope attached to registered network methods.
 }
 \seealso{
 Useful links:

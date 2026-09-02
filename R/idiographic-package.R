@@ -1,22 +1,24 @@
-#' idiographic: Idiographic Network Estimation from Intensive Longitudinal Data
+#' idiographic: Person-Specific Statistics and Dynamic Networks
 #'
-#' Person-specific and within-person network estimation from intensive
-#' longitudinal / ESM panel data: preprocessing audits
-#' ([preprocess()]), edge-stability diagnostics
-#' ([estimate_stability()]), model-comparison reports
-#' ([compare_idiographic()]), rolling forecast validation
-#' ([validate_forecast()]), rolling ordinary vector autoregression
-#' ([fit_rolling_var()]), rolling graphical vector autoregression
-#' ([fit_rolling_graphical_var()]), ordinary vector autoregression ([fit_var()]),
-#' graphical vector autoregression ([fit_graphical_var()]), multilevel vector
-#' autoregression ([fit_mlvar()]), unified SEM ([fit_usem()]), Group
-#' Iterative Multiple Model Estimation ([fit_gimme()]), and idiographic
-#' supervised machine-learning models ([fit_ml()]) for
-#' individualized prediction. Use [fit_idiographic()] for registry-driven
-#' dispatch or the direct `fit_*()` functions. Every result has tidy
-#' `as.data.frame()`, [summary()], and print methods; network estimators also
-#' share [edges()], [coefs()], [nodes()], [matrices()], and plotting methods.
-#' [equivalence()] reports the exact validation scope attached to each method.
+#' Person-specific and within-person analysis of intensive longitudinal and ESM
+#' panel data. The statistical workflow includes person-level descriptions
+#' ([describe_persons()]), centring, decomposition, and lagging
+#' ([preprocess_panel()]), scoped regression ([fit_lm()], [fit_glm()]), machine
+#' learning ([fit_ml()]), within-between effects ([fit_within_between()]),
+#' coefficient pooling ([pool_coefs()]), subgroup analysis
+#' ([test_subgroups()], [find_subgroups()]), treatment effects
+#' ([fit_effects()]), and heterogeneity ([fit_heterogeneity()]).
+#'
+#' Dynamic-network methods include network preprocessing audits
+#' ([preprocess()]), edge-stability diagnostics ([estimate_stability()]),
+#' rolling forecast validation ([validate_forecast()]), ordinary and graphical
+#' vector autoregression ([fit_var()], [fit_graphical_var()]), multilevel and
+#' Bayesian VAR ([fit_mlvar()], [fit_mlvar_bayes()]), unified SEM
+#' ([fit_usem()]), and GIMME ([fit_gimme()]). Use [fit_idiographic()] for
+#' registry-driven dispatch or the direct `fit_*()` functions. Results provide
+#' tidy accessors, readable print methods, diagnostics, and plots appropriate
+#' to their analytical level. [equivalence()] reports the exact validation
+#' scope attached to registered network methods.
 #'
 #' @importFrom grDevices rgb
 #' @importFrom graphics abline arrows axis barplot legend lines par plot.new

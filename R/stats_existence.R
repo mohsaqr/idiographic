@@ -81,7 +81,7 @@ test_subgroups <- function(data, y, x, id, time = NULL, k_max = 4L, ...) {
     evidence = tab$bic[tab$k == 1L][1L] - best$bic,   # BIC gain over one group
     shape = shape,
     skewed = .idio_shape_risk(shape)
-  ), class = "idiostats_subgroup_test")
+  ), class = c("idiographic_subgroup_test", "idiostats_subgroup_test"))
   out
 }
 
@@ -118,7 +118,7 @@ test_subgroups <- function(data, y, x, id, time = NULL, k_max = 4L, ...) {
 
 #' @export
 print.idiostats_subgroup_test <- function(x, ...) {
-  cat("Idiostats Subgroup Test\n")
+  cat("Idiographic Subgroup Test\n")
   cat(sprintf("  People:      %d\n", x$spec$n_people))
   cat(sprintf("  Coefficients: %s\n", paste(x$spec$x, collapse = ", ")))
   cat(sprintf("  Searched:    k = 1..%d, covariance models %s\n", x$spec$k_max,

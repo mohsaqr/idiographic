@@ -28,7 +28,7 @@
 #' @param ... Arguments passed to the selected implementation.
 #' @param y,x Consolidated outcome and predictor selectors. Supply both.
 #'
-#' @return An `idioml_result` for historical calls or an `idiostats_fit` for
+#' @return An `idioml_result` for historical calls or an `idiographic_fit` for
 #'   consolidated `y`/`x` calls.
 #' @export
 fit_ml <- function(data, outcome, predictors, id,

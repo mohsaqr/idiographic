@@ -45,7 +45,7 @@ reported rather than \code{NA}.}
 }
 \value{
 A \code{data.frame} of one row per person per pair, with class
-\code{idiostats_correlations}.
+\code{idiographic_correlations}.
 }
 \description{
 The most common idiographic statistic there is: for each person separately,

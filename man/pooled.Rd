@@ -2,16 +2,16 @@
 % Please edit documentation in R/stats_views.R
 \name{pooled}
 \alias{pooled}
-\title{Focus an idiostats fit on pooled models}
+\title{Focus an idiographic fit on pooled models}
 \usage{
 pooled(x)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 }
 \value{
-An idiostats fit view.
+An idiographic fit view.
 }
 \description{
-Focus an idiostats fit on pooled models
+Focus an idiographic fit on pooled models
 }

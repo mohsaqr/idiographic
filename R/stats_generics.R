@@ -1,6 +1,6 @@
 #' Tidy model metrics
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param overall Logical. If `TRUE`, return only overall rows.
 #' @param sort_by Optional metric/column to sort by.
@@ -24,7 +24,7 @@ metrics.idiostats_fit <- function(x, model = NULL, scope = NULL,
 
 #' Tidy held-out predictions
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param overall Logical. If `TRUE`, return only overall rows when present.
 #' @param sort_by Optional column to sort by.
@@ -64,7 +64,7 @@ coefs.idiostats_fit <- function(x, model = NULL, scope = NULL,
 
 #' Best overall model row
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param scope Optional scope filter.
 #' @param ... Ignored.
 #' @return One-row data frame with the best `.overall` metric row.
@@ -120,7 +120,7 @@ best_model.idiostats_fit <- function(x, scope = NULL, ...) {
 
 #' @export
 print.idiostats_fit <- function(x, ...) {
-  cat("Idiostats Fit\n")
+  cat("Idiographic Fit\n")
   cat(sprintf("  Method:      %s\n", x$spec$method))
   cat(sprintf("  Outcome:     %s (%s)\n", x$spec$y, x$spec$task))
   cat(sprintf("  Predictors:  %d (%s)\n", length(x$spec$x),
@@ -157,9 +157,9 @@ print.idiostats_fit <- function(x, ...) {
   invisible(x)
 }
 
-#' Compare idiostats fits
+#' Compare idiographic fits
 #'
-#' @param ... One or more idiostats fits.
+#' @param ... One or more idiographic fits.
 #' @return A tidy data frame formed from each fit's overall metrics.
 #' @export
 compare <- function(...) {
@@ -170,7 +170,8 @@ compare <- function(...) {
   rows <- lapply(seq_along(fits), function(i) {
     fit <- fits[[i]]
     if (!inherits(fit, "idiostats_fit")) {
-      stop("compare() only accepts idiostats fits.", call. = FALSE)
+      stop("compare() only accepts consolidated idiographic fits.",
+           call. = FALSE)
     }
     m <- metrics(fit)
     m <- m[m$subject == ".overall", , drop = FALSE]

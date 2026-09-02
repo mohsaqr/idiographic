@@ -57,7 +57,7 @@ across datasets.}
 }
 \value{
 A \code{data.frame} of one row per person per variable, with class
-\code{idiostats_descriptives}.
+\code{idiographic_descriptives}.
 }
 \description{
 One row per person per variable: how much data they contributed, where they

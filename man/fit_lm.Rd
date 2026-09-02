@@ -51,7 +51,7 @@ M-estimator (\code{MASS::rlm()}) that is not dragged around by outliers.}
 \item{...}{Passed to the underlying fitter.}
 }
 \value{
-An \code{idiostats_fit}.
+An \code{idiographic_fit}.
 }
 \description{
 Fits a linear model at every requested scope and returns them in one tidy

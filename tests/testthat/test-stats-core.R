@@ -40,7 +40,7 @@ test_that("fit_lm returns uniform tidy outputs", {
                             n = 2)), 2L)
   expect_true(all(coefs(fit, model = "lm", n = 2)$model == "lm"))
   expect_equal(nrow(predictions(fit, n = 3)), 3L)
-  expect_output(print(fit), "Idiostats Fit")
+  expect_output(print(fit), "Idiographic Fit")
 })
 
 test_that("pooled predictions keep the real person ID but pooled coefs collapse", {

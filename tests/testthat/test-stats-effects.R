@@ -141,7 +141,7 @@ test_that("fit_effects keeps the shared fit contract", {
   # The usual accessors still work: metrics describe the outcome model.
   expect_true(all(is.finite(metrics(fit, overall = TRUE)$rmse)))
   expect_true(all(c("treatment", "cate", "score") %in% names(predictions(fit))))
-  expect_output(print(fit), "Idiostats Treatment Effects")
+  expect_output(print(fit), "Idiographic Treatment Effects")
   expect_silent(plot_effects(fit))
 
   # The treatment must never be used as its own predictor.

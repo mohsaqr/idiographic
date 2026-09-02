@@ -51,7 +51,7 @@
 #' @param id Person/unit ID column.
 #' @param method `"anova"` (base R, the default) or `"reml"` (needs `lme4`).
 #' @param ... Ignored.
-#' @return A `data.frame` with class `idiostats_variance`. For a data frame:
+#' @return A `data.frame` with class `idiographic_variance`. For a data frame:
 #'   one row per variable, with `variable`, `n`, `people`, `var_within`,
 #'   `var_between`, `var_total`, `icc`, `reliability`. For a fitted model: one
 #'   row per grouping level, with `level`, `variance`, `sd`, `icc`.
@@ -88,7 +88,8 @@ variance_components.data.frame <- function(x, vars = NULL, id,
   })
   out <- do.call(rbind, rows)
   rownames(out) <- NULL
-  structure(out, class = c("idiostats_variance", "data.frame"), id = id,
+  structure(out, class = c("idiographic_variance", "idiostats_variance",
+                           "data.frame"), id = id,
             method = method)
 }
 
@@ -100,7 +101,9 @@ variance_components.idiostats_wb <- function(x, ...) {
          "\"ml\"; an OLS fit has no random effects. Call ",
          "variance_components() on the data instead.", call. = FALSE)
   }
-  structure(x$variances, class = c("idiostats_variance", "data.frame"),
+  structure(x$variances,
+            class = c("idiographic_variance", "idiostats_variance",
+                      "data.frame"),
             id = x$spec$id, method = x$spec$estimator)
 }
 
@@ -317,7 +320,7 @@ print.idiostats_variance <- function(x, ...) {
 #' @param cluster Column(s) to cluster standard errors on, defaulting to `id`.
 #'   Up to two, for two-way clustering. OLS only.
 #' @param conf_level Confidence level for the reported intervals.
-#' @return An `idiostats_wb` object, which is also an `idiostats_fit`. `coefs()`
+#' @return An `idiographic_wb` object, which is also an `idiographic_fit`. `coefs()`
 #'   gains `component` and `variable` columns; [contextual()] returns the
 #'   within/between comparison.
 #' @examples
@@ -398,7 +401,8 @@ fit_within_between <- function(data, y, x, id, time = NULL,
   out$spec$conf_level <- conf_level
   out$spec$random <- random
   out$spec$cluster <- if (length(cluster)) cluster else id
-  class(out) <- c("idiostats_wb", "idiostats_fit")
+  class(out) <- c("idiographic_wb", "idiostats_wb",
+                  "idiographic_fit", "idiostats_fit")
   out
 }
 
@@ -828,7 +832,8 @@ contextual.idiostats_wb <- function(x, variable = NULL, scope = NULL,
   out <- .idio_filter_table(tab, scope = scope, subject = subject,
                             subgroup = subgroup, sort_by = sort_by,
                             decreasing = decreasing, n = n)
-  structure(out, class = c("idiostats_contextual", "data.frame"))
+  structure(out, class = c("idiographic_contextual", "idiostats_contextual",
+                           "data.frame"))
 }
 
 #' @export

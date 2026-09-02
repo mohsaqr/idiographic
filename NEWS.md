@@ -1,3 +1,32 @@
+# idiographic 0.4.0.9000
+
+## Unified idiographic statistics
+
+* Folded the `idiostats` analytical engine into `idiographic`. The package now
+  covers person-level descriptions and correlations, LM/GLM and expanded ML,
+  rolling-origin validation, within-between effects, coefficient pooling and
+  shrinkage, subgroup existence/discovery/modelling, treatment effects, and
+  heterogeneity analysis alongside all existing dynamic-network estimators.
+
+* Added `describe_persons()`, `correlate_persons()`,
+  `variance_components()`, `fit_lm()`, `fit_glm()`, `fit_rolling()`,
+  `fit_within_between()`, `pool_coefs()`, `shrink_coefs()`,
+  `test_subgroups()`, `find_subgroups()`, `fit_subgroups()`, `fit_effects()`,
+  and `fit_heterogeneity()` with their tidy accessors, views, diagnostics, and
+  plots.
+
+* Added `preprocess_panel()` for person/grand centring and scaling, detrending,
+  within-between decomposition, and lags that never cross person boundaries.
+  The established `preprocess()` network audit remains unchanged.
+
+* `fit_ml()` now supports both interfaces. Existing
+  `outcome`/`predictors` calls retain the original `idioml_result`; consolidated
+  `y`/`x` calls support pooled, subgroup, and individual scopes, richer native
+  and optional model registries, tuning, diagnostics, and rolling validation.
+
+* Consolidated statistical results use an `idiographic_*` primary class while
+  retaining their `idiostats_*` compatibility class for downstream migration.
+
 # idiographic 0.3.4
 
 ## New features

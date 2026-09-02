@@ -25,7 +25,7 @@ test_that("find_subgroups recovers real structure", {
                             "n_assignments"))
   expect_equal(nrow(groups(g)), 6L)
   expect_length(unique(groups(g)$subgroup), 2L)
-  expect_output(print(g), "Idiostats Subgroups")
+  expect_output(print(g), "Idiographic Subgroups")
 
   # The discovered split must agree with the planted one (up to label swap).
   tab <- groups(g)

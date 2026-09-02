@@ -5,7 +5,7 @@
 #' scaling. For simple tree models, the selected split variable receives the
 #' split contrast magnitude.
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param method,repeats Only for [importance()]. `"coefficient"` (the default) uses the size of each
 #'   standardized coefficient, which only describes models that have
@@ -160,7 +160,7 @@ importance.idiostats_fit <- function(x, model = NULL, scope = NULL,
 
 #' Model diagnostics
 #'
-#' @param x An idiostats fit.
+#' @param x An idiographic fit.
 #' @param model,scope,subject Optional filters.
 #' @param n Optional number of rows.
 #' @param ... Ignored.

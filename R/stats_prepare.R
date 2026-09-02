@@ -111,7 +111,7 @@
   structure(list(spec = spec, fits = fits, predictions = preds, metrics = mets,
                  coefs = coefs, tuning = tuning %||% .idio_empty_tuning(),
                  failures = failures, y_info = y_info, data = data),
-            class = "idiostats_fit")
+            class = c("idiographic_fit", "idiostats_fit"))
 }
 
 #' Key a fitted unit for the `fits` list

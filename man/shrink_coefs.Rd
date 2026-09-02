@@ -14,7 +14,7 @@ shrink_coefs(
 )
 }
 \arguments{
-\item{x}{An \code{idiostats_fit} with individual-scope coefficients.}
+\item{x}{An \code{idiographic_fit} with individual-scope coefficients.}
 
 \item{term}{Optional filter on the coefficient name.}
 
@@ -26,7 +26,7 @@ shrink_coefs(
 }
 \value{
 A \code{data.frame} of one row per person per term, with class
-\code{idiostats_shrunk}.
+\code{idiographic_shrunk}.
 }
 \description{
 A person measured over few occasions has a noisy coefficient, and taking it

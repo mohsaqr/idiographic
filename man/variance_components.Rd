@@ -26,7 +26,7 @@ numeric column other than \code{id}.}
 \item{method}{\code{"anova"} (base R, the default) or \code{"reml"} (needs \code{lme4}).}
 }
 \value{
-A \code{data.frame} with class \code{idiostats_variance}. For a data frame:
+A \code{data.frame} with class \code{idiographic_variance}. For a data frame:
 one row per variable, with \code{variable}, \code{n}, \code{people}, \code{var_within},
 \code{var_between}, \code{var_total}, \code{icc}, \code{reliability}. For a fitted model: one
 row per grouping level, with \code{level}, \code{variance}, \code{sd}, \code{icc}.

@@ -61,7 +61,7 @@ Up to two, for two-way clustering. OLS only.}
 \item{min_test}{Minimum complete held-out rows per person.}
 }
 \value{
-An \code{idiostats_wb} object, which is also an \code{idiostats_fit}. \code{coefs()}
+An \code{idiographic_wb} object, which is also an \code{idiographic_fit}. \code{coefs()}
 gains \code{component} and \code{variable} columns; \code{\link[=contextual]{contextual()}} returns the
 within/between comparison.
 }

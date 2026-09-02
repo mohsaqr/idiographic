@@ -1,0 +1,141 @@
+---
+title: "From Raw Panel Data to Person-Specific Conclusions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{From Raw Panel Data to Person-Specific Conclusions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(idiographic)
+```
+
+`idiographic` treats the person as the primary analytical unit. This vignette
+shows the common path from inspecting repeated observations to comparing
+person-specific conclusions. Network methods use the same person-by-time data
+contract and are covered in the method-specific vignettes.
+
+## Inspect the panel
+
+The bundled `srl` data contain daily observations nested within learners.
+
+```{r inspect}
+vars <- c("efficacy", "monitoring", "effort")
+
+describe_persons(srl, id = "name", vars = vars, time = "day", n = 6)
+correlate_persons(srl, id = "name", vars = vars, n = 6)
+variance_components(srl, id = "name", vars = vars)
+```
+
+The descriptive layer reports each person's usable observations, missingness,
+variation, serial dependence, and sampling gaps. Inspecting these quantities
+before fitting helps distinguish a model failure from a panel that cannot
+identify the requested person-specific effect.
+
+## Prepare within-person variables
+
+`preprocess_panel()` transforms columns without crossing person boundaries.
+The example adds a person-centred predictor and its previous-occasion value.
+
+```{r prepare}
+panel <- preprocess_panel(
+  srl,
+  id = "name",
+  time = "day",
+  vars = c("efficacy", "monitoring"),
+  center = "person",
+  lag = 1
+)
+```
+
+Use `preprocess()` instead when the goal is the established network-readiness
+audit (stationarity, compliance, variance, and related diagnostics).
+
+## Compare pooled and individual estimates
+
+The default scope fits a pooled comparison and one model per person. Ordered
+hold-out validation uses the final observations of each person as test rows.
+
+```{r regression}
+fit <- fit_lm(
+  panel,
+  y = "effort",
+  x = c("efficacy", "monitoring", "efficacy_lag1"),
+  id = "name",
+  time = "day",
+  scope = "both",
+  min_train = 30
+)
+
+metrics(fit, overall = TRUE)
+coefs(fit, scope = "individual", n = 8)
+```
+
+`individuals(fit)`, `pooled(fit)`, `person(fit, id)`, and `overall(fit)` create
+focused views without changing the underlying estimates.
+
+## Separate within-person and between-person effects
+
+Raw panel regressions can mix two different questions: whether people with a
+higher typical predictor value have a higher outcome, and whether a person has
+a higher outcome than usual when their predictor is higher than usual.
+
+```{r within-between}
+wb <- fit_within_between(
+  srl,
+  y = "effort",
+  x = c("efficacy", "monitoring"),
+  id = "name",
+  time = "day",
+  scope = "pooled",
+  min_train = 30
+)
+
+contextual(wb)
+```
+
+The contextual table keeps these components explicit rather than silently
+assigning one interpretation to a raw-score coefficient.
+
+## Stabilise and explain differences between people
+
+Individual coefficients vary because processes differ and because estimates
+are noisy. Pooling estimates the coefficient distribution; shrinkage produces
+stabilised person-specific coefficients.
+
+```{r pooling}
+pooled_coefs <- pool_coefs(fit)
+shrunk_coefs <- shrink_coefs(fit)
+
+pooled_coefs
+head(shrunk_coefs)
+```
+
+Subgroup and treatment-effect workflows follow the same principle: test what
+the data identify, retain person-level uncertainty and failures, and use pooled
+quantities as comparisons rather than replacements for individual processes.
+See `test_subgroups()`, `find_subgroups()`, `fit_effects()`, and
+`fit_heterogeneity()` for those analyses.
+
+## Move to dynamic networks when the question is multivariate
+
+When the target is a system of lagged and contemporaneous relations rather than
+one outcome, use the network estimators on the same panel:
+
+```{r network, eval=FALSE}
+net <- fit_mlvar(
+  srl,
+  vars = c("efficacy", "monitoring", "effort"),
+  id = "name",
+  beep = "day"
+)
+
+edges(net)
+coefs(net)
+```
+
+The regression and network layers deliberately share `coefs()` and a common
+idiographic vocabulary while retaining result structures appropriate to their
+different estimands.

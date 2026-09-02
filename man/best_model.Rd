@@ -7,7 +7,7 @@
 best_model(x, scope = NULL, ...)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{scope}{Optional scope filter.}
 

@@ -2,20 +2,20 @@
 % Please edit documentation in R/stats_views.R
 \name{person}
 \alias{person}
-\title{Focus an idiostats fit on one person}
+\title{Focus an idiographic fit on one person}
 \usage{
 person(x, id, ...)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{id}{Person ID.}
 
 \item{...}{Ignored.}
 }
 \value{
-An idiostats fit view.
+An idiographic fit view.
 }
 \description{
-Focus an idiostats fit on one person
+Focus an idiographic fit on one person
 }

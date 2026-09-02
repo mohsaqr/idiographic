@@ -63,7 +63,7 @@ fold's training rows, so no fold's test rows influence its own settings.}
 \item{...}{Passed to the underlying fitter, e.g. \code{model} or \code{family}.}
 }
 \value{
-An \code{idiostats_fit} whose \code{predictions} carry a \code{fold} column.
+An \code{idiographic_fit} whose \code{predictions} carry a \code{fold} column.
 }
 \description{
 Instead of one hold-out block per person, the origin walks forward: train on

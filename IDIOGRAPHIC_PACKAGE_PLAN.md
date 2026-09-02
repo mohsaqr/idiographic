@@ -280,3 +280,34 @@ shared infrastructure and descriptive modules with their donor tests.
 **Next:** make `idiographic` the visible identity of all imported result
 classes and print methods, harmonize the public result contract, then rebuild
 the README and vignettes around the unified workflow.
+
+### 2026-09-02 — Identity and installed-package boundary unified
+
+- Added `idiographic_*` primary classes and primary S3 registrations to all
+  imported statistical result families. The corresponding `idiostats_*`
+  classes remain in each class vector as compatibility bridges.
+- Updated all imported print headers and user-facing type errors to identify
+  the surviving `idiographic` package.
+- Rewrote the README and package-level documentation around one workflow that
+  spans descriptions, preprocessing, scoped models, pooling, heterogeneity,
+  and dynamic networks.
+- Added `vignettes/unified-workflow.Rmd`, an end-to-end raw-panel to
+  person-specific-conclusions introduction.
+- Added consolidated release notes and updated the package title, description,
+  and development version to 0.4.0.9000.
+- Diagnosed the earlier installed-check uSEM failures: the managed sandbox
+  denies the macOS CPU-count query while `R CMD check` sets
+  `R_DEFAULT_PACKAGES=NULL`; `lavaan` 0.6-21 then fails its own `ncpus` option
+  validation. Running the same built tarball outside that sandbox resolves the
+  environmental condition.
+- The built `idiographic_0.4.0.9000.tar.gz` installs, runs examples and tests,
+  rebuilds every shipped vignette, and completes `R CMD check --no-manual`
+  with **Status: OK**. The PDF manual remains untested locally because
+  `pdflatex` is not installed.
+- Added push/PR CI for a required-dependencies-only lane and an
+  optional-backend lane on Linux, macOS, and Windows; the `merged` branch also
+  participates in pkgdown and oracle-equivalence workflows.
+
+**Next:** audit the dual result contracts and function vocabulary, expand the
+general estimator registry or document its network/workflow boundary, update
+CI/release metadata, and run required-only plus optional-backend matrices.

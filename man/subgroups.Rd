@@ -2,20 +2,20 @@
 % Please edit documentation in R/stats_views.R
 \name{subgroups}
 \alias{subgroups}
-\title{Focus an idiostats fit on subgroup models}
+\title{Focus an idiographic fit on subgroup models}
 \usage{
 subgroups(x, label = NULL)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{label}{Optional subgroup label(s). Defaults to every subgroup.}
 }
 \value{
-An idiostats fit view.
+An idiographic fit view.
 }
 \description{
-Focus an idiostats fit on subgroup models
+Focus an idiographic fit on subgroup models
 }
 \examples{
 g <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",

@@ -68,7 +68,7 @@
 #' @param decreasing Sort order when `sort_by` is supplied.
 #' @param n Optional number of rows to keep.
 #' @return A `data.frame` of one row per person per variable, with class
-#'   `idiostats_descriptives`.
+#'   `idiographic_descriptives`.
 #' @examples
 #' describe_persons(srl, "name", time = "day", vars = c("effort", "efficacy"))
 #'
@@ -116,7 +116,8 @@ describe_persons <- function(data, id, vars = NULL, time = NULL,
   if (is.null(time)) out <- out[setdiff(names(out),
                                         c("span", "gap_median", "gap_max"))]
   out <- .idio_arrange(out, variable, sort_by, decreasing, n)
-  structure(out, class = c("idiostats_descriptives", "data.frame"),
+  structure(out, class = c("idiographic_descriptives",
+                           "idiostats_descriptives", "data.frame"),
             id = id, time = time)
 }
 
@@ -406,7 +407,7 @@ print.idiostats_descriptives <- function(x, n = 12L, ...) {
 #' @param min_n Fewest complete pairs a person needs before a correlation is
 #'   reported rather than `NA`.
 #' @return A `data.frame` of one row per person per pair, with class
-#'   `idiostats_correlations`.
+#'   `idiographic_correlations`.
 #' @examples
 #' correlate_persons(srl, "name", vars = c("effort", "efficacy", "planning"))
 #'
@@ -441,7 +442,8 @@ correlate_persons <- function(data, id, vars = NULL, time = NULL,
     out <- out[out$x %in% variable | out$y %in% variable, , drop = FALSE]
   }
   out <- .idio_arrange(out, NULL, sort_by, decreasing, n)
-  structure(out, class = c("idiostats_correlations", "data.frame"),
+  structure(out, class = c("idiographic_correlations",
+                           "idiostats_correlations", "data.frame"),
             id = id, conf_level = conf_level)
 }
 

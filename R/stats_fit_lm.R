@@ -19,7 +19,7 @@
 #'   M-estimator (`MASS::rlm()`) that is not dragged around by outliers.
 #' @param weights Optional column name in `data` holding case weights.
 #' @param ... Passed to the underlying fitter.
-#' @return An `idiostats_fit`.
+#' @return An `idiographic_fit`.
 #' @examples
 #' fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",
 #'               time = "day")

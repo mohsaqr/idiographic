@@ -17,7 +17,7 @@ metrics(
 )
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{model, scope, subject}{Optional filters.}
 

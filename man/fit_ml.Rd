@@ -123,7 +123,7 @@ arguments.}
 \item{y, x}{Consolidated outcome and predictor selectors. Supply both.}
 }
 \value{
-An \code{idioml_result} for historical calls or an \code{idiostats_fit} for
+An \code{idioml_result} for historical calls or an \code{idiographic_fit} for
 consolidated \code{y}/\code{x} calls.
 }
 \description{

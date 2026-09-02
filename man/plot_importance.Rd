@@ -7,7 +7,7 @@
 plot_importance(x, model = NULL, scope = NULL, subject = NULL, n = 15, ...)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{model, scope, subject}{Optional filters.}
 

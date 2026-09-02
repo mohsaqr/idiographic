@@ -7,7 +7,7 @@
 plot_subjects(x, metric = NULL, model = NULL, scope = NULL, n = NULL, ...)
 }
 \arguments{
-\item{x}{An idiostats fit.}
+\item{x}{An idiographic fit.}
 
 \item{metric}{Metric column. Defaults to \code{rmse}, or \code{accuracy} when the
 outcome is a class.}
