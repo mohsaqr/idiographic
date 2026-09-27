@@ -1,11 +1,11 @@
 Package: idiographic
 Type: Package
 Title: Person-Specific Statistics and Heterogeneous Dynamic Networks
-Version: 0.4.0.9001
+Version: 0.4.0.9002
 Authors@R: c(
-    utils::person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
+    person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
         email = "saqr@saqr.me"),
-    utils::person("Sonsoles", "López-Pernas", role = "aut",
+    person("Sonsoles", "López-Pernas", role = "aut",
         email = "sonsoles.lopez@uef.fi"))
 Author: Mohammed Saqr [aut, cre, cph],
     Sonsoles López-Pernas [aut]

@@ -1,4 +1,4 @@
-# idiographic 0.4.0.9001
+# idiographic 0.4.0.9002
 
 ## Unified idiographic statistics
 

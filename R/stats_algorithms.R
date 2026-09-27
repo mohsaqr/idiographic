@@ -307,11 +307,15 @@
 # ------------------------------------------------------ optional backends ----
 
 .idio_fit_xgboost <- function(Xs, yv, x, task, control) {
-  fit <- xgboost::xgboost(
-    data = Xs, label = yv, nrounds = max(1L, as.integer(control$rounds)),
-    eta = control$learn_rate, max_depth = 3L, verbose = 0L, nthread = 1L,
+  # xgb.train() on a DMatrix is the interface shared by xgboost 1.x and 3.x;
+  # the xgboost() convenience wrapper changed its arguments in 3.0.
+  params <- list(
     objective = if (task == "regression") "reg:squarederror" else
-      "binary:logistic")
+      "binary:logistic",
+    eta = control$learn_rate, max_depth = 3L, nthread = 1L)
+  fit <- xgboost::xgb.train(
+    params = params, data = xgboost::xgb.DMatrix(Xs, label = yv),
+    nrounds = max(1L, as.integer(control$rounds)), verbose = 0L)
   importance <- tryCatch(xgboost::xgb.importance(model = fit),
                          error = function(e) NULL)
   coef <- stats::setNames(numeric(length(x)), x)
@@ -482,7 +486,7 @@
                                          type = "response")),
     mass_qda = .idio_qda_predict(fit, Xs),
     mass_polr = .idio_polr_predict(fit, Xs),
-    xgboost = as.numeric(stats::predict(fit$fit, Xs)),
+    xgboost = as.numeric(stats::predict(fit$fit, xgboost::xgb.DMatrix(Xs))),
     kernlab_svm = .idio_kernlab_predict(fit, Xs),
     kernlab_gp = .idio_kernlab_predict(fit, Xs),
     pls = .idio_pls_predict(fit, Xs),
