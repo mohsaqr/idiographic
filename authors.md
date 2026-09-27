@@ -12,13 +12,13 @@ Source:
 [`DESCRIPTION`](https://github.com/mohsaqr/idiographic/blob/merged/DESCRIPTION)
 
 Saqr M, López-Pernas S (2026). *idiographic: Person-Specific Statistics
-and Heterogeneous Dynamic Networks*. R package version 0.4.0.9001,
+and Heterogeneous Dynamic Networks*. R package version 0.4.0.9002,
 <https://pak.dynasite.org/idiographic/>.
 
     @Manual{,
       title = {idiographic: Person-Specific Statistics and Heterogeneous Dynamic Networks},
       author = {Mohammed Saqr and Sonsoles López-Pernas},
       year = {2026},
-      note = {R package version 0.4.0.9001},
+      note = {R package version 0.4.0.9002},
       url = {https://pak.dynasite.org/idiographic/},
     }
