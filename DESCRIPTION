@@ -1,7 +1,7 @@
 Package: idiographic
 Type: Package
 Title: Person-Specific Statistics and Heterogeneous Dynamic Networks
-Version: 0.4.0.9000
+Version: 0.4.0.9001
 Authors@R: c(
     utils::person("Mohammed", "Saqr", role = c("aut", "cre", "cph"),
         email = "saqr@saqr.me"),
