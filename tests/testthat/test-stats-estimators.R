@@ -64,11 +64,21 @@ test_that("negative binomial reports honest uncertainty for overdispersed counts
   nb <- fit_glm(d, "cnt", "x1", "id", family = "negbin", time = "time",
                 scope = "pooled", min_train = 20)
 
-  # Both land near the true 0.7, but Poisson's standard error is far too small
-  # under overdispersion -- that is the whole reason negbin exists.
   expect_lt(abs(slope_of(nb) - 0.7), 0.25)
-  expect_gt(coefs(nb, scope = "pooled")$std_error[2],
-            2 * coefs(pois, scope = "pooled")$std_error[2])
+
+  # Within one person the Poisson standard error is model-based and ignores
+  # overdispersion, so it is far too small -- the reason negbin exists. (Pooled
+  # standard errors are clustered on the person, which already absorbs
+  # overdispersion, so the contrast is tested on the person-specific models.)
+  pois_i <- fit_glm(d, "cnt", "x1", "id", family = "poisson", time = "time",
+                    scope = "individual", min_train = 20)
+  nb_i <- fit_glm(d, "cnt", "x1", "id", family = "negbin", time = "time",
+                  scope = "individual", min_train = 20)
+  slope_se <- \(fit) {
+    s <- coefs(fit, scope = "individual")
+    stats::median(s$std_error[s$term == "x1"])
+  }
+  expect_gt(slope_se(nb_i), 2 * slope_se(pois_i))
 
   expect_equal(unique(metrics(nb)$model), "negbin")
   expect_named(metrics(nb),

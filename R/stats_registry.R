@@ -166,12 +166,13 @@
 #'
 #' @param task Optional `"regression"` or `"classification"` filter.
 #' @param available Only models whose package is installed here.
+#' @param estimator Optional implementation filter, such as `"native"`.
 #' @return A `data.frame` with class `idiographic_models`.
 #' @examples
 #' models()
 #' models(task = "classification", available = TRUE)
 #' @export
-models <- function(task = NULL, available = FALSE) {
+models <- function(task = NULL, available = FALSE, estimator = NULL) {
   reg <- .idio_registry()
   if (!is.null(task)) {
     task <- match.arg(task, c("regression", "classification"))
@@ -183,6 +184,7 @@ models <- function(task = NULL, available = FALSE) {
   }, logical(1))
   reg$package[is.na(reg$package)] <- "base"
   if (available) reg <- reg[reg$installed, , drop = FALSE]
+  if (!is.null(estimator)) reg <- reg[reg$estimator %in% estimator, , drop = FALSE]
   rownames(reg) <- NULL
   structure(reg, class = c("idiographic_models", "idiostats_models",
                            "data.frame"))

@@ -146,3 +146,36 @@ test_that("an EM run that only ran out of iterations is not called converged", {
     "hit `maxit`")
   expect_false(stopped$converged)
 })
+
+test_that("as.data.frame() exposes the mixture tables without reaching in", {
+  d <- class_panel()
+  g <- find_subgroups(d, y = "y", x = "x", id = "id",
+                      method = "mixture_regression", k = 2, reps = 3)
+
+  comp <- as.data.frame(g, what = "components")
+  expect_s3_class(comp, "data.frame")
+  expect_named(comp, c("subgroup", "share", "sigma", "term", "estimate"))
+  # One row per subgroup and term: intercept + x, two components.
+  expect_equal(nrow(comp), 4L)
+  expect_identical(comp, `rownames<-`(g$mixture$components, NULL))
+  # Mixing shares are one per component and sum to one.
+  shares <- unique(comp[c("subgroup", "share")])$share
+  expect_equal(sum(shares), 1, tolerance = sqrt(.Machine$double.eps))
+  expect_true(all(comp$sigma > 0))
+
+  # The default is the assignment table, identical to groups().
+  expect_identical(as.data.frame(g), `rownames<-`(groups(g), NULL))
+
+  # The BIC sweep only exists under k = "auto".
+  expect_error(as.data.frame(g, what = "bic"),
+               class = "idiographic_missing_table")
+})
+
+test_that("non-mixture subgroup results have no component table", {
+  d <- class_panel()
+  g <- find_subgroups(d, y = "y", x = "x", id = "id",
+                      method = "effect_clustering", k = 2, reps = 3)
+  expect_error(as.data.frame(g, what = "components"),
+               class = "idiographic_missing_table")
+  expect_s3_class(as.data.frame(g), "data.frame")
+})

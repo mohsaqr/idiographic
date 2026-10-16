@@ -97,6 +97,19 @@ test_that("pooling refuses fits that cannot support it", {
   expect_error(pool_coefs(d), "must be a consolidated idiographic fit")
 })
 
+test_that("shrink_coefs sort_by orders the result", {
+  d <- pool_panel(tau = 0.30)
+  fit <- fit_lm(d, y = "y", x = "x", id = "id", time = "day",
+                scope = "individual")
+  sh <- shrink_coefs(fit, term = "x", sort_by = "shrunken")
+  expect_true(all(diff(sh$shrunken) >= -1e-12))
+  sh_desc <- shrink_coefs(fit, term = "x", sort_by = "shrunken",
+                          decreasing = TRUE)
+  expect_true(all(diff(sh_desc$shrunken) <= 1e-12))
+  expect_error(shrink_coefs(fit, term = "x", sort_by = "nosuchcol"),
+               "sort_by")
+})
+
 test_that("pooled output keeps a readable shape", {
   fit <- fit_lm(pool_panel(), y = "y", x = "x", id = "id", time = "day",
                 scope = "individual")

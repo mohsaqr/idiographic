@@ -12,21 +12,28 @@ plot_importance(
   n = 15,
   method = c("coefficient", "permutation"),
   repeats = 5L,
+  type = c("overall", "person", "boxplot", "density", "frequency", "comparison"),
   ...
 )
 }
 \arguments{
-\item{x}{An idiographic fit.}
+\item{x}{An idiographic fit or a table returned by \code{\link[=importance]{importance()}}.}
 
 \item{model, scope, subject}{Optional filters.}
 
-\item{n}{Number of rows/variables to plot.}
+\item{n}{Maximum rows in the overall plot or predictors per person. For
+frequency plots, the top-feature rank threshold (ties retained).
+Distribution and comparison plots retain all available predictors.}
 
 \item{method}{Importance method. \code{"coefficient"} uses absolute fitted
 coefficients where available; \code{"permutation"} measures the increase in
 held-out prediction error after shuffling a predictor.}
 
 \item{repeats}{Number of shuffles per predictor for permutation importance.}
+
+\item{type}{Overall points (default), per-person profiles (\code{"person"}),
+learner distributions (\code{"boxplot"}, \code{"density"}), top-feature
+frequencies (\code{"frequency"}), or pooled/individual means (\code{"comparison"}).}
 
 \item{...}{Passed to base plotting functions.}
 }

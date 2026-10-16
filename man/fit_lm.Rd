@@ -31,8 +31,10 @@ fit_lm(
 
 \item{time}{Optional ordering column.}
 
-\item{scope}{\code{"both"} (pooled + individual), \code{"pooled"}, \code{"individual"},
-\code{"subgroup"}, or \code{"all"} (pooled + subgroup + individual).}
+\item{scope}{Level(s) at which models are fitted: any of \code{"pooled"},
+\code{"subgroup"}, and \code{"individual"}, alone or as a vector such as
+\code{c("pooled", "individual")}. \code{"both"} is shorthand for pooled and
+individual, \code{"all"} for all three.}
 
 \item{subgroup}{Optional subgroup mapping: an \code{\link[=find_subgroups]{find_subgroups()}} result, a
 grouping column in \code{data}, or a named vector of labels per person.}
@@ -56,6 +58,14 @@ An \code{idiographic_fit}.
 \description{
 Fits a linear model at every requested scope and returns them in one tidy
 object, so pooled and person-specific results are directly comparable.
+}
+\details{
+Pooled and subgroup models combine many occasions of each person.
+Their standard errors, test statistics, and p-values are cluster-robust,
+clustered on \code{id} (CR1 sandwich estimator), so that repeated occasions of
+the same person are not treated as independent observations. With few
+persons, cluster-robust inference is imprecise. Person-specific models
+report the model-based standard errors of the fitted model.
 }
 \examples{
 fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",

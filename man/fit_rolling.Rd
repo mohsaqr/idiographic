@@ -37,8 +37,10 @@ fit_rolling(
 
 \item{time}{Optional ordering column.}
 
-\item{scope}{\code{"both"} (pooled + individual), \code{"pooled"}, \code{"individual"},
-\code{"subgroup"}, or \code{"all"} (pooled + subgroup + individual).}
+\item{scope}{Level(s) at which models are fitted: any of \code{"pooled"},
+\code{"subgroup"}, and \code{"individual"}, alone or as a vector such as
+\code{c("pooled", "individual")}. \code{"both"} is shorthand for pooled and
+individual, \code{"all"} for all three.}
 
 \item{subgroup}{Optional subgroup mapping: an \code{\link[=find_subgroups]{find_subgroups()}} result, a
 grouping column in \code{data}, or a named vector of labels per person.}

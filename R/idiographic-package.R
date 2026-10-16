@@ -20,6 +20,14 @@
 #' to their analytical level. [equivalence()] reports the exact validation
 #' scope attached to registered network methods.
 #'
+#' @author
+#' \strong{Maintainer}: Mohammed Saqr \email{saqr@saqr.me} \[copyright holder\]
+#'
+#' Authors:
+#' \itemize{
+#'   \item Sonsoles López-Pernas \email{sonsoles.lopez@uef.fi}
+#' }
+#'
 #' @importFrom grDevices rgb
 #' @importFrom graphics abline arrows axis barplot legend lines par plot.new
 #'   points title

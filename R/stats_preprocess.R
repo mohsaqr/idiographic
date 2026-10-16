@@ -65,6 +65,9 @@
 #'   occasions), or `"grand"` (one trend across everyone). Needs `time`.
 #' @param detrend_alpha Only remove a trend when it is significant at this
 #'   level. Set to `1` to detrend unconditionally.
+#' @param keep_all Keep every column of `data` (default). With `FALSE`, only
+#'   the id and time columns, the transformed variables, and the columns the
+#'   call adds are returned.
 #' @return The data frame, transformed in place, with any lag and decomposition
 #'   columns appended.
 #' @examples
@@ -88,7 +91,10 @@ preprocess_panel <- function(data, id, time = NULL, vars = NULL,
                        scale = c("none", "person", "grand"), lag = NULL,
                        decompose = FALSE, lag_max_gap = NULL,
                        detrend = c("none", "person", "grand"),
-                       detrend_alpha = 0.05) {
+                       detrend_alpha = 0.05, keep_all = TRUE) {
+  stopifnot("`keep_all` must be TRUE or FALSE" =
+              is.logical(keep_all) && length(keep_all) == 1L && !is.na(keep_all))
+  input_names <- names(data)
   center <- match.arg(center)
   scale <- match.arg(scale)
   detrend <- match.arg(detrend)
@@ -200,6 +206,10 @@ preprocess_panel <- function(data, id, time = NULL, vars = NULL,
     data <- do.call(cbind, c(list(data), lagged))
   }
 
+  if (!keep_all) {
+    added <- setdiff(names(data), input_names)
+    data <- data[unique(c(id, time, vars, added))]
+  }
   data
 }
 
@@ -286,3 +296,37 @@ preprocess_panel <- function(data, id, time = NULL, vars = NULL,
     c(rep(NA_real_, min(k, length(z))), utils::head(z, max(0L, length(z) - k)))
   }), key)
 }
+
+#' Split variables into within-person and between-person parts
+#'
+#' Person-mean centring (Curran & Bauer, 2011). Adds two columns for every
+#' variable: `<var>_between`, the person's mean, which is the stable level
+#' that distinguishes one person from another (repeated on each of the
+#' person's rows), and `<var>_within`, the deviation of each occasion from
+#' that stable level. The original columns are kept. A regression on both
+#' columns estimates separate within-person and between-person slopes.
+#' `split_wb()` is a short alias.
+#'
+#' @param data Long-format data frame.
+#' @param id Person identifier column.
+#' @param vars Columns to split (any [fit_lm()] selector).
+#' @param time Optional time column, kept in the output with `keep_all = FALSE`.
+#' @param keep_all Keep every column of `data` (default). With `FALSE`, only
+#'   the id and time columns, the split variables, and their `_between` and
+#'   `_within` parts are returned.
+#' @return `data` with `<var>_within` and `<var>_between` columns appended.
+#' @references Curran, P. J., & Bauer, D. J. (2011). The disaggregation of
+#'   within-person and between-person effects in longitudinal models of
+#'   change. *Annual Review of Psychology, 62*, 583-619.
+#'   \doi{10.1146/annurev.psych.093008.100356}
+#' @examples
+#' split_levels(srl, id = "name", vars = "efficacy") |> head()
+#' @export
+split_levels <- function(data, id, vars, time = NULL, keep_all = TRUE) {
+  preprocess_panel(data, id = id, time = time, vars = vars, decompose = TRUE,
+                   keep_all = keep_all)
+}
+
+#' @rdname split_levels
+#' @export
+split_wb <- split_levels

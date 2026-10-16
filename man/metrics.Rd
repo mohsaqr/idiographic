@@ -13,6 +13,7 @@ metrics(
   overall = FALSE,
   sort_by = NULL,
   decreasing = FALSE,
+  by = c("person", "fold"),
   ...
 )
 }
@@ -28,6 +29,8 @@ metrics(
 \item{sort_by}{Optional metric/column to sort by.}
 
 \item{decreasing}{Sort order when \code{sort_by} is supplied.}
+
+\item{by}{Summarise by person (default) or separately within each rolling fold.}
 
 \item{...}{Ignored.}
 }

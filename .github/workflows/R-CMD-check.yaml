@@ -23,9 +23,13 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           dependencies: '"hard"'
-          extra-packages: any::rcmdcheck
+          extra-packages: |
+            any::rcmdcheck
+            any::testthat
       # Vignettes need the knitr/rmarkdown Suggests; this lane proves the
-      # package works with hard dependencies only, so it skips them.
+      # package works with hard dependencies only, so it skips them. testthat
+      # is the one Suggests installed: tests using any other optional package
+      # must skip themselves, and this lane is what enforces that.
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

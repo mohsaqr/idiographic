@@ -36,6 +36,7 @@ coefs(x, ...)
   overall = FALSE,
   sort_by = NULL,
   decreasing = FALSE,
+  term = NULL,
   ...
 )
 
@@ -67,6 +68,8 @@ coefs(x, ...)
 \item{sort_by}{Optional output column used for sorting.}
 
 \item{decreasing}{Sort in descending order?}
+
+\item{term}{Optional filter: only these coefficient terms.}
 }
 \value{
 A tidy \code{data.frame} of coefficient estimates.

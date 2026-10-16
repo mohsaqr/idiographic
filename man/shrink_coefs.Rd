@@ -10,7 +10,9 @@ shrink_coefs(
   scope = "individual",
   model = NULL,
   subgroup = NULL,
-  conf_level = 0.95
+  conf_level = 0.95,
+  sort_by = NULL,
+  decreasing = FALSE
 )
 }
 \arguments{
@@ -23,6 +25,11 @@ shrink_coefs(
 \item{model, subgroup}{Optional filters.}
 
 \item{conf_level}{Confidence level for the pooled interval.}
+
+\item{sort_by}{Optional column name to sort the result by (e.g.
+\code{"shrunken"}, \code{"weight"}, \code{"estimate"}).}
+
+\item{decreasing}{Sort order when \code{sort_by} is supplied.}
 }
 \value{
 A \code{data.frame} of one row per person per term, with class

@@ -1,6 +1,16 @@
-# idiographic 0.4.0.9002
+# idiographic 0.4.0.9003
 
 ## Unified idiographic statistics
+
+* **Changed results:** pooled and subgroup models from `fit_lm()` and
+  `fit_glm()` now report standard errors clustered on the person (CR1). They
+  previously used model-based standard errors that treated every occasion as
+  an independent observation; on the bundled `srl` data these were about five
+  times too small. Person-specific models are unchanged.
+
+* Predictors with no variance for some persons now raise a warning of class
+  `idiographic_constant_predictor` naming those persons; their person-specific
+  models previously omitted the predictor silently.
 
 * Folded the `idiostats` analytical engine into `idiographic`. The package now
   covers person-level descriptions and correlations, LM/GLM and expanded ML,
@@ -27,13 +37,31 @@
 * Consolidated statistical results use an `idiographic_*` primary class while
   retaining their `idiostats_*` compatibility class for downstream migration.
 
-* Added a statistical workflow index and 16 detailed, function-specific
-  vignettes for the complete non-network analysis layer. Each vignette uses
+* Code written for `idiostats` runs with `library(idiographic)`. The former
+  `idiostats::preprocess()` transforms are `preprocess_panel()`, and
+  `preprocess()` remains the network audit. Named `fit_ml(y = , x = )` calls
+  use the scoped engine, `fit_ml_panel(data, y, x, id)` keeps the former
+  positional `idiostats` call, and positional `fit_ml(data, outcome,
+  predictors, id)` keeps the original `idiographic` call.
+
+* Added a statistical workflow index and six topic vignettes covering the 16
+  major non-network functions: describing persons, panel preparation,
+  regression models, prediction and temporal validation, pooling and
+  shrinkage, and subgroups, effects, and heterogeneity. Each section uses
   bundled data, prints tidy results, renders a decision-focused figure,
-  interprets the observed output, states assumptions and failure conditions,
-  and ends with guidance on method selection. The `fit_ml()` vignette includes
-  temporal validation, baselines, tuning, scope comparison, person-level
-  errors, prediction trajectories, and permutation importance.
+  interprets the observed output, and states assumptions and failure
+  conditions; each vignette ends with guidance on choosing among its
+  functions. The prediction vignette includes temporal validation, baselines,
+  tuning, scope comparison, person-level errors, prediction trajectories, and
+  permutation importance. The subgroup vignette includes a worked mixture of
+  regressions and shows why its own BIC is not used to choose the number of
+  groups.
+
+* `as.data.frame()` for `find_subgroups()` results returns the assignment
+  table (default), the mixture component regressions
+  (`what = "components"`), or the mixture's BIC sweep (`what = "bic"`), so
+  these no longer have to be read from the object's internals. A missing table
+  raises an error of class `idiographic_missing_table`.
 
 * Redesigned statistical plotting around ranked dot plots, interval displays,
   binned calibration, direct labels, temporal trajectories, and consistent

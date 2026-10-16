@@ -504,3 +504,51 @@ print.idiostats_correlations <- function(x, n = 12L, ...) {
   if (nrow(tab) > n) cat(sprintf("\n  ... %d more rows.\n", nrow(tab) - n))
   invisible(x)
 }
+
+#' Summarise person descriptives by variable
+#'
+#' One row per variable, aggregating the per-person rows of a
+#' [describe_persons()] result: the number of persons, the mean and standard
+#' deviation of the person means, the average within-person standard
+#' deviation, and, when the result was computed with `detail = "full"`, the
+#' number and share of persons whose linear trend is significant at `alpha`.
+#' With no trends present, the expected share is `alpha`.
+#'
+#' @param object A [describe_persons()] result.
+#' @param alpha Significance level for counting linear trends.
+#' @param ... Ignored.
+#' @return A data frame with one row per variable and columns `variable`,
+#'   `persons`, `mean_of_means`, `sd_of_means`, `mean_sd_within`,
+#'   `significant_trends`, and `trend_share` (the last two `NA` unless
+#'   `detail = "full"`).
+#' @examples
+#' d <- describe_persons(srl, id = "name", vars = c("efficacy", "effort"),
+#'                       time = "day", detail = "full")
+#' summary(d)
+#' @export
+summary.idiographic_descriptives <- function(object, alpha = 0.05, ...) {
+  stopifnot("`alpha` must be a single number in (0, 1)" =
+              is.numeric(alpha) && length(alpha) == 1L && alpha > 0 && alpha < 1)
+  tab <- as.data.frame.data.frame(object)
+  has_trend <- "trend_p" %in% names(tab)
+  out <- do.call(rbind, lapply(split(tab, factor(tab$variable,
+                                                  unique(tab$variable))), \(v) {
+    trends <- if (has_trend) sum(v$trend_p < alpha, na.rm = TRUE) else NA_integer_
+    data.frame(
+      variable = v$variable[1L],
+      persons = nrow(v),
+      mean_of_means = mean(v$mean, na.rm = TRUE),
+      sd_of_means = stats::sd(v$mean, na.rm = TRUE),
+      mean_sd_within = mean(v$sd, na.rm = TRUE),
+      significant_trends = as.integer(trends),
+      trend_share = if (has_trend) trends / nrow(v) else NA_real_,
+      stringsAsFactors = FALSE
+    )
+  }))
+  rownames(out) <- NULL
+  out
+}
+
+#' @rdname summary.idiographic_descriptives
+#' @export
+summary.idiostats_descriptives <- summary.idiographic_descriptives

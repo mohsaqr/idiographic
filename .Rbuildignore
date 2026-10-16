@@ -35,3 +35,4 @@
 ^IDIOGRAPHIC_PACKAGE_PLAN\.md$
 ^tests/testthat/test-offload-parity\.R$
 ^vignettes/articles$
+^data-raw$

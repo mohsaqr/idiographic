@@ -4,17 +4,29 @@
 \alias{plot_metrics}
 \title{Plot model metrics}
 \usage{
-plot_metrics(x, metric = NULL, model = NULL, scope = NULL, overall = TRUE, ...)
+plot_metrics(
+  x,
+  metric = NULL,
+  model = NULL,
+  scope = NULL,
+  overall = TRUE,
+  type = c("overall", "boxplot", "density", "time"),
+  ...
+)
 }
 \arguments{
 \item{x}{An idiographic fit.}
 
 \item{metric}{Metric column to plot. Defaults to \code{rmse} for regression and
-\code{accuracy} for classification.}
+\code{accuracy} for classification. Distribution and density views also accept
+a vector of metric names.}
 
 \item{model, scope}{Optional filters.}
 
 \item{overall}{Logical. Plot the aggregate rows (default) or every subject.}
+
+\item{type}{Overall points (default), learner distributions (\code{"boxplot"}
+or \code{"density"}), or rolling-fold trajectories (\code{"time"}).}
 
 \item{...}{Passed to base plotting functions.}
 }

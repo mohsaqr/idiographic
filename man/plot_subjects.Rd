@@ -4,7 +4,16 @@
 \alias{plot_subjects}
 \title{Plot per-person performance}
 \usage{
-plot_subjects(x, metric = NULL, model = NULL, scope = NULL, n = NULL, ...)
+plot_subjects(
+  x,
+  metric = NULL,
+  model = NULL,
+  scope = NULL,
+  n = NULL,
+  reference = NULL,
+  type = c("points", "density"),
+  ...
+)
 }
 \arguments{
 \item{x}{An idiographic fit.}
@@ -14,7 +23,12 @@ outcome is a class.}
 
 \item{model, scope}{Optional filters.}
 
-\item{n}{Maximum number of people to draw.}
+\item{n}{Maximum number of people to draw per algorithm.}
+
+\item{reference}{Optional \code{"pooled"} model or \code{"mean"} baseline for paired
+comparisons. Predictions must refer to identical test observations.}
+
+\item{type}{Person points (default) or densities of paired improvements.}
 
 \item{...}{Passed to base plotting functions.}
 }

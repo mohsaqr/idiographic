@@ -4,12 +4,14 @@
 \alias{models}
 \title{List every model the package knows about}
 \usage{
-models(task = NULL, available = FALSE)
+models(task = NULL, available = FALSE, estimator = NULL)
 }
 \arguments{
 \item{task}{Optional \code{"regression"} or \code{"classification"} filter.}
 
 \item{available}{Only models whose package is installed here.}
+
+\item{estimator}{Optional implementation filter, such as \code{"native"}.}
 }
 \value{
 A \code{data.frame} with class \code{idiographic_models}.

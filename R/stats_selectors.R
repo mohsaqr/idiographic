@@ -104,7 +104,10 @@
 
 .idio_stop_person_constant <- function(data, x, id, what = "person-specific") {
   bad <- .idio_person_constant(data, x, id)
-  if (!length(bad)) return(invisible(NULL))
+  if (!length(bad)) {
+    .idio_warn_some_constant(data, x, id)
+    return(invisible(NULL))
+  }
   stop("Predictor(s) constant within every person: ",
        paste(bad, collapse = ", "),
        ". A ", what, " model cannot estimate them -- they never vary inside a ",
@@ -112,7 +115,39 @@
        "scope = \"pooled\".", call. = FALSE)
 }
 
+# A predictor that is constant for only some persons is dropped from those
+# persons' models by the fitter, which otherwise happens silently: their model
+# is fitted without it and reported alongside everyone else's.
+.idio_warn_some_constant <- function(data, x, id) {
+  key <- as.character(data[[id]])
+  hits <- unlist(lapply(x, function(v) {
+    within_sd <- tapply(data[[v]], key, function(z) {
+      s <- stats::sd(z, na.rm = TRUE)
+      if (is.finite(s)) s else 0
+    })
+    flat <- names(within_sd)[within_sd < .Machine$double.eps^0.5]
+    if (length(flat)) sprintf("%s (%s)", v, paste(flat, collapse = ", ")) else NULL
+  }))
+  if (!length(hits)) return(invisible(NULL))
+  warning(warningCondition(
+    paste0("Predictor(s) with no variance for some persons, whose ",
+           "person-specific models omit them: ", paste(hits, collapse = "; "),
+           ". Use describe_persons() to inspect these series."),
+    class = "idiographic_constant_predictor"))
+  invisible(hits)
+}
+
 .idio_scope <- function(scope) {
+  levels <- c("pooled", "subgroup", "individual")
+  # A vector of levels names the scopes directly, e.g. c("pooled", "individual").
+  if (is.character(scope) && length(scope) > 1L) {
+    unknown <- setdiff(scope, levels)
+    if (length(unknown)) {
+      stop("Unknown scope: ", paste(unknown, collapse = ", "), ". Use any of ",
+           paste(levels, collapse = ", "), ".", call. = FALSE)
+    }
+    return(levels[levels %in% scope])
+  }
   scope <- match.arg(scope, c("both", "pooled", "individual", "subgroup",
                              "all"))
   switch(scope,

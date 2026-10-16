@@ -15,7 +15,8 @@ preprocess_panel(
   decompose = FALSE,
   lag_max_gap = NULL,
   detrend = c("none", "person", "grand"),
-  detrend_alpha = 0.05
+  detrend_alpha = 0.05,
+  keep_all = TRUE
 )
 }
 \arguments{
@@ -45,6 +46,10 @@ occasions), or \code{"grand"} (one trend across everyone). Needs \code{time}.}
 
 \item{detrend_alpha}{Only remove a trend when it is significant at this
 level. Set to \code{1} to detrend unconditionally.}
+
+\item{keep_all}{Keep every column of \code{data} (default). With \code{FALSE}, only
+the id and time columns, the transformed variables, and the columns the
+call adds are returned.}
 }
 \value{
 The data frame, transformed in place, with any lag and decomposition

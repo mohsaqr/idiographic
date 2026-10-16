@@ -8,8 +8,10 @@
 #' @param x Predictors: names, numeric positions, `a:b` range, formula, or data frame.
 #' @param id Person/unit ID column.
 #' @param time Optional ordering column.
-#' @param scope `"both"` (pooled + individual), `"pooled"`, `"individual"`,
-#'   `"subgroup"`, or `"all"` (pooled + subgroup + individual).
+#' @param scope Level(s) at which models are fitted: any of `"pooled"`,
+#'   `"subgroup"`, and `"individual"`, alone or as a vector such as
+#'   `c("pooled", "individual")`. `"both"` is shorthand for pooled and
+#'   individual, `"all"` for all three.
 #' @param subgroup Optional subgroup mapping: an [find_subgroups()] result, a
 #'   grouping column in `data`, or a named vector of labels per person.
 #' @param test_prop Proportion of each person's ordered rows held out.
@@ -19,6 +21,12 @@
 #'   M-estimator (`MASS::rlm()`) that is not dragged around by outliers.
 #' @param weights Optional column name in `data` holding case weights.
 #' @param ... Passed to the underlying fitter.
+#' @details Pooled and subgroup models combine many occasions of each person.
+#'   Their standard errors, test statistics, and p-values are cluster-robust,
+#'   clustered on `id` (CR1 sandwich estimator), so that repeated occasions of
+#'   the same person are not treated as independent observations. With few
+#'   persons, cluster-robust inference is imprecise. Person-specific models
+#'   report the model-based standard errors of the fitted model.
 #' @return An `idiographic_fit`.
 #' @examples
 #' fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",

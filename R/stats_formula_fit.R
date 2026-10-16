@@ -45,6 +45,9 @@
     out_pred <- .idio_prediction_rows(pred, test, y, id, unit, model, estimator,
                                       task, y_info)
     out_coef <- .idio_tidy_coef(fit, unit, model, estimator)
+    if (unit$scope %in% c("pooled", "subgroup")) {
+      out_coef <- .idio_cluster_coefs(out_coef, fit, train, id)
+    }
     list(fit = fit, pred = out_pred, coefs = out_coef)
   }, error = function(e) e)
 }
@@ -78,6 +81,48 @@
   }
   if (!is.null(fold)) out$fold <- fold
   out
+}
+
+#' Cluster-robust inference for a model fitted to several persons
+#'
+#' A pooled or subgroup model stacks many occasions of each person, which are
+#' not independent. The model-based standard errors of `summary()` treat every
+#' occasion as a separate observation and are therefore too small. This
+#' replaces them with a sandwich estimator clustered on the person (CR1):
+#' `V = B M B`, with bread `B = (X'WX)^-1` and meat summing, per person, the
+#' outer product of `X' w r` (working weights `w`, working residuals `r`), which
+#' covers least squares (`w = 1` or the prior weights) and GLMs alike.
+#' Inference uses a t distribution on `G - 1` degrees of freedom for linear
+#' models and the normal distribution for GLMs, `G` being the number of
+#' persons. Robust M-estimation (`rlm`) keeps its own standard errors.
+#'
+#' @noRd
+.idio_cluster_coefs <- function(coef_tab, fit, train, id) {
+  if (!nrow(coef_tab) || inherits(fit, "rlm") || !inherits(fit, "lm")) {
+    return(coef_tab)
+  }
+  X <- stats::model.matrix(fit)
+  used <- match(rownames(X), rownames(train))
+  cluster <- as.character(train[[id]])[used]
+  if (anyNA(cluster) || length(unique(cluster)) < 2L) return(coef_tab)
+  is_glm <- inherits(fit, "glm")
+  w <- if (is_glm) stats::weights(fit, "working") else
+    (stats::weights(fit) %||% rep(1, nrow(X)))
+  r <- if (is_glm) stats::residuals(fit, "working") else stats::residuals(fit)
+  bread <- tryCatch(solve(crossprod(X, X * w)),
+                    error = function(e) NULL)
+  if (is.null(bread)) return(coef_tab)
+  sw <- .idio_sandwich(X, as.numeric(w * r), cluster, bread)
+  se <- sqrt(pmax(diag(sw$V), 0))
+  keep <- match(coef_tab$term, colnames(X))
+  coef_tab$std_error <- se[keep]
+  coef_tab$statistic <- coef_tab$estimate / coef_tab$std_error
+  coef_tab$p_value <- if (is_glm) {
+    2 * stats::pnorm(-abs(coef_tab$statistic))
+  } else {
+    2 * stats::pt(-abs(coef_tab$statistic), df = sw$df)
+  }
+  coef_tab
 }
 
 .idio_tidy_coef <- function(fit, unit, model, estimator) {

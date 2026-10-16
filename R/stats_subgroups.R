@@ -652,6 +652,9 @@ print.idiostats_groups <- function(x, ...) {
     cat("               (cf. Bauer & Curran, 2003). Treat this as unproven.\n")
   }
   cat("\n  Use groups(), test_subgroups(), fit_subgroups()\n")
+  if (!is.null(x$mixture)) {
+    cat("  Component regressions: as.data.frame(x, what = \"components\")\n")
+  }
   invisible(x)
 }
 
@@ -679,6 +682,52 @@ groups.idiostats_groups <- function(x, subgroup = NULL, subject = NULL,
   .idio_filter_table(x$groups, subject = subject, subgroup = subgroup,
                      sort_by = sort_by, decreasing = decreasing, n = n)
 }
+
+#' Tidy tables from a subgroup result
+#'
+#' @param x A [find_subgroups()] result.
+#' @param row.names,optional Ignored.
+#' @param what Which table to return: `"groups"` (one row per person, as
+#'   [groups()]), `"components"` (one row per subgroup and term: the component
+#'   regressions of `method = "mixture_regression"`, with the mixing `share`
+#'   and residual `sigma`), or `"bic"` (one row per candidate number of
+#'   components: the mixture's own BIC sweep, reported when
+#'   `method = "mixture_regression"` and `k = "auto"`).
+#' @param ... Ignored.
+#' @return A `data.frame`. `"components"` has columns `subgroup`, `share`,
+#'   `sigma`, `term`, `estimate`. Requesting `"components"` or `"bic"` from a
+#'   result that has no such table raises an error of class
+#'   `idiographic_missing_table`.
+#' @examples
+#' g <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",
+#'                     id = "name", method = "mixture_regression", k = 2,
+#'                     reps = 5)
+#' as.data.frame(g, what = "components")
+#' @export
+as.data.frame.idiographic_groups <- function(x, row.names = NULL,
+                                             optional = FALSE,
+                                             what = c("groups", "components",
+                                                      "bic"), ...) {
+  what <- match.arg(what)
+  tab <- switch(what,
+    groups = x$groups,
+    components = x$mixture$components,
+    bic = x$mixture_bic
+  )
+  if (is.null(tab)) {
+    stop(errorCondition(
+      sprintf(paste0("No \"%s\" table: it exists only for ",
+                     "method = \"mixture_regression\"%s."), what,
+              if (what == "bic") " with k = \"auto\"" else ""),
+      class = "idiographic_missing_table", call = NULL))
+  }
+  rownames(tab) <- NULL
+  tab
+}
+
+#' @rdname as.data.frame.idiographic_groups
+#' @export
+as.data.frame.idiostats_groups <- as.data.frame.idiographic_groups
 
 #' @export
 groups.idiostats_fit <- function(x, subgroup = NULL, subject = NULL,

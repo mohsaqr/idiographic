@@ -15,31 +15,31 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 This document indexes the non-network statistical workflows in
 `idiographic`. The package contains 16 major functions in this part of its
-interface. They address different estimands: data quality, within-person
+interface, worked through in six topic vignettes. They address different estimands: data quality, within-person
 association, prediction, coefficient synthesis, subgroup structure, and
 treatment-effect heterogeneity. Choosing a function begins with the research
 question, not with the preferred algorithm.
 
 ## Start with the analytical question
 
-| Question | Primary function | Detailed vignette |
+| Question | Primary function | Vignette section |
 |:--|:--|:--|
-| Is each person's series usable and sufficiently variable? | `describe_persons()` | [Person-level description](describe-persons.html) |
-| How are variables associated within each person? | `correlate_persons()` | [Within-person correlation](correlate-persons.html) |
-| How much variation lies within versus between people? | `variance_components()` | [Variance decomposition](variance-components.html) |
+| Is each person's series usable and sufficiently variable? | `describe_persons()` | [Describing persons](describing-persons.html#describe_persons) |
+| How are variables associated within each person? | `correlate_persons()` | [Describing persons](describing-persons.html#correlate_persons) |
+| How much variation lies within versus between people? | `variance_components()` | [Describing persons](describing-persons.html#variance_components) |
 | How should a panel be ordered, lagged, centred, and screened? | `preprocess_panel()` | [Panel preparation](preprocess-panel.html) |
-| What are the pooled and person-specific linear coefficients? | `fit_lm()` | [Linear models](fit-lm.html) |
-| What are the pooled and person-specific binary or count associations? | `fit_glm()` | [Generalized linear models](fit-glm.html) |
-| Which algorithm predicts later observations most accurately? | `fit_ml()` | [Machine learning](fit-ml.html) |
-| Does predictive performance persist across forecast origins? | `fit_rolling()` | [Rolling-origin validation](fit-rolling.html) |
-| Do within-person and between-person effects differ? | `fit_within_between()` | [Within-between models](fit-within-between.html) |
-| What is the uncertainty-weighted average of person-specific coefficients? | `pool_coefs()` | [Coefficient pooling](pool-coefs.html) |
-| How should noisy person-specific coefficients be stabilised? | `shrink_coefs()` | [Coefficient shrinkage](shrink-coefs.html) |
-| Is a discrete subgroup representation supported at all? | `test_subgroups()` | [Testing subgroup existence](test-subgroups.html) |
-| Which people share a reproducible coefficient profile? | `find_subgroups()` | [Subgroup discovery](find-subgroups.html) |
-| Does subgroup-specific modelling improve held-out performance? | `fit_subgroups()` | [Subgroup-specific models](fit-subgroups.html) |
-| What is the treatment effect, and who benefits more? | `fit_effects()` | [Treatment effects](fit-effects.html) |
-| Is a person-varying target predictably heterogeneous? | `fit_heterogeneity()` | [Repeated-split heterogeneity](fit-heterogeneity.html) |
+| What are the pooled and person-specific linear coefficients? | `fit_lm()` | [Regression models](regression-models.html#fit_lm) |
+| What are the pooled and person-specific binary or count associations? | `fit_glm()` | [Regression models](regression-models.html#fit_glm) |
+| How accurately do different algorithms predict each person's outcomes? | `fit_ml()` | [Prediction](prediction.html#fit_ml) |
+| How does predictive accuracy vary across evaluation periods? | `fit_rolling()` | [Prediction](prediction.html#fit_rolling) |
+| Do within-person and between-person effects differ? | `fit_within_between()` | [Regression models](regression-models.html#fit_within_between) |
+| What is the uncertainty-weighted average of person-specific coefficients? | `pool_coefs()` | [Pooling and shrinkage](pooling-shrinkage.html#pool_coefs) |
+| How should noisy person-specific coefficients be stabilised? | `shrink_coefs()` | [Pooling and shrinkage](pooling-shrinkage.html#shrink_coefs) |
+| Is a discrete subgroup representation supported at all? | `test_subgroups()` | [Subgroups and effects](subgroups-effects.html#test_subgroups) |
+| Which people share a reproducible coefficient profile? | `find_subgroups()` | [Subgroups and effects](subgroups-effects.html#find_subgroups) |
+| Does subgroup-specific modelling improve held-out performance? | `fit_subgroups()` | [Subgroups and effects](subgroups-effects.html#fit_subgroups) |
+| What is the treatment effect, and who benefits more? | `fit_effects()` | [Subgroups and effects](subgroups-effects.html#fit_effects) |
+| Is a person-varying target predictably heterogeneous? | `fit_heterogeneity()` | [Subgroups and effects](subgroups-effects.html#fit_heterogeneity) |
 
 ## Recommended sequence
 
@@ -92,13 +92,14 @@ models with the same outcome, predictors, coding, and scale.
 - **Validation design:** which later observations form the validation and test
   blocks.
 
-The [machine-learning vignette](fit-ml.html) compares models with a mean
-baseline, audits hyperparameter selection, compares pooled and individual
-scopes, identifies people with poor predictions, inspects their trajectories,
-and computes model-agnostic permutation importance. `fit_rolling()` extends
-the same logic across several temporal origins. A model should not be called
-personally useful from an aggregate metric alone; report the distribution of
-person-level errors.
+The [prediction vignette](prediction.html) develops idiographic models for
+each learner, compares algorithms and pooled counterparts, and plots
+learner-level accuracy and predictor importance. It examines the distribution
+of important predictors, their agreement across algorithms, and the
+differences between individual profiles and aggregate summaries.
+`fit_rolling()` repeats the comparison across successive evaluation periods.
+The examples predict effort from measurements on the same occasion, with
+chronologically earlier records used for model development.
 
 ## Subgroups: evidence before assignment
 
@@ -143,7 +144,7 @@ question: show uncertainty for coefficients and effects, show a reference
 model for prediction, show chronology for forecasts, and show assignment
 stability for subgroups.
 
-The 16 linked vignettes provide executable examples using the bundled `srl`
+The six topic vignettes provide executable examples using the bundled `srl`
 data. Each example prints the public result object before interpreting it,
 uses public accessors for detailed tables, and states when a neighbouring
 function answers a more appropriate question.

@@ -2,8 +2,9 @@
 # colour-vision-deficiency safe and remains distinguishable in greyscale.
 fig_col <- c(
   ink = "#243447", muted = "#667085", grid = "#E3E8EF",
-  blue = "#2A6FBB", orange = "#E07A3F", teal = "#238A7A",
-  purple = "#8064A2", red = "#C44E52", pale_blue = "#DCE9F6"
+  # Okabe-Ito data colours; ink/muted/grid are neutral greys.
+  blue = "#0072B2", orange = "#E69F00", teal = "#009E73",
+  purple = "#CC79A7", red = "#D55E00", pale_blue = "#56B4E9"
 )
 
 figure_begin <- function(mar = c(4.2, 4.5, 1.0, 1.0), ...) {

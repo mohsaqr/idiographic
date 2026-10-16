@@ -6,9 +6,12 @@
 #'
 #' @param x An idiographic fit.
 #' @param metric Metric column to plot. Defaults to `rmse` for regression and
-#'   `accuracy` for classification.
+#'   `accuracy` for classification. Distribution and density views also accept
+#'   a vector of metric names.
 #' @param model,scope Optional filters.
 #' @param overall Logical. Plot the aggregate rows (default) or every subject.
+#' @param type Overall points (default), learner distributions (`"boxplot"`
+#'   or `"density"`), or rolling-fold trajectories (`"time"`).
 #' @param ... Passed to base plotting functions.
 #' @return Invisibly, the plotted table.
 #' @examples
@@ -17,7 +20,11 @@
 #' plot_metrics(fit)
 #' @export
 plot_metrics <- function(x, metric = NULL, model = NULL, scope = NULL,
-                         overall = TRUE, ...) {
+                         overall = TRUE, type = c("overall", "boxplot", "density", "time"), ...) {
+  type <- match.arg(type)
+  if (type != "overall") {
+    return(.idio_plot_metric_view(x, metric, model, scope, type, ...))
+  }
   tab <- metrics(x, model = model, scope = scope, overall = overall)
   if (!nrow(tab)) {
     .idio_plot_empty("No metrics available")
@@ -74,22 +81,32 @@ plot_metrics <- function(x, metric = NULL, model = NULL, scope = NULL,
 
 #' Plot feature importance
 #'
-#' @param x An idiographic fit.
+#' @param x An idiographic fit or a table returned by [importance()].
 #' @param model,scope,subject Optional filters.
-#' @param n Number of rows/variables to plot.
+#' @param n Maximum rows in the overall plot or predictors per person. For
+#'   frequency plots, the top-feature rank threshold (ties retained).
+#'   Distribution and comparison plots retain all available predictors.
 #' @param method Importance method. `"coefficient"` uses absolute fitted
 #'   coefficients where available; `"permutation"` measures the increase in
 #'   held-out prediction error after shuffling a predictor.
 #' @param repeats Number of shuffles per predictor for permutation importance.
+#' @param type Overall points (default), per-person profiles (`"person"`),
+#'   learner distributions (`"boxplot"`, `"density"`), top-feature
+#'   frequencies (`"frequency"`), or pooled/individual means (`"comparison"`).
 #' @param ... Passed to base plotting functions.
 #' @return Invisibly, the plotted importance table.
 #' @export
 plot_importance <- function(x, model = NULL, scope = NULL, subject = NULL,
                             n = 15, method = c("coefficient", "permutation"),
-                            repeats = 5L, ...) {
+                            repeats = 5L,
+                            type = c("overall", "person", "boxplot", "density",
+                                     "frequency", "comparison"), ...) {
   method <- match.arg(method)
-  imp <- importance(x, model = model, scope = scope, subject = subject, n = NULL,
-                    method = method, repeats = repeats)
+  type <- match.arg(type)
+  imp <- .idio_importance_data(x, model, scope, subject, method, repeats)
+  if (type != "overall") {
+    return(.idio_plot_importance_view(imp, type, n, method, ...))
+  }
   if (!nrow(imp)) {
     .idio_plot_empty("No feature importance available")
     return(invisible(imp))
@@ -272,7 +289,10 @@ plot_predictions <- function(x, model = NULL, scope = NULL, subject = NULL,
 #' @param metric Metric column. Defaults to `rmse`, or `accuracy` when the
 #'   outcome is a class.
 #' @param model,scope Optional filters.
-#' @param n Maximum number of people to draw.
+#' @param n Maximum number of people to draw per algorithm.
+#' @param reference Optional `"pooled"` model or `"mean"` baseline for paired
+#'   comparisons. Predictions must refer to identical test observations.
+#' @param type Person points (default) or densities of paired improvements.
 #' @param ... Passed to base plotting functions.
 #' @return Invisibly, the plotted table.
 #' @examples
@@ -281,7 +301,15 @@ plot_predictions <- function(x, model = NULL, scope = NULL, subject = NULL,
 #' plot_subjects(fit)
 #' @export
 plot_subjects <- function(x, metric = NULL, model = NULL, scope = NULL,
-                          n = NULL, ...) {
+                          n = NULL, reference = NULL, type = c("points", "density"), ...) {
+  type <- match.arg(type)
+  if (!is.null(reference)) {
+    return(.idio_plot_prediction_comparison(x, metric, model, scope, n,
+                                            reference, type, ...))
+  }
+  if (type == "density") {
+    return(.idio_plot_metric_view(x, metric, model, scope, type, ...))
+  }
   tab <- metrics(x, model = model, scope = scope)
   tab <- tab[tab$subject != ".overall", , drop = FALSE]
   if (!nrow(tab)) {
@@ -399,4 +427,72 @@ plot_subgroups <- function(x, metric = NULL, ...) {
   graphics::points(agg[[metric]], at, pch = args$pch, bg = args$bg,
                    col = args$col, cex = args$cex)
   invisible(agg)
+}
+
+#' Plot person-specific coefficients and their heterogeneity
+#'
+#' One row per person: the person-specific estimate of `term` with its 95%
+#' confidence interval (estimate plus or minus 1.96 standard errors), sorted by
+#' size. The vertical line marks the random-effects pooled estimate from
+#' [pool_coefs()], and the shaded band marks the range in which 95% of the true
+#' person-specific coefficients are expected to fall (pooled estimate plus or
+#' minus 1.96 `tau`). A wide band indicates that persons differ in the
+#' coefficient beyond what sampling error explains.
+#'
+#' @param x A fit from [fit_lm()] or [fit_glm()] that includes
+#'   `scope = "individual"`.
+#' @param term The coefficient to plot.
+#' @param ... Ignored.
+#' @return Invisibly, the plotted person-specific coefficients (one row per
+#'   person).
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day",
+#'               scope = "individual")
+#' plot_coefs(fit, term = "efficacy")
+#' @export
+plot_coefs <- function(x, term, ...) {
+  stopifnot("`term` must be a single coefficient name" =
+              is.character(term) && length(term) == 1L)
+  tab <- coefs(x, scope = "individual", term = term, sort_by = "estimate")
+  tab <- tab[is.finite(tab$estimate) & is.finite(tab$std_error), ,
+             drop = FALSE]
+  if (!nrow(tab)) {
+    .idio_plot_empty("No person-specific coefficients to plot")
+    return(invisible(tab))
+  }
+  pooled <- as.data.frame(pool_coefs(x))
+  pooled <- pooled[pooled$term == term, , drop = FALSE]
+  low <- tab$estimate - 1.96 * tab$std_error
+  high <- tab$estimate + 1.96 * tab$std_error
+  at <- seq_len(nrow(tab))
+  band <- pooled$estimate + c(-1, 1) * 1.96 * pooled$tau
+  limits <- range(c(low, high, band, 0), na.rm = TRUE)
+  pad <- diff(limits) * 0.04
+
+  op <- .idio_plot_begin(mar = c(4.2, max(5, 0.5 * max(nchar(tab$subject))),
+                                 1.2, 1))
+  on.exit(graphics::par(op), add = TRUE)
+  graphics::plot(NA, xlim = limits + c(-pad, pad),
+                 ylim = c(0.5, length(at) + 0.5), yaxt = "n",
+                 xlab = sprintf("Person-specific coefficient of %s (95%% CI)",
+                                term), ylab = "")
+  if (nrow(pooled) && is.finite(pooled$tau)) {
+    graphics::rect(band[1L], 0.5, band[2L], length(at) + 0.5, border = NA,
+                   col = grDevices::adjustcolor(.idio_colours[["pale_blue"]],
+                                                0.25))
+  }
+  .idio_plot_grid(x = TRUE, y = FALSE)
+  graphics::abline(v = 0, col = .idio_colours[["muted"]], lty = 3)
+  if (nrow(pooled)) {
+    graphics::abline(v = pooled$estimate, col = .idio_colours[["blue"]],
+                     lwd = 1.6, lty = 2)
+  }
+  graphics::segments(low, at, high, at, col = .idio_colours[["muted"]],
+                     lwd = 1.2)
+  graphics::points(tab$estimate, at, pch = 21, bg = .idio_colours[["ink"]],
+                   col = "white", cex = 1.1)
+  graphics::axis(2, at = at, labels = tab$subject, tick = FALSE, las = 1,
+                 cex.axis = 0.72, col.axis = .idio_colours[["ink"]])
+  rownames(tab) <- NULL
+  invisible(tab)
 }

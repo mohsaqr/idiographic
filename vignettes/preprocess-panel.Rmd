@@ -1,100 +1,139 @@
 ---
-title: "Panel Preparation with preprocess_panel()"
+title: "Preparing Panel Data"
 output:
   rmarkdown::html_vignette:
     toc: true
-bibliography: references.bib
-link-citations: true
 vignette: >
-  %\VignetteIndexEntry{Panel Preparation with preprocess_panel()}
+  %\VignetteIndexEntry{Preparing Panel Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE, fig.width = 7.2, fig.height = 4.6, dpi = 144, fig.align = "center", out.width = "100%")
-source("figure-style.R")
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE, warning = FALSE)
 library(idiographic)
 data(srl)
-analysis_data <- subset(srl, name %in% c("Aisha", "Alice", "Anika", "Astrid", "Bjorn", "Bob", "Charlie", "Diana", "Erik", "Eve", "Fatima", "Frank"))
 ```
 
-## Analytic question
+Repeated-measures data are usually transformed before modelling. This
+vignette covers three transformations: separating each variable into its
+between-person and within-person parts, creating lagged variables, and
+removing time trends. Each transformation is computed separately for each
+person and in time order. The examples use the 36 learners in the `srl`
+data, each observed on 156 days.
 
-`preprocess_panel()` prepares repeated measurements without crossing person
-boundaries. The function takes a long-format panel, person and time columns,
-and variables to transform. It returns the original data frame with requested
-centred, scaled, detrended, decomposed, or lagged columns.
+## Within-person and between-person decomposition
 
-`preprocess_panel()` treats centring and decomposition as different analytic
-operations. Person centring replaces a variable with deviations from each
-person's mean. Decomposition retains both the deviation and the person mean.
-The latter supports separate within-person and between-person coefficients in
-one pooled model [@mundlak1978].
+Each repeated measure has two parts. The between-person part is the stable
+average across all occasions. The within-person part is the fluctuation of
+each occasion around that stable average. Differences between persons in
+their stable averages form the between-person variation; the fluctuations
+form the within-person variation. An analysis of the raw scores, whether
+across all occasions or at a single occasion, mixes the two, and its result
+can resemble the within-person association, the between-person association,
+or neither, depending on how much of each variable is stable and how much
+fluctuates. Separating the two parts allows each association to be estimated
+on its own.
 
-## Create decomposition and lag columns
+For a variable $x$ observed for person $i$ at occasion $t$, `split_levels()`
+computes the between-person part as the mean of that person's observed
+values,
+$$\bar{x}_i = \frac{1}{T_i}\sum_{t=1}^{T_i} x_{it},$$
+where $T_i$ is the number of occasions on which $x$ was observed. The
+within-person part is the deviation of each observation from that mean,
+$x_{it} - \bar{x}_i$. The two parts sum to the original score. For efficacy,
+the between-person part is stored as `efficacy_between` and the
+within-person part as `efficacy_within`.
 
-`preprocess_panel()` orders rows by learner and day before constructing lags.
-The call below adds within-person and between-person components plus a
-one-occasion lag for efficacy and monitoring. Table 1 displays the returned
-columns directly.
-
-```{r preparation-table}
-prepared <- preprocess_panel(analysis_data, id = "name", time = "day", vars = c("efficacy", "monitoring"), decompose = TRUE, lag = 1)
-head(prepared)
+```{r decompose}
+split_levels(srl, id = "name", vars = "efficacy", time = "day", keep_all = FALSE) |> head()
 ```
 
-`preprocess_panel()` sets the first lag of each learner to missing in Table 1.
-The second row for Aisha receives the first row's efficacy and monitoring
-values. The within-person efficacy column expresses each daily value as a
-deviation from Aisha's mean. The between-person column repeats that mean across
-Aisha's rows.
+To see how effort relates to each part, both parts are used as predictors in
+the same regression. The slope of `efficacy_within` shows how effort changes
+on days when a learner's efficacy is above or below that learner's average.
+The slope of `efficacy_between` shows how effort differs between learners
+with higher and lower average efficacy. `fit_within_between()` performs the
+split and the regression in one step. Because each learner contributes many
+days, its standard errors are adjusted for the repeated observations of the
+same learner.
 
-## Plot the transformed series
-
-The time-series display uses the centred values returned by
-`preprocess_panel()`. A zero reference identifies Aisha's own mean, so the
-sign of each point has a direct within-person interpretation.
-
-```{r preparation-plot, fig.cap="Figure 1. Person-centred efficacy over time for Aisha."}
-aisha <- subset(prepared, name == "Aisha")
-figure_begin()
-plot(aisha$day, aisha$efficacy_within, type = "l", lwd = 1.8,
-     col = fig_col["blue"], xlab = "Day",
-     ylab = "Deviation from Aisha's mean")
-figure_grid(x = FALSE, y = TRUE)
-abline(h = 0, col = fig_col["orange"], lwd = 1.4, lty = 2)
-points(aisha$day, aisha$efficacy_within, pch = 21,
-       bg = fig_col["blue"], col = "white", cex = 0.62)
+```{r within-between}
+wb_fit <- fit_within_between(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+coefs(wb_fit)
 ```
 
-Figure 1 fluctuates around zero because the series is person-centred. Positive
-values mark days above Aisha's typical efficacy. Negative values mark days
-below her typical efficacy. The transformation changes the interpretation of
-a regression coefficient from a raw-score contrast to a within-person
-contrast.
+The within-person slope was 0.42 (95% CI 0.30 to 0.53). On days when a
+learner's efficacy was 10 points above that learner's average, effort was
+about 4 points higher. The between-person slope was 0.63 (95% CI 0.41 to
+0.84). Learners whose average efficacy was 10 points higher reported about 6
+points more effort on average. The between-person interval is wider because
+it rests on 36 learners, while the within-person slope draws on all of their
+days.
 
-## Assumptions and failure checks
+Whether the two slopes differ is tested directly by their difference, which
+`contextual()` reports.
 
-`preprocess_panel()` requires a meaningful ordering variable for lagging and
-detrending. A lag represents the preceding recorded occasion. The
-`lag_max_gap` argument can invalidate lags that span an unacceptable elapsed
-time. No lag is carried from the final row of one learner to the first row of
-another learner.
+```{r contextual}
+contextual(wb_fit)
+```
 
-`preprocess_panel()` applies scaling parameters within the requested scope.
-Person scaling changes coefficients into person-specific standard-deviation
-units. Grand scaling uses a common scale. Detrending removes an estimated
-linear trend and requires a time column. Transformation choices should follow
-the estimand rather than a desire to improve model fit.
+The between-person slope exceeded the within-person slope by 0.21 (95% CI
+0.003 to 0.42, p = .047). The interval barely excludes zero, so the evidence
+that the two slopes differ is weak.
 
-## When to use which
+## Lagged variables
 
-`preprocess_panel()` is appropriate for explicit centring, scaling,
-decomposition, detrending, and lag construction. `preprocess()` is the
-network-readiness audit for stationarity, compliance, and series variance.
-`fit_within_between()` performs decomposition inside the model and is preferred
-when the main question directly contrasts within-person and between-person
-effects.
+A lagged variable holds the value of a variable on the preceding occasion.
+With `lag = 1`, the column `efficacy_lag1` contains, in each row, the
+learner's efficacy on the previous day. Lagged variables allow a model to
+test whether a state on one day predicts an outcome on the next, for example
+whether efficacy yesterday predicts effort today.
 
-## References
+Lags are computed within persons, so the first occasion of each person has a
+missing lagged value, as shown below for the first days of Aisha.
+
+```{r lags}
+preprocess_panel(srl, id = "name", time = "day", vars = "efficacy", lag = 1, keep_all = FALSE) |> head()
+```
+
+A lag refers to the preceding occasion regardless of the time elapsed
+between occasions. For irregularly spaced occasions, `lag_max_gap` sets the
+lagged value to missing when the preceding occasion lies further back than a
+specified interval.
+
+## Detrending
+
+`preprocess_panel(detrend = "person")` removes the linear time trend of each
+person's series when the trend is significant at `detrend_alpha` (0.05 by
+default). The presence of trends is assessed beforehand with the trend
+estimates reported by `describe_persons()`.
+
+```{r trends}
+trends <- describe_persons(srl, id = "name", time = "day", vars = "efficacy:organizing", detail = "full")
+summary(trends)
+```
+
+Across the nine variables, 16 of the 324 person-by-variable series (4.9%)
+had a significant linear trend, the proportion expected from false positives at the 0.05 level if no
+series trended. Detrending these data would therefore modify a small number
+of series largely at random. Detrending is warranted when significant trends
+are considerably more frequent than the significance level, or when the
+design implies a trend, as in intervention or developmental studies. Series
+without a fixed slope, such as random walks, require differencing, which
+`preprocess(detrend = "auto")` applies to the affected series only.
+
+## Centring and scaling
+
+Person-centring (`center = "person"`) retains only the within-person part
+and discards the between-person part; `split_levels()` retains both, so the
+two options are not combined. Person scaling (`scale = "person"`) divides
+each person's values by that person's standard deviation, which places
+persons who fluctuate to different degrees on a common scale. Grand scaling
+(`scale = "grand"`) uses a single standard deviation for all persons.
+
+`preprocess_panel()` and `split_levels()` compute these quantities from all
+occasions of each person. Model functions that hold out later occasions for
+testing, such as `fit_within_between()`, compute them from the training
+occasions only.
+

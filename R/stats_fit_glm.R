@@ -6,6 +6,12 @@
 #'   binomial via `MASS::glm.nb()`, which is what overdispersed counts need --
 #'   Poisson would report standard errors that are too small.
 #' @param ... Passed to the underlying fitter.
+#' @details Pooled and subgroup models combine many occasions of each person.
+#'   Their standard errors, test statistics, and p-values are cluster-robust,
+#'   clustered on `id` (CR1 sandwich estimator), so that repeated occasions of
+#'   the same person are not treated as independent observations. With few
+#'   persons, cluster-robust inference is imprecise. Person-specific models
+#'   report the model-based standard errors of the fitted model.
 #' @return An `idiographic_fit`.
 #' @examples
 #' # `srl` carries some missing values, so na.rm is needed to derive an outcome.

@@ -120,6 +120,9 @@ pool_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
 #' coefficients finds groups partly in the estimation noise.
 #'
 #' @inheritParams pool_coefs
+#' @param sort_by Optional column name to sort the result by (e.g.
+#'   `"shrunken"`, `"weight"`, `"estimate"`).
+#' @param decreasing Sort order when `sort_by` is supplied.
 #' @return A `data.frame` of one row per person per term, with class
 #'   `idiographic_shrunk`.
 #' @examples
@@ -128,7 +131,8 @@ pool_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
 #' shrink_coefs(fit)
 #' @export
 shrink_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
-                         subgroup = NULL, conf_level = 0.95) {
+                         subgroup = NULL, conf_level = 0.95,
+                         sort_by = NULL, decreasing = FALSE) {
   tab <- .idio_pool_input(x, term, scope, model, subgroup)
   by <- unique(tab[c("model", "estimator", "term")])
   rows <- lapply(seq_len(nrow(by)), function(i) {
@@ -151,6 +155,12 @@ shrink_coefs <- function(x, term = NULL, scope = "individual", model = NULL,
   if (is.null(out)) {
     stop("No term had at least two people with a usable standard error.",
          call. = FALSE)
+  }
+  if (!is.null(sort_by)) {
+    stopifnot("`sort_by` must name one column of the result" =
+                is.character(sort_by) && length(sort_by) == 1L &&
+                sort_by %in% names(out))
+    out <- out[order(out[[sort_by]], decreasing = decreasing), , drop = FALSE]
   }
   rownames(out) <- NULL
   structure(out, class = c("idiographic_shrunk", "idiostats_shrunk",
@@ -249,7 +259,7 @@ print.idiostats_pooled <- function(x, ...) {
                 "Q p"),
     n_left = 1L
   )
-  cat("\n  sd_obs = spread you see;  tau = spread that is REAL\n")
+  cat("\n  sd_obs = observed spread;  tau = spread of the true coefficients\n")
   cat("  I2     = share of the observed spread that is real\n")
   invisible(x)
 }

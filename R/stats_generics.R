@@ -6,18 +6,22 @@
 #' @param sort_by Optional metric/column to sort by.
 #' @param decreasing Sort order when `sort_by` is supplied.
 #' @param n Optional number of rows to return.
+#' @param by Summarise by person (default) or separately within each rolling fold.
 #' @param ... Ignored.
 #' @return A data frame.
 #' @export
 metrics <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
                     overall = FALSE, sort_by = NULL, decreasing = FALSE,
-                    ...) UseMethod("metrics")
+                    by = c("person", "fold"), ...) UseMethod("metrics")
 
 #' @export
 metrics.idiostats_fit <- function(x, model = NULL, scope = NULL,
                                   subject = NULL, n = NULL, overall = FALSE,
-                                  sort_by = NULL, decreasing = FALSE, ...) {
-  .idio_filter_table(x$metrics, model = model, scope = scope,
+                                  sort_by = NULL, decreasing = FALSE,
+                                  by = c("person", "fold"), ...) {
+  by <- match.arg(by)
+  tab <- if (by == "fold") .idio_fold_metrics(x) else x$metrics
+  .idio_filter_table(tab, model = model, scope = scope,
                      subject = subject, overall = overall, sort_by = sort_by,
                      decreasing = decreasing, n = n)
 }
@@ -52,12 +56,23 @@ predictions.idiostats_fit <- function(x, model = NULL, scope = NULL,
 #' @param overall Return only aggregate rows when available?
 #' @param sort_by Optional output column used for sorting.
 #' @param decreasing Sort in descending order?
+#' @param term Optional filter: only these coefficient terms.
 #' @rdname coefs
 #' @export
 coefs.idiostats_fit <- function(x, model = NULL, scope = NULL,
                                 subject = NULL, n = NULL, overall = FALSE,
-                                sort_by = NULL, decreasing = FALSE, ...) {
-  .idio_filter_table(x$coefs, model = model, scope = scope,
+                                sort_by = NULL, decreasing = FALSE,
+                                term = NULL, ...) {
+  tab <- x$coefs
+  if (!is.null(term)) {
+    unknown <- setdiff(term, unique(tab$term))
+    if (length(unknown)) {
+      stop("No such term: ", paste(unknown, collapse = ", "), ". Available: ",
+           paste(unique(tab$term), collapse = ", "), ".", call. = FALSE)
+    }
+    tab <- tab[tab$term %in% term, , drop = FALSE]
+  }
+  .idio_filter_table(tab, model = model, scope = scope,
                      subject = subject, overall = overall, sort_by = sort_by,
                      decreasing = decreasing, n = n)
 }
