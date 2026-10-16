@@ -120,6 +120,6 @@ pool_coefs(fit)
 #>   efficacy      36    0.2379     [0.15, 0.33]    0.274    0.255   0.907   <1e-04
 #>   planning      36    0.3131     [0.22, 0.41]    0.282    0.251   0.909   <1e-04
 #> 
-#>   sd_obs = spread you see;  tau = spread that is REAL
+#>   sd_obs = observed spread;  tau = spread of the true coefficients
 #>   I2     = share of the observed spread that is real
 ```

@@ -7,7 +7,15 @@ versus subgroup versus individual.
 ## Usage
 
 ``` r
-plot_metrics(x, metric = NULL, model = NULL, scope = NULL, overall = TRUE, ...)
+plot_metrics(
+  x,
+  metric = NULL,
+  model = NULL,
+  scope = NULL,
+  overall = TRUE,
+  type = c("overall", "boxplot", "density", "time"),
+  ...
+)
 ```
 
 ## Arguments
@@ -19,7 +27,8 @@ plot_metrics(x, metric = NULL, model = NULL, scope = NULL, overall = TRUE, ...)
 - metric:
 
   Metric column to plot. Defaults to `rmse` for regression and
-  `accuracy` for classification.
+  `accuracy` for classification. Distribution and density views also
+  accept a vector of metric names.
 
 - model, scope:
 
@@ -28,6 +37,11 @@ plot_metrics(x, metric = NULL, model = NULL, scope = NULL, overall = TRUE, ...)
 - overall:
 
   Logical. Plot the aggregate rows (default) or every subject.
+
+- type:
+
+  Overall points (default), learner distributions (`"boxplot"` or
+  `"density"`), or rolling-fold trajectories (`"time"`).
 
 - ...:
 

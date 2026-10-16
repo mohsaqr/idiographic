@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,31 +21,21 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bayesian-var-dsem.html">6. Bayesian VAR and DSEM</a></li>
     <li><a class="dropdown-item" href="../articles/clean-room-methods.html">10. Clean-room design</a></li>
-    <li><a class="dropdown-item" href="../articles/correlate-persons.html">Within-Person Correlation with correlate_persons()</a></li>
-    <li><a class="dropdown-item" href="../articles/describe-persons.html">Person-Level Description with describe_persons()</a></li>
-    <li><a class="dropdown-item" href="../articles/find-subgroups.html">Discovering Person Subgroups with find_subgroups()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-effects.html">Treatment-Effect Estimation with fit_effects()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-glm.html">Generalized Linear Models with fit_glm()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-heterogeneity.html">Repeated-Split Heterogeneity Analysis with fit_heterogeneity()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-lm.html">Pooled and Person-Specific Linear Models with fit_lm()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-ml.html">Idiographic Machine Learning with fit_ml()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-rolling.html">Rolling-Origin Validation with fit_rolling()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-subgroups.html">Subgroup-Specific Models with fit_subgroups()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-within-between.html">Within- and Between-Person Effects with fit_within_between()</a></li>
+    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing Persons: Level, Change, Association, and Variance</a></li>
     <li><a class="dropdown-item" href="../articles/gimme.html">8. GIMME</a></li>
     <li><a class="dropdown-item" href="../articles/graphical-var.html">4. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="../articles/mlvar.html">5. Multilevel VAR</a></li>
     <li><a class="dropdown-item" href="../articles/ordinary-var.html">3. Ordinary VAR</a></li>
-    <li><a class="dropdown-item" href="../articles/pool-coefs.html">Pooling Person-Specific Coefficients with pool_coefs()</a></li>
-    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Panel Preparation with preprocess_panel()</a></li>
+    <li><a class="dropdown-item" href="../articles/pooling-shrinkage.html">Pooling and Shrinking Person-Specific Coefficients</a></li>
+    <li><a class="dropdown-item" href="../articles/prediction.html">Idiographic Prediction and Temporal Validation</a></li>
+    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing Panel Data</a></li>
     <li><a class="dropdown-item" href="../articles/preprocessing.html">2. Preprocessing</a></li>
+    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression Models</a></li>
     <li><a class="dropdown-item" href="../articles/rolling-networks.html">9. Rolling networks</a></li>
-    <li><a class="dropdown-item" href="../articles/shrink-coefs.html">Stabilizing Person-Specific Coefficients with shrink_coefs()</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-workflows.html">Guide to Idiographic Statistical Workflows</a></li>
-    <li><a class="dropdown-item" href="../articles/test-subgroups.html">Testing Whether Subgroups Exist with test_subgroups()</a></li>
+    <li><a class="dropdown-item" href="../articles/subgroups-effects.html">Subgroups, Treatment Effects, and Heterogeneity</a></li>
     <li><a class="dropdown-item" href="../articles/unified-workflow.html">From Raw Panel Data to Person-Specific Conclusions</a></li>
     <li><a class="dropdown-item" href="../articles/usem.html">7. Unified SEM</a></li>
-    <li><a class="dropdown-item" href="../articles/variance-components.html">Within- and Between-Person Variance with variance_components()</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -64,15 +54,19 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.0.9002" id="idiographic-0409002">idiographic 0.4.0.9002<a class="anchor" aria-label="anchor" href="#idiographic-0409002"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0.9003" id="idiographic-0409003">idiographic 0.4.0.9003<a class="anchor" aria-label="anchor" href="#idiographic-0409003"></a></h2>
 <div class="section level3">
-<h3 id="unified-idiographic-statistics-0-4-0-9002">Unified idiographic statistics<a class="anchor" aria-label="anchor" href="#unified-idiographic-statistics-0-4-0-9002"></a></h3>
-<ul><li><p>Folded the <code>idiostats</code> analytical engine into <code>idiographic</code>. The package now covers person-level descriptions and correlations, LM/GLM and expanded ML, rolling-origin validation, within-between effects, coefficient pooling and shrinkage, subgroup existence/discovery/modelling, treatment effects, and heterogeneity analysis alongside all existing dynamic-network estimators.</p></li>
+<h3 id="unified-idiographic-statistics-0-4-0-9003">Unified idiographic statistics<a class="anchor" aria-label="anchor" href="#unified-idiographic-statistics-0-4-0-9003"></a></h3>
+<ul><li><p><strong>Changed results:</strong> pooled and subgroup models from <code><a href="../reference/fit_lm.html">fit_lm()</a></code> and <code><a href="../reference/fit_glm.html">fit_glm()</a></code> now report standard errors clustered on the person (CR1). They previously used model-based standard errors that treated every occasion as an independent observation; on the bundled <code>srl</code> data these were about five times too small. Person-specific models are unchanged.</p></li>
+<li><p>Predictors with no variance for some persons now raise a warning of class <code>idiographic_constant_predictor</code> naming those persons; their person-specific models previously omitted the predictor silently.</p></li>
+<li><p>Folded the <code>idiostats</code> analytical engine into <code>idiographic</code>. The package now covers person-level descriptions and correlations, LM/GLM and expanded ML, rolling-origin validation, within-between effects, coefficient pooling and shrinkage, subgroup existence/discovery/modelling, treatment effects, and heterogeneity analysis alongside all existing dynamic-network estimators.</p></li>
 <li><p>Added <code><a href="../reference/describe_persons.html">describe_persons()</a></code>, <code><a href="../reference/correlate_persons.html">correlate_persons()</a></code>, <code><a href="../reference/variance_components.html">variance_components()</a></code>, <code><a href="../reference/fit_lm.html">fit_lm()</a></code>, <code><a href="../reference/fit_glm.html">fit_glm()</a></code>, <code><a href="../reference/fit_rolling.html">fit_rolling()</a></code>, <code><a href="../reference/fit_within_between.html">fit_within_between()</a></code>, <code><a href="../reference/pool_coefs.html">pool_coefs()</a></code>, <code><a href="../reference/shrink_coefs.html">shrink_coefs()</a></code>, <code><a href="../reference/test_subgroups.html">test_subgroups()</a></code>, <code><a href="../reference/find_subgroups.html">find_subgroups()</a></code>, <code><a href="../reference/fit_subgroups.html">fit_subgroups()</a></code>, <code><a href="../reference/fit_effects.html">fit_effects()</a></code>, and <code><a href="../reference/fit_heterogeneity.html">fit_heterogeneity()</a></code> with their tidy accessors, views, diagnostics, and plots.</p></li>
 <li><p>Added <code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> for person/grand centring and scaling, detrending, within-between decomposition, and lags that never cross person boundaries. The established <code><a href="../reference/preprocess.html">preprocess()</a></code> network audit remains unchanged.</p></li>
 <li><p><code><a href="../reference/fit_ml.html">fit_ml()</a></code> now supports both interfaces. Existing <code>outcome</code>/<code>predictors</code> calls retain the original <code>idioml_result</code>; consolidated <code>y</code>/<code>x</code> calls support pooled, subgroup, and individual scopes, richer native and optional model registries, tuning, diagnostics, and rolling validation.</p></li>
 <li><p>Consolidated statistical results use an <code>idiographic_*</code> primary class while retaining their <code>idiostats_*</code> compatibility class for downstream migration.</p></li>
-<li><p>Added a statistical workflow index and 16 detailed, function-specific vignettes for the complete non-network analysis layer. Each vignette uses bundled data, prints tidy results, renders a decision-focused figure, interprets the observed output, states assumptions and failure conditions, and ends with guidance on method selection. The <code><a href="../reference/fit_ml.html">fit_ml()</a></code> vignette includes temporal validation, baselines, tuning, scope comparison, person-level errors, prediction trajectories, and permutation importance.</p></li>
+<li><p>Code written for <code>idiostats</code> runs with <code><a href="https://pak.dynasite.org/idiographic/">library(idiographic)</a></code>. The former <code>idiostats::preprocess()</code> transforms are <code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code>, and <code><a href="../reference/preprocess.html">preprocess()</a></code> remains the network audit. Named <code>fit_ml(y = , x = )</code> calls use the scoped engine, <code>fit_ml_panel(data, y, x, id)</code> keeps the former positional <code>idiostats</code> call, and positional <code>fit_ml(data, outcome, predictors, id)</code> keeps the original <code>idiographic</code> call.</p></li>
+<li><p>Added a statistical workflow index and six topic vignettes covering the 16 major non-network functions: describing persons, panel preparation, regression models, prediction and temporal validation, pooling and shrinkage, and subgroups, effects, and heterogeneity. Each section uses bundled data, prints tidy results, renders a decision-focused figure, interprets the observed output, and states assumptions and failure conditions; each vignette ends with guidance on choosing among its functions. The prediction vignette includes temporal validation, baselines, tuning, scope comparison, person-level errors, prediction trajectories, and permutation importance. The subgroup vignette includes a worked mixture of regressions and shows why its own BIC is not used to choose the number of groups.</p></li>
+<li><p><code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> for <code><a href="../reference/find_subgroups.html">find_subgroups()</a></code> results returns the assignment table (default), the mixture component regressions (<code>what = "components"</code>), or the mixture’s BIC sweep (<code>what = "bic"</code>), so these no longer have to be read from the object’s internals. A missing table raises an error of class <code>idiographic_missing_table</code>.</p></li>
 <li><p>Redesigned statistical plotting around ranked dot plots, interval displays, binned calibration, direct labels, temporal trajectories, and consistent colour-accessible styling. Plots now foreground uncertainty, reference values, and person-level failures instead of relying on default bar charts.</p></li>
 </ul></div>
 </div>

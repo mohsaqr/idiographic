@@ -57,8 +57,10 @@ fit_rolling(
 
 - scope:
 
-  `"both"` (pooled + individual), `"pooled"`, `"individual"`,
-  `"subgroup"`, or `"all"` (pooled + subgroup + individual).
+  Level(s) at which models are fitted: any of `"pooled"`, `"subgroup"`,
+  and `"individual"`, alone or as a vector such as
+  `c("pooled", "individual")`. `"both"` is shorthand for pooled and
+  individual, `"all"` for all three.
 
 - subgroup:
 

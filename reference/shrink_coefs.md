@@ -14,7 +14,9 @@ shrink_coefs(
   scope = "individual",
   model = NULL,
   subgroup = NULL,
-  conf_level = 0.95
+  conf_level = 0.95,
+  sort_by = NULL,
+  decreasing = FALSE
 )
 ```
 
@@ -39,6 +41,15 @@ shrink_coefs(
 - conf_level:
 
   Confidence level for the pooled interval.
+
+- sort_by:
+
+  Optional column name to sort the result by (e.g. `"shrunken"`,
+  `"weight"`, `"estimate"`).
+
+- decreasing:
+
+  Sort order when `sort_by` is supplied.
 
 ## Value
 

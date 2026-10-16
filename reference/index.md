@@ -15,6 +15,13 @@
   [`as.data.frame(`*`<idiostats_fit>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_fit.md)
   : Convert a consolidated fit to its prediction table
 
+- [`as.data.frame(`*`<idiographic_groups>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_groups.md)
+  [`as.data.frame(`*`<idiostats_groups>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_groups.md)
+  : Tidy tables from a subgroup result
+
+- [`as.data.frame(`*`<idiographic_level_correlations>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_level_correlations.md)
+  : Tidy tables from a within/between correlation comparison
+
 - [`as_netobject()`](https://pak.dynasite.org/idiographic/reference/as_netobject.md)
   : Coerce to a netobject
 
@@ -45,9 +52,15 @@
 - [`compare_idiographic()`](https://pak.dynasite.org/idiographic/reference/compare_idiographic.md)
   : Compare idiographic estimators on one dataset
 
+- [`compare_predictions()`](https://pak.dynasite.org/idiographic/reference/compare_predictions.md)
+  : Compare prediction errors on paired observations
+
 - [`contextual()`](https://pak.dynasite.org/idiographic/reference/contextual.md)
   : Compare the within-person and between-person effect of each
   predictor
+
+- [`correlate_levels()`](https://pak.dynasite.org/idiographic/reference/correlate_levels.md)
+  : Compare within-person and between-person correlations
 
 - [`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md)
   : Correlate variables within each person
@@ -208,8 +221,17 @@
 - [`person()`](https://pak.dynasite.org/idiographic/reference/person.md)
   : Focus an idiographic fit on one person
 
+- [`plot_coefs()`](https://pak.dynasite.org/idiographic/reference/plot_coefs.md)
+  : Plot person-specific coefficients and their heterogeneity
+
 - [`plot_components()`](https://pak.dynasite.org/idiographic/reference/plot_components.md)
   : Plot within-person against between-person effects
+
+- [`plot_correlations()`](https://pak.dynasite.org/idiographic/reference/plot_correlations.md)
+  : Plot within-person correlations with their confidence intervals
+
+- [`plot_descriptives()`](https://pak.dynasite.org/idiographic/reference/plot_descriptives.md)
+  : Plot person-level spread against day-to-day change
 
 - [`plot_diagnostics()`](https://pak.dynasite.org/idiographic/reference/plot_diagnostics.md)
   : Plot model diagnostics
@@ -239,11 +261,17 @@
 - [`plot_importance()`](https://pak.dynasite.org/idiographic/reference/plot_importance.md)
   : Plot feature importance
 
+- [`plot_levels()`](https://pak.dynasite.org/idiographic/reference/plot_levels.md)
+  : Plot within-person against between-person correlations
+
 - [`plot_metrics()`](https://pak.dynasite.org/idiographic/reference/plot_metrics.md)
   : Plot model metrics
 
 - [`plot_predictions()`](https://pak.dynasite.org/idiographic/reference/plot_predictions.md)
   : Plot held-out prediction trajectories
+
+- [`plot_series()`](https://pak.dynasite.org/idiographic/reference/plot_series.md)
+  : Plot person-specific time series
 
 - [`plot_subgroups()`](https://pak.dynasite.org/idiographic/reference/plot_subgroups.md)
   : Plot subgroups
@@ -338,14 +366,28 @@
 - [`shrink_coefs()`](https://pak.dynasite.org/idiographic/reference/shrink_coefs.md)
   : Shrink each person's coefficient towards the pooled effect
 
+- [`split_levels()`](https://pak.dynasite.org/idiographic/reference/split_levels.md)
+  [`split_wb()`](https://pak.dynasite.org/idiographic/reference/split_levels.md)
+  : Split variables into within-person and between-person parts
+
 - [`srl`](https://pak.dynasite.org/idiographic/reference/srl.md) :
   Self-regulated learning intensive longitudinal data (Chapter 20)
 
 - [`subgroups()`](https://pak.dynasite.org/idiographic/reference/subgroups.md)
   : Focus an idiographic fit on subgroup models
 
+- [`submissions`](https://pak.dynasite.org/idiographic/reference/submissions.md)
+  : Simulated daily assignment submissions
+
+- [`summarize_importance()`](https://pak.dynasite.org/idiographic/reference/summarize_importance.md)
+  : Summarise predictor importance across people
+
 - [`summary(`*`<gvar_result>`*`)`](https://pak.dynasite.org/idiographic/reference/summary.gvar_result.md)
   : Summary Method for gvar_result
+
+- [`summary(`*`<idiographic_descriptives>`*`)`](https://pak.dynasite.org/idiographic/reference/summary.idiographic_descriptives.md)
+  [`summary(`*`<idiostats_descriptives>`*`)`](https://pak.dynasite.org/idiographic/reference/summary.idiographic_descriptives.md)
+  : Summarise person descriptives by variable
 
 - [`summary(`*`<idiographic_fit>`*`)`](https://pak.dynasite.org/idiographic/reference/summary.idiographic_fit.md)
   [`summary(`*`<idiostats_fit>`*`)`](https://pak.dynasite.org/idiographic/reference/summary.idiographic_fit.md)

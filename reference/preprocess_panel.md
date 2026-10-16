@@ -16,7 +16,8 @@ preprocess_panel(
   decompose = FALSE,
   lag_max_gap = NULL,
   detrend = c("none", "person", "grand"),
-  detrend_alpha = 0.05
+  detrend_alpha = 0.05,
+  keep_all = TRUE
 )
 ```
 
@@ -72,6 +73,12 @@ preprocess_panel(
 
   Only remove a trend when it is significant at this level. Set to `1`
   to detrend unconditionally.
+
+- keep_all:
+
+  Keep every column of `data` (default). With `FALSE`, only the id and
+  time columns, the transformed variables, and the columns the call adds
+  are returned.
 
 ## Value
 

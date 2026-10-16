@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Panel Preparation with preprocess_panel() • idiographic</title>
+<title>Preparing Panel Data • idiographic</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Panel Preparation with preprocess_panel()">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Preparing Panel Data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,31 +36,21 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/bayesian-var-dsem.html">6. Bayesian VAR and DSEM</a></li>
     <li><a class="dropdown-item" href="../articles/clean-room-methods.html">10. Clean-room design</a></li>
-    <li><a class="dropdown-item" href="../articles/correlate-persons.html">Within-Person Correlation with correlate_persons()</a></li>
-    <li><a class="dropdown-item" href="../articles/describe-persons.html">Person-Level Description with describe_persons()</a></li>
-    <li><a class="dropdown-item" href="../articles/find-subgroups.html">Discovering Person Subgroups with find_subgroups()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-effects.html">Treatment-Effect Estimation with fit_effects()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-glm.html">Generalized Linear Models with fit_glm()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-heterogeneity.html">Repeated-Split Heterogeneity Analysis with fit_heterogeneity()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-lm.html">Pooled and Person-Specific Linear Models with fit_lm()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-ml.html">Idiographic Machine Learning with fit_ml()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-rolling.html">Rolling-Origin Validation with fit_rolling()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-subgroups.html">Subgroup-Specific Models with fit_subgroups()</a></li>
-    <li><a class="dropdown-item" href="../articles/fit-within-between.html">Within- and Between-Person Effects with fit_within_between()</a></li>
+    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing Persons: Level, Change, Association, and Variance</a></li>
     <li><a class="dropdown-item" href="../articles/gimme.html">8. GIMME</a></li>
     <li><a class="dropdown-item" href="../articles/graphical-var.html">4. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="../articles/mlvar.html">5. Multilevel VAR</a></li>
     <li><a class="dropdown-item" href="../articles/ordinary-var.html">3. Ordinary VAR</a></li>
-    <li><a class="dropdown-item" href="../articles/pool-coefs.html">Pooling Person-Specific Coefficients with pool_coefs()</a></li>
-    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Panel Preparation with preprocess_panel()</a></li>
+    <li><a class="dropdown-item" href="../articles/pooling-shrinkage.html">Pooling and Shrinking Person-Specific Coefficients</a></li>
+    <li><a class="dropdown-item" href="../articles/prediction.html">Idiographic Prediction and Temporal Validation</a></li>
+    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing Panel Data</a></li>
     <li><a class="dropdown-item" href="../articles/preprocessing.html">2. Preprocessing</a></li>
+    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression Models</a></li>
     <li><a class="dropdown-item" href="../articles/rolling-networks.html">9. Rolling networks</a></li>
-    <li><a class="dropdown-item" href="../articles/shrink-coefs.html">Stabilizing Person-Specific Coefficients with shrink_coefs()</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-workflows.html">Guide to Idiographic Statistical Workflows</a></li>
-    <li><a class="dropdown-item" href="../articles/test-subgroups.html">Testing Whether Subgroups Exist with test_subgroups()</a></li>
+    <li><a class="dropdown-item" href="../articles/subgroups-effects.html">Subgroups, Treatment Effects, and Heterogeneity</a></li>
     <li><a class="dropdown-item" href="../articles/unified-workflow.html">From Raw Panel Data to Person-Specific Conclusions</a></li>
     <li><a class="dropdown-item" href="../articles/usem.html">7. Unified SEM</a></li>
-    <li><a class="dropdown-item" href="../articles/variance-components.html">Within- and Between-Person Variance with variance_components()</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -83,7 +73,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Panel Preparation with preprocess_panel()</h1>
+      <h1>Preparing Panel Data</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mohsaqr/idiographic/blob/merged/vignettes/preprocess-panel.Rmd" class="external-link"><code>vignettes/preprocess-panel.Rmd</code></a></small>
@@ -92,121 +82,178 @@
 
     
     
+<p>Repeated-measures data are usually transformed before modelling. This
+vignette covers three transformations: separating each variable into its
+between-person and within-person parts, creating lagged variables, and
+removing time trends. Each transformation is computed separately for
+each person and in time order. The examples use the 36 learners in the
+<code>srl</code> data, each observed on 156 days.</p>
 <div class="section level2">
-<h2 id="analytic-question">Analytic question<a class="anchor" aria-label="anchor" href="#analytic-question"></a>
+<h2 id="within-person-and-between-person-decomposition">Within-person and between-person decomposition<a class="anchor" aria-label="anchor" href="#within-person-and-between-person-decomposition"></a>
 </h2>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> prepares repeated measurements
-without crossing person boundaries. The function takes a long-format
-panel, person and time columns, and variables to transform. It returns
-the original data frame with requested centred, scaled, detrended,
-decomposed, or lagged columns.</p>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> treats centring and decomposition as
-different analytic operations. Person centring replaces a variable with
-deviations from each person’s mean. Decomposition retains both the
-deviation and the person mean. The latter supports separate
-within-person and between-person coefficients in one pooled model <span class="citation">(<a href="#ref-mundlak1978">Mundlak
-1978</a>)</span>.</p>
-</div>
-<div class="section level2">
-<h2 id="create-decomposition-and-lag-columns">Create decomposition and lag columns<a class="anchor" aria-label="anchor" href="#create-decomposition-and-lag-columns"></a>
-</h2>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> orders rows by learner and day before
-constructing lags. The call below adds within-person and between-person
-components plus a one-occasion lag for efficacy and monitoring. Table 1
-displays the returned columns directly.</p>
+<p>Each repeated measure has two parts. The between-person part is the
+stable average across all occasions. The within-person part is the
+fluctuation of each occasion around that stable average. Differences
+between persons in their stable averages form the between-person
+variation; the fluctuations form the within-person variation. An
+analysis of the raw scores, whether across all occasions or at a single
+occasion, mixes the two, and its result can resemble the within-person
+association, the between-person association, or neither, depending on
+how much of each variable is stable and how much fluctuates. Separating
+the two parts allows each association to be estimated on its own.</p>
+<p>For a variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+observed for person
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+at occasion
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+<code><a href="../reference/split_levels.html">split_levels()</a></code> computes the between-person part as the mean
+of that person’s observed values,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><msub><mi>T</mi><mi>i</mi></msub></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>T</mi><mi>i</mi></msub></munderover><msub><mi>x</mi><mrow><mi>i</mi><mi>t</mi></mrow></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">\bar{x}_i = \frac{1}{T_i}\sum_{t=1}^{T_i} x_{it},</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mi>i</mi></msub><annotation encoding="application/x-tex">T_i</annotation></semantics></math>
+is the number of occasions on which
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+was observed. The within-person part is the deviation of each
+observation from that mean,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>i</mi><mi>t</mi></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_{it} - \bar{x}_i</annotation></semantics></math>.
+The two parts sum to the original score. For efficacy, the
+between-person part is stored as <code>efficacy_between</code> and the
+within-person part as <code>efficacy_within</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">prepared</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_panel.html">preprocess_panel</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span><span class="op">)</span>, decompose <span class="op">=</span> <span class="cn">TRUE</span>, lag <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prepared</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    name day efficacy    value planning monitoring   effort  control help social</span></span>
-<span><span class="co">#&gt; 1 Aisha   1 38.23529 58.33333  0.00000  34.210526 53.96825 39.39394   78   60.0</span></span>
-<span><span class="co">#&gt; 2 Aisha   2 14.70588 47.22222 50.00000   7.894737 79.36508 45.45455   16   10.0</span></span>
-<span><span class="co">#&gt; 3 Aisha   3 67.64706 52.77778 52.27273  19.736842 77.77778 39.39394   28   55.0</span></span>
-<span><span class="co">#&gt; 4 Aisha   4 55.88235 63.88889 65.90909  22.368421 93.65079 42.42424   24   47.5</span></span>
-<span><span class="co">#&gt; 5 Aisha   5 55.88235 36.11111 52.27273  22.368421 71.42857 57.57576   48   57.5</span></span>
-<span><span class="co">#&gt; 6 Aisha   6 44.11765 61.11111 52.27273  57.894737 82.53968 42.42424   28   62.5</span></span>
-<span><span class="co">#&gt;   organizing efficacy_within monitoring_within efficacy_between</span></span>
-<span><span class="co">#&gt; 1   1.612903      -18.684012          8.923752         56.91931</span></span>
-<span><span class="co">#&gt; 2  61.290323      -42.213424        -17.392038         56.91931</span></span>
-<span><span class="co">#&gt; 3  77.419355       10.727753         -5.549933         56.91931</span></span>
-<span><span class="co">#&gt; 4  37.096774       -1.036953         -2.918354         56.91931</span></span>
-<span><span class="co">#&gt; 5  75.806452       -1.036953         -2.918354         56.91931</span></span>
-<span><span class="co">#&gt; 6  30.645161      -12.801659         32.607962         56.91931</span></span>
-<span><span class="co">#&gt;   monitoring_between efficacy_lag1 monitoring_lag1</span></span>
-<span><span class="co">#&gt; 1           25.28677            NA              NA</span></span>
-<span><span class="co">#&gt; 2           25.28677      38.23529       34.210526</span></span>
-<span><span class="co">#&gt; 3           25.28677      14.70588        7.894737</span></span>
-<span><span class="co">#&gt; 4           25.28677      67.64706       19.736842</span></span>
-<span><span class="co">#&gt; 5           25.28677      55.88235       22.368421</span></span>
-<span><span class="co">#&gt; 6           25.28677      55.88235       22.368421</span></span></code></pre></div>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> sets the first lag of each learner to
-missing in Table 1. The second row for Aisha receives the first row’s
-efficacy and monitoring values. The within-person efficacy column
-expresses each daily value as a deviation from Aisha’s mean. The
-between-person column repeats that mean across Aisha’s rows.</p>
-</div>
-<div class="section level2">
-<h2 id="plot-the-transformed-series">Plot the transformed series<a class="anchor" aria-label="anchor" href="#plot-the-transformed-series"></a>
-</h2>
-<p>The time-series display uses the centred values returned by
-<code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code>. A zero reference identifies Aisha’s own
-mean, so the sign of each point has a direct within-person
-interpretation.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/split_levels.html">split_levels</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="st">"efficacy"</span>, time <span class="op">=</span> <span class="st">"day"</span>, keep_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    name day efficacy efficacy_within efficacy_between</span></span>
+<span><span class="co">#&gt; 1 Aisha   1 38.23529      -18.684012         56.91931</span></span>
+<span><span class="co">#&gt; 2 Aisha   2 14.70588      -42.213424         56.91931</span></span>
+<span><span class="co">#&gt; 3 Aisha   3 67.64706       10.727753         56.91931</span></span>
+<span><span class="co">#&gt; 4 Aisha   4 55.88235       -1.036953         56.91931</span></span>
+<span><span class="co">#&gt; 5 Aisha   5 55.88235       -1.036953         56.91931</span></span>
+<span><span class="co">#&gt; 6 Aisha   6 44.11765      -12.801659         56.91931</span></span></code></pre></div>
+<p>To see how effort relates to each part, both parts are used as
+predictors in the same regression. The slope of
+<code>efficacy_within</code> shows how effort changes on days when a
+learner’s efficacy is above or below that learner’s average. The slope
+of <code>efficacy_between</code> shows how effort differs between
+learners with higher and lower average efficacy.
+<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> performs the split and the regression
+in one step. Because each learner contributes many days, its standard
+errors are adjusted for the repeated observations of the same
+learner.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aisha</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">prepared</span>, <span class="va">name</span> <span class="op">==</span> <span class="st">"Aisha"</span><span class="op">)</span></span>
-<span><span class="fu">figure_begin</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">aisha</span><span class="op">$</span><span class="va">day</span>, <span class="va">aisha</span><span class="op">$</span><span class="va">efficacy_within</span>, type <span class="op">=</span> <span class="st">"l"</span>, lwd <span class="op">=</span> <span class="fl">1.8</span>,</span>
-<span>     col <span class="op">=</span> <span class="va">fig_col</span><span class="op">[</span><span class="st">"blue"</span><span class="op">]</span>, xlab <span class="op">=</span> <span class="st">"Day"</span>,</span>
-<span>     ylab <span class="op">=</span> <span class="st">"Deviation from Aisha's mean"</span><span class="op">)</span></span>
-<span><span class="fu">figure_grid</span><span class="op">(</span>x <span class="op">=</span> <span class="cn">FALSE</span>, y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span>, col <span class="op">=</span> <span class="va">fig_col</span><span class="op">[</span><span class="st">"orange"</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.4</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">aisha</span><span class="op">$</span><span class="va">day</span>, <span class="va">aisha</span><span class="op">$</span><span class="va">efficacy_within</span>, pch <span class="op">=</span> <span class="fl">21</span>,</span>
-<span>       bg <span class="op">=</span> <span class="va">fig_col</span><span class="op">[</span><span class="st">"blue"</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"white"</span>, cex <span class="op">=</span> <span class="fl">0.62</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="preprocess-panel_files/figure-html/preparation-plot-1.png" class="r-plt" alt="Figure 1. Person-centred efficacy over time for Aisha." width="100%"><p class="caption">
-Figure 1. Person-centred efficacy over time for Aisha.
-</p>
-</div>
-<p>Figure 1 fluctuates around zero because the series is person-centred.
-Positive values mark days above Aisha’s typical efficacy. Negative
-values mark days below her typical efficacy. The transformation changes
-the interpretation of a regression coefficient from a raw-score contrast
-to a within-person contrast.</p>
-</div>
-<div class="section level2">
-<h2 id="assumptions-and-failure-checks">Assumptions and failure checks<a class="anchor" aria-label="anchor" href="#assumptions-and-failure-checks"></a>
-</h2>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> requires a meaningful ordering
-variable for lagging and detrending. A lag represents the preceding
-recorded occasion. The <code>lag_max_gap</code> argument can invalidate
-lags that span an unacceptable elapsed time. No lag is carried from the
-final row of one learner to the first row of another learner.</p>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> applies scaling parameters within the
-requested scope. Person scaling changes coefficients into
-person-specific standard-deviation units. Grand scaling uses a common
-scale. Detrending removes an estimated linear trend and requires a time
-column. Transformation choices should follow the estimand rather than a
-desire to improve model fit.</p>
+<code class="sourceCode R"><span><span class="va">wb_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_within_between.html">fit_within_between</a></span><span class="op">(</span><span class="va">srl</span>, y <span class="op">=</span> <span class="st">"effort"</span>, x <span class="op">=</span> <span class="st">"efficacy"</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">wb_fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    scope          model estimator subject subgroup             term component</span></span>
+<span><span class="co">#&gt; 1 pooled within_between       ols    .all     .all      (Intercept)     .none</span></span>
+<span><span class="co">#&gt; 2 pooled within_between       ols    .all     .all  efficacy_within    within</span></span>
+<span><span class="co">#&gt; 3 pooled within_between       ols    .all     .all efficacy_between   between</span></span>
+<span><span class="co">#&gt;   variable   estimate  std_error statistic      p_value   conf_low  conf_high</span></span>
+<span><span class="co">#&gt; 1    .none 25.0284934 6.64097196  3.768800 6.059592e-04 11.5466036 38.5103833</span></span>
+<span><span class="co">#&gt; 2 efficacy  0.4163891 0.05518059  7.545934 7.650039e-09  0.3043665  0.5284116</span></span>
+<span><span class="co">#&gt; 3 efficacy  0.6266185 0.10584994  5.919876 9.845147e-07  0.4117317  0.8415053</span></span></code></pre></div>
+<p>The within-person slope was 0.42 (95% CI 0.30 to 0.53). On days when
+a learner’s efficacy was 10 points above that learner’s average, effort
+was about 4 points higher. The between-person slope was 0.63 (95% CI
+0.41 to 0.84). Learners whose average efficacy was 10 points higher
+reported about 6 points more effort on average. The between-person
+interval is wider because it rests on 36 learners, while the
+within-person slope draws on all of their days.</p>
+<p>Whether the two slopes differ is tested directly by their difference,
+which <code><a href="../reference/contextual.html">contextual()</a></code> reports.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/contextual.html">contextual</a></span><span class="op">(</span><span class="va">wb_fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   variable   within   between   contextual     S.E.           95% CI        p</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;   efficacy   0.4164    0.6266       0.2102   0.1021   [0.003, 0.417]   0.0469</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; scope = pooled,  model = within_between,  estimator = ols,  subject = .all,  subgroup = .all</span></span></code></pre></div>
+<p>The between-person slope exceeded the within-person slope by 0.21
+(95% CI 0.003 to 0.42, p = .047). The interval barely excludes zero, so
+the evidence that the two slopes differ is weak.</p>
 </div>
 <div class="section level2">
-<h2 id="when-to-use-which">When to use which<a class="anchor" aria-label="anchor" href="#when-to-use-which"></a>
+<h2 id="lagged-variables">Lagged variables<a class="anchor" aria-label="anchor" href="#lagged-variables"></a>
 </h2>
-<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> is appropriate for explicit centring,
-scaling, decomposition, detrending, and lag construction.
-<code><a href="../reference/preprocess.html">preprocess()</a></code> is the network-readiness audit for
-stationarity, compliance, and series variance.
-<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> performs decomposition inside the
-model and is preferred when the main question directly contrasts
-within-person and between-person effects.</p>
+<p>A lagged variable holds the value of a variable on the preceding
+occasion. With <code>lag = 1</code>, the column
+<code>efficacy_lag1</code> contains, in each row, the learner’s efficacy
+on the previous day. Lagged variables allow a model to test whether a
+state on one day predicts an outcome on the next, for example whether
+efficacy yesterday predicts effort today.</p>
+<p>Lags are computed within persons, so the first occasion of each
+person has a missing lagged value, as shown below for the first days of
+Aisha.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/preprocess_panel.html">preprocess_panel</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>, vars <span class="op">=</span> <span class="st">"efficacy"</span>, lag <span class="op">=</span> <span class="fl">1</span>, keep_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    name day efficacy efficacy_lag1</span></span>
+<span><span class="co">#&gt; 1 Aisha   1 38.23529            NA</span></span>
+<span><span class="co">#&gt; 2 Aisha   2 14.70588      38.23529</span></span>
+<span><span class="co">#&gt; 3 Aisha   3 67.64706      14.70588</span></span>
+<span><span class="co">#&gt; 4 Aisha   4 55.88235      67.64706</span></span>
+<span><span class="co">#&gt; 5 Aisha   5 55.88235      55.88235</span></span>
+<span><span class="co">#&gt; 6 Aisha   6 44.11765      55.88235</span></span></code></pre></div>
+<p>A lag refers to the preceding occasion regardless of the time elapsed
+between occasions. For irregularly spaced occasions,
+<code>lag_max_gap</code> sets the lagged value to missing when the
+preceding occasion lies further back than a specified interval.</p>
 </div>
-<div class="section level2 unnumbered">
-<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<div class="section level2">
+<h2 id="detrending">Detrending<a class="anchor" aria-label="anchor" href="#detrending"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-mundlak1978" class="csl-entry">
-Mundlak, Yair. 1978. <span>“On the Pooling of Time Series and Cross
-Section Data.”</span> <em>Econometrica</em> 46 (1): 69–85. <a href="https://doi.org/10.2307/1913646" class="external-link">https://doi.org/10.2307/1913646</a>.
+<p><code>preprocess_panel(detrend = "person")</code> removes the linear
+time trend of each person’s series when the trend is significant at
+<code>detrend_alpha</code> (0.05 by default). The presence of trends is
+assessed beforehand with the trend estimates reported by
+<code><a href="../reference/describe_persons.html">describe_persons()</a></code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">trends</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>, vars <span class="op">=</span> <span class="st">"efficacy:organizing"</span>, detail <span class="op">=</span> <span class="st">"full"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">trends</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     variable persons mean_of_means sd_of_means mean_sd_within</span></span>
+<span><span class="co">#&gt; 1    control      36      52.75783    18.45740       22.84994</span></span>
+<span><span class="co">#&gt; 2   efficacy      36      54.03965    15.90734       21.27906</span></span>
+<span><span class="co">#&gt; 3     effort      36      58.97604    14.54039       22.25366</span></span>
+<span><span class="co">#&gt; 4       help      36      62.07208    18.17278       20.59724</span></span>
+<span><span class="co">#&gt; 5 monitoring      36      49.11049    21.00157       21.10374</span></span>
+<span><span class="co">#&gt; 6 organizing      36      55.49354    15.95229       22.35608</span></span>
+<span><span class="co">#&gt; 7   planning      36      56.84187    14.86661       21.97606</span></span>
+<span><span class="co">#&gt; 8     social      36      56.64708    21.02848       21.07529</span></span>
+<span><span class="co">#&gt; 9      value      36      56.55765    14.53585       22.03823</span></span>
+<span><span class="co">#&gt;   significant_trends trend_share</span></span>
+<span><span class="co">#&gt; 1                  2  0.05555556</span></span>
+<span><span class="co">#&gt; 2                  1  0.02777778</span></span>
+<span><span class="co">#&gt; 3                  1  0.02777778</span></span>
+<span><span class="co">#&gt; 4                  0  0.00000000</span></span>
+<span><span class="co">#&gt; 5                  1  0.02777778</span></span>
+<span><span class="co">#&gt; 6                  1  0.02777778</span></span>
+<span><span class="co">#&gt; 7                  5  0.13888889</span></span>
+<span><span class="co">#&gt; 8                  3  0.08333333</span></span>
+<span><span class="co">#&gt; 9                  2  0.05555556</span></span></code></pre></div>
+<p>Across the nine variables, 16 of the 324 person-by-variable series
+(4.9%) had a significant linear trend, the proportion expected from
+false positives at the 0.05 level if no series trended. Detrending these
+data would therefore modify a small number of series largely at random.
+Detrending is warranted when significant trends are considerably more
+frequent than the significance level, or when the design implies a
+trend, as in intervention or developmental studies. Series without a
+fixed slope, such as random walks, require differencing, which
+<code>preprocess(detrend = "auto")</code> applies to the affected series
+only.</p>
 </div>
-</div>
+<div class="section level2">
+<h2 id="centring-and-scaling">Centring and scaling<a class="anchor" aria-label="anchor" href="#centring-and-scaling"></a>
+</h2>
+<p>Person-centring (<code>center = "person"</code>) retains only the
+within-person part and discards the between-person part;
+<code><a href="../reference/split_levels.html">split_levels()</a></code> retains both, so the two options are not
+combined. Person scaling (<code>scale = "person"</code>) divides each
+person’s values by that person’s standard deviation, which places
+persons who fluctuate to different degrees on a common scale. Grand
+scaling (<code>scale = "grand"</code>) uses a single standard deviation
+for all persons.</p>
+<p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> and <code><a href="../reference/split_levels.html">split_levels()</a></code>
+compute these quantities from all occasions of each person. Model
+functions that hold out later occasions for testing, such as
+<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code>, compute them from the training
+occasions only.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

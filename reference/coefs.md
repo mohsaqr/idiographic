@@ -33,6 +33,7 @@ coefs(
   overall = FALSE,
   sort_by = NULL,
   decreasing = FALSE,
+  term = NULL,
   ...
 )
 
@@ -87,6 +88,10 @@ coefs(x, ...)
 - decreasing:
 
   Sort in descending order?
+
+- term:
+
+  Optional filter: only these coefficient terms.
 
 ## Value
 

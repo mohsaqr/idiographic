@@ -7,7 +7,7 @@ tunable parameter is.
 ## Usage
 
 ``` r
-models(task = NULL, available = FALSE)
+models(task = NULL, available = FALSE, estimator = NULL)
 ```
 
 ## Arguments
@@ -19,6 +19,10 @@ models(task = NULL, available = FALSE)
 - available:
 
   Only models whose package is installed here.
+
+- estimator:
+
+  Optional implementation filter, such as `"native"`.
 
 ## Value
 

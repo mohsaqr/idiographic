@@ -2,31 +2,32 @@
 
 This document indexes the non-network statistical workflows in
 `idiographic`. The package contains 16 major functions in this part of
-its interface. They address different estimands: data quality,
-within-person association, prediction, coefficient synthesis, subgroup
-structure, and treatment-effect heterogeneity. Choosing a function
-begins with the research question, not with the preferred algorithm.
+its interface, worked through in six topic vignettes. They address
+different estimands: data quality, within-person association,
+prediction, coefficient synthesis, subgroup structure, and
+treatment-effect heterogeneity. Choosing a function begins with the
+research question, not with the preferred algorithm.
 
 ## Start with the analytical question
 
-| Question | Primary function | Detailed vignette |
+| Question | Primary function | Vignette section |
 |:---|:---|:---|
-| Is each person’s series usable and sufficiently variable? | [`describe_persons()`](https://pak.dynasite.org/idiographic/reference/describe_persons.md) | [Person-level description](https://pak.dynasite.org/idiographic/articles/describe-persons.md) |
-| How are variables associated within each person? | [`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md) | [Within-person correlation](https://pak.dynasite.org/idiographic/articles/correlate-persons.md) |
-| How much variation lies within versus between people? | [`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md) | [Variance decomposition](https://pak.dynasite.org/idiographic/articles/variance-components.md) |
+| Is each person’s series usable and sufficiently variable? | [`describe_persons()`](https://pak.dynasite.org/idiographic/reference/describe_persons.md) | [Describing persons](https://pak.dynasite.org/idiographic/articles/describing-persons.html#describe_persons) |
+| How are variables associated within each person? | [`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md) | [Describing persons](https://pak.dynasite.org/idiographic/articles/describing-persons.html#correlate_persons) |
+| How much variation lies within versus between people? | [`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md) | [Describing persons](https://pak.dynasite.org/idiographic/articles/describing-persons.html#variance_components) |
 | How should a panel be ordered, lagged, centred, and screened? | [`preprocess_panel()`](https://pak.dynasite.org/idiographic/reference/preprocess_panel.md) | [Panel preparation](https://pak.dynasite.org/idiographic/articles/preprocess-panel.md) |
-| What are the pooled and person-specific linear coefficients? | [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md) | [Linear models](https://pak.dynasite.org/idiographic/articles/fit-lm.md) |
-| What are the pooled and person-specific binary or count associations? | [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md) | [Generalized linear models](https://pak.dynasite.org/idiographic/articles/fit-glm.md) |
-| Which algorithm predicts later observations most accurately? | [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md) | [Machine learning](https://pak.dynasite.org/idiographic/articles/fit-ml.md) |
-| Does predictive performance persist across forecast origins? | [`fit_rolling()`](https://pak.dynasite.org/idiographic/reference/fit_rolling.md) | [Rolling-origin validation](https://pak.dynasite.org/idiographic/articles/fit-rolling.md) |
-| Do within-person and between-person effects differ? | [`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md) | [Within-between models](https://pak.dynasite.org/idiographic/articles/fit-within-between.md) |
-| What is the uncertainty-weighted average of person-specific coefficients? | [`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md) | [Coefficient pooling](https://pak.dynasite.org/idiographic/articles/pool-coefs.md) |
-| How should noisy person-specific coefficients be stabilised? | [`shrink_coefs()`](https://pak.dynasite.org/idiographic/reference/shrink_coefs.md) | [Coefficient shrinkage](https://pak.dynasite.org/idiographic/articles/shrink-coefs.md) |
-| Is a discrete subgroup representation supported at all? | [`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md) | [Testing subgroup existence](https://pak.dynasite.org/idiographic/articles/test-subgroups.md) |
-| Which people share a reproducible coefficient profile? | [`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md) | [Subgroup discovery](https://pak.dynasite.org/idiographic/articles/find-subgroups.md) |
-| Does subgroup-specific modelling improve held-out performance? | [`fit_subgroups()`](https://pak.dynasite.org/idiographic/reference/fit_subgroups.md) | [Subgroup-specific models](https://pak.dynasite.org/idiographic/articles/fit-subgroups.md) |
-| What is the treatment effect, and who benefits more? | [`fit_effects()`](https://pak.dynasite.org/idiographic/reference/fit_effects.md) | [Treatment effects](https://pak.dynasite.org/idiographic/articles/fit-effects.md) |
-| Is a person-varying target predictably heterogeneous? | [`fit_heterogeneity()`](https://pak.dynasite.org/idiographic/reference/fit_heterogeneity.md) | [Repeated-split heterogeneity](https://pak.dynasite.org/idiographic/articles/fit-heterogeneity.md) |
+| What are the pooled and person-specific linear coefficients? | [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md) | [Regression models](https://pak.dynasite.org/idiographic/articles/regression-models.html#fit_lm) |
+| What are the pooled and person-specific binary or count associations? | [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md) | [Regression models](https://pak.dynasite.org/idiographic/articles/regression-models.html#fit_glm) |
+| How accurately do different algorithms predict each person’s outcomes? | [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md) | [Prediction](https://pak.dynasite.org/idiographic/articles/prediction.html#fit_ml) |
+| How does predictive accuracy vary across evaluation periods? | [`fit_rolling()`](https://pak.dynasite.org/idiographic/reference/fit_rolling.md) | [Prediction](https://pak.dynasite.org/idiographic/articles/prediction.html#fit_rolling) |
+| Do within-person and between-person effects differ? | [`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md) | [Regression models](https://pak.dynasite.org/idiographic/articles/regression-models.html#fit_within_between) |
+| What is the uncertainty-weighted average of person-specific coefficients? | [`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md) | [Pooling and shrinkage](https://pak.dynasite.org/idiographic/articles/pooling-shrinkage.html#pool_coefs) |
+| How should noisy person-specific coefficients be stabilised? | [`shrink_coefs()`](https://pak.dynasite.org/idiographic/reference/shrink_coefs.md) | [Pooling and shrinkage](https://pak.dynasite.org/idiographic/articles/pooling-shrinkage.html#shrink_coefs) |
+| Is a discrete subgroup representation supported at all? | [`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md) | [Subgroups and effects](https://pak.dynasite.org/idiographic/articles/subgroups-effects.html#test_subgroups) |
+| Which people share a reproducible coefficient profile? | [`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md) | [Subgroups and effects](https://pak.dynasite.org/idiographic/articles/subgroups-effects.html#find_subgroups) |
+| Does subgroup-specific modelling improve held-out performance? | [`fit_subgroups()`](https://pak.dynasite.org/idiographic/reference/fit_subgroups.md) | [Subgroups and effects](https://pak.dynasite.org/idiographic/articles/subgroups-effects.html#fit_subgroups) |
+| What is the treatment effect, and who benefits more? | [`fit_effects()`](https://pak.dynasite.org/idiographic/reference/fit_effects.md) | [Subgroups and effects](https://pak.dynasite.org/idiographic/articles/subgroups-effects.html#fit_effects) |
+| Is a person-varying target predictably heterogeneous? | [`fit_heterogeneity()`](https://pak.dynasite.org/idiographic/reference/fit_heterogeneity.md) | [Subgroups and effects](https://pak.dynasite.org/idiographic/articles/subgroups-effects.html#fit_heterogeneity) |
 
 ## Recommended sequence
 
@@ -103,16 +104,17 @@ separates three decisions that are often conflated.
 - **Validation design:** which later observations form the validation
   and test blocks.
 
-The [machine-learning
-vignette](https://pak.dynasite.org/idiographic/articles/fit-ml.md)
-compares models with a mean baseline, audits hyperparameter selection,
-compares pooled and individual scopes, identifies people with poor
-predictions, inspects their trajectories, and computes model-agnostic
-permutation importance.
+The [prediction
+vignette](https://pak.dynasite.org/idiographic/articles/prediction.md)
+develops idiographic models for each learner, compares algorithms and
+pooled counterparts, and plots learner-level accuracy and predictor
+importance. It examines the distribution of important predictors, their
+agreement across algorithms, and the differences between individual
+profiles and aggregate summaries.
 [`fit_rolling()`](https://pak.dynasite.org/idiographic/reference/fit_rolling.md)
-extends the same logic across several temporal origins. A model should
-not be called personally useful from an aggregate metric alone; report
-the distribution of person-level errors.
+repeats the comparison across successive evaluation periods. The
+examples predict effort from measurements on the same occasion, with
+chronologically earlier records used for model development.
 
 ## Subgroups: evidence before assignment
 
@@ -162,7 +164,7 @@ should answer a named question: show uncertainty for coefficients and
 effects, show a reference model for prediction, show chronology for
 forecasts, and show assignment stability for subgroups.
 
-The 16 linked vignettes provide executable examples using the bundled
+The six topic vignettes provide executable examples using the bundled
 `srl` data. Each example prints the public result object before
 interpreting it, uses public accessors for detailed tables, and states
 when a neighbouring function answers a more appropriate question.

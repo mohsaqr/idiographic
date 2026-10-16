@@ -194,7 +194,7 @@ pooled_coefs
 #>   monitoring      36    0.1956     [0.09, 0.30]    0.297    0.272   0.915   <1e-04
 #>   efficacy_lag1   36    0.0222    [-0.01, 0.05]    0.092    0.031   0.159    0.204
 #> 
-#>   sd_obs = spread you see;  tau = spread that is REAL
+#>   sd_obs = observed spread;  tau = spread of the true coefficients
 #>   I2     = share of the observed spread that is real
 head(shrunk_coefs)
 #> SHRUNKEN PERSON EFFECTS

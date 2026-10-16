@@ -13,6 +13,7 @@ plot_importance(
   n = 15,
   method = c("coefficient", "permutation"),
   repeats = 5L,
+  type = c("overall", "person", "boxplot", "density", "frequency", "comparison"),
   ...
 )
 ```
@@ -21,7 +22,8 @@ plot_importance(
 
 - x:
 
-  An idiographic fit.
+  An idiographic fit or a table returned by
+  [`importance()`](https://pak.dynasite.org/idiographic/reference/importance.md).
 
 - model, scope, subject:
 
@@ -29,7 +31,9 @@ plot_importance(
 
 - n:
 
-  Number of rows/variables to plot.
+  Maximum rows in the overall plot or predictors per person. For
+  frequency plots, the top-feature rank threshold (ties retained).
+  Distribution and comparison plots retain all available predictors.
 
 - method:
 
@@ -40,6 +44,12 @@ plot_importance(
 - repeats:
 
   Number of shuffles per predictor for permutation importance.
+
+- type:
+
+  Overall points (default), per-person profiles (`"person"`), learner
+  distributions (`"boxplot"`, `"density"`), top-feature frequencies
+  (`"frequency"`), or pooled/individual means (`"comparison"`).
 
 - ...:
 

@@ -14,6 +14,7 @@ metrics(
   overall = FALSE,
   sort_by = NULL,
   decreasing = FALSE,
+  by = c("person", "fold"),
   ...
 )
 ```
@@ -43,6 +44,10 @@ metrics(
 - decreasing:
 
   Sort order when `sort_by` is supplied.
+
+- by:
+
+  Summarise by person (default) or separately within each rolling fold.
 
 - ...:
 

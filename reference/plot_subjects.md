@@ -8,7 +8,16 @@ ask.
 ## Usage
 
 ``` r
-plot_subjects(x, metric = NULL, model = NULL, scope = NULL, n = NULL, ...)
+plot_subjects(
+  x,
+  metric = NULL,
+  model = NULL,
+  scope = NULL,
+  n = NULL,
+  reference = NULL,
+  type = c("points", "density"),
+  ...
+)
 ```
 
 ## Arguments
@@ -28,7 +37,16 @@ plot_subjects(x, metric = NULL, model = NULL, scope = NULL, n = NULL, ...)
 
 - n:
 
-  Maximum number of people to draw.
+  Maximum number of people to draw per algorithm.
+
+- reference:
+
+  Optional `"pooled"` model or `"mean"` baseline for paired comparisons.
+  Predictions must refer to identical test observations.
+
+- type:
+
+  Person points (default) or densities of paired improvements.
 
 - ...:
 
