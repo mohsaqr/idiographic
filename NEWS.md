@@ -1,6 +1,9 @@
-# idiographic 0.4.0.9003
+# idiographic 0.4.0.9004
 
 ## Unified idiographic statistics
+
+* `fit_gimme()` checks its arguments before it checks for `lavaan`, so an
+  unsupported GIMME mode raises its own error when `lavaan` is absent.
 
 * **Changed results:** pooled and subgroup models from `fit_lm()` and
   `fit_glm()` now report standard errors clustered on the person (CR1). They

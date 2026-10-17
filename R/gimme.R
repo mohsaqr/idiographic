@@ -208,12 +208,6 @@ fit_gimme <- function(data,
             "Ignoring plot = TRUE.")
   }
 
-  if (!requireNamespace("lavaan", quietly = TRUE)) {
-    stop("fit_gimme() requires the optional package 'lavaan'. The rest of ", # nocov
-         "idiographic remains available offline; install 'lavaan' only when ", # nocov
-         "you need GIMME estimation.", call. = FALSE) # nocov
-  }
-
   if (!is.null(seed)) {
     if (!(is.numeric(seed) && length(seed) == 1L && is.finite(seed) &&
           seed == floor(seed))) {
@@ -310,6 +304,13 @@ fit_gimme <- function(data,
          ". These gimme features (latent-variable / fMRI-convolution / ",
          "multiplied terms / LASSO / ordinal / multiple-solutions / ",
          "directionality) require gimme::gimme().", call. = FALSE)
+  }
+  # The engine is checked after the argument contract, so a malformed call
+  # reports its argument whether or not lavaan is installed.
+  if (!requireNamespace("lavaan", quietly = TRUE)) {
+    stop("fit_gimme() requires the optional package 'lavaan'. The rest of ", # nocov
+         "idiographic remains available offline; install 'lavaan' only when ", # nocov
+         "you need GIMME estimation.", call. = FALSE) # nocov
   }
   # Sub-options of the unsupported features (and gimme's standalone `diagnos`)
   # are accepted for API parity but inert. Warn rather than silently ignore them

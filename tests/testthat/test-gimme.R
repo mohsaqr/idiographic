@@ -147,6 +147,7 @@ test_that("dir_prop_cutoff = 0L (default-equivalent integer) is accepted", {
 
 test_that("non-default inert sub-feature args warn (not silently ignored)", {
   skip_on_cran()
+  skip_if_not_installed("lavaan")
   d <- synth_panel(n_id = 4, days = 3, beeps = 12, vars = c("A", "B"), seed = 5)
   expect_warning(
     suppressMessages(fit_gimme(d, vars = c("A", "B"), id = "id", day = "day",
