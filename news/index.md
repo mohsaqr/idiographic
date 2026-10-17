@@ -1,8 +1,12 @@
 # Changelog
 
-## idiographic 0.4.0.9003
+## idiographic 0.4.0.9004
 
 ### Unified idiographic statistics
+
+- [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md)
+  checks its arguments before it checks for `lavaan`, so an unsupported
+  GIMME mode raises its own error when `lavaan` is absent.
 
 - **Changed results:** pooled and subgroup models from
   [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
