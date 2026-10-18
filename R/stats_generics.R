@@ -166,9 +166,9 @@ print.idiostats_fit <- function(x, ...) {
                 best$scope, best$model))
   }
   if (nrow(x$failures)) {
-    cat(sprintf("  Failures:    %d (see $failures)\n", nrow(x$failures)))
+    cat(sprintf("  Failures:    %d (see failures())\n", nrow(x$failures)))
   }
-  cat("  Use metrics(), predictions(), coefs(), compare()\n")
+  cat("  Use metrics(), predictions(), coefs(), failures(), compare()\n")
   invisible(x)
 }
 

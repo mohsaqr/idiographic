@@ -709,7 +709,7 @@ print.idiostats_effects <- function(x, ...) {
                 het$p_value[1L]))
   }
   if (nrow(x$failures)) {
-    cat(sprintf("  Failures:    %d (see $failures)\n", nrow(x$failures)))
+    cat(sprintf("  Failures:    %d (see failures())\n", nrow(x$failures)))
   }
   cat("  Use effects(), plot_effects(), metrics()\n")
   invisible(x)

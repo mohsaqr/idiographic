@@ -124,8 +124,8 @@ fit_rolling_graphical_var <- function(data, vars, id = NULL, day = NULL,
 
   if (length(estimates) == 0L) {
     stop("No rolling graphical VAR windows could be fit. Increase data ",
-         "length, reduce `window_size`, or inspect `$failures` from smaller ",
-         "trials.", call. = FALSE)
+         "length, reduce `window_size`, or inspect `failures()` of a smaller ",
+         "trial.", call. = FALSE)
   }
   out <- list(
     estimates = do.call(rbind, estimates),
@@ -158,7 +158,7 @@ print.rolling_gvar_result <- function(x, ...) {
   cat(sprintf("  Windows:    %d\n", x$n_windows))
   cat(sprintf("  Variables:  %d (%s)\n",
               length(x$labels), paste(x$labels, collapse = ", ")))
-  cat("  Tables:     x$estimates | x$windows | x$failures\n")
+  cat("  Tables:     as.data.frame(x) | as.data.frame(x, what = \"windows\") | failures(x)\n")
   if (!is.null(x$fits) && length(x$fits) > 0L) {
     cat("  Cograph:    cograph::splot(x$fits[[1]])\n")
     cat("  Matrices:   matrices(x$fits[[1]])\n")
@@ -168,10 +168,22 @@ print.rolling_gvar_result <- function(x, ...) {
   invisible(x)
 }
 
+#' Tidy tables of a rolling network result
+#'
+#' @param x A `rolling_gvar_result` from [fit_rolling_graphical_var()].
+#' @param row.names,optional Ignored; part of the [as.data.frame()] generic.
+#' @param what `"estimates"` (default) for one row per window and edge, or
+#'   `"windows"` for one row per window with its subject, start and end.
+#' @param ... Ignored.
+#' @return A base `data.frame`. The failures of individual windows are returned
+#'   by [failures()].
 #' @export
 as.data.frame.rolling_gvar_result <- function(x, row.names = NULL,
-                                              optional = FALSE, ...) {
-  x$estimates
+                                              optional = FALSE,
+                                              what = c("estimates", "windows"),
+                                              ...) {
+  what <- match.arg(what)
+  x[[what]]
 }
 
 #' @export

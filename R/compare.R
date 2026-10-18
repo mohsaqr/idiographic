@@ -151,7 +151,7 @@ print.model_comparison <- function(x, ...) {
   cat(sprintf("  Requested: %d\n", x$n_requested))
   cat(sprintf("  Successful: %d\n", x$n_success))
   cat(sprintf("  Failures:   %d\n", nrow(x$failures)))
-  cat("  Tables:     x$comparison | x$failures\n")
+  cat("  Tables:     as.data.frame(x) | failures(x)\n")
   if (!is.null(x$fits) && length(x$fits) > 0L) {
     cat("  Cograph:    cograph::splot(x$fits[[1]])\n")
     cat("  Matrices:   matrices(x$fits[[1]])\n")

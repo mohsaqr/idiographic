@@ -1020,7 +1020,7 @@ print.idiostats_wb <- function(x, ...) {
   }
 
   if (nrow(x$failures)) {
-    cat(sprintf("\n%d unit(s) failed; see $failures.\n", nrow(x$failures)))
+    cat(sprintf("\n%d unit(s) failed; see failures().\n", nrow(x$failures)))
   }
   invisible(x)
 }

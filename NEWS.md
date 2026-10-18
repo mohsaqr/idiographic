@@ -1,6 +1,12 @@
-# idiographic 0.4.0.9004
+# idiographic 0.4.0.9005
 
 ## Unified idiographic statistics
+
+* New `failures()` accessor returns the failure table of any result as a
+  tidy data frame, with `model`, `scope` and `subject` filters. Print methods
+  and error messages now point to `failures()` instead of `$failures`, and
+  rolling network results return their windows with
+  `as.data.frame(x, what = "windows")`.
 
 * `fit_gimme()` checks its arguments before it checks for `lavaan`, so an
   unsupported GIMME mode raises its own error when `lavaan` is absent.
