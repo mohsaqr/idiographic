@@ -6,8 +6,8 @@
   DSEM](https://pak.dynasite.org/idiographic/articles/bayesian-var-dsem.md):
 - [10. Clean-room
   design](https://pak.dynasite.org/idiographic/articles/clean-room-methods.md):
-- [Describing Persons: Level, Change, Association, and
-  Variance](https://pak.dynasite.org/idiographic/articles/describing-persons.md):
+- [Describing
+  persons](https://pak.dynasite.org/idiographic/articles/describing-persons.md):
 - [8. GIMME](https://pak.dynasite.org/idiographic/articles/gimme.md):
 - [4. Graphical
   VAR](https://pak.dynasite.org/idiographic/articles/graphical-var.md):
@@ -21,12 +21,12 @@
   Coefficients](https://pak.dynasite.org/idiographic/articles/pooling-shrinkage.md):
 - [Idiographic Prediction and Temporal
   Validation](https://pak.dynasite.org/idiographic/articles/prediction.md):
-- [Preparing Panel
-  Data](https://pak.dynasite.org/idiographic/articles/preprocess-panel.md):
+- [Preparing panel
+  data](https://pak.dynasite.org/idiographic/articles/preprocess-panel.md):
 - [2.
   Preprocessing](https://pak.dynasite.org/idiographic/articles/preprocessing.md):
 - [Regression
-  Models](https://pak.dynasite.org/idiographic/articles/regression-models.md):
+  models](https://pak.dynasite.org/idiographic/articles/regression-models.md):
 - [9. Rolling
   networks](https://pak.dynasite.org/idiographic/articles/rolling-networks.md):
 - [Guide to Idiographic Statistical

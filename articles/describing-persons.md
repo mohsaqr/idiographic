@@ -1,58 +1,83 @@
-# Describing Persons: Level, Change, Association, and Variance
+# Describing persons
 
-Person-specific analysis rests on the properties of each individual time
-series. Four descriptive functions are presented here. They are intended
-to precede model fitting, because the amount of data, the variability of
-each series, and the balance between stable and fluctuating variation
-determine which models can be estimated and how their coefficients are
-interpreted.
+An idiographic model is estimated from the observations of a single
+person, so the quality of that person’s data limits what the model can
+show. Before any model is fitted, descriptive statistics are therefore
+computed separately for each person and each variable. These are the
+number of observations and missing values, the spacing of the occasions,
+the mean and the range, the standard deviation, the change from one
+occasion to the next, and the correlation of each occasion with the
+previous one. These statistics establish whether the data of each person
+can be analysed and reveal the problems that would distort the results.
 
-| Question | Function |
-|:---|:---|
-| Is each person’s series long and variable enough for analysis? | [`describe_persons()`](https://pak.dynasite.org/idiographic/reference/describe_persons.md) |
-| Which variables co-vary within each person? | [`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md) |
-| What share of the variance reflects stable differences between persons? | [`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md) |
-| Do correlations computed across persons describe the correlations within persons? | [`correlate_levels()`](https://pak.dynasite.org/idiographic/reference/correlate_levels.md) |
+The first problem is a short series. Every coefficient of a person’s
+model is estimated from that person’s observations alone, and a series
+with few observations gives unstable estimates and supports only a small
+model. Missing occasions and long gaps between occasions shorten the
+series further and break the regular spacing that lagged effects assume,
+because a lag that spans one day for one pair of observations and a week
+for another mixes two different quantities.
 
-All examples use 12 learners from the bundled `srl` data set, each of
-whom completed the same self-report items once a day, yielding 154 to
-156 observations per learner.
+The second problem is low variability. A variable that changes little
+within a person carries little information about its effects, and its
+coefficient has a wide confidence interval. A variable that is constant
+within a person cannot be estimated as a predictor at all. Responses
+gathered at the floor or ceiling of the scale restrict the range in the
+same way and weaken the observed associations.
 
-## `describe_persons()`
+The third problem is dependence over time. A series with a trend changes
+level over the study period, and two variables that both trend appear
+related even when their daily fluctuations are unrelated. A series with
+strong autocorrelation carries each day’s value into the next day, so
+its observations are less informative than their number suggests. Long
+runs of identical responses can indicate careless responding.
 
-### Purpose
+The fourth problem concerns the level of the variation. Part of the
+variance of a variable lies between persons, in their means, and part
+lies within persons, in their daily fluctuations. A correlation computed
+across all observations mixes the two parts, and the share of each
+determines whether the variable is suited to a within-person analysis.
+
+## Data
+
+The examples use 12 learners from `srl`, a data frame in long format
+with one row per learner and day. Each learner rated self-efficacy,
+effort and seven other indicators of self-regulated learning once a day
+for 156 days.
+
+## Level and variability
+
+Level and variability are the basic properties of a time series. The
+level is the typical value of a person’s responses, given by the mean
+and the median. The variability is the amount by which the responses
+change over time, and it determines how much the series can show about
+the effects of its variable. A variable that stays at nearly the same
+value for 156 days shows little of what happens when it changes.
+
+The variability of each series is measured in two ways. The standard
+deviation (SD) measures the spread of a person’s observations around
+that person’s mean over the whole study. The root mean square successive
+difference (RMSSD) measures the size of the change from one occasion to
+the next. A series that drifts slowly over a wide range and a series
+that alternates sharply from day to day can have the same SD, and the
+second has the larger RMSSD ([Jahng et al. 2008](#ref-jahng2008)). The
+two are linked by the lag-1 autocorrelation $`\rho_1`$, the correlation
+of each occasion with the previous one. For a stationary series
+$`\text{RMSSD} \approx \text{SD}\sqrt{2(1-\rho_1)}`$, so the RMSSD is
+about 1.41 times the SD when consecutive days are unrelated, and smaller
+when each day carries over into the next.
 
 [`describe_persons()`](https://pak.dynasite.org/idiographic/reference/describe_persons.md)
-returns a tidy data frame with one row for each combination of learner
-and variable. Two learners measured on two variables therefore yield
-four rows (Aisha’s efficacy, Aisha’s effort, Alice’s efficacy, Alice’s
-effort). The columns describe the series in each row:
-
-- **amount of data**: the number of observations (`n`), the number of
-  missing values (`missing`), the number of days covered (`span`), and
-  the typical and longest interval between consecutive observations
-  (`gap_median`, `gap_max`);
-- **level**: the mean, median, minimum, and maximum;
-- **variability**: the standard deviation (`sd`), the root mean square
-  successive difference (`rmssd`), and the lag-1 autocorrelation
-  (`autocor`).
-
-The two measures capture distinct properties of a series. The standard
-deviation (SD) quantifies the spread of observations around the person’s
-own mean across the full observation period. The root mean square
-successive difference (RMSSD) quantifies the magnitude of change between
-consecutive occasions. A series that drifts slowly across a wide range
-and a series that alternates sharply from day to day may have the same
-SD; the RMSSD separates the two ([Jahng et al. 2008](#ref-jahng2008)).
-The two quantities are related through the lag-1 autocorrelation
-$`\rho_1`$: for a stationary series,
-$`\text{RMSSD} \approx \text{SD}\sqrt{2(1-\rho_1)}`$.
-
-### Example
+returns one row per person and variable, with the number of
+observations, the missing values, the span of the occasions and the gaps
+between them, the level and the variability. The argument `time` orders
+the observations, and the successive differences and the autocorrelation
+are computed in that order.
 
 ``` r
 
-describe_persons(analysis_data, id = "name", vars = c("efficacy", "effort"), time = "day", subject = c("Aisha", "Alice"))
+describe_persons(analysis_data, id = "name", vars = c("efficacy", "effort"),
+                 time = "day", subject = c("Aisha", "Alice"))
 #> PERSON DESCRIPTIVES
 #>   Grouping    name
 #>   Time        day
@@ -70,27 +95,18 @@ describe_persons(analysis_data, id = "name", vars = c("efficacy", "effort"), tim
 #>   autocor = lag-1 carry-over (inertia)
 ```
 
-Both learners contributed 156 observations with no missing values. Mean
-efficacy was 57 for Aisha and 36 for Alice, whereas the SDs (21 for
-both) and the RMSSDs (27 and 29) were similar. The two learners
-therefore differed in their typical level of efficacy and showed
-comparable variability.
+Aisha and Alice each have 156 observations and no missing values. Their
+mean efficacy is 57 and 36, both have an SD of 21, and their RMSSDs are
+27 and 29. The two learners differ in their typical level of efficacy
+and have similar day-to-day variability.
 
-The `time` argument defines the chronological order of observations
-within each person; successive differences and autocorrelations are
-computed in that order. Additional columns (floor and ceiling
-proportions, skewness, kurtosis, linear trend, and the longest run of
-identical values) are returned with `detail = "full"`.
-
-### Visualisation
-
-[`plot_descriptives()`](https://pak.dynasite.org/idiographic/reference/plot_descriptives.md)
-displays the SD on the horizontal axis and the RMSSD on the vertical
-axis, with one point per person and variable.
+The figure plots the SD against the RMSSD for the 12 learners, with one
+point per learner and variable.
 
 ``` r
 
-descriptives <- describe_persons(analysis_data, id = "name", vars = c("efficacy", "effort"), time = "day")
+descriptives <- describe_persons(analysis_data, id = "name",
+                                 vars = c("efficacy", "effort"), time = "day")
 plot_descriptives(descriptives)
 ```
 
@@ -101,47 +117,48 @@ learners.](describing-persons_files/figure-html/description-plot-1.png)
 Figure 1. Spread (SD) against day-to-day change (RMSSD) for efficacy and
 effort in 12 learners.
 
-The points lie close to a straight line, with RMSSD between 1.3 and 1.5
-times the SD. Under the relation given above, this ratio corresponds to
-small lag-1 autocorrelations: consecutive responses carried over little
-from one day to the next. Strong carry-over would place points well
-below this line.
+The RMSSD lies between 1.28 and 1.54 times the SD, close to the value of
+1.41 for unrelated consecutive days, so the learners carry little over
+from one day to the next. Erik and Eve have the largest spread and the
+largest daily change in both efficacy and effort. Diana, Frank and Bob
+vary least in efficacy, and Frank’s effort is among the most variable,
+so a learner can be stable on one variable and variable on another.
 
-The figure also identifies atypical learners. Erik and Eve showed the
-largest spread and the largest day-to-day change on both variables.
-Diana, Bob, and Frank showed the least variability in efficacy, while
-Frank’s effort was among the most variable. Stability on one variable is
-therefore no indication of stability on another.
+With `detail = "full"`, the table adds the proportions of responses at
+the floor and ceiling of the scale, the skewness and kurtosis, the
+probability of an acute change between consecutive occasions, the linear
+trend over the study and the longest run of identical responses. These
+columns detect the restricted range, the trends and the careless
+responding described above. Missing occasions reduce the number of
+consecutive pairs from which the RMSSD and the autocorrelation are
+computed.
 
-### Assumptions and limitations
+## Within-person correlations
 
-Successive differences and autocorrelations are meaningful only when
-rows are ordered chronologically, so the `time` argument is required
-whenever the stored row order differs from the order of measurement.
-Missing occasions reduce the number of consecutive pairs available for
-the RMSSD and the autocorrelation. A variable that is constant within a
-person has an undefined correlation with any other variable and cannot
-serve as a predictor in that person’s model. The `trend` column
-describes a linear trend and is insensitive to abrupt shifts or other
-non-linear change.
+A within-person correlation quantifies the covariation of two variables
+across the occasions of one person. It indicates which states co-occur
+within an individual, and its sign and magnitude differ between
+individuals. A correlation computed over the pooled observations of a
+sample combines within-person and between-person covariation, and it can
+differ from the within-person correlation of every individual in the
+sample. In the pooled observations of the 12 learners, monitoring and
+effort correlate at 0.10. The within-person correlations of the same
+pair range from −0.47 to 0.52 and are negative for 3 of the 12 learners.
 
-## `correlate_persons()`
-
-### Purpose
-
+The within-person correlation is the Pearson correlation of two
+variables computed from the observations of one person. A positive
+correlation indicates that on occasions when one variable exceeds the
+person’s mean, the other variable also tends to exceed its mean.
 [`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md)
-estimates, separately for each person, the Pearson correlation between
-every pair of variables, together with a 95% confidence interval
-obtained through Fisher’s $`z`$ transformation. A positive within-person
-correlation indicates that on occasions when one variable is above that
-person’s typical level, the other variable also tends to be above its
-typical level.
-
-### Example
+returns one row per person and pair of variables, with the correlation,
+the number of complete pairs and a 95% confidence interval based on
+Fisher’s $`z`$ transformation.
 
 ``` r
 
-correlations <- correlate_persons(analysis_data, id = "name", vars = c("efficacy", "monitoring", "effort"), time = "day", subject = c("Aisha", "Alice"))
+correlations <- correlate_persons(analysis_data, id = "name",
+                                  vars = c("efficacy", "monitoring", "effort"),
+                                  time = "day", subject = c("Aisha", "Alice"))
 correlations
 #> PERSON-SPECIFIC CORRELATIONS
 #>   Grouping   name
@@ -158,14 +175,14 @@ correlations
 #>   Alice     monitoring   effort       156   -0.352   [-0.48, -0.21]    < 1e-04
 ```
 
-For Aisha, all three pairs were positively correlated, with coefficients
-between 0.28 and 0.39. For Alice, efficacy and effort were positively
-correlated (0.49), whereas monitoring was negatively correlated with
-both efficacy (-0.23) and effort (-0.35). A single correlation computed
-across all learners would conceal this difference in the direction of
-association.
+For Aisha, all three pairs are positively correlated, with coefficients
+between 0.28 and 0.39. For Alice, efficacy and effort are positively
+correlated (r = 0.49), and monitoring is negatively correlated with
+efficacy (r = −0.23) and with effort (r = −0.35). Alice reports lower
+effort and lower efficacy on occasions of higher monitoring.
 
-### Visualisation
+The figure plots each correlation with its 95% confidence interval,
+ordered by magnitude.
 
 ``` r
 
@@ -179,41 +196,50 @@ learners.](describing-persons_files/figure-html/correlation-plot-1.png)
 Figure 2. Within-person correlations with 95% confidence intervals for
 two learners.
 
-Each row corresponds to one person and one pair of variables, and rows
-are ordered by the size of the correlation. All six confidence intervals
-exclude zero.
+Of the 6 intervals, 6 lie entirely on one side of zero.
 
-### Assumptions and limitations
+The coefficients describe concurrent associations, measured on the same
+occasion, and each is a bivariate association unadjusted for the
+remaining variables. Temporal precedence is examined with lagged
+regressions and dynamic networks. Serial dependence between consecutive
+daily observations makes the confidence intervals too narrow when the
+autocorrelation is strong. The argument `min_n` sets the minimum number
+of complete pairs for a coefficient to be reported, and a variable that
+is constant within a person yields a missing coefficient.
 
-The coefficients describe association between variables measured on the
-same occasion. Temporal precedence is examined with
-[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
-using lagged predictors or with the dynamic network models. Each
-coefficient is a bivariate association and is unadjusted for the
-remaining variables. Because consecutive daily observations are serially
-dependent, the confidence intervals may be too narrow. The `min_n`
-argument sets the minimum number of complete pairs required for a
-coefficient to be reported, and constant variables yield missing
-coefficients.
+## Between-person and within-person variance
 
-## `variance_components()`
+Person-specific models use only the fluctuation of each person around
+that person’s mean. Analyses that combine persons, such as pooled
+regressions, multilevel models and the comparison of individual with
+pooled estimates, use both the differences between person means and the
+fluctuation within persons. For these analyses, the partition of the
+variance determines how each variable enters the model. Between-person
+variance arises from differences in the person means, and within-person
+variance arises from the fluctuation of each person around that person’s
+mean.
 
-### Purpose
-
-[`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md)
-partitions the total variance of each variable into a between-person
-component, reflecting differences in person means, and a within-person
-component, reflecting fluctuation around each person’s mean. The
-intraclass correlation (ICC) is the between-person share of the total
-variance. Values near 0 indicate that persons have similar means and
-that variation arises mainly over time; values near 1 indicate stable
-differences between persons with little fluctuation within them.
-
-### Example
+The intraclass correlation (ICC) is the between-person share of the
+total variance. A large ICC indicates that much of the variance reflects
+stable differences between persons. An association computed on the raw
+scores of all persons is then largely an association between person
+means. Such a variable enters a pooled analysis as a person mean and a
+deviation from it, so that the within-person and between-person effects
+are estimated separately with
+[`split_levels()`](https://pak.dynasite.org/idiographic/reference/split_levels.md)
+and
+[`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md).
+The ICC is a property of the sample, computed over all persons. The
+within-person variability of an individual is assessed with the SD and
+RMSSD of that individual’s series. The reliability of the person means
+indicates how precisely the between-person part of a variable is
+measured, and an unreliable person mean biases the between-person and
+contextual effects.
 
 ``` r
 
-components <- variance_components(analysis_data, vars = c("efficacy", "monitoring", "effort"), id = "name")
+components <- variance_components(analysis_data, id = "name",
+                                  vars = c("efficacy", "monitoring", "effort"))
 components
 #> VARIANCE COMPONENTS
 #>   Grouping   name
@@ -229,17 +255,17 @@ components
 #>   Reliability precision of each group's own mean
 ```
 
-The ICCs were 0.40 for efficacy, 0.38 for monitoring, and 0.26 for
-effort. Between 60% and 74% of the variance of each variable was
-therefore located within learners. The between-person component was
-nonetheless substantial. Under these conditions a regression on the raw
-scores combines two distinct associations: the association between a
-learner’s daily deviations, and the association between learners’
-average levels.
-[`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md)
-estimates the two separately.
+The ICCs are 0.40 for efficacy, 0.38 for monitoring and 0.26 for effort,
+so between 60% and 74% of the variance of each variable lies within
+learners, the part that person-specific models use. The between-person
+share is substantial for all three variables, and in a pooled analysis
+each is decomposed into a person mean and a deviation before entering
+the model. The reliability of the person means exceeds 0.98 for all
+three variables, because each mean is computed from about 156
+observations.
 
-### Visualisation
+The figure plots the between-person and within-person share of the
+variance of each variable.
 
 ``` r
 
@@ -251,46 +277,43 @@ variance.](describing-persons_files/figure-html/variance-plot-1.png)
 
 Figure 3. Between-person and within-person shares of variance.
 
-### Assumptions and limitations
+A variable that is constant within persons supports only between-person
+comparisons, and a variable without between-person variance supports
+only within-person analysis.
 
-The reliability column refers to the precision of each person’s mean and
-is distinct from the reliability of a single occasion. A variable that
-is constant within persons supports only between-person comparisons, and
-a variable with no between-person variation supports only within-person
-analysis.
+## Within-person and between-person correlations
 
-## `correlate_levels()`
+Findings obtained from a group are often taken to describe the
+individuals in that group. The inference from the group to the
+individual holds when the process is ergodic, that is, when the
+relations among the variables are the same within every person and
+stable over time ([Molenaar 2004](#ref-molenaar2004)). Fisher, Medaglia
+and Jeronimus ([2018](#ref-fisher2018)) proposed a direct test of this
+generalisation for correlations. For one pair of variables, two
+distributions of correlations are compared. The within-person
+distribution contains one correlation per person, computed across that
+person’s occasions. The between-person distribution contains one
+correlation per occasion, computed across persons. The first
+observations of all persons form one cross-sectional sample, the second
+observations form a second one, and so on. When group-level results
+generalise to individuals, the two distributions have similar means and
+similar spreads. Across six samples, Fisher and colleagues found the
+within-person standard deviation to be two to four times the
+between-person standard deviation.
 
-### Purpose
-
-A correlation computed across persons is frequently used to describe how
-two variables are related within each person. Fisher, Medaglia, and
-Jeronimus ([2018](#ref-fisher2018)) proposed a direct test of this
-generalization. Two distributions of correlations are compared for the
-same pair of variables:
-
-- **within persons**: one correlation per person, computed across that
-  person’s occasions;
-- **between persons**: one correlation per occasion, computed across
-  persons. The first observations of all persons form one
-  cross-sectional data set, the second observations form a second one,
-  and so on.
-
-When group-level results generalize to individuals, the two
-distributions have similar means and similar spreads. Fisher and
-colleagues found the within-person standard deviation to be two to four
-times larger than the between-person standard deviation across six
-samples.
-
-### Example
-
-This example uses all 36 learners in `srl`, so that every between-person
-correlation is based on 36 persons and every within-person correlation
-on up to 156 occasions.
+The comparison uses all 36 learners in `srl`, so each between-person
+correlation rests on 36 persons and each within-person correlation on up
+to 156 occasions.
+[`correlate_levels()`](https://pak.dynasite.org/idiographic/reference/correlate_levels.md)
+returns one row per pair of variables, with the mean and standard
+deviation of each distribution and the ratio of the two standard
+deviations.
 
 ``` r
 
-levels_result <- correlate_levels(srl, id = "name", vars = c("efficacy", "monitoring", "effort"), time = "day")
+levels_result <- correlate_levels(srl, id = "name",
+                                  vars = c("efficacy", "monitoring", "effort"),
+                                  time = "day")
 levels_result
 #> WITHIN- VERSUS BETWEEN-PERSON CORRELATIONS
 #>   Grouping       name
@@ -307,25 +330,19 @@ levels_result
 ```
 
 For efficacy and monitoring, and for monitoring and effort, the mean
-correlations at the two levels were close (0.27 and 0.29; 0.25 and
-0.28). For efficacy and effort, the mean within-person correlation
-(0.36) was lower than the mean between-person correlation (0.50). For
-all three pairs, the within-person correlations were considerably more
-dispersed: their standard deviation was 1.8 to 2.3 times that of the
-between-person correlations. For two of the three pairs, the correlation
-estimated across learners therefore approximated the average
-within-learner correlation, while the correlations of individual
-learners were distributed about twice as widely around that value as the
-between-person correlations.
+correlations at the two levels are close (0.27 and 0.29; 0.25 and 0.28).
+For efficacy and effort, the mean within-person correlation (0.36) is
+lower than the mean between-person correlation (0.50). For all three
+pairs, the within-person correlations are more dispersed, with a
+standard deviation 1.82 to 2.30 times that of the between-person
+correlations. For two of the three pairs, the correlation across
+learners approximates the average within-learner correlation, and the
+correlations of the individual learners are distributed about twice as
+widely around it.
 
-### Visualisation
-
-[`plot_levels()`](https://pak.dynasite.org/idiographic/reference/plot_levels.md)
-displays the two distributions as density curves, following the
-comparison of Fisher and colleagues. Densities place the 36
-within-person and 156 between-person correlations on a common scale. The
-ticks below each curve mark the correlations of the individual learners,
-and the vertical stems mark the means.
+The figure plots the two distributions as density curves. The ticks
+below each curve mark the individual correlations, and the vertical
+lines mark the means.
 
 ``` r
 
@@ -341,16 +358,18 @@ Figure 4. Distributions of within-person correlations (one per learner,
 solid) and between-person correlations (one per occasion, dashed) for
 three pairs of variables.
 
-### Temporal dependence
-
-Serial dependence within persons can inflate the spread of within-person
-correlations. With `lag_adjust = TRUE`, each variable is first regressed
-on its own lag-1 value and on the lag-1 value of the other variable, and
-the within-person correlations are computed from the residuals.
+Serial dependence within persons can inflate the spread of the
+within-person correlations. With `lag_adjust = TRUE`, each variable is
+first regressed on its own lag-1 value and on the lag-1 value of the
+other variable, and the within-person correlations are computed from the
+residuals.
 
 ``` r
 
-summary(correlate_levels(srl, id = "name", vars = c("efficacy", "monitoring", "effort"), time = "day", lag_adjust = TRUE))
+lagged_levels <- correlate_levels(srl, id = "name",
+                                  vars = c("efficacy", "monitoring", "effort"),
+                                  time = "day", lag_adjust = TRUE)
+summary(lagged_levels)
 #>            x          y n_within mean_within median_within sd_within n_between
 #> 1   efficacy monitoring       36   0.2710705     0.2988340 0.3057933       156
 #> 2   efficacy     effort       36   0.3674765     0.3562763 0.2499535       156
@@ -361,45 +380,33 @@ summary(correlate_levels(srl, id = "name", vars = c("efficacy", "monitoring", "e
 #> 3    0.2818936      0.3080957  0.1397777     -0.03682132 2.293521
 ```
 
-The adjustment left the results essentially unchanged: the mean
-within-person correlations changed by at most 0.003, and the ratios of
-standard deviations remained between 1.8 and 2.3. This agrees with the
-small lag-1 autocorrelations implied by Figure 1. The larger spread of
-within-person correlations is therefore attributable to differences
-between learners in how the variables co-vary.
-
-### Assumptions and limitations
+The adjustment changes the mean within-person correlations by at most
+0.004, and the ratios of the standard deviations remain between 1.82 and
+2.29. The lag-1 autocorrelations in Figure 1 are small, and the larger
+spread of the within-person correlations reflects differences between
+learners in the covariation of the variables.
 
 The between-person correlations require occasions that are comparable
-across persons; here the $`t`$-th observation of every learner is
-treated as one occasion. With fewer persons than occasions, each
-between-person correlation rests on a small sample, and its sampling
-error contributes to the between-person spread. The ratio of standard
-deviations is a descriptive index and is reported without a significance
-test.
+across persons, and here the $`t`$-th observation of every learner is
+treated as one occasion. With few persons, each between-person
+correlation rests on a small sample, and its sampling error adds to the
+between-person spread. The ratio of the standard deviations is a
+descriptive index and is reported without a significance test.
 
-## Choice among the four functions
+## From description to models
 
-[`describe_persons()`](https://pak.dynasite.org/idiographic/reference/describe_persons.md)
-is applied first, to establish that every person has sufficient
-observations and variation.
-[`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md)
-then indicates whether variation is located mainly between or within
-persons, which determines whether the two levels must be separated in
-subsequent models.
-[`correlate_persons()`](https://pak.dynasite.org/idiographic/reference/correlate_persons.md)
-provides an initial account of within-person co-variation, and
-[`correlate_levels()`](https://pak.dynasite.org/idiographic/reference/correlate_levels.md)
-indicates how well correlations estimated across persons describe the
-correlations within them.
-
-The four functions are descriptive. Models are fitted with
-[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
-for a single outcome and several predictors, with
+The descriptions identify the persons and variables that can be analysed
+and the form in which the variables enter the models. Series that are
+short, sparse or nearly constant are excluded or analysed with fewer
+predictors. Variables with a substantial between-person share are
+decomposed into person means and deviations. The within-person
+correlations and their spread indicate how far a pooled estimate
+describes the individual learners. The person-specific estimates are
+then modelled and compared with the pooled estimate using
+[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md),
 [`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md)
-for separate within-person and between-person effects, and with
-[`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
-for summarising the heterogeneity of person-specific effects.
+and
+[`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md).
 
 ## References
 
@@ -413,3 +420,8 @@ of Affective Instability in Ecological Momentary Assessment: Indices
 Using Successive Difference and Group Comparison via Multilevel
 Modeling.” *Psychological Methods* 13 (4): 354–75.
 <https://doi.org/10.1037/a0014173>.
+
+Molenaar, Peter C. M. 2004. “A Manifesto on Psychology as Idiographic
+Science: Bringing the Person Back into Scientific Psychology, This Time
+Forever.” *Measurement: Interdisciplinary Research and Perspectives* 2
+(4): 201–18. <https://doi.org/10.1207/s15366359mea0204_1>.

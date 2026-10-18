@@ -1,50 +1,50 @@
-# Regression Models
+# Regression models
 
-Regression analyses of intensive longitudinal data can be conducted at
-three levels, each allowing a different degree of heterogeneity between
-persons ([López-Pernas et al. 2025](#ref-lopezpernas2025)).
+A regression model of intensive longitudinal data relates an outcome on
+each occasion to predictors measured on the same or an earlier occasion.
+The data contain many occasions for each of many persons, and the model
+can be estimated for the sample as a whole, for groups of persons, or
+for each person separately ([López-Pernas et al.
+2025](#ref-lopezpernas2025)). The three levels rest on different
+assumptions about how far persons share the same process.
 
-At the **variable-centered** (pooled) level, one model is estimated from
-the data of all persons together. The resulting coefficients describe
-the average association in the sample and assume that one set of
-coefficients adequately represents every person. At the
-**person-centered** (subgroup) level, the sample is partitioned into
-groups whose members share similar coefficient profiles, and one model
-is estimated for each group. At the **person-specific** (individual)
-level, a separate model is estimated for each person from that person’s
-own repeated measures. No similarity between persons is assumed, and
-many observations per person are required.
+A pooled model, also termed variable-centred, estimates one set of
+coefficients from the data of all persons. It assumes that the
+coefficients are identical across persons, or that their average is the
+quantity of interest. When persons differ in the strength or the
+direction of an association, the pooled coefficient describes the
+average of the sample and can misdescribe most of its members ([Molenaar
+2004](#ref-molenaar2004)). A subgroup model, also termed person-centred,
+partitions the persons into groups with similar coefficients and
+estimates one model per group. It assumes that the heterogeneity between
+persons takes the form of a small number of distinct processes. A
+person-specific model, also termed idiographic, estimates a separate
+model for each person from that person’s repeated measures. It treats
+each person as a separate system and requires enough occasions per
+person to estimate the coefficients with useful precision.
 
-| Question | Function |
-|:---|:---|
-| What are the pooled and person-specific linear associations? | [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md) |
-| What are the pooled and person-specific binary or count associations? | [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md) |
-| Do within-person and between-person effects differ? | [`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md) |
-
-The three functions accept a `scope` argument (`"pooled"`, `"subgroup"`,
-`"individual"`, or any combination) and fit the selected levels on the
-same data, so that their coefficients can be compared directly.
-
-## `fit_lm()`
-
-### Analytic question
-
+Estimating the three levels on the same data turns these assumptions
+into testable claims. The comparison shows whether the person-specific
+coefficients spread more than sampling error predicts, whether that
+spread forms distinct groups, and how well the pooled coefficient
+represents the individual persons.
 [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
-estimates a linear model at every requested scope and returns the
-results in one tidy object. The outcome, predictors, person identifier,
-and time column are specified once; the `scope` argument determines how
-many models are fitted. When `scope = c("pooled", "individual")`, both
-the pooled model and one model per person are estimated. Pooled and
-subgroup models combine the occasions of many persons, so their standard
-errors are cluster-robust (sandwich-estimated), clustered on the person
-identifier, rather than model-based. This ensures that the repeated
-occasions of the same person are not treated as independent
-observations.
+estimates linear models,
+[`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
+estimates generalized linear models for binary and count outcomes, and
+the `scope` argument of both selects the levels.
 
-### Pooled and person-specific coefficients
+## Linear models
 
-The example below predicts daily effort from efficacy and monitoring for
-the 36 learners in the bundled `srl` data, each observed on 156 days.
+The example models daily effort as a linear function of efficacy and
+monitoring for the 36 learners in `srl`.
+[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
+estimates the pooled model and one model per learner. Each model is
+estimated on the first 124 days of each learner, and the last 32 days
+are held out to evaluate predictions, as described in the prediction
+vignette. The pooled model combines the occasions of all learners, and
+occasions of the same learner are correlated, so its standard errors are
+clustered on the learner ([Liang and Zeger 1986](#ref-liang1986)).
 
 ``` r
 
@@ -62,60 +62,18 @@ coefs(lm_fit, scope = "pooled")
 #> 3  2.906753 6.297403e-03
 ```
 
-In the pooled model, estimated effort increased by 0.44 points per unit
-of efficacy (SE = 0.056) and by 0.14 points per unit of monitoring (SE =
-0.050). Both standard errors are cluster-robust. Because every learner
-contributes to the same regression, these coefficients describe an
-average association that may not hold for any individual learner
-([López-Pernas et al. 2025](#ref-lopezpernas2025)).
-
-### Subgroup evidence
-
-Whether the learners form distinct coefficient types is an empirical
-question.
-[`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md)
-compares Gaussian mixture models with one to four components by the
-Bayesian information criterion (BIC), where lower values indicate better
-fit. A one-component solution is a valid outcome of the comparison: it
-indicates that the coefficients are drawn from a single population
-rather than discrete types.
-
-``` r
-
-subgroup_test <- test_subgroups(srl, y = "effort",
-                                x = c("efficacy", "monitoring"),
-                                id = "name", time = "day")
-subgroup_test
-#> Idiographic Subgroup Test
-#>   People:      36
-#>   Coefficients: efficacy, monitoring
-#>   Searched:    k = 1..4, covariance models EII/VII/EEI/VVI/EEE/VVV
-#> 
-#>   VERDICT:     no subgroups detected (one population fits best)
-#>                Clustering these people anyway will still return
-#>                groups -- they will not mean anything.
-#> 
-#>   Use as.data.frame() for the BIC table.
-as.data.frame(subgroup_test) |> head()
-#>   k model     loglik npar      bic selected
-#> 1 1   EII -101.14942    3 213.0494     TRUE
-#> 2 1   VII -101.14942    3 213.0494    FALSE
-#> 3 1   EEI -101.14942    4 216.6329    FALSE
-#> 4 1   VVI -101.14942    4 216.6329    FALSE
-#> 5 2   EEI  -96.59769    7 218.2800    FALSE
-#> 6 1   EEE -100.37905    5 218.6757    FALSE
-```
-
-The one-population model had the lowest BIC (213.0); the best
-two-component model reached 218.3. The learners therefore did not
-separate into subgroups, and a subgroup model would effectively
-reproduce the pooled model. The differences between learners were
-continuous, with no evidence of discrete types.
+In the pooled model, effort increases by 0.44 points per point of
+efficacy (SE = 0.056) and by 0.14 points per point of monitoring (SE =
+0.050), with the other predictor held constant. These coefficients
+estimate the average association in the sample. The person-specific
+coefficients show whether this average describes the individual
+learners.
 
 ### Person-specific coefficients
 
-The individual scope returns one coefficient per learner. Sorting the
-efficacy slopes reveals the spread of person-specific associations.
+A person-specific model compares the days of one learner with each
+other, so its slope estimates the within-person association of that
+learner. The individual scope returns one slope per learner.
 
 ``` r
 
@@ -196,22 +154,29 @@ coefs(lm_fit, scope = "individual", term = "efficacy", sort_by = "estimate")
 #> 36  8.7079007 1.895113e-14
 ```
 
-The person-specific efficacy slopes ranged from -0.18 (Ravi) to 0.87
-(Lars), with a median of 0.32. Seven of the 36 learners had negative
-slopes, and only eight had a slope within 0.10 of the pooled value of
-0.44. The spread of these slopes contains both true between-person
-differences and sampling error, because each slope is estimated from a
-limited number of occasions.
+The person-specific efficacy slopes range from −0.18 (Ravi) to 0.87
+(Lars), with a median of 0.32. Seven of the 36 learners have negative
+slopes, and 8 have a slope within 0.10 of the pooled value of 0.44. The
+observed spread of the slopes has two sources, true differences between
+learners and sampling error. Each slope rests on 124 days, and its
+standard error has a median of 0.09 across learners. The standard
+deviation of the observed slopes is 0.27, three times the typical
+standard error, so sampling error accounts for a small share of the
+spread.
 
-### Coefficient heterogeneity
+### Heterogeneity of the coefficients
 
+The separation of true heterogeneity from sampling error is the problem
+that random-effects meta-analysis addresses, with persons in the role of
+studies ([DerSimonian and Laird 1986](#ref-dersimonian1986)). The model
+treats each person-specific slope as an estimate of that person’s true
+slope and the true slopes as draws from a normal distribution. It
+estimates the mean of the true slopes, their standard deviation
+$`\tau`$, and the share $`I^2`$ of the observed variance that reflects
+true differences.
 [`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
-separates true heterogeneity from sampling error by fitting a
-DerSimonian–Laird random-effects model to the person-specific
-coefficients . The function reports the uncertainty-weighted pooled
-slope, the standard deviation of the true slopes ($`\tau`$), and the
-share of the observed spread attributable to true between-person
-differences ($`I^2`$).
+applies the DerSimonian–Laird estimator to the person-specific
+coefficients.
 
 ``` r
 
@@ -231,16 +196,23 @@ pool_coefs(lm_fit)
 #>   I2     = share of the observed spread that is real
 ```
 
-For efficacy, the pooled slope was 0.29 (95% CI: 0.20 to 0.38), the
-estimated $`\tau`$ was 0.25, and $`I^2`$ was 0.91. Under a normal
-approximation, the true slopes of 95% of learners lie between
-approximately \$-\$0.20 and 0.78 — a range that includes learners for
-whom efficacy is unrelated to effort. The pooling and shrinkage vignette
-covers
-[`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
-and
-[`shrink_coefs()`](https://pak.dynasite.org/idiographic/reference/shrink_coefs.md)
-in greater detail.
+For efficacy, the mean of the true slopes is 0.29 (95% CI 0.20 to 0.38),
+$`\tau`$ is 0.25, and $`I^2`$ is 0.91, so 91% of the observed variance
+of the slopes reflects true differences between learners. Under the
+normal distribution of the true slopes, 95% of learners have a slope
+between −0.21 and 0.78, an interval that contains learners for whom
+efficacy and effort are unrelated as well as learners with a strong
+positive association.
+
+The mean of the true slopes, 0.29, is smaller than the pooled
+coefficient, 0.44, for two reasons. The pooled coefficient also contains
+the between-person association, which is the larger of the two for
+efficacy, and with the person means separated the pooled within-person
+slope falls to 0.37, as the section on within-person and between-person
+effects shows. The pooled regression also weights each learner by the
+within-person variance of efficacy, and learners with more variable
+efficacy have steeper slopes (r = 0.27), whereas the random-effects
+model weights each learner by the precision of that learner’s slope.
 
 ``` r
 
@@ -248,32 +220,98 @@ plot_coefs(lm_fit, term = "efficacy")
 ```
 
 ![Figure 1. Person-specific efficacy slopes with 95% confidence
-intervals. The dashed line marks the pooled slope; the shaded band
-covers the interval expected to contain 95% of the true
+intervals. The dashed line marks the mean of the true slopes, and the
+shaded band covers the interval expected to contain 95% of the true
 slopes.](regression-models_files/figure-html/lm-plot-1.png)
 
 Figure 1. Person-specific efficacy slopes with 95% confidence intervals.
-The dashed line marks the pooled slope; the shaded band covers the
-interval expected to contain 95% of the true slopes.
+The dashed line marks the mean of the true slopes, and the shaded band
+covers the interval expected to contain 95% of the true slopes.
 
-## `fit_glm()`
+### Subgroups
 
-### Analytic question
+Person-centred research assumes that the processes of many persons can
+be summarised by a small number of types, each type representing persons
+who share the same process. Effort can depend on efficacy for the
+learners of one type and on monitoring for the learners of another. When
+such types exist, a model per subgroup describes each process more
+faithfully than the pooled model and estimates it more precisely than
+the person-specific models, because each subgroup combines the occasions
+of several persons. The heterogeneity found above can take two forms.
+The slopes can form distinct clusters, which supports types, or vary
+continuously around a single mean, which supports a single population
+with individual differences in degree. Clustering methods return groups
+in both cases, so the form of the heterogeneity is tested before any
+grouping is interpreted ([Bauer and Curran 2003](#ref-bauer2003)).
 
+[`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md)
+compares mixture models with one to four components for the
+person-specific slopes of efficacy and monitoring and selects the number
+of components by the Bayesian information criterion (BIC), on which
+lower values indicate a better balance of fit and complexity. A single
+component, the hypothesis of one population, is among the models
+compared.
+
+``` r
+
+subgroup_test <- test_subgroups(srl, y = "effort",
+                                x = c("efficacy", "monitoring"),
+                                id = "name", time = "day")
+subgroup_test
+#> Idiographic Subgroup Test
+#>   People:      36
+#>   Coefficients: efficacy, monitoring
+#>   Searched:    k = 1..4, covariance models EII/VII/EEI/VVI/EEE/VVV
+#> 
+#>   VERDICT:     no subgroups detected (one population fits best)
+#>                Clustering these people anyway will still return
+#>                groups -- they will not mean anything.
+#> 
+#>   Use as.data.frame() for the BIC table.
+as.data.frame(subgroup_test) |> head()
+#>   k model     loglik npar      bic selected
+#> 1 1   EII -101.14942    3 213.0494     TRUE
+#> 2 1   VII -101.14942    3 213.0494    FALSE
+#> 3 1   EEI -101.14942    4 216.6329    FALSE
+#> 4 1   VVI -101.14942    4 216.6329    FALSE
+#> 5 2   EEI  -96.59769    7 218.2800    FALSE
+#> 6 1   EEE -100.37905    5 218.6757    FALSE
+```
+
+The one-component model has the lowest BIC (213.0), and the best
+two-component model has a BIC of 218.3. The learners in `srl` therefore
+form a single population whose slopes differ continuously, and the
+person-specific models are the appropriate description of these
+differences.
+
+## Generalized linear models
+
+Many outcomes of intensive longitudinal studies are binary or counts,
+such as whether a learner submits an assignment on a given day or how
+many messages a learner posts. A linear model for such outcomes predicts
+values outside the possible range and assumes a constant residual
+variance, whereas the variance of a binary or count outcome depends on
+its mean. A generalized linear model relates the predictors to a
+transformation of the expected outcome through a link function and takes
+the variance from the distribution of the outcome ([McCullagh and Nelder
+1989](#ref-mccullagh1989)). For a binary outcome, the logistic model
+relates the predictors to the log-odds of the outcome, and a slope is
+the change in log-odds per unit of the predictor.
 [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
-extends the same three-level framework to binary and count outcomes
-through a generalized linear model. The `family` argument accepts
-`"binomial"` for binary outcomes, `"poisson"` for counts, and `"negbin"`
-for overdispersed counts. Pooled and subgroup standard errors are again
-cluster-robust.
+estimates these models at the same levels as
+[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md),
+with `family = "binomial"` for binary outcomes, `"poisson"` for counts,
+and `"negbin"` for counts whose variance exceeds their mean.
 
-The bundled `submissions` data are simulated: 40 learners observed on 80
-days, with a binary record of whether an assignment was submitted each
-day. The learners belong to two types. For the 20 engaged learners, the
-log-odds of submitting rise with daily motivation (true slope 1.2); for
-the 20 avoidant learners, they fall (true slope \$-\$0.6). Each
-learner’s slope varies slightly around the slope of the type, and the
-`type` column records the true type.
+The `submissions` data are simulated, so that the true process of each
+learner is known and the estimates at each level can be compared with
+it. Forty learners are observed on 80 days, with a binary record of
+whether an assignment was submitted. The learners belong to two types.
+For the 20 engaged learners, the log-odds of submitting rise with daily
+motivation, with a slope of 1.2, and for the 20 avoidant learners they
+fall, with a slope of −0.6. The slope of each learner varies around the
+slope of the type with a standard deviation of 0.15, and the `type`
+column records the true type.
 
 ``` r
 
@@ -292,8 +330,8 @@ head(submissions)
 ``` r
 
 pooled_glm <- fit_glm(submissions, y = "submitted", x = "motivation",
-                       id = "learner", family = "binomial",
-                       time = "day", scope = "pooled")
+                      id = "learner", family = "binomial",
+                      time = "day", scope = "pooled")
 coefs(pooled_glm)
 #>    scope    model estimator subject subgroup        term   estimate  std_error
 #> 1 pooled binomial    native    .all     .all (Intercept) -0.1210932 0.08797027
@@ -303,20 +341,28 @@ coefs(pooled_glm)
 #> 2  1.905111 0.05676559
 ```
 
-The pooled motivation slope was 0.23 (SE = 0.12, $`p`$ = .057). Averaged
-over both types, motivation appeared weakly related to submission — a
-coefficient that describes neither type of learner accurately. This is
-the expected consequence of pooling across processes with opposite
-signs.
+The pooled motivation slope is 0.23 (SE = 0.12, p = .057). The pooled
+model averages two processes of opposite sign, and its slope describes
+neither type. A pooled analysis of these data would conclude that
+motivation is at most weakly related to submission, although motivation
+is strongly associated with submission for every learner, positively for
+half of the learners and negatively for the other half.
 
-### Subgroup discovery
+### Subgroups
 
+The simulated data contain two types, and the subgroup analysis is
+expected to recover them.
 [`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md)
-first applies the mixture comparison internally (equivalent to
-[`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md))
-and, when a multi-component representation is supported, assigns each
-learner to a group. Assignment stability is estimated through repeated
-resampling.
+with `k = "auto"` chooses the number of subgroups by the same mixture
+comparison as
+[`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md)
+and assigns the learners to subgroups by their person-specific slopes.
+The assignment is repeated on 30 resamples of the occasions, and the
+stability of the partition is the proportion of resamples in which each
+learner is grouped with the same learners. Stability measures the
+reproducibility of a partition, which is distinct from its validity,
+since a single continuous population divided at the same point also
+yields a stable partition.
 
 ``` r
 
@@ -338,19 +384,21 @@ submission_groups
 #>   Use groups(), test_subgroups(), fit_subgroups()
 ```
 
-Two subgroups were selected (BIC improvement of 23.9 over a single
-population). The partition coincided with the simulated types for 39 of
-the 40 learners. The subgroup assignment then enters
+Two subgroups are selected, with a BIC lower by 23.9 than that of a
+single population, and the stability of the partition is 0.92. The
+partition matches the simulated types for 39 of the 40 learners. The 20
+avoidant learners and 1 engaged learner form the first subgroup, and the
+remaining 19 engaged learners form the second. The assignment enters
 [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
-through the `subgroup` argument, so that pooled, subgroup, and
-individual models are estimated together.
+through the `subgroup` argument, so that the pooled, subgroup and
+person-specific models are estimated on the same data.
 
 ``` r
 
 glm_fit <- fit_glm(submissions, y = "submitted", x = "motivation",
-                    id = "learner", family = "binomial", time = "day",
-                    scope = c("pooled", "subgroup", "individual"),
-                    subgroup = submission_groups)
+                   id = "learner", family = "binomial", time = "day",
+                   scope = c("pooled", "subgroup", "individual"),
+                   subgroup = submission_groups)
 coefs(glm_fit, scope = "subgroup")
 #>      scope    model estimator subject subgroup        term   estimate
 #> 1 subgroup binomial    native    .all       g1 (Intercept) -0.2698968
@@ -364,12 +412,18 @@ coefs(glm_fit, scope = "subgroup")
 #> 4 0.06605776 17.779749 1.014329e-70
 ```
 
-The subgroup motivation slopes were \$-\$0.44 and 1.17, close to the
-generating values of \$-\$0.6 and 1.2. The person-centered level
-recovered the two processes that the pooled coefficient had averaged
-away.
+The subgroup motivation slopes are −0.44 and 1.17, against generating
+slopes of −0.6 and 1.2. The subgroup analysis recovers the two processes
+that the pooled slope averaged away. The slope of the avoidant subgroup
+lies closer to zero for two reasons. The person-specific slopes of the
+avoidant learners average −0.56, and a model fitted to the 20 avoidant
+learners alone gives −0.51. The engaged learner assigned to the avoidant
+subgroup moves the slope further toward zero.
 
-### Person-specific estimates
+### Person-specific coefficients
+
+The person-specific models estimate the slope of each learner from that
+learner’s first 64 days, with the last 16 days held out.
 
 ``` r
 
@@ -458,11 +512,19 @@ coefs(glm_fit, scope = "individual", term = "motivation", sort_by = "estimate")
 #> 40 0.5540106  3.4525919 0.0005552283
 ```
 
-The person-specific slopes ranged from \$-\$1.38 to 1.91. Each learner’s
-model estimates that learner’s slope from the 80 available occasions,
-with the precision that sample size allows.
+The person-specific slopes range from −1.38 to 1.91. They average −0.56
+for the avoidant learners and 1.15 for the engaged learners, close to
+the generating values, so the person-specific level recovers both
+processes from the data of each learner alone. The cost is precision. A
+logistic slope estimated from 64 binary observations has a median
+standard error of 0.34, against 0.07 and 0.10 for the subgroup slopes,
+which combine the days of about 20 learners each.
 
-### Coefficient heterogeneity
+### Heterogeneity of the coefficients
+
+The random-effects model of
+[`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
+summarises the person-specific slopes by a normal distribution.
 
 ``` r
 
@@ -481,11 +543,15 @@ pool_coefs(glm_fit)
 #>   I2     = share of the observed spread that is real
 ```
 
-The random-effects pooled motivation slope was 0.26 (95% CI: \$-\$0.04
-to 0.57), the estimated $`\tau`$ was 0.79, and $`I^2`$ was 0.85. The
-large $`\tau`$ mainly reflects the distance between the two subgroups:
-the random-effects model describes the slopes with a single normal
-distribution, whereas the true generating distribution is bimodal.
+The mean of the true slopes is 0.26 (95% CI −0.04 to 0.57), $`\tau`$ is
+0.79, and $`I^2`$ is 0.85. The large $`\tau`$ reflects the distance
+between the two types, since the slopes come from a bimodal distribution
+with modes near −0.6 and 1.2. The normal distribution places its mean
+between the two modes, at a value that describes neither type, as the
+pooled slope does. The test of subgroups therefore determines whether
+the normal summary is adequate. It suits a single population with
+continuous differences, as in `srl`, and misdescribes a population of
+distinct types, as in `submissions`.
 
 ``` r
 
@@ -493,64 +559,79 @@ plot_coefs(glm_fit, term = "motivation")
 ```
 
 ![Figure 2. Person-specific motivation slopes with 95% confidence
-intervals. The dashed line marks the pooled slope; the shaded band
-covers the interval expected to contain 95% of the true
-slopes.](regression-models_files/figure-html/glm-plot-1.png)
+intervals. The dashed line marks the mean of the true slopes, and the
+shaded band covers the interval expected to contain 95% of the true
+slopes under a normal
+distribution.](regression-models_files/figure-html/glm-plot-1.png)
 
 Figure 2. Person-specific motivation slopes with 95% confidence
-intervals. The dashed line marks the pooled slope; the shaded band
-covers the interval expected to contain 95% of the true slopes.
+intervals. The dashed line marks the mean of the true slopes, and the
+shaded band covers the interval expected to contain 95% of the true
+slopes under a normal distribution.
 
-### Assumptions and failure checks
+### Assumptions of the models
 
-Several conditions determine the validity of the results above.
+Each model rests on assumptions about the data. A violated assumption
+biases the coefficients or makes their standard errors too small.
 
-1.  **Independence of persons.** Cluster-robust standard errors correct
-    for within-person dependence but assume that persons are
-    independent. Nested designs (learners within classrooms) require an
-    additional clustering level.
-2.  **Sufficient occasions.** Person-specific models require enough
-    complete rows per person for estimation and for a meaningful
-    held-out block. Persons with too few observations are recorded in
-    the failure table rather than silently dropped.
-3.  **Outcome distribution.** The binomial family assumes a binary
-    outcome coded as 0/1 or as a two-level factor. Overdispersed counts
-    should be modelled with `"negbin"` rather than `"poisson"`, because
-    the Poisson assumption of equal mean and variance produces standard
-    errors that are too small when violated.
-4.  **Coefficient comparability.** Pooling with
-    [`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
-    and subgroup discovery with
-    [`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md)
-    require person-specific coefficients that are on the same scale.
-    Differing predictors, coding, or transformations across persons
-    invalidate comparisons.
-
-## `fit_within_between()`
-
-### Analytic question
-
-A regression on the raw scores of a repeated-measures variable conflates
-two associations: the association between a person’s daily deviations
-from their own average (within-person), and the association between
-persons’ long-run averages (between-person) ([Saqr et al.
-2024](#ref-saqr2024)). Whether these two associations differ is an
-empirical question with substantive implications. A within-person effect
-of efficacy on effort describes how effort changes on days when efficacy
-is above or below a learner’s own typical level. A between-person effect
-describes whether learners who are generally more efficacious also tend
-to exert more effort.
-
+Clustered standard errors allow the occasions of one person to be
+correlated with each other and assume that different persons are
+independent. Learners in the same classroom share the influence of their
+teacher, so their outcomes are correlated, and standard errors clustered
+on the learner then understate the uncertainty. For such designs,
 [`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md)
-separates each predictor into its within-person and between-person parts
-— by person-mean centring the raw scores and including the person means
-as separate predictors — and estimates a slope for each part. The
-[`contextual()`](https://pak.dynasite.org/idiographic/reference/contextual.md)
-accessor reports both slopes and their difference, which indicates
-whether the between-person association exceeds (or falls short of) the
-within-person association.
+clusters the standard errors on the classroom through its `cluster`
+argument, while
+[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
+and
+[`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
+cluster on the person only.
 
-### Contextual effects
+A person-specific model is estimated from the occasions of one person,
+so its precision depends on the number of occasions of that person. A
+person with fewer than 10 complete estimation occasions receives no
+person-specific model, and
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+lists that person with the reason. A binary outcome carries less
+information per occasion than a continuous outcome, so a logistic model
+needs more occasions than a linear model for the same precision. A
+person who submits an assignment on every day, or on none, gives no
+information about the effect of motivation, because the outcome never
+varies.
+
+The family of a generalized linear model states how the variance of the
+outcome relates to its mean. The binomial family applies to an outcome
+with two values, coded 0 and 1 or as a factor with two levels. The
+Poisson family applies to counts whose variance equals their mean.
+Counts of behaviour usually vary more than the Poisson family allows,
+and Poisson standard errors are then too small. The negative binomial
+family (`"negbin"`) estimates this extra variance.
+
+Comparing slopes across persons, as
+[`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
+and
+[`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md)
+do, assumes that every slope is measured in the same unit. This holds
+when every person has the same predictors, coded and transformed in the
+same way. Person scaling breaks it, because it divides the scores of
+each person by a different standard deviation, so a slope of 0.5 means a
+different change in raw scores for each person.
+
+## Within-person and between-person effects
+
+A person-specific model estimates the within-person association of each
+person, whereas a pooled model of raw scores mixes the within-person and
+the between-person association. The within-between model separates the
+two associations in one pooled regression. Each predictor is decomposed
+into the person mean and the deviation from it, and both components
+enter the model, which therefore estimates a within-person slope and a
+between-person slope for each predictor ([Curran and Bauer
+2011](#ref-curran2011); [Hoffman and Stawski 2009](#ref-hoffman2009)).
+The difference between the two slopes is the contextual effect, the
+association of the person mean with the outcome beyond the association
+implied by the within-person slope ([Mundlak 1978](#ref-mundlak1978)).
+The vignette on preparing panel data derives the decomposition in
+detail.
 
 ``` r
 
@@ -566,17 +647,16 @@ contextual(wb_fit)
 #> scope = pooled,  model = within_between,  estimator = ols,  subject = .all,  subgroup = .all
 ```
 
-For efficacy, the within-person slope was 0.37 and the between-person
-slope was 0.59. The difference of 0.22 (95% CI: 0.01 to 0.42, $`p`$ =
-.039) indicates a stronger association between learners than within
-them: learners who were generally more efficacious tended to exert
-disproportionately more effort than would be expected from the
-within-person relation alone. For monitoring, the within-person slope
-was 0.17 and the between-person slope was 0.10; the difference of
-\$-\$0.08 (95% CI: \$-\$0.28 to 0.12, $`p`$ = .44) was not
-distinguishable from zero.
-
-### Visualisation
+For efficacy, the within-person slope is 0.37 and the between-person
+slope is 0.59. The contextual effect of 0.22 (95% CI 0.01 to 0.42, p =
+.039) indicates that learners with a higher mean efficacy report more
+effort than their daily relation between efficacy and effort predicts.
+For monitoring, the within-person slope is 0.17 and the between-person
+slope is 0.10, and the contextual effect of −0.08 (95% CI −0.28 to 0.12,
+p = .44) is consistent with equal slopes at the two levels. With two
+contextual effects tested, the Benjamini–Hochberg adjusted p-value for
+efficacy is .078 ([Benjamini and Hochberg 1995](#ref-benjamini1995)),
+and the evidence for a contextual effect of efficacy is weak.
 
 ``` r
 
@@ -589,60 +669,80 @@ intervals.](regression-models_files/figure-html/wb-plot-1.png)
 Figure 3. Within-person and between-person slopes with 95% confidence
 intervals.
 
-### Assumptions and failure checks
+### Assumptions of the decomposition
 
-The decomposition requires that variation exists at both levels. A
-variable with no between-person variance (ICC near zero) has no
-between-person component to estimate; a variable constant within every
-person has no within-person component. The
-[`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md)
-function, described in the descriptives vignette, reports the ICC for
-each variable.
+The decomposition requires variation at both levels. A variable whose
+person means are nearly equal has no between-person component to
+estimate, and a variable that is constant within every person has no
+within-person component.
+[`variance_components()`](https://pak.dynasite.org/idiographic/reference/variance_components.md),
+described in the vignette on describing persons, reports the share of
+variance at each level.
 
-The contextual effect is an associational difference, not a causal
-estimate. The between-person slope is identified under the assumption
-that no time-invariant confounders jointly predict the outcome and the
-person-level predictor mean. When that assumption is untenable, the
-within-person slope remains identified under weaker conditions (no
-time-varying confounders), whereas the between-person slope and the
-contextual difference absorb unobserved between-person confounding.
+The two slopes differ in what can bias them. The within-person slope
+compares occasions of the same person, so any stable characteristic of
+the person, measured or unmeasured, cancels from it. Variables that
+change from day to day and affect both predictor and outcome, such as
+sleep or workload, still bias it. The between-person slope compares
+persons, and any stable characteristic that differs between persons and
+affects the outcome, such as prior achievement, enters it. The
+contextual effect inherits this bias, so it is an association between
+person means and has no causal interpretation without further
+assumptions.
 
-## Choice among the three functions
+## Choice of level
 
-[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
-and
-[`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
-estimate associations at pooled, subgroup, and individual levels. The
-choice between the two depends on the outcome distribution: continuous
-for
-[`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md),
-binary or count for
-[`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md).
+The level of a regression analysis follows from the research question
+and from the evidence about heterogeneity. A question about the average
+association in a population is answered by the pooled model, and the
+within-between model adds whether that association holds within persons,
+between persons, or at both levels. A question about the process of each
+person is answered by the person-specific models. Their coefficients are
+summarised by the random-effects model when they form a single
+population, as in `srl`, and by subgroup models when they form distinct
+types, as in `submissions`. The heterogeneity statistics $`\tau`$ and
+$`I^2`$ and the test of subgroups show which of these descriptions the
+data support.
 
-[`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md)
-separates within-person and between-person associations in the pooled
-regression. It addresses the question of whether the relation observed
-on days when a person deviates from their own average matches the
-relation observed across persons who differ in their averages. A
-substantial contextual effect indicates that the raw pooled coefficient
-is a weighted average of two different quantities.
-
-Prediction accuracy at the individual level is examined in the
-prediction vignette with
-[`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md).
-Subgroup discovery and treatment-effect heterogeneity are covered in the
-subgroups and effects vignette with
-[`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md),
-[`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md),
-and
-[`fit_effects()`](https://pak.dynasite.org/idiographic/reference/fit_effects.md).
-Coefficient synthesis and stabilisation are covered in the pooling and
-shrinkage vignette with
+Person-specific coefficients estimated from short series are imprecise,
+and shrinkage toward the population mean improves their accuracy, as the
+vignette on pooling and shrinkage shows with
 [`pool_coefs()`](https://pak.dynasite.org/idiographic/reference/pool_coefs.md)
 and
 [`shrink_coefs()`](https://pak.dynasite.org/idiographic/reference/shrink_coefs.md).
+The prediction vignette evaluates the models on held-out occasions, and
+the vignette on subgroups and effects covers subgroup discovery and
+heterogeneous treatment effects in detail.
 
 ## References
+
+Bauer, Daniel J., and Patrick J. Curran. 2003. “Distributional
+Assumptions of Growth Mixture Models: Implications for Overextraction of
+Latent Trajectory Classes.” *Psychological Methods* 8 (3): 338–63.
+<https://doi.org/10.1037/1082-989X.8.3.338>.
+
+Benjamini, Yoav, and Yosef Hochberg. 1995. “Controlling the False
+Discovery Rate: A Practical and Powerful Approach to Multiple Testing.”
+*Journal of the Royal Statistical Society: Series B (Methodological)* 57
+(1): 289–300. <https://doi.org/10.1111/j.2517-6161.1995.tb02031.x>.
+
+Curran, Patrick J., and Daniel J. Bauer. 2011. “The Disaggregation of
+Within-Person and Between-Person Effects in Longitudinal Models of
+Change.” *Annual Review of Psychology* 62: 583–619.
+<https://doi.org/10.1146/annurev.psych.093008.100356>.
+
+DerSimonian, Rebecca, and Nan Laird. 1986. “Meta-Analysis in Clinical
+Trials.” *Controlled Clinical Trials* 7 (3): 177–88.
+<https://doi.org/10.1016/0197-2456(86)90046-2>.
+
+Hoffman, Lesa, and Robert S. Stawski. 2009. “Persons as Contexts:
+Evaluating Between-Person and Within-Person Effects in Longitudinal
+Analysis.” *Research in Human Development* 6 (2–3): 97–120.
+<https://doi.org/10.1080/15427600902911189>.
+
+Liang, Kung-Yee, and Scott L. Zeger. 1986. “Longitudinal Data Analysis
+Using Generalized Linear Models.” *Biometrika* 73 (1): 13–22.
+<https://doi.org/10.1093/biomet/73.1.13>.
 
 López-Pernas, Sonsoles, Halil Kayaduman, Leonie V. D. E. Vogelsmeier,
 and Mohammed Saqr. 2025. “The Three Levels of Analysis:
@@ -651,7 +751,13 @@ Education.” Chap. 19 in *Advanced Learning Analytics Methods: AI,
 Precision and Complexity*. Springer Nature Switzerland.
 <https://doi.org/10.1007/978-3-031-54464-4_19>.
 
-Saqr, Mohammed, Leonie V. Vogelsmeier, and Sonsoles López-Pernas. 2024.
-“Capturing Where the Learning Process Takes Place: A Person-Specific and
-Person-Centered Primer.” *Learning and Individual Differences* 113:
-102492.
+McCullagh, Peter, and John A. Nelder. 1989. *Generalized Linear Models*.
+2nd ed. Chapman; Hall.
+
+Molenaar, Peter C. M. 2004. “A Manifesto on Psychology as Idiographic
+Science: Bringing the Person Back into Scientific Psychology, This Time
+Forever.” *Measurement: Interdisciplinary Research and Perspectives* 2
+(4): 201–18. <https://doi.org/10.1207/s15366359mea0204_1>.
+
+Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section
+Data.” *Econometrica* 46 (1): 69–85. <https://doi.org/10.2307/1913646>.

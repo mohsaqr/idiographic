@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Preparing Panel Data • idiographic</title>
+<title>Preparing panel data • idiographic</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Preparing Panel Data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Preparing panel data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,16 +36,16 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/bayesian-var-dsem.html">6. Bayesian VAR and DSEM</a></li>
     <li><a class="dropdown-item" href="../articles/clean-room-methods.html">10. Clean-room design</a></li>
-    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing Persons: Level, Change, Association, and Variance</a></li>
+    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing persons</a></li>
     <li><a class="dropdown-item" href="../articles/gimme.html">8. GIMME</a></li>
     <li><a class="dropdown-item" href="../articles/graphical-var.html">4. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="../articles/mlvar.html">5. Multilevel VAR</a></li>
     <li><a class="dropdown-item" href="../articles/ordinary-var.html">3. Ordinary VAR</a></li>
     <li><a class="dropdown-item" href="../articles/pooling-shrinkage.html">Pooling and Shrinking Person-Specific Coefficients</a></li>
     <li><a class="dropdown-item" href="../articles/prediction.html">Idiographic Prediction and Temporal Validation</a></li>
-    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing Panel Data</a></li>
+    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing panel data</a></li>
     <li><a class="dropdown-item" href="../articles/preprocessing.html">2. Preprocessing</a></li>
-    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression Models</a></li>
+    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression models</a></li>
     <li><a class="dropdown-item" href="../articles/rolling-networks.html">9. Rolling networks</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-workflows.html">Guide to Idiographic Statistical Workflows</a></li>
     <li><a class="dropdown-item" href="../articles/subgroups-effects.html">Subgroups, Treatment Effects, and Heterogeneity</a></li>
@@ -73,7 +73,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Preparing Panel Data</h1>
+      <h1>Preparing panel data</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mohsaqr/idiographic/blob/merged/vignettes/preprocess-panel.Rmd" class="external-link"><code>vignettes/preprocess-panel.Rmd</code></a></small>
@@ -82,44 +82,78 @@
 
     
     
-<p>Repeated-measures data are usually transformed before modelling. This
-vignette covers three transformations: separating each variable into its
-between-person and within-person parts, creating lagged variables, and
-removing time trends. Each transformation is computed separately for
-each person and in time order. The examples use the 36 learners in the
-<code>srl</code> data, each observed on 156 days.</p>
+<p>Intensive longitudinal data record the same persons on many
+occasions, and the questions they address concern processes within
+persons, such as whether the state of a person on one occasion relates
+to other states of that person on the same or the following occasion.
+Raw scores are an imperfect basis for these questions. Each raw score
+combines the stable level at which a person typically stands with the
+deviation of the occasion from that level, so an association computed on
+raw scores mixes a between-person association with a within-person
+association. The two associations answer different questions and can
+differ in size and in sign <span class="citation">(<a href="#ref-curran2011">Curran and Bauer 2011</a>; <a href="#ref-hoffman2009">Hoffman and Stawski 2009</a>)</span>. A raw
+score also holds no information about earlier occasions, while any claim
+about temporal precedence requires the state on one occasion to be
+paired with a later state of the same person. Scores that change
+systematically over the study period, through learning, fatigue or
+habituation, share that change across variables, and a shared trend
+produces an association between two variables whose occasion-to-occasion
+fluctuations are independent.</p>
+<p>Panel preparation removes these sources of bias before modelling. The
+decomposition of a variable separates its between-person and
+within-person components, a lagged variable pairs each occasion with the
+preceding occasion of the same person, and detrending removes a linear
+change over the study period. Each transformation is computed separately
+for each person and in time order.</p>
+<p>The examples use the 36 learners in <code>srl</code>, each observed
+on 156 days.</p>
 <div class="section level2">
 <h2 id="within-person-and-between-person-decomposition">Within-person and between-person decomposition<a class="anchor" aria-label="anchor" href="#within-person-and-between-person-decomposition"></a>
 </h2>
-<p>Each repeated measure has two parts. The between-person part is the
-stable average across all occasions. The within-person part is the
-fluctuation of each occasion around that stable average. Differences
-between persons in their stable averages form the between-person
-variation; the fluctuations form the within-person variation. An
-analysis of the raw scores, whether across all occasions or at a single
-occasion, mixes the two, and its result can resemble the within-person
-association, the between-person association, or neither, depending on
-how much of each variable is stable and how much fluctuates. Separating
-the two parts allows each association to be estimated on its own.</p>
+<p>A variable measured repeatedly varies between persons and within
+persons. A learner can report high efficacy on most days because high
+efficacy is a stable characteristic of that learner, and the same
+learner reports higher efficacy on some days than on others. The two
+sources of variation correspond to different mechanisms. The
+between-person association concerns stable differences, whether learners
+who are generally more efficacious also generally invest more effort.
+The within-person association concerns a process, whether a learner
+invests more effort on days when that learner feels more efficacious
+than usual. The first characterises a population of persons and the
+second characterises the functioning of each person, and the inference
+from one to the other holds only under restrictive conditions <span class="citation">(<a href="#ref-molenaar2004">Molenaar
+2004</a>)</span>.</p>
+<p>A regression of raw scores estimates a weighted combination of the
+two slopes, with weights given by the share of the predictor’s variance
+at each level <span class="citation">(<a href="#ref-curran2011">Curran
+and Bauer 2011</a>)</span>. When the two slopes differ, the pooled slope
+matches neither, and its value depends on the composition of the sample.
+Entering the person mean and the deviation from it as separate
+predictors resolves this conflation <span class="citation">(<a href="#ref-mundlak1978">Mundlak 1978</a>; <a href="#ref-hoffman2009">Hoffman and Stawski 2009</a>)</span>. The
+deviation is uncorrelated with the person mean by construction. Its
+slope is therefore a within-person estimate that is unaffected by any
+stable characteristic of the person, whether measured or unmeasured,
+which is the property of the fixed-effects estimator.</p>
 <p>For a variable
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 observed for person
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 at occasion
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
-<code><a href="../reference/split_levels.html">split_levels()</a></code> computes the between-person part as the mean
-of that person’s observed values,
+the between-person component is the person mean, the mean of that
+person’s observed values,
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><msub><mi>T</mi><mi>i</mi></msub></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>T</mi><mi>i</mi></msub></munderover><msub><mi>x</mi><mrow><mi>i</mi><mi>t</mi></mrow></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">\bar{x}_i = \frac{1}{T_i}\sum_{t=1}^{T_i} x_{it},</annotation></semantics></math>
 where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mi>i</mi></msub><annotation encoding="application/x-tex">T_i</annotation></semantics></math>
 is the number of occasions on which
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
-was observed. The within-person part is the deviation of each
-observation from that mean,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>i</mi><mi>t</mi></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_{it} - \bar{x}_i</annotation></semantics></math>.
-The two parts sum to the original score. For efficacy, the
-between-person part is stored as <code>efficacy_between</code> and the
-within-person part as <code>efficacy_within</code>.</p>
+was observed. The within-person component is the person-mean-centred
+score
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>i</mi><mi>t</mi></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_{it} - \bar{x}_i</annotation></semantics></math>,
+the deviation of each occasion from the person mean, and the two
+components sum to the original score. <code><a href="../reference/split_levels.html">split_levels()</a></code> adds
+both components to the data as variables, for efficacy as
+<code>efficacy_between</code> and <code>efficacy_within</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/split_levels.html">split_levels</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="st">"efficacy"</span>, time <span class="op">=</span> <span class="st">"day"</span>, keep_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    name day efficacy efficacy_within efficacy_between</span></span>
@@ -129,16 +163,22 @@ within-person part as <code>efficacy_within</code>.</p>
 <span><span class="co">#&gt; 4 Aisha   4 55.88235       -1.036953         56.91931</span></span>
 <span><span class="co">#&gt; 5 Aisha   5 55.88235       -1.036953         56.91931</span></span>
 <span><span class="co">#&gt; 6 Aisha   6 44.11765      -12.801659         56.91931</span></span></code></pre></div>
-<p>To see how effort relates to each part, both parts are used as
-predictors in the same regression. The slope of
-<code>efficacy_within</code> shows how effort changes on days when a
-learner’s efficacy is above or below that learner’s average. The slope
-of <code>efficacy_between</code> shows how effort differs between
-learners with higher and lower average efficacy.
-<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> performs the split and the regression
-in one step. Because each learner contributes many days, its standard
-errors are adjusted for the repeated observations of the same
-learner.</p>
+<p>The between-person component <code>efficacy_between</code> and the
+within-person component <code>efficacy_within</code> enter the same
+regression as predictors of effort. The slope of
+<code>efficacy_within</code> is the within-person effect, the change in
+effort on days when a learner’s efficacy deviates from that learner’s
+mean. The slope of <code>efficacy_between</code> is the between-person
+effect, the difference in mean effort between learners whose mean
+efficacy differs. <code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> estimates the
+regression on the first 124 days of each learner and holds out the last
+32 days to evaluate its predictions, and the person means are computed
+from the estimation days only. The 4,464 estimation days are nested in
+36 learners, and observations of the same learner are correlated.
+Standard errors that treat the observations as independent understate
+the uncertainty, so the standard errors are clustered on the learner
+<span class="citation">(<a href="#ref-liang1986">Liang and Zeger
+1986</a>)</span>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wb_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_within_between.html">fit_within_between</a></span><span class="op">(</span><span class="va">srl</span>, y <span class="op">=</span> <span class="st">"effort"</span>, x <span class="op">=</span> <span class="st">"efficacy"</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/coefs.html">coefs</a></span><span class="op">(</span><span class="va">wb_fit</span><span class="op">)</span></span>
@@ -150,15 +190,21 @@ learner.</p>
 <span><span class="co">#&gt; 1    .none 25.0284934 6.64097196  3.768800 6.059592e-04 11.5466036 38.5103833</span></span>
 <span><span class="co">#&gt; 2 efficacy  0.4163891 0.05518059  7.545934 7.650039e-09  0.3043665  0.5284116</span></span>
 <span><span class="co">#&gt; 3 efficacy  0.6266185 0.10584994  5.919876 9.845147e-07  0.4117317  0.8415053</span></span></code></pre></div>
-<p>The within-person slope was 0.42 (95% CI 0.30 to 0.53). On days when
-a learner’s efficacy was 10 points above that learner’s average, effort
-was about 4 points higher. The between-person slope was 0.63 (95% CI
-0.41 to 0.84). Learners whose average efficacy was 10 points higher
-reported about 6 points more effort on average. The between-person
-interval is wider because it rests on 36 learners, while the
-within-person slope draws on all of their days.</p>
-<p>Whether the two slopes differ is tested directly by their difference,
-which <code><a href="../reference/contextual.html">contextual()</a></code> reports.</p>
+<p>The within-person slope is 0.42 (95% CI 0.30 to 0.53). On days when a
+learner’s efficacy is 10 points above that learner’s mean, effort is
+about 4 points higher. The between-person slope is 0.63 (95% CI 0.41 to
+0.84). Learners whose mean efficacy is 10 points higher report about 6
+points more effort on average. The between-person interval is wider
+because its precision depends on the number of learners, 36, while the
+within-person slope draws on the daily deviations of all learners.</p>
+<p>The difference between the between-person and the within-person slope
+is the contextual effect <span class="citation">(<a href="#ref-mundlak1978">Mundlak 1978</a>)</span>. It measures the
+association of the person mean with the outcome beyond the association
+implied by the within-person slope. A positive contextual effect
+indicates that learners with higher mean efficacy invest more effort
+than their daily relation between efficacy and effort predicts, which is
+consistent with stable characteristics, such as motivation or prior
+achievement, that raise both mean efficacy and mean effort.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contextual.html">contextual</a></span><span class="op">(</span><span class="va">wb_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   variable   within   between   contextual     S.E.           95% CI        p</span></span>
@@ -166,24 +212,44 @@ which <code><a href="../reference/contextual.html">contextual()</a></code> repor
 <span><span class="co">#&gt;   efficacy   0.4164    0.6266       0.2102   0.1021   [0.003, 0.417]   0.0469</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; scope = pooled,  model = within_between,  estimator = ols,  subject = .all,  subgroup = .all</span></span></code></pre></div>
-<p>The between-person slope exceeded the within-person slope by 0.21
-(95% CI 0.003 to 0.42, p = .047). The interval barely excludes zero, so
-the evidence that the two slopes differ is weak.</p>
+<p>The between-person slope exceeds the within-person slope by 0.21 (95%
+CI 0.003 to 0.42, p = .047). The lower bound of the interval lies close
+to zero, and the evidence for a difference between the two slopes is
+weak.</p>
 </div>
 <div class="section level2">
 <h2 id="lagged-variables">Lagged variables<a class="anchor" aria-label="anchor" href="#lagged-variables"></a>
 </h2>
-<p>A lagged variable holds the value of a variable on the preceding
-occasion. With <code>lag = 1</code>, the column
-<code>efficacy_lag1</code> contains, in each row, the learner’s efficacy
-on the previous day. Lagged variables allow a model to test whether a
-state on one day predicts an outcome on the next, for example whether
-efficacy yesterday predicts effort today.</p>
-<p>Lags are computed within persons, so the first occasion of each
-person has a missing lagged value, as shown below for the first days of
-Aisha.</p>
+<p>Many hypotheses about within-person processes concern effects that
+unfold over time, such as whether the efficacy of a learner on one day
+predicts the effort of that learner on the following day. A test of such
+a hypothesis requires a predictor measured before the outcome. Temporal
+precedence is also a necessary condition for a causal interpretation.
+Two variables measured at the same time can each be the cause of the
+other, whereas a variable measured earlier can only act on a later
+outcome. A lagged variable establishes this order by pairing each
+observation with the preceding observation of the same person. With
+<code>lag = 1</code>, the column <code>efficacy_lag1</code> holds, in
+each row, the efficacy of the learner on the preceding day.</p>
+<p>The pairing yields two kinds of lagged effect. The autoregressive
+effect, the slope of a variable on its own lagged value, measures the
+persistence of a state from one occasion to the next, often termed
+inertia. The cross-lagged effect, the slope of one variable on the
+lagged value of another, measures whether a deviation in one state
+precedes a deviation in the other, for example whether efficacy above a
+learner’s mean on one day predicts effort above the mean on the next
+day. These two effects are the parameters of the vector autoregressive
+models that underlie dynamic networks <span class="citation">(<a href="#ref-bringmann2013">Bringmann et al. 2013</a>; <a href="#ref-epskamp2018mlvar">Epskamp et al. 2018</a>)</span>. Precedence
+is a necessary condition and remains insufficient on its own, since a
+third variable that changes before both can produce a cross-lagged
+association.</p>
+<p>Lags are computed within persons, so each lagged value comes from the
+same person as the row it occupies. The first observation of each person
+has no preceding observation and receives a missing lagged value, as the
+first days of Aisha show.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/preprocess_panel.html">preprocess_panel</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>, vars <span class="op">=</span> <span class="st">"efficacy"</span>, lag <span class="op">=</span> <span class="fl">1</span>, keep_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">lagged</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_panel.html">preprocess_panel</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>, vars <span class="op">=</span> <span class="st">"efficacy"</span>, lag <span class="op">=</span> <span class="fl">1</span>, keep_all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">lagged</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    name day efficacy efficacy_lag1</span></span>
 <span><span class="co">#&gt; 1 Aisha   1 38.23529            NA</span></span>
 <span><span class="co">#&gt; 2 Aisha   2 14.70588      38.23529</span></span>
@@ -191,19 +257,49 @@ Aisha.</p>
 <span><span class="co">#&gt; 4 Aisha   4 55.88235      67.64706</span></span>
 <span><span class="co">#&gt; 5 Aisha   5 55.88235      55.88235</span></span>
 <span><span class="co">#&gt; 6 Aisha   6 44.11765      55.88235</span></span></code></pre></div>
-<p>A lag refers to the preceding occasion regardless of the time elapsed
-between occasions. For irregularly spaced occasions,
-<code>lag_max_gap</code> sets the lagged value to missing when the
-preceding occasion lies further back than a specified interval.</p>
+<p>Of the 5,616 lagged values, 42 are missing, 36 for the first days of
+the learners and 6 for days that follow a day without an efficacy
+rating.</p>
+<p>The size of a lagged effect depends on the interval between
+occasions. An effect that unfolds within hours appears stronger over a
+lag of one hour than over a lag of one day, and lagged effects are
+therefore comparable only between designs with similar intervals <span class="citation">(<a href="#ref-gollob1987">Gollob and Reichardt
+1987</a>)</span>. A lag refers to the preceding occasion whatever the
+elapsed time, which is appropriate when occasions are evenly spaced, as
+the consecutive days in <code>srl</code> are for every learner. In
+designs with irregular spacing, such as experience sampling at random
+times or diaries with skipped days, <code>lag_max_gap</code> sets the
+lagged value to missing when the preceding occasion lies further back
+than a specified interval, so that a lag spanning several days stays out
+of a model of day-to-day effects.</p>
 </div>
 <div class="section level2">
 <h2 id="detrending">Detrending<a class="anchor" aria-label="anchor" href="#detrending"></a>
 </h2>
-<p><code>preprocess_panel(detrend = "person")</code> removes the linear
-time trend of each person’s series when the trend is significant at
-<code>detrend_alpha</code> (0.05 by default). The presence of trends is
-assessed beforehand with the trend estimates reported by
-<code><a href="../reference/describe_persons.html">describe_persons()</a></code>.</p>
+<p>The within-person models of the later vignettes assume that each
+series is stationary, with a mean and a variance that stay constant over
+the study period. A series that rises or falls systematically violates
+this assumption. Its deviations from the person mean are then dominated
+by the trend, negative early in the study and positive late in the
+study, and an autoregressive model attributes the resulting dependence
+between neighbouring occasions to the persistence of the state. When two
+variables share a trend, their deviations correlate across occasions
+whatever their day-to-day relation, a spurious association well
+documented for time series <span class="citation">(<a href="#ref-granger1974">Granger and Newbold 1974</a>)</span>. Detrending
+regresses the series of each person on time and retains the residuals,
+so that the within-person component expresses the fluctuation around the
+trajectory of the person <span class="citation">(<a href="#ref-wang2015">Wang and Maxwell 2015</a>)</span>.</p>
+<p>Removing a trend is a substantive decision. A trend can be a
+nuisance, such as a gradual habituation to the questionnaire, or the
+phenomenon of interest, such as a growth in efficacy over a course. In
+the second case detrending removes the effect under study, and time
+belongs in the model as a predictor.</p>
+<p><code>preprocess_panel(detrend = "person")</code> fits a linear trend
+to the series of each person and removes it when the slope is
+significant at <code>detrend_alpha</code>, 0.05 by default. The presence
+of trends is assessed beforehand with the trend tests that
+<code><a href="../reference/describe_persons.html">describe_persons()</a></code> reports for each person and
+variable.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trends</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, time <span class="op">=</span> <span class="st">"day"</span>, vars <span class="op">=</span> <span class="st">"efficacy:organizing"</span>, detail <span class="op">=</span> <span class="st">"full"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">trends</span><span class="op">)</span></span>
@@ -228,32 +324,138 @@ assessed beforehand with the trend estimates reported by
 <span><span class="co">#&gt; 8                  3  0.08333333</span></span>
 <span><span class="co">#&gt; 9                  2  0.05555556</span></span></code></pre></div>
 <p>Across the nine variables, 16 of the 324 person-by-variable series
-(4.9%) had a significant linear trend, the proportion expected from
-false positives at the 0.05 level if no series trended. Detrending these
-data would therefore modify a small number of series largely at random.
-Detrending is warranted when significant trends are considerably more
-frequent than the significance level, or when the design implies a
-trend, as in intervention or developmental studies. Series without a
-fixed slope, such as random walks, require differencing, which
-<code>preprocess(detrend = "auto")</code> applies to the affected series
-only.</p>
+(4.9%) have a significant linear trend. With 324 tests at the 0.05 level
+and no trend in any series, about 16 significant results are expected by
+chance. The observed count therefore gives no evidence of systematic
+trends, and detrending these data would alter a small number of series
+largely at random. Detrending is warranted when significant trends are
+considerably more frequent than the significance level, or when the
+design implies a trend, as in intervention or developmental studies.</p>
+<p>A linear detrend suits a deterministic trend, a steady change in the
+mean. A stochastic trend, as in a random walk, wanders without a fixed
+slope and is removed by differencing, the replacement of each value by
+its change from the preceding occasion.
+<code>preprocess(detrend = "auto")</code> tests each series for both
+kinds of trend and applies linear detrending or differencing to the
+flagged series only.</p>
 </div>
 <div class="section level2">
 <h2 id="centring-and-scaling">Centring and scaling<a class="anchor" aria-label="anchor" href="#centring-and-scaling"></a>
 </h2>
-<p>Person-centring (<code>center = "person"</code>) retains only the
-within-person part and discards the between-person part;
-<code><a href="../reference/split_levels.html">split_levels()</a></code> retains both, so the two options are not
-combined. Person scaling (<code>scale = "person"</code>) divides each
-person’s values by that person’s standard deviation, which places
-persons who fluctuate to different degrees on a common scale. Grand
-scaling (<code>scale = "grand"</code>) uses a single standard deviation
-for all persons.</p>
+<p>Centring subtracts a mean from each score. The mean that is
+subtracted decides whether the differences between persons remain in the
+scores, and therefore whether a slope estimated on the centred scores is
+a within-person effect. Person-centring (<code>center = "person"</code>)
+subtracts the person mean from each score and retains only the
+within-person component. It is the appropriate transformation when the
+research question concerns within-person processes alone, as in dynamic
+network models. In a multilevel autoregressive model, lagged predictors
+left uncentred carry the between-person differences in level, and the
+autoregressive effect then mixes the persistence of daily states with
+the stable differences between persons <span class="citation">(<a href="#ref-hamaker2015">Hamaker and Grasman 2015</a>)</span>. Grand-mean
+centring (<code>center = "grand"</code>) subtracts one mean computed
+over all persons and occasions. It gives the intercept the
+interpretation of the expected outcome at the sample mean and leaves the
+between-person differences in the scores, so a slope on
+grand-mean-centred scores remains the combination of the within-person
+and the between-person slope <span class="citation">(<a href="#ref-enders2007">Enders and Tofighi 2007</a>)</span>.
+Person-centring and decomposition are alternatives, because
+person-centring discards the between-person component that decomposition
+retains, and <code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> refuses a request for
+both.</p>
+<p>Scaling sets the unit of a variable. Person scaling
+(<code>scale = "person"</code>) divides the scores of each person by
+that person’s standard deviation. Slopes then express change in standard
+deviations of the person, which makes them comparable across persons who
+fluctuate to different degrees. In <code>srl</code>, the within-person
+standard deviation of efficacy ranges from 14.7 to 34.5 points across
+learners. Person scaling also removes these differences in variability,
+and within-person variability is itself an individual difference with
+substantive meaning, such as emotional instability. A slope on
+person-scaled scores combines the strength of an association with the
+variability of the predictor and reports the two as one quantity. Grand
+scaling (<code>scale = "grand"</code>) divides all scores by one
+standard deviation, which changes the unit of measurement and preserves
+the differences in variability between persons.</p>
 <p><code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> and <code><a href="../reference/split_levels.html">split_levels()</a></code>
-compute these quantities from all occasions of each person. Model
-functions that hold out later occasions for testing, such as
-<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code>, compute them from the training
-occasions only.</p>
+compute person means, standard deviations and trends from all occasions
+of each person. When a model is evaluated on held-out occasions,
+quantities computed from all occasions carry information from the
+held-out occasions into the estimation and inflate the measured
+predictive accuracy. <code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> therefore
+computes the person means from the estimation occasions only and applies
+them to the held-out occasions, and the transformations of
+<code><a href="../reference/preprocess_panel.html">preprocess_panel()</a></code> are suited to descriptive analyses and
+to models estimated without held-out occasions.</p>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bringmann2013" class="csl-entry">
+Bringmann, Laura F., Nathalie Vissers, Marieke Wichers, et al. 2013.
+<span>“A Network Approach to Psychopathology: New Insights into Clinical
+Longitudinal Data.”</span> <em>PLoS ONE</em> 8 (4): e60188.
+</div>
+<div id="ref-curran2011" class="csl-entry">
+Curran, Patrick J., and Daniel J. Bauer. 2011. <span>“The Disaggregation
+of Within-Person and Between-Person Effects in Longitudinal Models of
+Change.”</span> <em>Annual Review of Psychology</em> 62: 583–619. <a href="https://doi.org/10.1146/annurev.psych.093008.100356" class="external-link">https://doi.org/10.1146/annurev.psych.093008.100356</a>.
+</div>
+<div id="ref-enders2007" class="csl-entry">
+Enders, Craig K., and Davood Tofighi. 2007. <span>“Centering Predictor
+Variables in Cross-Sectional Multilevel Models: A New Look at an Old
+Issue.”</span> <em>Psychological Methods</em> 12 (2): 121–38. <a href="https://doi.org/10.1037/1082-989X.12.2.121" class="external-link">https://doi.org/10.1037/1082-989X.12.2.121</a>.
+</div>
+<div id="ref-epskamp2018mlvar" class="csl-entry">
+Epskamp, Sacha, Lourens J. Waldorp, René Mõttus, and Denny Borsboom.
+2018. <span>“The Gaussian Graphical Model in Cross-Sectional and
+Time-Series Data.”</span> <em>Multivariate Behavioral Research</em> 53
+(4): 453–80.
+</div>
+<div id="ref-gollob1987" class="csl-entry">
+Gollob, Harry F., and Charles S. Reichardt. 1987. <span>“Taking Account
+of Time Lags in Causal Models.”</span> <em>Child Development</em> 58
+(1): 80–92. <a href="https://doi.org/10.2307/1130293" class="external-link">https://doi.org/10.2307/1130293</a>.
+</div>
+<div id="ref-granger1974" class="csl-entry">
+Granger, C. W. J., and P. Newbold. 1974. <span>“Spurious Regressions in
+Econometrics.”</span> <em>Journal of Econometrics</em> 2 (2): 111–20. <a href="https://doi.org/10.1016/0304-4076(74)90034-7" class="external-link">https://doi.org/10.1016/0304-4076(74)90034-7</a>.
+</div>
+<div id="ref-hamaker2015" class="csl-entry">
+Hamaker, Ellen L., and Raoul P. P. P. Grasman. 2015. <span>“To Center or
+Not to Center? <span>Investigating</span> Inertia with a Multilevel
+Autoregressive Model.”</span> <em>Frontiers in Psychology</em> 5: 1492.
+<a href="https://doi.org/10.3389/fpsyg.2014.01492" class="external-link">https://doi.org/10.3389/fpsyg.2014.01492</a>.
+</div>
+<div id="ref-hoffman2009" class="csl-entry">
+Hoffman, Lesa, and Robert S. Stawski. 2009. <span>“Persons as Contexts:
+Evaluating Between-Person and Within-Person Effects in Longitudinal
+Analysis.”</span> <em>Research in Human Development</em> 6 (2–3):
+97–120. <a href="https://doi.org/10.1080/15427600902911189" class="external-link">https://doi.org/10.1080/15427600902911189</a>.
+</div>
+<div id="ref-liang1986" class="csl-entry">
+Liang, Kung-Yee, and Scott L. Zeger. 1986. <span>“Longitudinal Data
+Analysis Using Generalized Linear Models.”</span> <em>Biometrika</em> 73
+(1): 13–22. <a href="https://doi.org/10.1093/biomet/73.1.13" class="external-link">https://doi.org/10.1093/biomet/73.1.13</a>.
+</div>
+<div id="ref-molenaar2004" class="csl-entry">
+Molenaar, Peter C. M. 2004. <span>“A Manifesto on Psychology as
+Idiographic Science: Bringing the Person Back into Scientific
+Psychology, This Time Forever.”</span> <em>Measurement:
+Interdisciplinary Research and Perspectives</em> 2 (4): 201–18. <a href="https://doi.org/10.1207/s15366359mea0204_1" class="external-link">https://doi.org/10.1207/s15366359mea0204_1</a>.
+</div>
+<div id="ref-mundlak1978" class="csl-entry">
+Mundlak, Yair. 1978. <span>“On the Pooling of Time Series and Cross
+Section Data.”</span> <em>Econometrica</em> 46 (1): 69–85. <a href="https://doi.org/10.2307/1913646" class="external-link">https://doi.org/10.2307/1913646</a>.
+</div>
+<div id="ref-wang2015" class="csl-entry">
+Wang, Lijuan Peggy, and Scott E. Maxwell. 2015. <span>“On Disaggregating
+Between-Person and Within-Person Effects with Longitudinal Data Using
+Multilevel Models.”</span> <em>Psychological Methods</em> 20 (1): 63–83.
+<a href="https://doi.org/10.1037/met0000030" class="external-link">https://doi.org/10.1037/met0000030</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -102,7 +102,7 @@ rolling_ols
 #>   Subjects:   1
 #>   Windows:    6
 #>   Variables:  5 (efficacy, value, planning, monitoring, effort)
-#>   Tables:     x$estimates | x$windows | x$failures
+#>   Tables:     as.data.frame(x) | as.data.frame(x, what = "windows") | failures(x)
 #>   Cograph:    cograph::splot(x$fits[[1]])
 #>   Matrices:   matrices(x$fits[[1]])
 ```
@@ -133,7 +133,7 @@ rolling_gvar
 #>   Subjects:   1
 #>   Windows:    4
 #>   Variables:  5 (efficacy, value, planning, monitoring, effort)
-#>   Tables:     x$estimates | x$windows | x$failures
+#>   Tables:     as.data.frame(x) | as.data.frame(x, what = "windows") | failures(x)
 #>   Cograph:    cograph::splot(x$fits[[1]])
 #>   Matrices:   matrices(x$fits[[1]])
 ```

@@ -22,6 +22,12 @@
 - [`as.data.frame(`*`<idiographic_level_correlations>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_level_correlations.md)
   : Tidy tables from a within/between correlation comparison
 
+- [`as.data.frame(`*`<rolling_gvar_result>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.rolling_gvar_result.md)
+  : Tidy tables of a rolling network result
+
+- [`as.data.frame(`*`<rolling_var_result>`*`)`](https://pak.dynasite.org/idiographic/reference/as.data.frame.rolling_var_result.md)
+  : Tidy tables of a rolling network result
+
 - [`as_netobject()`](https://pak.dynasite.org/idiographic/reference/as_netobject.md)
   : Coerce to a netobject
 
@@ -94,6 +100,9 @@
 
 - [`extract_edges()`](https://pak.dynasite.org/idiographic/reference/extract_edges.md)
   : Tidy edge table from a network object
+
+- [`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+  : Units that could not be fitted
 
 - [`find_subgroups()`](https://pak.dynasite.org/idiographic/reference/find_subgroups.md)
   : Discover subgroups of people

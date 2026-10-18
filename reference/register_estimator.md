@@ -67,6 +67,6 @@ register_estimator("demo", demo_fitter, result_class = "demo_result")
 get_estimator("demo")
 #> function (data, ...) 
 #> structure(list(data = data), class = "demo_result")
-#> <environment: 0x55cc291294d0>
+#> <environment: 0x560a48ff9f70>
 remove_estimator("demo")
 ```

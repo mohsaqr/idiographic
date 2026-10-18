@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Describing Persons: Level, Change, Association, and Variance • idiographic</title>
+<title>Describing persons • idiographic</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Describing Persons: Level, Change, Association, and Variance">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Describing persons">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,16 +36,16 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/bayesian-var-dsem.html">6. Bayesian VAR and DSEM</a></li>
     <li><a class="dropdown-item" href="../articles/clean-room-methods.html">10. Clean-room design</a></li>
-    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing Persons: Level, Change, Association, and Variance</a></li>
+    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing persons</a></li>
     <li><a class="dropdown-item" href="../articles/gimme.html">8. GIMME</a></li>
     <li><a class="dropdown-item" href="../articles/graphical-var.html">4. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="../articles/mlvar.html">5. Multilevel VAR</a></li>
     <li><a class="dropdown-item" href="../articles/ordinary-var.html">3. Ordinary VAR</a></li>
     <li><a class="dropdown-item" href="../articles/pooling-shrinkage.html">Pooling and Shrinking Person-Specific Coefficients</a></li>
     <li><a class="dropdown-item" href="../articles/prediction.html">Idiographic Prediction and Temporal Validation</a></li>
-    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing Panel Data</a></li>
+    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing panel data</a></li>
     <li><a class="dropdown-item" href="../articles/preprocessing.html">2. Preprocessing</a></li>
-    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression Models</a></li>
+    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression models</a></li>
     <li><a class="dropdown-item" href="../articles/rolling-networks.html">9. Rolling networks</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-workflows.html">Guide to Idiographic Statistical Workflows</a></li>
     <li><a class="dropdown-item" href="../articles/subgroups-effects.html">Subgroups, Treatment Effects, and Heterogeneity</a></li>
@@ -73,7 +73,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Describing Persons: Level, Change, Association, and Variance</h1>
+      <h1>Describing persons</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mohsaqr/idiographic/blob/merged/vignettes/describing-persons.Rmd" class="external-link"><code>vignettes/describing-persons.Rmd</code></a></small>
@@ -82,90 +82,82 @@
 
     
     
-<p>Person-specific analysis rests on the properties of each individual
-time series. Four descriptive functions are presented here. They are
-intended to precede model fitting, because the amount of data, the
-variability of each series, and the balance between stable and
-fluctuating variation determine which models can be estimated and how
-their coefficients are interpreted.</p>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Question</th>
-<th align="left">Function</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Is each person’s series long and variable enough for
-analysis?</td>
-<td align="left"><code><a href="../reference/describe_persons.html">describe_persons()</a></code></td>
-</tr>
-<tr class="even">
-<td align="left">Which variables co-vary within each person?</td>
-<td align="left"><code><a href="../reference/correlate_persons.html">correlate_persons()</a></code></td>
-</tr>
-<tr class="odd">
-<td align="left">What share of the variance reflects stable differences
-between persons?</td>
-<td align="left"><code><a href="../reference/variance_components.html">variance_components()</a></code></td>
-</tr>
-<tr class="even">
-<td align="left">Do correlations computed across persons describe the
-correlations within persons?</td>
-<td align="left"><code><a href="../reference/correlate_levels.html">correlate_levels()</a></code></td>
-</tr>
-</tbody>
-</table>
-<p>All examples use 12 learners from the bundled <code>srl</code> data
-set, each of whom completed the same self-report items once a day,
-yielding 154 to 156 observations per learner.</p>
+<p>An idiographic model is estimated from the observations of a single
+person, so the quality of that person’s data limits what the model can
+show. Before any model is fitted, descriptive statistics are therefore
+computed separately for each person and each variable. These are the
+number of observations and missing values, the spacing of the occasions,
+the mean and the range, the standard deviation, the change from one
+occasion to the next, and the correlation of each occasion with the
+previous one. These statistics establish whether the data of each person
+can be analysed and reveal the problems that would distort the
+results.</p>
+<p>The first problem is a short series. Every coefficient of a person’s
+model is estimated from that person’s observations alone, and a series
+with few observations gives unstable estimates and supports only a small
+model. Missing occasions and long gaps between occasions shorten the
+series further and break the regular spacing that lagged effects assume,
+because a lag that spans one day for one pair of observations and a week
+for another mixes two different quantities.</p>
+<p>The second problem is low variability. A variable that changes little
+within a person carries little information about its effects, and its
+coefficient has a wide confidence interval. A variable that is constant
+within a person cannot be estimated as a predictor at all. Responses
+gathered at the floor or ceiling of the scale restrict the range in the
+same way and weaken the observed associations.</p>
+<p>The third problem is dependence over time. A series with a trend
+changes level over the study period, and two variables that both trend
+appear related even when their daily fluctuations are unrelated. A
+series with strong autocorrelation carries each day’s value into the
+next day, so its observations are less informative than their number
+suggests. Long runs of identical responses can indicate careless
+responding.</p>
+<p>The fourth problem concerns the level of the variation. Part of the
+variance of a variable lies between persons, in their means, and part
+lies within persons, in their daily fluctuations. A correlation computed
+across all observations mixes the two parts, and the share of each
+determines whether the variable is suited to a within-person
+analysis.</p>
 <div class="section level2">
-<h2 id="describe_persons">
-<code>describe_persons()</code><a class="anchor" aria-label="anchor" href="#describe_persons"></a>
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<div class="section level3">
-<h3 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
-</h3>
-<p><code><a href="../reference/describe_persons.html">describe_persons()</a></code> returns a tidy data frame with one
-row for each combination of learner and variable. Two learners measured
-on two variables therefore yield four rows (Aisha’s efficacy, Aisha’s
-effort, Alice’s efficacy, Alice’s effort). The columns describe the
-series in each row:</p>
-<ul>
-<li>
-<strong>amount of data</strong>: the number of observations
-(<code>n</code>), the number of missing values (<code>missing</code>),
-the number of days covered (<code>span</code>), and the typical and
-longest interval between consecutive observations
-(<code>gap_median</code>, <code>gap_max</code>);</li>
-<li>
-<strong>level</strong>: the mean, median, minimum, and maximum;</li>
-<li>
-<strong>variability</strong>: the standard deviation
-(<code>sd</code>), the root mean square successive difference
-(<code>rmssd</code>), and the lag-1 autocorrelation
-(<code>autocor</code>).</li>
-</ul>
-<p>The two measures capture distinct properties of a series. The
-standard deviation (SD) quantifies the spread of observations around the
-person’s own mean across the full observation period. The root mean
-square successive difference (RMSSD) quantifies the magnitude of change
-between consecutive occasions. A series that drifts slowly across a wide
-range and a series that alternates sharply from day to day may have the
-same SD; the RMSSD separates the two <span class="citation">(<a href="#ref-jahng2008">Jahng et al. 2008</a>)</span>. The two quantities
-are related through the lag-1 autocorrelation
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\rho_1</annotation></semantics></math>:
-for a stationary series,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">RMSSD</mtext><mo>≈</mo><mtext mathvariant="normal">SD</mtext><msqrt><mrow><mn>2</mn><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>ρ</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mrow><annotation encoding="application/x-tex">\text{RMSSD} \approx \text{SD}\sqrt{2(1-\rho_1)}</annotation></semantics></math>.</p>
+<p>The examples use 12 learners from <code>srl</code>, a data frame in
+long format with one row per learner and day. Each learner rated
+self-efficacy, effort and seven other indicators of self-regulated
+learning once a day for 156 days.</p>
 </div>
-<div class="section level3">
-<h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h3>
+<div class="section level2">
+<h2 id="level-and-variability">Level and variability<a class="anchor" aria-label="anchor" href="#level-and-variability"></a>
+</h2>
+<p>Level and variability are the basic properties of a time series. The
+level is the typical value of a person’s responses, given by the mean
+and the median. The variability is the amount by which the responses
+change over time, and it determines how much the series can show about
+the effects of its variable. A variable that stays at nearly the same
+value for 156 days shows little of what happens when it changes.</p>
+<p>The variability of each series is measured in two ways. The standard
+deviation (SD) measures the spread of a person’s observations around
+that person’s mean over the whole study. The root mean square successive
+difference (RMSSD) measures the size of the change from one occasion to
+the next. A series that drifts slowly over a wide range and a series
+that alternates sharply from day to day can have the same SD, and the
+second has the larger RMSSD <span class="citation">(<a href="#ref-jahng2008">Jahng et al. 2008</a>)</span>. The two are linked
+by the lag-1 autocorrelation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\rho_1</annotation></semantics></math>,
+the correlation of each occasion with the previous one. For a stationary
+series
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">RMSSD</mtext><mo>≈</mo><mtext mathvariant="normal">SD</mtext><msqrt><mrow><mn>2</mn><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>ρ</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mrow><annotation encoding="application/x-tex">\text{RMSSD} \approx \text{SD}\sqrt{2(1-\rho_1)}</annotation></semantics></math>,
+so the RMSSD is about 1.41 times the SD when consecutive days are
+unrelated, and smaller when each day carries over into the next.</p>
+<p><code><a href="../reference/describe_persons.html">describe_persons()</a></code> returns one row per person and
+variable, with the number of observations, the missing values, the span
+of the occasions and the gaps between them, the level and the
+variability. The argument <code>time</code> orders the observations, and
+the successive differences and the autocorrelation are computed in that
+order.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"effort"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"day"</span>, subject <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aisha"</span>, <span class="st">"Alice"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"effort"</span><span class="op">)</span>,</span>
+<span>                 time <span class="op">=</span> <span class="st">"day"</span>, subject <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aisha"</span>, <span class="st">"Alice"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; PERSON DESCRIPTIVES</span></span>
 <span><span class="co">#&gt;   Grouping    name</span></span>
 <span><span class="co">#&gt;   Time        day</span></span>
@@ -181,26 +173,15 @@ for a stationary series,
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   sd    = overall spread;  rmssd = occasion-to-occasion change</span></span>
 <span><span class="co">#&gt;   autocor = lag-1 carry-over (inertia)</span></span></code></pre></div>
-<p>Both learners contributed 156 observations with no missing values.
-Mean efficacy was 57 for Aisha and 36 for Alice, whereas the SDs (21 for
-both) and the RMSSDs (27 and 29) were similar. The two learners
-therefore differed in their typical level of efficacy and showed
-comparable variability.</p>
-<p>The <code>time</code> argument defines the chronological order of
-observations within each person; successive differences and
-autocorrelations are computed in that order. Additional columns (floor
-and ceiling proportions, skewness, kurtosis, linear trend, and the
-longest run of identical values) are returned with
-<code>detail = "full"</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="visualisation">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation"></a>
-</h3>
-<p><code><a href="../reference/plot_descriptives.html">plot_descriptives()</a></code> displays the SD on the horizontal
-axis and the RMSSD on the vertical axis, with one point per person and
-variable.</p>
+<p>Aisha and Alice each have 156 observations and no missing values.
+Their mean efficacy is 57 and 36, both have an SD of 21, and their
+RMSSDs are 27 and 29. The two learners differ in their typical level of
+efficacy and have similar day-to-day variability.</p>
+<p>The figure plots the SD against the RMSSD for the 12 learners, with
+one point per learner and variable.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">descriptives</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"effort"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">descriptives</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/describe_persons.html">describe_persons</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>                                 vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"effort"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_descriptives.html">plot_descriptives</a></span><span class="op">(</span><span class="va">descriptives</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="describing-persons_files/figure-html/description-plot-1.png" class="r-plt" alt="Figure 1. Spread (SD) against day-to-day change (RMSSD) for efficacy and effort in 12 learners." width="100%"><p class="caption">
@@ -208,51 +189,48 @@ Figure 1. Spread (SD) against day-to-day change (RMSSD) for efficacy and
 effort in 12 learners.
 </p>
 </div>
-<p>The points lie close to a straight line, with RMSSD between 1.3 and
-1.5 times the SD. Under the relation given above, this ratio corresponds
-to small lag-1 autocorrelations: consecutive responses carried over
-little from one day to the next. Strong carry-over would place points
-well below this line.</p>
-<p>The figure also identifies atypical learners. Erik and Eve showed the
-largest spread and the largest day-to-day change on both variables.
-Diana, Bob, and Frank showed the least variability in efficacy, while
-Frank’s effort was among the most variable. Stability on one variable is
-therefore no indication of stability on another.</p>
-</div>
-<div class="section level3">
-<h3 id="assumptions-and-limitations">Assumptions and limitations<a class="anchor" aria-label="anchor" href="#assumptions-and-limitations"></a>
-</h3>
-<p>Successive differences and autocorrelations are meaningful only when
-rows are ordered chronologically, so the <code>time</code> argument is
-required whenever the stored row order differs from the order of
-measurement. Missing occasions reduce the number of consecutive pairs
-available for the RMSSD and the autocorrelation. A variable that is
-constant within a person has an undefined correlation with any other
-variable and cannot serve as a predictor in that person’s model. The
-<code>trend</code> column describes a linear trend and is insensitive to
-abrupt shifts or other non-linear change.</p>
-</div>
+<p>The RMSSD lies between 1.28 and 1.54 times the SD, close to the value
+of 1.41 for unrelated consecutive days, so the learners carry little
+over from one day to the next. Erik and Eve have the largest spread and
+the largest daily change in both efficacy and effort. Diana, Frank and
+Bob vary least in efficacy, and Frank’s effort is among the most
+variable, so a learner can be stable on one variable and variable on
+another.</p>
+<p>With <code>detail = "full"</code>, the table adds the proportions of
+responses at the floor and ceiling of the scale, the skewness and
+kurtosis, the probability of an acute change between consecutive
+occasions, the linear trend over the study and the longest run of
+identical responses. These columns detect the restricted range, the
+trends and the careless responding described above. Missing occasions
+reduce the number of consecutive pairs from which the RMSSD and the
+autocorrelation are computed.</p>
 </div>
 <div class="section level2">
-<h2 id="correlate_persons">
-<code>correlate_persons()</code><a class="anchor" aria-label="anchor" href="#correlate_persons"></a>
+<h2 id="within-person-correlations">Within-person correlations<a class="anchor" aria-label="anchor" href="#within-person-correlations"></a>
 </h2>
-<div class="section level3">
-<h3 id="purpose-1">Purpose<a class="anchor" aria-label="anchor" href="#purpose-1"></a>
-</h3>
-<p><code><a href="../reference/correlate_persons.html">correlate_persons()</a></code> estimates, separately for each
-person, the Pearson correlation between every pair of variables,
-together with a 95% confidence interval obtained through Fisher’s
+<p>A within-person correlation quantifies the covariation of two
+variables across the occasions of one person. It indicates which states
+co-occur within an individual, and its sign and magnitude differ between
+individuals. A correlation computed over the pooled observations of a
+sample combines within-person and between-person covariation, and it can
+differ from the within-person correlation of every individual in the
+sample. In the pooled observations of the 12 learners, monitoring and
+effort correlate at 0.10. The within-person correlations of the same
+pair range from −0.47 to 0.52 and are negative for 3 of the 12
+learners.</p>
+<p>The within-person correlation is the Pearson correlation of two
+variables computed from the observations of one person. A positive
+correlation indicates that on occasions when one variable exceeds the
+person’s mean, the other variable also tends to exceed its mean.
+<code><a href="../reference/correlate_persons.html">correlate_persons()</a></code> returns one row per person and pair of
+variables, with the correlation, the number of complete pairs and a 95%
+confidence interval based on Fisher’s
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
-transformation. A positive within-person correlation indicates that on
-occasions when one variable is above that person’s typical level, the
-other variable also tends to be above its typical level.</p>
-</div>
-<div class="section level3">
-<h3 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
-</h3>
+transformation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">correlations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlate_persons.html">correlate_persons</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"day"</span>, subject <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aisha"</span>, <span class="st">"Alice"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">correlations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlate_persons.html">correlate_persons</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>                                  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>,</span>
+<span>                                  time <span class="op">=</span> <span class="st">"day"</span>, subject <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aisha"</span>, <span class="st">"Alice"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">correlations</span></span>
 <span><span class="co">#&gt; PERSON-SPECIFIC CORRELATIONS</span></span>
 <span><span class="co">#&gt;   Grouping   name</span></span>
@@ -267,16 +245,14 @@ other variable also tends to be above its typical level.</p>
 <span><span class="co">#&gt;   Alice     efficacy     monitoring   156   -0.231   [-0.37, -0.08]   0.003736</span></span>
 <span><span class="co">#&gt;   Alice     efficacy     effort       156    0.491     [0.36, 0.60]    &lt; 1e-04</span></span>
 <span><span class="co">#&gt;   Alice     monitoring   effort       156   -0.352   [-0.48, -0.21]    &lt; 1e-04</span></span></code></pre></div>
-<p>For Aisha, all three pairs were positively correlated, with
-coefficients between 0.28 and 0.39. For Alice, efficacy and effort were
-positively correlated (0.49), whereas monitoring was negatively
-correlated with both efficacy (-0.23) and effort (-0.35). A single
-correlation computed across all learners would conceal this difference
-in the direction of association.</p>
-</div>
-<div class="section level3">
-<h3 id="visualisation-1">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation-1"></a>
-</h3>
+<p>For Aisha, all three pairs are positively correlated, with
+coefficients between 0.28 and 0.39. For Alice, efficacy and effort are
+positively correlated (r = 0.49), and monitoring is negatively
+correlated with efficacy (r = −0.23) and with effort (r = −0.35). Alice
+reports lower effort and lower efficacy on occasions of higher
+monitoring.</p>
+<p>The figure plots each correlation with its 95% confidence interval,
+ordered by magnitude.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_correlations.html">plot_correlations</a></span><span class="op">(</span><span class="va">correlations</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -285,45 +261,45 @@ Figure 2. Within-person correlations with 95% confidence intervals for
 two learners.
 </p>
 </div>
-<p>Each row corresponds to one person and one pair of variables, and
-rows are ordered by the size of the correlation. All six confidence
-intervals exclude zero.</p>
-</div>
-<div class="section level3">
-<h3 id="assumptions-and-limitations-1">Assumptions and limitations<a class="anchor" aria-label="anchor" href="#assumptions-and-limitations-1"></a>
-</h3>
-<p>The coefficients describe association between variables measured on
-the same occasion. Temporal precedence is examined with
-<code><a href="../reference/fit_lm.html">fit_lm()</a></code> using lagged predictors or with the dynamic
-network models. Each coefficient is a bivariate association and is
-unadjusted for the remaining variables. Because consecutive daily
-observations are serially dependent, the confidence intervals may be too
-narrow. The <code>min_n</code> argument sets the minimum number of
-complete pairs required for a coefficient to be reported, and constant
-variables yield missing coefficients.</p>
-</div>
+<p>Of the 6 intervals, 6 lie entirely on one side of zero.</p>
+<p>The coefficients describe concurrent associations, measured on the
+same occasion, and each is a bivariate association unadjusted for the
+remaining variables. Temporal precedence is examined with lagged
+regressions and dynamic networks. Serial dependence between consecutive
+daily observations makes the confidence intervals too narrow when the
+autocorrelation is strong. The argument <code>min_n</code> sets the
+minimum number of complete pairs for a coefficient to be reported, and a
+variable that is constant within a person yields a missing
+coefficient.</p>
 </div>
 <div class="section level2">
-<h2 id="variance_components">
-<code>variance_components()</code><a class="anchor" aria-label="anchor" href="#variance_components"></a>
+<h2 id="between-person-and-within-person-variance">Between-person and within-person variance<a class="anchor" aria-label="anchor" href="#between-person-and-within-person-variance"></a>
 </h2>
-<div class="section level3">
-<h3 id="purpose-2">Purpose<a class="anchor" aria-label="anchor" href="#purpose-2"></a>
-</h3>
-<p><code><a href="../reference/variance_components.html">variance_components()</a></code> partitions the total variance of
-each variable into a between-person component, reflecting differences in
-person means, and a within-person component, reflecting fluctuation
-around each person’s mean. The intraclass correlation (ICC) is the
-between-person share of the total variance. Values near 0 indicate that
-persons have similar means and that variation arises mainly over time;
-values near 1 indicate stable differences between persons with little
-fluctuation within them.</p>
-</div>
-<div class="section level3">
-<h3 id="example-2">Example<a class="anchor" aria-label="anchor" href="#example-2"></a>
-</h3>
+<p>Person-specific models use only the fluctuation of each person around
+that person’s mean. Analyses that combine persons, such as pooled
+regressions, multilevel models and the comparison of individual with
+pooled estimates, use both the differences between person means and the
+fluctuation within persons. For these analyses, the partition of the
+variance determines how each variable enters the model. Between-person
+variance arises from differences in the person means, and within-person
+variance arises from the fluctuation of each person around that person’s
+mean.</p>
+<p>The intraclass correlation (ICC) is the between-person share of the
+total variance. A large ICC indicates that much of the variance reflects
+stable differences between persons. An association computed on the raw
+scores of all persons is then largely an association between person
+means. Such a variable enters a pooled analysis as a person mean and a
+deviation from it, so that the within-person and between-person effects
+are estimated separately with <code><a href="../reference/split_levels.html">split_levels()</a></code> and
+<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code>. The ICC is a property of the sample,
+computed over all persons. The within-person variability of an
+individual is assessed with the SD and RMSSD of that individual’s
+series. The reliability of the person means indicates how precisely the
+between-person part of a variable is measured, and an unreliable person
+mean biases the between-person and contextual effects.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">components</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/variance_components.html">variance_components</a></span><span class="op">(</span><span class="va">analysis_data</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">components</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/variance_components.html">variance_components</a></span><span class="op">(</span><span class="va">analysis_data</span>, id <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>                                  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">components</span></span>
 <span><span class="co">#&gt; VARIANCE COMPONENTS</span></span>
 <span><span class="co">#&gt;   Grouping   name</span></span>
@@ -337,18 +313,16 @@ fluctuation within them.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   ICC         share of variance lying BETWEEN groups</span></span>
 <span><span class="co">#&gt;   Reliability precision of each group's own mean</span></span></code></pre></div>
-<p>The ICCs were 0.40 for efficacy, 0.38 for monitoring, and 0.26 for
-effort. Between 60% and 74% of the variance of each variable was
-therefore located within learners. The between-person component was
-nonetheless substantial. Under these conditions a regression on the raw
-scores combines two distinct associations: the association between a
-learner’s daily deviations, and the association between learners’
-average levels. <code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> estimates the two
-separately.</p>
-</div>
-<div class="section level3">
-<h3 id="visualisation-2">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation-2"></a>
-</h3>
+<p>The ICCs are 0.40 for efficacy, 0.38 for monitoring and 0.26 for
+effort, so between 60% and 74% of the variance of each variable lies
+within learners, the part that person-specific models use. The
+between-person share is substantial for all three variables, and in a
+pooled analysis each is decomposed into a person mean and a deviation
+before entering the model. The reliability of the person means exceeds
+0.98 for all three variables, because each mean is computed from about
+156 observations.</p>
+<p>The figure plots the between-person and within-person share of the
+variance of each variable.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_variance.html">plot_variance</a></span><span class="op">(</span><span class="va">components</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -356,53 +330,40 @@ separately.</p>
 Figure 3. Between-person and within-person shares of variance.
 </p>
 </div>
-</div>
-<div class="section level3">
-<h3 id="assumptions-and-limitations-2">Assumptions and limitations<a class="anchor" aria-label="anchor" href="#assumptions-and-limitations-2"></a>
-</h3>
-<p>The reliability column refers to the precision of each person’s mean
-and is distinct from the reliability of a single occasion. A variable
-that is constant within persons supports only between-person
-comparisons, and a variable with no between-person variation supports
-only within-person analysis.</p>
-</div>
+<p>A variable that is constant within persons supports only
+between-person comparisons, and a variable without between-person
+variance supports only within-person analysis.</p>
 </div>
 <div class="section level2">
-<h2 id="correlate_levels">
-<code>correlate_levels()</code><a class="anchor" aria-label="anchor" href="#correlate_levels"></a>
+<h2 id="within-person-and-between-person-correlations">Within-person and between-person correlations<a class="anchor" aria-label="anchor" href="#within-person-and-between-person-correlations"></a>
 </h2>
-<div class="section level3">
-<h3 id="purpose-3">Purpose<a class="anchor" aria-label="anchor" href="#purpose-3"></a>
-</h3>
-<p>A correlation computed across persons is frequently used to describe
-how two variables are related within each person. Fisher, Medaglia, and
+<p>Findings obtained from a group are often taken to describe the
+individuals in that group. The inference from the group to the
+individual holds when the process is ergodic, that is, when the
+relations among the variables are the same within every person and
+stable over time <span class="citation">(<a href="#ref-molenaar2004">Molenaar 2004</a>)</span>. Fisher, Medaglia and
 Jeronimus <span class="citation">(<a href="#ref-fisher2018">2018</a>)</span> proposed a direct test of this
-generalization. Two distributions of correlations are compared for the
-same pair of variables:</p>
-<ul>
-<li>
-<strong>within persons</strong>: one correlation per person,
-computed across that person’s occasions;</li>
-<li>
-<strong>between persons</strong>: one correlation per occasion,
-computed across persons. The first observations of all persons form one
-cross-sectional data set, the second observations form a second one, and
-so on.</li>
-</ul>
-<p>When group-level results generalize to individuals, the two
-distributions have similar means and similar spreads. Fisher and
-colleagues found the within-person standard deviation to be two to four
-times larger than the between-person standard deviation across six
-samples.</p>
-</div>
-<div class="section level3">
-<h3 id="example-3">Example<a class="anchor" aria-label="anchor" href="#example-3"></a>
-</h3>
-<p>This example uses all 36 learners in <code>srl</code>, so that every
-between-person correlation is based on 36 persons and every
-within-person correlation on up to 156 occasions.</p>
+generalisation for correlations. For one pair of variables, two
+distributions of correlations are compared. The within-person
+distribution contains one correlation per person, computed across that
+person’s occasions. The between-person distribution contains one
+correlation per occasion, computed across persons. The first
+observations of all persons form one cross-sectional sample, the second
+observations form a second one, and so on. When group-level results
+generalise to individuals, the two distributions have similar means and
+similar spreads. Across six samples, Fisher and colleagues found the
+within-person standard deviation to be two to four times the
+between-person standard deviation.</p>
+<p>The comparison uses all 36 learners in <code>srl</code>, so each
+between-person correlation rests on 36 persons and each within-person
+correlation on up to 156 occasions. <code><a href="../reference/correlate_levels.html">correlate_levels()</a></code>
+returns one row per pair of variables, with the mean and standard
+deviation of each distribution and the ratio of the two standard
+deviations.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">levels_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlate_levels.html">correlate_levels</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">levels_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlate_levels.html">correlate_levels</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>                                  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>,</span>
+<span>                                  time <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
 <span><span class="va">levels_result</span></span>
 <span><span class="co">#&gt; WITHIN- VERSUS BETWEEN-PERSON CORRELATIONS</span></span>
 <span><span class="co">#&gt;   Grouping       name</span></span>
@@ -417,25 +378,18 @@ within-person correlation on up to 156 occasions.</p>
 <span><span class="co">#&gt;   within: one r per person;  between: one r per occasion</span></span>
 <span><span class="co">#&gt;   SD ratio = within SD / between SD</span></span></code></pre></div>
 <p>For efficacy and monitoring, and for monitoring and effort, the mean
-correlations at the two levels were close (0.27 and 0.29; 0.25 and
-0.28). For efficacy and effort, the mean within-person correlation
-(0.36) was lower than the mean between-person correlation (0.50). For
-all three pairs, the within-person correlations were considerably more
-dispersed: their standard deviation was 1.8 to 2.3 times that of the
-between-person correlations. For two of the three pairs, the correlation
-estimated across learners therefore approximated the average
-within-learner correlation, while the correlations of individual
-learners were distributed about twice as widely around that value as the
-between-person correlations.</p>
-</div>
-<div class="section level3">
-<h3 id="visualisation-3">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation-3"></a>
-</h3>
-<p><code><a href="../reference/plot_levels.html">plot_levels()</a></code> displays the two distributions as density
-curves, following the comparison of Fisher and colleagues. Densities
-place the 36 within-person and 156 between-person correlations on a
-common scale. The ticks below each curve mark the correlations of the
-individual learners, and the vertical stems mark the means.</p>
+correlations at the two levels are close (0.27 and 0.29; 0.25 and 0.28).
+For efficacy and effort, the mean within-person correlation (0.36) is
+lower than the mean between-person correlation (0.50). For all three
+pairs, the within-person correlations are more dispersed, with a
+standard deviation 1.82 to 2.30 times that of the between-person
+correlations. For two of the three pairs, the correlation across
+learners approximates the average within-learner correlation, and the
+correlations of the individual learners are distributed about twice as
+widely around it.</p>
+<p>The figure plots the two distributions as density curves. The ticks
+below each curve mark the individual correlations, and the vertical
+lines mark the means.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_levels.html">plot_levels</a></span><span class="op">(</span><span class="va">levels_result</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -445,17 +399,16 @@ solid) and between-person correlations (one per occasion, dashed) for
 three pairs of variables.
 </p>
 </div>
-</div>
-<div class="section level3">
-<h3 id="temporal-dependence">Temporal dependence<a class="anchor" aria-label="anchor" href="#temporal-dependence"></a>
-</h3>
-<p>Serial dependence within persons can inflate the spread of
+<p>Serial dependence within persons can inflate the spread of the
 within-person correlations. With <code>lag_adjust = TRUE</code>, each
 variable is first regressed on its own lag-1 value and on the lag-1
 value of the other variable, and the within-person correlations are
 computed from the residuals.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="../reference/correlate_levels.html">correlate_levels</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>, time <span class="op">=</span> <span class="st">"day"</span>, lag_adjust <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">lagged_levels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlate_levels.html">correlate_levels</a></span><span class="op">(</span><span class="va">srl</span>, id <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>                                  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"efficacy"</span>, <span class="st">"monitoring"</span>, <span class="st">"effort"</span><span class="op">)</span>,</span>
+<span>                                  time <span class="op">=</span> <span class="st">"day"</span>, lag_adjust <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lagged_levels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            x          y n_within mean_within median_within sd_within n_between</span></span>
 <span><span class="co">#&gt; 1   efficacy monitoring       36   0.2710705     0.2988340 0.3057933       156</span></span>
 <span><span class="co">#&gt; 2   efficacy     effort       36   0.3674765     0.3562763 0.2499535       156</span></span>
@@ -464,43 +417,33 @@ computed from the residuals.</p>
 <span><span class="co">#&gt; 1    0.2873413      0.2979134  0.1446419     -0.01627083 2.114140</span></span>
 <span><span class="co">#&gt; 2    0.5034717      0.5096236  0.1373181     -0.13599523 1.820251</span></span>
 <span><span class="co">#&gt; 3    0.2818936      0.3080957  0.1397777     -0.03682132 2.293521</span></span></code></pre></div>
-<p>The adjustment left the results essentially unchanged: the mean
-within-person correlations changed by at most 0.003, and the ratios of
-standard deviations remained between 1.8 and 2.3. This agrees with the
-small lag-1 autocorrelations implied by Figure 1. The larger spread of
-within-person correlations is therefore attributable to differences
-between learners in how the variables co-vary.</p>
-</div>
-<div class="section level3">
-<h3 id="assumptions-and-limitations-3">Assumptions and limitations<a class="anchor" aria-label="anchor" href="#assumptions-and-limitations-3"></a>
-</h3>
+<p>The adjustment changes the mean within-person correlations by at most
+0.004, and the ratios of the standard deviations remain between 1.82 and
+2.29. The lag-1 autocorrelations in Figure 1 are small, and the larger
+spread of the within-person correlations reflects differences between
+learners in the covariation of the variables.</p>
 <p>The between-person correlations require occasions that are comparable
-across persons; here the
+across persons, and here the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>-th
-observation of every learner is treated as one occasion. With fewer
-persons than occasions, each between-person correlation rests on a small
-sample, and its sampling error contributes to the between-person spread.
-The ratio of standard deviations is a descriptive index and is reported
-without a significance test.</p>
-</div>
+observation of every learner is treated as one occasion. With few
+persons, each between-person correlation rests on a small sample, and
+its sampling error adds to the between-person spread. The ratio of the
+standard deviations is a descriptive index and is reported without a
+significance test.</p>
 </div>
 <div class="section level2">
-<h2 id="choice-among-the-four-functions">Choice among the four functions<a class="anchor" aria-label="anchor" href="#choice-among-the-four-functions"></a>
+<h2 id="from-description-to-models">From description to models<a class="anchor" aria-label="anchor" href="#from-description-to-models"></a>
 </h2>
-<p><code><a href="../reference/describe_persons.html">describe_persons()</a></code> is applied first, to establish that
-every person has sufficient observations and variation.
-<code><a href="../reference/variance_components.html">variance_components()</a></code> then indicates whether variation is
-located mainly between or within persons, which determines whether the
-two levels must be separated in subsequent models.
-<code><a href="../reference/correlate_persons.html">correlate_persons()</a></code> provides an initial account of
-within-person co-variation, and <code><a href="../reference/correlate_levels.html">correlate_levels()</a></code>
-indicates how well correlations estimated across persons describe the
-correlations within them.</p>
-<p>The four functions are descriptive. Models are fitted with
-<code><a href="../reference/fit_lm.html">fit_lm()</a></code> for a single outcome and several predictors, with
-<code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> for separate within-person and
-between-person effects, and with <code><a href="../reference/pool_coefs.html">pool_coefs()</a></code> for
-summarising the heterogeneity of person-specific effects.</p>
+<p>The descriptions identify the persons and variables that can be
+analysed and the form in which the variables enter the models. Series
+that are short, sparse or nearly constant are excluded or analysed with
+fewer predictors. Variables with a substantial between-person share are
+decomposed into person means and deviations. The within-person
+correlations and their spread indicate how far a pooled estimate
+describes the individual learners. The person-specific estimates are
+then modelled and compared with the pooled estimate using
+<code><a href="../reference/fit_lm.html">fit_lm()</a></code>, <code><a href="../reference/fit_within_between.html">fit_within_between()</a></code> and
+<code><a href="../reference/pool_coefs.html">pool_coefs()</a></code>.</p>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -518,6 +461,12 @@ Jahng, Seungmin, Phillip K. Wood, and Timothy J. Trull. 2008.
 Assessment: Indices Using Successive Difference and Group Comparison via
 Multilevel Modeling.”</span> <em>Psychological Methods</em> 13 (4):
 354–75. <a href="https://doi.org/10.1037/a0014173" class="external-link">https://doi.org/10.1037/a0014173</a>.
+</div>
+<div id="ref-molenaar2004" class="csl-entry">
+Molenaar, Peter C. M. 2004. <span>“A Manifesto on Psychology as
+Idiographic Science: Bringing the Person Back into Scientific
+Psychology, This Time Forever.”</span> <em>Measurement:
+Interdisciplinary Research and Perspectives</em> 2 (4): 201–18. <a href="https://doi.org/10.1207/s15366359mea0204_1" class="external-link">https://doi.org/10.1207/s15366359mea0204_1</a>.
 </div>
 </div>
 </div>

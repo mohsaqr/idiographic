@@ -31,6 +31,8 @@
 <url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_fit.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_groups.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.idiographic_level_correlations.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.rolling_gvar_result.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/as.data.frame.rolling_var_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as_netobject.gvar_result.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as_netobject.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/as_netobject.net_gimme.html</loc></url>
@@ -55,6 +57,7 @@
 <url><loc>https://pak.dynasite.org/idiographic/reference/estimate_stability.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/estimator_info.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/extract_edges.html</loc></url>
+<url><loc>https://pak.dynasite.org/idiographic/reference/failures.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/find_subgroups.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/fit_effects.html</loc></url>
 <url><loc>https://pak.dynasite.org/idiographic/reference/fit_gimme.html</loc></url>

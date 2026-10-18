@@ -158,7 +158,7 @@ fit_lm(prepped, y = "effort", x = c("efficacy", "efficacy_lag1"),
 #>   Subjects:    36
 #>   Predictions: 2300
 #>   Best RMSE:   19.3110 (individual/lm)
-#>   Use metrics(), predictions(), coefs(), compare()
+#>   Use metrics(), predictions(), coefs(), failures(), compare()
 
 # Keep both halves, so the two effects can be compared in one model. A
 # between-person column is constant inside a person, so it only belongs in a
@@ -177,5 +177,5 @@ fit_lm(split, y = "effort", x = c("efficacy_within", "efficacy_between"),
 #>   Subjects:    36
 #>   Predictions: 1150
 #>   Best RMSE:   21.9757 (pooled/lm)
-#>   Use metrics(), predictions(), coefs(), compare()
+#>   Use metrics(), predictions(), coefs(), failures(), compare()
 ```

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,16 +21,16 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bayesian-var-dsem.html">6. Bayesian VAR and DSEM</a></li>
     <li><a class="dropdown-item" href="../articles/clean-room-methods.html">10. Clean-room design</a></li>
-    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing Persons: Level, Change, Association, and Variance</a></li>
+    <li><a class="dropdown-item" href="../articles/describing-persons.html">Describing persons</a></li>
     <li><a class="dropdown-item" href="../articles/gimme.html">8. GIMME</a></li>
     <li><a class="dropdown-item" href="../articles/graphical-var.html">4. Graphical VAR</a></li>
     <li><a class="dropdown-item" href="../articles/mlvar.html">5. Multilevel VAR</a></li>
     <li><a class="dropdown-item" href="../articles/ordinary-var.html">3. Ordinary VAR</a></li>
     <li><a class="dropdown-item" href="../articles/pooling-shrinkage.html">Pooling and Shrinking Person-Specific Coefficients</a></li>
     <li><a class="dropdown-item" href="../articles/prediction.html">Idiographic Prediction and Temporal Validation</a></li>
-    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing Panel Data</a></li>
+    <li><a class="dropdown-item" href="../articles/preprocess-panel.html">Preparing panel data</a></li>
     <li><a class="dropdown-item" href="../articles/preprocessing.html">2. Preprocessing</a></li>
-    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression Models</a></li>
+    <li><a class="dropdown-item" href="../articles/regression-models.html">Regression models</a></li>
     <li><a class="dropdown-item" href="../articles/rolling-networks.html">9. Rolling networks</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-workflows.html">Guide to Idiographic Statistical Workflows</a></li>
     <li><a class="dropdown-item" href="../articles/subgroups-effects.html">Subgroups, Treatment Effects, and Heterogeneity</a></li>
@@ -54,10 +54,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.0.9004" id="idiographic-0409004">idiographic 0.4.0.9004<a class="anchor" aria-label="anchor" href="#idiographic-0409004"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0.9005" id="idiographic-0409005">idiographic 0.4.0.9005<a class="anchor" aria-label="anchor" href="#idiographic-0409005"></a></h2>
 <div class="section level3">
-<h3 id="unified-idiographic-statistics-0-4-0-9004">Unified idiographic statistics<a class="anchor" aria-label="anchor" href="#unified-idiographic-statistics-0-4-0-9004"></a></h3>
-<ul><li><p><code><a href="../reference/fit_gimme.html">fit_gimme()</a></code> checks its arguments before it checks for <code>lavaan</code>, so an unsupported GIMME mode raises its own error when <code>lavaan</code> is absent.</p></li>
+<h3 id="unified-idiographic-statistics-0-4-0-9005">Unified idiographic statistics<a class="anchor" aria-label="anchor" href="#unified-idiographic-statistics-0-4-0-9005"></a></h3>
+<ul><li><p>New <code><a href="../reference/failures.html">failures()</a></code> accessor returns the failure table of any result as a tidy data frame, with <code>model</code>, <code>scope</code> and <code>subject</code> filters. Print methods and error messages now point to <code><a href="../reference/failures.html">failures()</a></code> instead of <code>$failures</code>, and rolling network results return their windows with <code>as.data.frame(x, what = "windows")</code>.</p></li>
+<li><p><code><a href="../reference/fit_gimme.html">fit_gimme()</a></code> checks its arguments before it checks for <code>lavaan</code>, so an unsupported GIMME mode raises its own error when <code>lavaan</code> is absent.</p></li>
 <li><p><strong>Changed results:</strong> pooled and subgroup models from <code><a href="../reference/fit_lm.html">fit_lm()</a></code> and <code><a href="../reference/fit_glm.html">fit_glm()</a></code> now report standard errors clustered on the person (CR1). They previously used model-based standard errors that treated every occasion as an independent observation; on the bundled <code>srl</code> data these were about five times too small. Person-specific models are unchanged.</p></li>
 <li><p>Predictors with no variance for some persons now raise a warning of class <code>idiographic_constant_predictor</code> naming those persons; their person-specific models previously omitted the predictor silently.</p></li>
 <li><p>Folded the <code>idiostats</code> analytical engine into <code>idiographic</code>. The package now covers person-level descriptions and correlations, LM/GLM and expanded ML, rolling-origin validation, within-between effects, coefficient pooling and shrinkage, subgroup existence/discovery/modelling, treatment effects, and heterogeneity analysis alongside all existing dynamic-network estimators.</p></li>
