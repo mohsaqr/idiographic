@@ -97,9 +97,18 @@ fit_rolling_graphical_var(
 
 ## Value
 
-A `rolling_gvar_result` with `$estimates`, `$windows`, `$failures`, and
-optionally `$fits`. `$estimates` is a tidy coefficient table with
-subject/window metadata plus `network`, `from`, `to`, and `weight`.
+A `rolling_gvar_result`.
+[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) (or
+[`summary()`](https://rdrr.io/r/base/summary.html) and
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md))
+returns the estimates, one row per subject, window, network and edge:
+`subject`, `window`, the window bounds (`start_row`, `end_row`,
+`start_day`, `end_day`, `start_beep`, `end_beep`), `network`, `from`,
+`to` and `weight`. `as.data.frame(x, what = "windows")` returns one row
+per window and
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+the windows that could not be fit. With `keep_fits = TRUE`,
+`plot(x, fit = )` and `matrices(x, fit = )` show one window's network.
 
 ## Examples
 
@@ -112,7 +121,7 @@ tv <- fit_rolling_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                             day = "day", beep = "beep",
                             window_size = 50, step = 25,
                             scale = FALSE, n_lambda = 5)
-head(tv$estimates)
+head(as.data.frame(tv))
 #>   subject window start_row end_row start_day end_day start_beep end_beep
 #> 1       1      1         1      50         1       3          1       10
 #> 2       1      1         1      50         1       3          1       10
@@ -127,4 +136,9 @@ head(tv$estimates)
 #> 4 temporal    A  B      0
 #> 5 temporal    B  B      0
 #> 6 temporal    C  B      0
+as.data.frame(tv, what = "windows")
+#>   subject window start_row end_row start_day end_day start_beep end_beep
+#> 1       1      1         1      50         1       3          1       10
+#> 2       1      2        26      75         2       4          6       15
+#> 3       1      3        51     100         3       5         11       20
 ```

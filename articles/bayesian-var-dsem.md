@@ -82,7 +82,7 @@ preprocess(srl, vars = vars, id = "name", subject = "Grace")
 #>   Drift flags:    0
 #>   Unit-root risk: 0
 #>   Zero variance:  0
-#>   Tables:         x$pairs | x$counts | x$diagnostics
+#>   Tables:         as.data.frame(x) | summary(x) | matrices(x)
 ```
 
 Grace’s 156 ordered occasions yield 155 complete current/lagged pairs,

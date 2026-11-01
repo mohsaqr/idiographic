@@ -21,4 +21,6 @@ summary(object, ...)
 
 ## Value
 
-A tidy per-network metrics `data.frame`.
+A `data.frame` with one row per network layer (`temporal`,
+`contemporaneous`): `network`, `n_nodes`, `n_edges`, `density`,
+`mean_abs_weight`, `n_positive` and `n_negative`.

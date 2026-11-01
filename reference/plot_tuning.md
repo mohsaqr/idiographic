@@ -28,4 +28,14 @@ plot_tuning(x, model = NULL, scope = NULL, subject = NULL, metric = NULL, ...)
 
 ## Value
 
-Invisibly, the tuning table.
+Invisibly, the `data.frame` of
+[`tuning()`](https://pak.dynasite.org/idiographic/reference/tuning.md)
+that was plotted, one row per candidate setting.
+
+## Examples
+
+``` r
+fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day", scope = "pooled", model = "knn", tune = TRUE)
+plot_tuning(fit)
+```

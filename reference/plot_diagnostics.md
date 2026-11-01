@@ -35,4 +35,15 @@ plot_diagnostics(
 
 ## Value
 
-Invisibly, the diagnostic table.
+Invisibly, the `data.frame` of
+[`diagnostics()`](https://pak.dynasite.org/idiographic/reference/diagnostics.md)
+that was plotted, one row per held-out occasion and model.
+
+## Examples
+
+``` r
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+plot_diagnostics(fit, scope = "individual")
+
+plot_diagnostics(fit, scope = "individual", type = "calibration")
+```

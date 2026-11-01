@@ -67,7 +67,7 @@ pp
 #>   Drift flags:    1
 #>   Unit-root risk: 0
 #>   Zero variance:  0
-#>   Tables:         x$pairs | x$counts | x$diagnostics
+#>   Tables:         as.data.frame(x) | summary(x) | matrices(x)
 #> 
 #> 10 of 180 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
 #>   preprocess(data = srl, vars = vars, id = "name", detrend = "auto")
@@ -131,8 +131,8 @@ occasions (here, Bob) retains fewer.
 
 ## What the flags mean
 
-Each row of `pp$diagnostics` is one subject-series, and each flag marks
-a different way stationarity can fail:
+Each row of `as.data.frame(pp)` is one subject-series, and each flag
+marks a different way stationarity can fail:
 
 - **`flag_trend`** — a significant linear slope over time; the mean is
   not constant.
@@ -208,12 +208,11 @@ summary(clean2)
 #> 5     effort       36   0.827       1         0           0         1
 ```
 
-The transformed lag-pair design is available in `clean$pairs` and its
-current and lagged matrices in `matrices(clean)`. The model-fitting
-functions take long data rather than a `preprocess_result`, so an
-applied analysis must make the same documented transformation to its
-long input before fitting; the audit does not silently alter `srl` or
-any later model call.
+The current and lagged matrices of the transformed lag-pair design are
+returned by `matrices(clean)`. The model-fitting functions take long
+data rather than a `preprocess_result`, so an applied analysis must make
+the same documented transformation to its long input before fitting; the
+audit does not silently alter `srl` or any later model call.
 
 ## References
 

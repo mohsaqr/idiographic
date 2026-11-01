@@ -65,27 +65,77 @@ d <- data.frame(
 )
 fits <- fit_var_each(d, vars = c("A", "B", "C"), id = "id",
                        day = "day", beep = "beep")
-fits[["1"]]
-#> OLS VAR Result
-#>   Variables:      3 (A, B, C)
-#>   Observations:   39
-#>   Temporal edges: 9 / 9
-#>   Contemp edges:  3 / 3
+fits
+#> Idiographic OLS VARs
+#>   Subjects:       3
+#>   Variables:      3
+#>   Lag pairs:      median 39 (range 39-39)
+#>   Temporal edges: median 9 (range 9-9)
+#>   Access:         edges(x) | matrices(x, subject = "1") | plot(x, subject = "1")
+edges(fits)
+#>    subject         network from to       weight
+#> 1        1        temporal    B  A -0.334449439
+#> 2        1        temporal    C  A -0.268308164
+#> 3        1        temporal    A  B  0.123451891
+#> 4        1        temporal    B  C -0.096399247
+#> 5        1        temporal    A  C  0.078323279
+#> 6        1        temporal    C  B -0.071241298
+#> 7        1 contemporaneous    B  C -0.235617628
+#> 8        1 contemporaneous    A  B  0.042767980
+#> 9        1 contemporaneous    A  C -0.013305561
+#> 10       2        temporal    A  C -0.242893972
+#> 11       2        temporal    C  B  0.238052275
+#> 12       2        temporal    B  C -0.134676220
+#> 13       2        temporal    A  B  0.080957526
+#> 14       2        temporal    C  A -0.070842824
+#> 15       2        temporal    B  A  0.054567914
+#> 16       2 contemporaneous    A  B -0.332758490
+#> 17       2 contemporaneous    A  C  0.282896400
+#> 18       2 contemporaneous    B  C -0.000641728
+#> 19       3        temporal    B  A -0.220206978
+#> 20       3        temporal    C  A -0.179718696
+#> 21       3        temporal    A  B  0.174612034
+#> 22       3        temporal    A  C  0.159131762
+#> 23       3        temporal    B  C  0.097882095
+#> 24       3        temporal    C  B  0.033223272
+#> 25       3 contemporaneous    A  B  0.302546919
+#> 26       3 contemporaneous    B  C -0.180732931
+#> 27       3 contemporaneous    A  C  0.159837858
+matrices(fits, subject = "1")
 #> 
-#>   Temporal [directed]
-#>     weights [-0.334, 0.123]  |  +3 / -6 edges
-#>           A     B     C
-#>     A  0.07  0.12  0.08
-#>     B -0.33 -0.31 -0.10
-#>     C -0.27 -0.07 -0.29
+#> $beta
+#>   (Intercept)     A      B      C
+#> A      -0.003 0.073 -0.334 -0.268
+#> B      -0.012 0.123 -0.312 -0.071
+#> C      -0.026 0.078 -0.096 -0.288
 #> 
-#>   Contemporaneous [undirected]
-#>     weights [-0.236, 0.043]  |  +1 / -2 edges
-#>           A     B     C
-#>     A  0.00  0.04 -0.01
-#>     B  0.04  0.00 -0.24
-#>     C -0.01 -0.24  0.00
+#> $temporal
+#>       A      B      C
+#> A 0.073 -0.334 -0.268
+#> B 0.123 -0.312 -0.071
+#> C 0.078 -0.096 -0.288
 #> 
-#>   plot(x) | plot(x, layer = "temporal") 
-#>   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)
+#> $residual_cov
+#>        A      B      C
+#> A  0.881  0.043 -0.022
+#> B  0.043  0.937 -0.221
+#> C -0.022 -0.221  0.934
+#> 
+#> $kappa
+#>        A      B     C
+#> A  1.137 -0.049 0.015
+#> B -0.049  1.133 0.267
+#> C  0.015  0.267 1.134
+#> 
+#> $PCC
+#>        A      B      C
+#> A  0.000  0.043 -0.013
+#> B  0.043  0.000 -0.236
+#> C -0.013 -0.236  0.000
+#> 
+#> $PDC
+#>        A      B      C
+#> A  0.073  0.119  0.076
+#> B -0.317 -0.290 -0.093
+#> C -0.259 -0.069 -0.269
 ```

@@ -152,7 +152,13 @@ preprocess(
 
 ## Value
 
-A `preprocess_result` object with:
+A `preprocess_result` object.
+[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) returns
+the per-subject, per-variable diagnostics;
+[`summary()`](https://rdrr.io/r/base/summary.html) rolls them up to one
+row per variable;
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
+returns the design matrices. It holds:
 
 - `pairs`:
 
@@ -182,12 +188,25 @@ d <- data.frame(id = 1, day = 1, beep = 1:40,
 pp <- preprocess(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep")
 #> 1 of 2 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
 #>   preprocess(data = d, vars = c("A", "B"), id = "id", day = "day", beep = "beep", detrend = "auto")
-pp$counts
-#>   subject day n_rows n_lag_possible n_complete_pairs n_retained
-#> 1       1   1     40             39               39         39
-#>   n_boundary_dropped
-#> 1                  1
-pp$diagnostics
+pp
+#> Idiographic Preprocessing
+#>   Variables:      2 (A, B)
+#>   Ordered rows:   40
+#>   Retained pairs: 39
+#>   Trend flags:    1
+#>   High AR flags:  0
+#>   Drift flags:    1
+#>   Unit-root risk: 1
+#>   Zero variance:  0
+#>   Tables:         as.data.frame(x) | summary(x) | matrices(x)
+#> 
+#> 1 of 2 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
+#>   preprocess(data = d, vars = c("A", "B"), id = "id", day = "day", beep = "beep", detrend = "auto")
+summary(pp)
+#>   variable n_series mean_sd n_trend n_high_ar n_unit_root n_flagged
+#> 1        A        1       1       1         0           1         1
+#> 2        B        1       1       0         0           0         0
+as.data.frame(pp)
 #>   subject variable  n n_observed missing_prop         mean sd  trend_slope
 #> 1       1        A 40         40            0 2.637593e-17  1  0.054326088
 #> 2       1        B 40         40            0 1.507583e-17  1 -0.008082785
@@ -208,23 +227,8 @@ pp$diagnostics
 #> 2                  FALSE
 # Difference the trending series and recheck the flags:
 preprocess(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
-           detrend = "difference")$diagnostics
-#>   subject variable  n n_observed missing_prop        mean        sd
-#> 1       1        A 40         39        0.025  0.06550595 0.5281272
-#> 2       1        B 40         39        0.025 -0.01177038 1.4990982
-#>    trend_slope    trend_t   trend_p         ar1      ar1_t        ar1_p
-#> 1 -0.004133590 -0.5450014 0.5890229  0.03985218  0.2375795 0.8135542319
-#> 2 -0.004349215 -0.2013219 0.8415496 -0.54633732 -3.8973207 0.0004063707
-#>   mean_first_half mean_second_half  mean_shift mean_shift_std mean_shift_p
-#> 1     0.138499769     -0.003838187 -0.14233796     0.26951451    0.4081080
-#> 2     0.001675254     -0.024543733 -0.02621899     0.01748984    0.9570363
-#>   sd_first_half sd_second_half sd_ratio unit_root_coef unit_root_t
-#> 1      0.544007      0.5167972 1.052651     -0.9601478   -5.723937
-#> 2      1.293586      1.7055629 1.318476     -1.5463373  -11.030864
-#>   flag_zero_variance flag_trend flag_high_ar flag_mean_shift flag_sd_shift
-#> 1              FALSE      FALSE        FALSE           FALSE         FALSE
-#> 2              FALSE      FALSE        FALSE           FALSE         FALSE
-#>   flag_unit_root flag_stationarity_risk
-#> 1          FALSE                  FALSE
-#> 2          FALSE                  FALSE
+           detrend = "difference") |> summary()
+#>   variable n_series mean_sd n_trend n_high_ar n_unit_root n_flagged
+#> 1        A        1   0.528       0         0           0         0
+#> 2        B        1   1.499       0         0           0         0
 ```

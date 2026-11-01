@@ -89,7 +89,17 @@ fit_glm(
 
 ## Value
 
-An `idiographic_fit`.
+An `idiographic_fit` (also of class `idiostats_fit`). Read it with
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
+(one row per scope, model, person and term: `estimate`, `std_error`,
+`statistic`, `p_value`),
+[`metrics()`](https://pak.dynasite.org/idiographic/reference/metrics.md)
+(held-out prediction error, one row per scope, model and person plus
+`.overall` rows),
+[`predictions()`](https://pak.dynasite.org/idiographic/reference/predictions.md)
+(one row per held-out occasion) and
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+(persons or scopes that could not be fitted).
 
 ## Details
 
@@ -103,16 +113,21 @@ report the model-based standard errors of the fitted model.
 ## Examples
 
 ``` r
-# `srl` carries some missing values, so na.rm is needed to derive an outcome.
-srl$high <- ifelse(srl$effort > median(srl$effort, na.rm = TRUE),
-                   "yes", "no")
-fit <- fit_glm(srl, y = "high", x = c("efficacy", "planning"), id = "name",
-               family = "binomial", time = "day")
+# Daily submission (0/1) of 40 simulated learners, predicted by motivation.
+fit <- fit_glm(submissions, y = "submitted", x = "motivation",
+               id = "learner", family = "binomial", time = "day")
+coefs(fit, scope = "pooled")
+#>    scope    model estimator subject subgroup        term   estimate  std_error
+#> 1 pooled binomial    native    .all     .all (Intercept) -0.1210932 0.08797027
+#> 2 pooled binomial    native    .all     .all  motivation  0.2297620 0.12060291
+#>   statistic    p_value
+#> 1 -1.376524 0.16865944
+#> 2  1.905111 0.05676559
 metrics(fit, overall = TRUE)
-#>        scope    model estimator  subject subgroup    n  accuracy     brier
-#> 1     pooled binomial    native .overall     .all 1150 0.7165217 0.1869180
-#> 2 individual binomial    native .overall     .all 1150 0.7765217 0.1485573
+#>        scope    model estimator  subject subgroup   n accuracy     brier
+#> 1     pooled binomial    native .overall     .all 640 0.565625 0.2432327
+#> 2 individual binomial    native .overall     .all 640 0.659375 0.2098596
 #>    log_loss
-#> 1 0.5541527
-#> 2 0.4468249
+#> 1 0.6794943
+#> 2 0.6062158
 ```

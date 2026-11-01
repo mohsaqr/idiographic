@@ -141,8 +141,9 @@ With `k = "auto"` the number of subgroups is chosen by
 a Gaussian mixture on the person coefficients selected by BIC over both
 the number of components and the covariance structure. It may return
 **one**, in which case a warning is raised and the partition should not
-be trusted. See `$selection` for the BIC table and `$shape` for the
-skewness diagnostic.
+be trusted. The printed result states this verdict; the BIC table
+(`selection`) and the skewness diagnostic (`shape`) are stored in the
+result.
 
 `method = "mixture_regression"` defers to the same test rather than to
 its own BIC, and the reason is worth knowing. On 30 simulated panels
@@ -205,30 +206,17 @@ groups(g)
 auto <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",
                        id = "name", k = "auto", k_max = 4, reps = 10)
 #> Warning: No subgroups detected: one population fits these people best. Any partition returned below is not supported by the data.
-auto$selection
-#>    k model    loglik npar      bic selected
-#> 1  1   EII -202.2988    5 422.5153     TRUE
-#> 2  1   VII -202.2988    5 422.5153    FALSE
-#> 3  2   EII -195.1972   10 426.2296    FALSE
-#> 4  2   VII -194.5701   11 428.5589    FALSE
-#> 5  2   EEI -191.4409   13 429.4675    FALSE
-#> 6  1   EEE -191.2969   14 432.7631    FALSE
-#> 7  1   VVV -191.2969   14 432.7631    FALSE
-#> 8  1   EEI -202.2988    8 433.2658    FALSE
-#> 9  1   VVI -202.2988    8 433.2658    FALSE
-#> 10 3   VII -186.3938   17 433.7074    FALSE
-#> 11 2   VVV -165.3181   29 434.5582    FALSE
-#> 12 3   EII -191.2184   15 436.1897    FALSE
-#> 13 2   EEE -185.1661   19 438.4190    FALSE
-#> 14 2   VVI -189.2301   17 439.3800    FALSE
-#> 15 3   EEI -187.4943   18 439.4919    FALSE
-#> 16 3   EEE -179.4884   24 444.9812    FALSE
-#> 17 4   VII -182.2114   23 446.8438    FALSE
-#> 18 4   EII -189.0430   20 449.7565    FALSE
-#> 19 4   VVV -120.4172   59 452.2620    FALSE
-#> 20 3   VVI -179.7337   26 452.6388    FALSE
-#> 21 4   EEI -185.1333   23 452.6875    FALSE
-#> 22 3   VVV -149.2422   44 456.1591    FALSE
-#> 23 4   EEE -176.5275   29 456.9771    FALSE
-#> 24 4   VVI -173.6042   35 472.6316    FALSE
+auto
+#> Idiographic Subgroups
+#>   Method:      effect_clustering
+#>   Subgroups:   1 (chosen automatically)
+#>   People:      36
+#>   Sizes:       g1=36
+#>   Stability:   1.00 (how reproducible the partition is --
+#>                NOT evidence that the subgroups are real)
+#> 
+#>   VERDICT:     no subgroups detected -- one population fits best.
+#>                The groups above are not supported by the data.
+#> 
+#>   Use groups(), test_subgroups(), fit_subgroups()
 ```

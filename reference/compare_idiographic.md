@@ -61,9 +61,14 @@ compare_idiographic(
 
 ## Value
 
-A `model_comparison` object with `$comparison`, `$failures`, and
-optionally `$fits`. `$comparison` is a tidy `data.frame` with one row
-per method/network.
+A `model_comparison` object.
+[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) (or
+[`summary()`](https://rdrr.io/r/base/summary.html)) returns the
+comparison table, a tidy `data.frame` with one row per method and
+network;
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+returns the estimators that failed. With `keep_fits = TRUE`,
+`matrices(x, fit = 1)` prints the matrices of one stored fit.
 
 ## Examples
 
@@ -77,7 +82,7 @@ cmp <- compare_idiographic(
   estimators = c("var", "graphical_var"),
   estimator_args = list(graphical_var = list(n_lambda = 5))
 )
-cmp$comparison
+as.data.frame(cmp)
 #>          method         network n_nodes n_edges density mean_abs_weight
 #> 1           var        temporal       3       6       1      0.09014205
 #> 2           var contemporaneous       3       3       1      0.08260114

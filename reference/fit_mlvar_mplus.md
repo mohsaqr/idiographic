@@ -124,7 +124,11 @@ fit_mlvar_mplus(
 
 A `net_mplus` object, also inheriting from `net_mlvar`, with temporal,
 contemporaneous, and between networks plus Mplus metadata in attributes.
-The original `mlVAR`/Mplus object is available as `attr(x, "mplus")`.
+[`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md),
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md) and
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
+read the networks; the original `mlVAR`/Mplus object is kept in the
+`"mplus"` attribute.
 
 ## See also
 
@@ -134,12 +138,13 @@ The original `mlVAR`/Mplus object is available as `attr(x, "mplus")`.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run: needs a licensed Mplus installation, which CRAN does not have.
 fit <- fit_mlvar_mplus(
-  data, vars = c("A", "B", "C"), id = "id", beep = "time",
-  temporal = "fixed", contemporaneous = "fixed",
-  MplusName = "my_mplus_mlvar"
+  srl, vars = c("efficacy", "planning", "effort"), id = "name",
+  beep = "day", temporal = "fixed", contemporaneous = "fixed",
+  MplusName = "srl_mlvar", workdir = tempdir()
 )
 edges(fit)
-attr(fit, "mplus")$output$summaries
+coefs(fit)
 } # }
 ```

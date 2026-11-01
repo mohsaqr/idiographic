@@ -179,7 +179,7 @@ shrinkage produces stabilised person-specific coefficients.
 ``` r
 
 pooled_coefs <- pool_coefs(fit)
-shrunk_coefs <- shrink_coefs(fit)
+shrunk_coefs <- shrink_coefs(fit, term = "efficacy")
 
 pooled_coefs
 #> POOLED PERSON EFFECTS
@@ -201,17 +201,23 @@ head(shrunk_coefs)
 #>   People   6
 #>   Terms    1
 #> 
-#>   subject   term              raw     S.E.   weight   shrunken
-#> --------------------------------------------------------------
-#>   Aisha     (Intercept)   77.3251   1.5811    0.990    77.1469
-#>   Alice     (Intercept)   60.4228   1.5546    0.991    60.4088
-#>   Anika     (Intercept)   47.0761   1.8153    0.987    47.2271
-#>   Astrid    (Intercept)   68.5023   1.6127    0.990    68.4059
-#>   Bjorn     (Intercept)   52.1594   1.7829    0.988    52.2427
-#>   Bob       (Intercept)   73.1308   1.4604    0.992    73.0133
+#>   subject   term           raw     S.E.   weight   shrunken
+#> -----------------------------------------------------------
+#>   Aisha     efficacy    0.2117   0.0847    0.898     0.2196
+#>   Alice     efficacy    0.4565   0.0765    0.915     0.4424
+#>   Anika     efficacy    0.5127   0.1014    0.860     0.4814
+#>   Astrid    efficacy   -0.0693   0.0981    0.868    -0.0219
+#>   Bjorn     efficacy    0.3281   0.0785    0.911     0.3247
+#>   Bob       efficacy    0.5672   0.0900    0.886     0.5356
 #> 
 #>   weight = how much of the person's own estimate is kept
 ```
+
+The pooled efficacy slope is the uncertainty-weighted mean of the 36
+person-specific slopes, and $`\tau`$ is the spread of the true slopes
+around it. The shrinkage weight states how much of each learner’s own
+efficacy slope is kept; a learner with a large standard error is pulled
+further toward the pooled slope.
 
 Subgroup and treatment-effect workflows follow the same principle: test
 what the data identify, retain person-level uncertainty and failures,

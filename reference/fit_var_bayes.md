@@ -114,11 +114,12 @@ excluding 0).
 ## Examples
 
 ``` r
-# \donttest{
+# Two independent AR(1) series with autoregressions of 0.4 and 0.3.
 set.seed(1)
-y <- matrix(0, 200, 2)
-for (t in 2:200) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
-d <- data.frame(A = y[, 1], B = y[, 2])
+d <- data.frame(
+  A = as.numeric(stats::filter(rnorm(200), 0.4, method = "recursive")),
+  B = as.numeric(stats::filter(rnorm(200), 0.3, method = "recursive"))
+)
 fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 500, seed = 1)
 print(fit)
 #> Bayesian VAR(1) result (unregularized, Mplus-targeted)
@@ -128,28 +129,27 @@ print(fit)
 #>   Temporal 95% CIs excluding 0: 2 / 4
 #> 
 #>   Temporal [directed]
-#>     weights [-0.057, 0.426]  |  +2 / -2 edges
+#>     weights [-0.046, 0.373]  |  +2 / -2 edges
 #>           A     B
-#>     A  0.43 -0.05
-#>     B -0.06  0.26
+#>     A  0.37 -0.03
+#>     B -0.05  0.25
 #> 
 #>   Contemporaneous [undirected]
-#>     weights [-0.012, -0.012]  |  +0 / -1 edges
+#>     weights [-0.021, -0.021]  |  +0 / -1 edges
 #>           A     B
-#>     A  0.00 -0.01
-#>     B -0.01  0.00
+#>     A  0.00 -0.02
+#>     B -0.02  0.00
 #> 
 #>   coefs(x) | matrices(x) | edges(x) | nodes(x) | summary(x)
 coefs(fit)
 #>   outcome predictor    estimate posterior_sd   ci_lower   ci_upper     p
-#> 1       A         A  0.42622237   0.06617353  0.3038259 0.55781645 0.000
-#> 2       A         B -0.05725438   0.06822709 -0.1831618 0.08338037 0.194
-#> 3       B         A -0.05098612   0.07220854 -0.1865525 0.09368754 0.240
-#> 4       B         B  0.26411833   0.06976118  0.1318581 0.40487278 0.000
+#> 1       A         A  0.37317738   0.06736368  0.2495538 0.50669480 0.000
+#> 2       A         B -0.04624642   0.06989868 -0.1748218 0.09766115 0.254
+#> 3       B         A -0.02512889   0.07216782 -0.1587258 0.11975205 0.346
+#> 4       B         B  0.24702492   0.07017144  0.1153309 0.38703367 0.000
 #>   significant
 #> 1        TRUE
 #> 2       FALSE
 #> 3       FALSE
 #> 4        TRUE
-# }
 ```

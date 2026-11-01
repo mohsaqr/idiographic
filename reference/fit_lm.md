@@ -90,7 +90,17 @@ fit_lm(
 
 ## Value
 
-An `idiographic_fit`.
+An `idiographic_fit` (also of class `idiostats_fit`). Read it with
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
+(one row per scope, model, person and term: `estimate`, `std_error`,
+`statistic`, `p_value`),
+[`metrics()`](https://pak.dynasite.org/idiographic/reference/metrics.md)
+(held-out prediction error, one row per scope, model and person plus
+`.overall` rows),
+[`predictions()`](https://pak.dynasite.org/idiographic/reference/predictions.md)
+(one row per held-out occasion) and
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+(persons or scopes that could not be fitted).
 
 ## Details
 

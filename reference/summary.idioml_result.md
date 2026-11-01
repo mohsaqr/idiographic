@@ -21,4 +21,6 @@ summary(object, ...)
 
 ## Value
 
-The metrics table.
+A `data.frame` of held-out metrics with one row per `model_scope`,
+model, estimator and person: `n`, `mae`, `rmse`, `bias` and `r_squared`
+for regression, accuracy-type metrics for classification.

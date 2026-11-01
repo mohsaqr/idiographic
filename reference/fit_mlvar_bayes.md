@@ -194,51 +194,50 @@ SD.
 ## Examples
 
 ``` r
-# \donttest{
+# Ten persons, two AR(1) series with autoregressions of 0.3 and 0.15.
 set.seed(1)
-n_id <- 10; n_t <- 40; vars <- c("A", "B")
-rows <- lapply(seq_len(n_id), function(i) {
-  y <- matrix(0, n_t, 2)
-  for (t in 2:n_t) y[t, ] <- c(0.3, 0.15) * y[t - 1, ] + rnorm(2)
-  data.frame(id = i, beep = seq_len(n_t), A = y[, 1], B = y[, 2])
-})
-d <- do.call(rbind, rows)
-fit <- fit_mlvar_bayes(d, vars = vars, id = "id", beep = "beep",
-                         n_iter = 500, seed = 1)
+n_id <- 10; n_t <- 40
+ar1 <- \(phi) unlist(lapply(seq_len(n_id), \(i) {
+  as.numeric(stats::filter(rnorm(n_t), phi, method = "recursive"))
+}))
+d <- data.frame(id = rep(seq_len(n_id), each = n_t),
+                beep = rep(seq_len(n_t), n_id),
+                A = ar1(0.3), B = ar1(0.15))
+fit <- fit_mlvar_bayes(d, vars = c("A", "B"), id = "id", beep = "beep",
+                       n_iter = 500, seed = 1)
 print(fit)
 #> Bayesian mlVAR (Mplus DSEM-targeted, temporal = fixed): 10 subjects, 390 observations, 2 variables
-#>   MCMC: 2 chains x 500 iter (250 burn-in), 500 draws | max PSR = 1.023
+#>   MCMC: 2 chains x 500 iter (250 burn-in), 500 draws | max PSR = 1.003
 #>   Temporal 95% CIs excluding 0: 2 / 4
 #> 
 #>   Temporal [directed]
-#>     weights [-0.088, 0.252]  |  +2 / -2 edges
-#>           A     B
-#>     A  0.25 -0.09
-#>     B -0.07  0.13
+#>     weights [-0.000, 0.247]  |  +3 / -1 edges
+#>          A    B
+#>     A 0.25 0.00
+#>     B 0.04 0.12
 #> 
 #>   Contemporaneous [undirected]
-#>     weights [-0.003, -0.003]  |  +0 / -1 edges
-#>       A B
-#>     A 0 0
-#>     B 0 0
+#>     weights [0.037, 0.037]  |  +1 / -0 edges
+#>          A    B
+#>     A 0.00 0.04
+#>     B 0.04 0.00
 #> 
 #>   Between [undirected]
-#>     weights [0.312, 0.312]  |  +1 / -0 edges
+#>     weights [0.147, 0.147]  |  +1 / -0 edges
 #>          A    B
-#>     A 0.00 0.31
-#>     B 0.31 0.00
+#>     A 0.00 0.15
+#>     B 0.15 0.00
 #> 
 #>   coefs(x) posterior median/SD/CI | matrices(x) | edges(x) | summary(x)
 coefs(fit)
-#>   outcome predictor    estimate posterior_sd    ci_lower   ci_upper     p
-#> 1       A         A  0.25209120   0.05021821  0.15945833 0.34723692 0.000
-#> 2       A         B -0.06643236   0.04845493 -0.16844721 0.01897108 0.086
-#> 3       B         A -0.08835699   0.05652692 -0.20220844 0.02199014 0.062
-#> 4       B         B  0.12768325   0.05189932  0.02778123 0.22516873 0.012
+#>   outcome predictor      estimate posterior_sd    ci_lower  ci_upper     p
+#> 1       A         A  2.465436e-01   0.04949487  0.14798279 0.3337375 0.000
+#> 2       A         B  4.261244e-02   0.04748700 -0.05576119 0.1271919 0.182
+#> 3       B         A -5.375017e-05   0.05543053 -0.10842777 0.1137954 0.500
+#> 4       B         B  1.223390e-01   0.05115860  0.02283269 0.2184169 0.008
 #>   significant
 #> 1        TRUE
 #> 2       FALSE
 #> 3       FALSE
 #> 4        TRUE
-# }
 ```

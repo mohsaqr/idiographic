@@ -1,6 +1,6 @@
 # Changelog
 
-## idiographic 0.4.0.9005
+## idiographic 0.4.0.9006
 
 ### Unified idiographic statistics
 
@@ -113,6 +113,51 @@
   and consistent colour-accessible styling. Plots now foreground
   uncertainty, reference values, and person-level failures instead of
   relying on default bar charts.
+
+### Documentation
+
+- Documentation revision.
+  [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md)
+  now documents both interfaces, the consolidated controls passed
+  through `...` and the structure of each result, with runnable
+  examples. Every exported accessor and view
+  ([`metrics()`](https://pak.dynasite.org/idiographic/reference/metrics.md),
+  [`predictions()`](https://pak.dynasite.org/idiographic/reference/predictions.md),
+  [`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md),
+  [`importance()`](https://pak.dynasite.org/idiographic/reference/importance.md),
+  [`diagnostics()`](https://pak.dynasite.org/idiographic/reference/diagnostics.md),
+  [`tuning()`](https://pak.dynasite.org/idiographic/reference/tuning.md),
+  [`best_model()`](https://pak.dynasite.org/idiographic/reference/best_model.md),
+  [`compare()`](https://pak.dynasite.org/idiographic/reference/compare.md),
+  [`person()`](https://pak.dynasite.org/idiographic/reference/person.md),
+  [`people()`](https://pak.dynasite.org/idiographic/reference/people.md),
+  [`individuals()`](https://pak.dynasite.org/idiographic/reference/individuals.md),
+  [`pooled()`](https://pak.dynasite.org/idiographic/reference/pooled.md),
+  [`overall()`](https://pak.dynasite.org/idiographic/reference/overall.md),
+  [`plot_diagnostics()`](https://pak.dynasite.org/idiographic/reference/plot_diagnostics.md),
+  [`plot_importance()`](https://pak.dynasite.org/idiographic/reference/plot_importance.md),
+  [`plot_tuning()`](https://pak.dynasite.org/idiographic/reference/plot_tuning.md))
+  has an example and a return value that names its columns. The
+  [`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
+  help page no longer claims that only multilevel VAR fits are
+  supported.
+
+- Examples and print methods no longer reach into results with `$` or
+  `[[`. They use
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html),
+  [`summary()`](https://rdrr.io/r/base/summary.html),
+  [`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md),
+  `matrices(x, fit = )`, `matrices(x, subject = )` and `plot(x, fit = )`
+  instead. The multilevel VAR examples use the bundled `srl` data rather
+  than white noise, which removes 28 singular-fit warnings, and the
+  Bayesian VAR and
+  [`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
+  examples now run under `R CMD check` instead of sitting entirely in
+  `\donttest{}`.
+
+- The DESCRIPTION gives author and year for both method references, and
+  the graphical VAR, subgroup-test and heterogeneity references carry
+  DOIs.
 
 ## idiographic 0.3.4
 

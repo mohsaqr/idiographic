@@ -105,8 +105,18 @@ estimate_stability(
 
 ## Value
 
-A `stability_result` with `$stability` edge statistics, `$original` fit,
-`$resample_edges`, `$failures`, and `$config`.
+A `stability_result`.
+[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) (or
+[`summary()`](https://rdrr.io/r/base/summary.html)) returns the
+edge-stability table, one row per network and edge: `network`, `from`,
+`to`, the `original` weight, the resampled `mean`, `sd`, `q05`, `q50`
+and `q95`, `selection_prop`, `positive_prop`, `negative_prop` and
+`n_success`.
+[`matrices()`](https://pak.dynasite.org/idiographic/reference/matrices.md)
+and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) show the
+original fit and
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+the resamples that could not be fit.
 
 ## Examples
 
@@ -118,7 +128,7 @@ d <- data.frame(id = 1, day = rep(1:4, each = 12),
 st <- estimate_stability(d, vars = c("A", "B", "C"), id = "id",
                          day = "day", beep = "beep",
                          n_resamples = 5, seed = 1)
-head(st$stability)
+head(as.data.frame(st))
 #>            network from to    original        mean        sd         q05
 #> 10 contemporaneous    A  B  0.13027729  0.13845866 0.0587604  0.06255204
 #> 11 contemporaneous    A  C -0.14198048 -0.16134737 0.1837809 -0.36807703

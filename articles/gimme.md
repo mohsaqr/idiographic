@@ -56,19 +56,8 @@ alphabetically.
 ``` r
 
 vars <- c("efficacy", "value", "planning", "monitoring", "effort")
-complete_n <- tapply(complete.cases(esm_srl[vars]), esm_srl$name, sum)
-selection <- data.frame(subject = names(complete_n),
-                        complete = as.integer(complete_n))
-selection <- selection[order(-selection$complete, selection$subject), ]
-selected_ids <- head(selection$subject, 4)
-head(selection, 4)
-#>    subject complete
-#> 15    Hana       79
-#> 17    Iker       79
-#> 19   Jamal       79
-#> 29    Omar       79
-preprocess(esm_srl[esm_srl$name %in% selected_ids, ],
-           vars = vars, id = "name")
+selected_ids <- c("Hana", "Iker", "Jamal", "Omar")
+preprocess(esm_srl, vars = vars, id = "name", subject = selected_ids)
 #> Idiographic Preprocessing
 #>   Variables:      5 (efficacy, value, planning, monitoring, effort)
 #>   Ordered rows:   316
@@ -78,17 +67,17 @@ preprocess(esm_srl[esm_srl$name %in% selected_ids, ],
 #>   Drift flags:    4
 #>   Unit-root risk: 0
 #>   Zero variance:  0
-#>   Tables:         x$pairs | x$counts | x$diagnostics
+#>   Tables:         as.data.frame(x) | summary(x) | matrices(x)
 #> 
 #> 10 of 20 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
-#>   preprocess(data = esm_srl[esm_srl$name %in% selected_ids, ], vars = vars, id = "name", detrend = "auto")
+#>   preprocess(data = esm_srl, vars = vars, id = "name", subject = selected_ids, detrend = "auto")
 ```
 
-The transparent rule selects Hana, Iker, Jamal, and Omar, each with 79
-complete five-indicator occasions. The audit is shown rather than
-silently assuming stationarity; these supplied series contain trend or
-shift flags, so the fit is a method demonstration and its paths should
-not be treated as confirmatory substantive findings.
+The rule selects Hana, Iker, Jamal, and Omar, each with 79 complete
+five-indicator occasions. The audit is shown rather than silently
+assuming stationarity; these supplied series contain trend or shift
+flags, so the fit is a method demonstration and its paths should not be
+treated as confirmatory substantive findings.
 
 ## Fitting the model
 
@@ -102,9 +91,9 @@ four — before it is promoted by the corresponding rule.
 
 ``` r
 
-students <- esm_srl[esm_srl$name %in% selected_ids, ]
 gimme_fit <- fit_gimme(
-  students, vars = vars, id = "name", time = "occasion",
+  esm_srl, vars = vars, id = "name", time = "occasion",
+  subject = selected_ids,
   ar = TRUE, groupcutoff = 0.75, subcutoff = 0.75, seed = 1
 )
 gimme_fit

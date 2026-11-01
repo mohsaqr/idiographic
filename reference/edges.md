@@ -130,17 +130,30 @@ edges(x, ...)
 
 ## Value
 
-A tidy `data.frame`, one row per edge.
+A tidy `data.frame` with one row per edge: `network` (layer), `from`,
+`to` and `weight`; results for several persons (`var_list`, `gvar_list`)
+add a leading `subject` column.
 
 ## Examples
 
 ``` r
-# \donttest{
 set.seed(1)
 d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
-edges(fit)            # tidy: network / from / to / weight
-#> [1] network from    to      weight 
-#> <0 rows> (or 0-length row.names)
-# }
+fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
+edges(fit)
+#>           network from to       weight
+#> 1        temporal    C  B  0.113592795
+#> 2        temporal    B  C -0.056084686
+#> 3        temporal    B  A  0.042216979
+#> 4        temporal    A  B -0.030796224
+#> 5        temporal    A  C -0.024626586
+#> 6        temporal    C  A  0.004625333
+#> 7 contemporaneous    A  B -0.302794840
+#> 8 contemporaneous    A  C  0.175739891
+#> 9 contemporaneous    B  C  0.042015104
+edges(fit, network = "temporal", n = 3)
+#>    network from to      weight
+#> 1 temporal    C  B  0.11359280
+#> 2 temporal    B  C -0.05608469
+#> 3 temporal    B  A  0.04221698
 ```

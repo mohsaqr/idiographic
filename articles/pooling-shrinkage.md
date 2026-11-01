@@ -94,13 +94,13 @@ estimated $`\tau`$ was 0.20, and $`I^2`$ was 0.81 — roughly four-fifths
 of the observed spread among the 12 efficacy slopes reflected true
 between-person differences rather than sampling error. Under a normal
 approximation, the true slopes of 95% of learners lie between
-approximately \$-\$0.10 and 0.68.
+approximately -0.10 and 0.67.
 
-The pooled monitoring coefficient was 0.12 (95% CI:
-\$-$`0.10 to 0.35), with`$\$ = 0.33 and $`I^2`$ = 0.94. Although the
-pooled value was compatible with zero, the large $`I^2`$ indicates
-substantial heterogeneity: the monitoring slope varies considerably
-across learners, and the pooled mean does not represent a common effect.
+The pooled monitoring coefficient was 0.12 (95% CI: -0.10 to 0.35), with
+$`\tau`$ = 0.33 and $`I^2`$ = 0.94. Although the pooled value was
+compatible with zero, the large $`I^2`$ indicates substantial
+heterogeneity: the monitoring slope varies considerably across learners,
+and the pooled mean does not represent a common effect.
 
 ### Visualisation
 

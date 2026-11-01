@@ -50,7 +50,7 @@
   Who is in the extreme groups
 
 - [`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md) :
-  Tidy coefficients from a fitted mlvar model
+  Tidy coefficients of a fitted model
 
 - [`compare()`](https://pak.dynasite.org/idiographic/reference/compare.md)
   : Compare idiographic fits

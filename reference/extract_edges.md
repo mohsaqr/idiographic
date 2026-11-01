@@ -15,8 +15,8 @@ extract_edges(model, sort_by = "weight", include_self = FALSE)
 
   A `netobject` or `cograph_network`. Multi-network results (a
   `gvar_result`, `net_mlvar`, or any `netobject_group`) hold more than
-  one network, so pass a single constituent — e.g.
-  `extract_edges(as_netobject(x)$temporal)`.
+  one network; for those, `edges(x, network = "temporal")` returns the
+  edges of one layer.
 
 - sort_by:
 

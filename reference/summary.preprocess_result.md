@@ -2,7 +2,8 @@
 
 Compact per-variable roll-up of the diagnostics: one row per variable
 with its mean spread and the number of subject-series that tripped each
-stationarity flag. Use `x$diagnostics` for the full per-subject table.
+stationarity flag. `as.data.frame(x)` returns the full per-subject
+table.
 
 ## Usage
 
@@ -23,4 +24,6 @@ summary(object, ...)
 
 ## Value
 
-A tidy per-variable `data.frame`.
+A `data.frame` with one row per variable: `variable`, `n_series`
+(subject-series), `mean_sd`, and the counts `n_trend`, `n_high_ar`,
+`n_unit_root` and `n_flagged` (series with any stationarity risk).

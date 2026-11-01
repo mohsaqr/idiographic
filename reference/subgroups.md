@@ -20,7 +20,13 @@ subgroups(x, label = NULL)
 
 ## Value
 
-An idiographic fit view.
+An `idiographic_fit` of the same structure as `x` whose metric,
+prediction, coefficient and tuning tables are restricted to the subgroup
+scope (and to `label` when given), so that
+[`metrics()`](https://pak.dynasite.org/idiographic/reference/metrics.md),
+[`predictions()`](https://pak.dynasite.org/idiographic/reference/predictions.md)
+and [`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md)
+report only those rows.
 
 ## Examples
 

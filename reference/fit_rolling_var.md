@@ -90,9 +90,18 @@ fit_rolling_var(
 
 ## Value
 
-A `rolling_var_result` with `$estimates`, `$windows`, `$failures`, and
-optionally `$fits`. `$estimates` is a tidy coefficient table with
-subject/window metadata plus `network`, `from`, `to`, and `weight`.
+A `rolling_var_result`.
+[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) (or
+[`summary()`](https://rdrr.io/r/base/summary.html) and
+[`coefs()`](https://pak.dynasite.org/idiographic/reference/coefs.md))
+returns the estimates, one row per subject, window, network and edge:
+`subject`, `window`, the window bounds (`start_row`, `end_row`,
+`start_day`, `end_day`, `start_beep`, `end_beep`), `network`, `from`,
+`to` and `weight`. `as.data.frame(x, what = "windows")` returns one row
+per window and
+[`failures()`](https://pak.dynasite.org/idiographic/reference/failures.md)
+the windows that could not be fit. With `keep_fits = TRUE`,
+`plot(x, fit = )` and `matrices(x, fit = )` show one window's network.
 
 ## Examples
 
@@ -104,7 +113,7 @@ d <- data.frame(id = 1, day = rep(1:5, each = 20),
 tv <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
                   day = "day", beep = "beep",
                   window_size = 40, step = 20, scale = FALSE)
-head(tv$estimates)
+head(as.data.frame(tv))
 #>   subject window start_row end_row start_day end_day start_beep end_beep
 #> 1       1      1         1      40         1       2          1       20
 #> 2       1      1         1      40         1       2          1       20
@@ -119,4 +128,10 @@ head(tv$estimates)
 #> 4 temporal    A  B  0.17263795
 #> 5 temporal    B  B -0.09875282
 #> 6 temporal    C  B -0.07445738
+as.data.frame(tv, what = "windows")
+#>   subject window start_row end_row start_day end_day start_beep end_beep
+#> 1       1      1         1      40         1       2          1       20
+#> 2       1      2        21      60         2       3          1       20
+#> 3       1      3        41      80         3       4          1       20
+#> 4       1      4        61     100         4       5          1       20
 ```

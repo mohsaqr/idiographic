@@ -69,7 +69,7 @@ preprocess(esm_srl, vars = vars, id = "name", subject = "Quinn")
 #>   Drift flags:    1
 #>   Unit-root risk: 0
 #>   Zero variance:  0
-#>   Tables:         x$pairs | x$counts | x$diagnostics
+#>   Tables:         as.data.frame(x) | summary(x) | matrices(x)
 #> 
 #> 6 of 9 subject-series show a trend or unit-root that can bias the temporal network. preprocess() only diagnosed this; to clean just the series that need it, re-run with:
 #>   preprocess(data = esm_srl, vars = vars, id = "name", subject = "Quinn", detrend = "auto")

@@ -66,6 +66,7 @@ solution on visibly skewed coefficients is not trustworthy.**
 
 Bauer, D. J., & Curran, P. J. (2003). Distributional assumptions of
 growth mixture models. *Psychological Methods*, 8(3), 338-363.
+[doi:10.1037/1082-989X.8.3.338](https://doi.org/10.1037/1082-989X.8.3.338)
 
 ## Examples
 

@@ -1,10 +1,25 @@
-# Tidy coefficients from a fitted mlvar model
+# Tidy coefficients of a fitted model
 
-Generic accessor for the tidy coefficient table stored on a
-[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
-result. Returns a `data.frame` with one row per `(outcome, predictor)`
-pair and columns `outcome`, `predictor`, `beta`, `se`, `t`, `p`,
-`ci_lower`, `ci_upper`, `significant`.
+Generic accessor for the coefficient table of a fitted model. Methods
+exist for the statistical fits
+([`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md),
+[`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md),
+[`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md),
+[`fit_within_between()`](https://pak.dynasite.org/idiographic/reference/fit_within_between.md),
+[`fit_subgroups()`](https://pak.dynasite.org/idiographic/reference/fit_subgroups.md)),
+the network estimators
+([`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md),
+[`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md),
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md),
+[`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md),
+[`fit_mlvar_mplus()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_mplus.md),
+[`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md),
+[`fit_usem()`](https://pak.dynasite.org/idiographic/reference/fit_usem.md),
+[`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md)),
+their per-person lists
+([`fit_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_var_each.md),
+[`fit_graphical_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var_each.md))
+and the rolling network results.
 
 ## Usage
 
@@ -63,11 +78,11 @@ coefs(x, ...)
 
 - x:
 
-  A fitted model object — currently only `net_mlvar` is supported.
+  A fitted model object.
 
 - ...:
 
-  Unused.
+  Passed to methods.
 
 - model, scope, subject:
 
@@ -95,68 +110,59 @@ coefs(x, ...)
 
 ## Value
 
-A tidy `data.frame` of coefficient estimates.
+A tidy `data.frame` with one row per coefficient. Statistical fits
+return one row per scope, model, person and term (`scope`, `model`,
+`estimator`, `subject`, `subgroup`, `term`, `estimate`, `std_error`,
+`statistic`, `p_value`).
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
+returns one row per outcome and predictor (`outcome`, `predictor`,
+`beta`, `se`, `t`, `p`, `ci_lower`, `ci_upper`, `significant`); the
+Bayesian estimators report posterior summaries (`estimate`,
+`posterior_sd`, `ci_lower`, `ci_upper`, `p`, `significant`); the
+ordinary and graphical VARs return their edges (`network`, `from`, `to`,
+`weight`). Per-person lists add a `subject` column.
 
 ## Details
 
-Only the within-person (temporal) coefficients are tabulated — these are
-the lagged fixed effects that populate `fit$temporal`. The
-between-subjects effects that go into `fit$between` are handled via the
-`D (I - Gamma)` transformation and are not exposed as a separate tidy
-table.
+For
+[`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md)
+only the within-person (temporal) coefficients are tabulated: the lagged
+fixed effects of the temporal network. The between-person network is
+derived through the `D (I - Gamma)` transformation and has no
+coefficient table of its own.
 
 ## Examples
 
 ``` r
-# \donttest{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+coefs(fit, scope = "pooled")
+#>    scope model estimator subject subgroup        term   estimate  std_error
+#> 1 pooled    lm    native    .all     .all (Intercept) 32.5060708 4.52339554
+#> 2 pooled    lm    native    .all     .all    efficacy  0.4878091 0.06319256
+#>   statistic      p_value
+#> 1  7.186210 2.200421e-08
+#> 2  7.719407 4.617938e-09
+coefs(fit, term = "efficacy", sort_by = "estimate", n = 5)
+#>        scope model estimator subject subgroup     term    estimate  std_error
+#> 1 individual    lm    native    Ravi    .none efficacy -0.25715871 0.06375941
+#> 2 individual    lm    native  Takumi    .none efficacy  0.01483564 0.05459424
+#> 3 individual    lm    native  Ingrid    .none efficacy  0.04585617 0.03830126
+#> 4 individual    lm    native   Freja    .none efficacy  0.05452198 0.08719789
+#> 5 individual    lm    native   Diana    .none efficacy  0.08210175 0.12357205
+#>    statistic      p_value
+#> 1 -4.0332666 9.626368e-05
+#> 2  0.2717436 7.862785e-01
+#> 3  1.1972498 2.335304e-01
+#> 4  0.6252672 5.329635e-01
+#> 5  0.6644039 5.076856e-01
+
 set.seed(1)
-n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")
-rows <- lapply(seq_len(n_id), function(i) {
-  m <- as.data.frame(matrix(rnorm(n_t * 3), ncol = 3))
-  names(m) <- vars
-  m$id <- i; m$day <- 1L; m$beep <- seq_len(n_t)
-  m
-})
-d <- do.call(rbind, rows)
-fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
-#> Warning: Model for 'A': singular fit (random-effects variance near zero).
-#> Warning: Model for 'A': boundary (singular) fit: see help('isSingular')
-#> Warning: Model for 'B': singular fit (random-effects variance near zero).
-#> Warning: Model for 'B': boundary (singular) fit: see help('isSingular')
-#> Warning: Model for 'C': singular fit (random-effects variance near zero).
-#> Warning: Model for 'C': boundary (singular) fit: see help('isSingular')
-#> Warning: Between-subjects network not estimable: a random-intercept SD is 0 (no between-person variance). Returning a zero matrix by convention (mlVAR returns NA here).
-print(fit)
-#> mlVAR result: 8 subjects, 232 observations, 3 variables (lags 1)
-#>   Temporal edges significant at p<0.05: 1 / 9
-#> 
-#>   Temporal [directed]
-#>     weights [-0.131, 0.062]  |  +3 / -6 edges
-#>           A     B     C
-#>     A -0.13 -0.05 -0.03
-#>     B -0.01 -0.08 -0.01
-#>     C  0.06  0.02  0.04
-#> 
-#>   Contemporaneous [undirected]
-#>     weights [0.006, 0.085]  |  +3 / -0 edges
-#>          A    B    C
-#>     A 0.00 0.06 0.08
-#>     B 0.06 0.00 0.01
-#>     C 0.08 0.01 0.00
-#> 
-#>   Between [undirected]
-#>     no non-zero edges
-#>       A B C
-#>     A 0 0 0
-#>     B 0 0 0
-#>     C 0 0 0
-#> 
-#>   plot(x) | plot(x, layer = "temporal") | plot(x, layer = "between") 
-#>   edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)
-summary(fit)
-#>           network n_nodes n_edges density mean_abs_weight n_positive n_negative
-#> 1        temporal       3       6       1      0.03140474          2          4
-#> 2 contemporaneous       3       3       1      0.05004674          3          0
-#> 3         between       3       0       0      0.00000000          0          0
-# }
+d <- data.frame(A = rnorm(80), B = rnorm(80))
+coefs(fit_var(d, vars = c("A", "B")))
+#>           network from to      weight
+#> 1        temporal    A  A -0.02775576
+#> 2        temporal    B  A  0.04237342
+#> 3        temporal    A  B -0.01100758
+#> 4        temporal    B  B -0.05450831
+#> 5 contemporaneous    A  B -0.29792762
 ```

@@ -23,9 +23,9 @@ summary(object, ...)
 
 A tidy `data.frame` of per-network metrics (one row per network:
 `temporal`, `contemporaneous`), with `n_edges`/`density`/etc. computed
-from the proportion-of-subjects networks. Per-subject fit indices are in
-`object$fit`; `coefs(object)` gives the per-person estimates,
-`edges(object)` the tidy edge list, and `nodes(object)` node strengths.
+from the proportion-of-subjects networks. `coefs(object)` gives the
+per-person estimates, `edges(object)` the tidy edge list, and
+`nodes(object)` node strengths.
 
 ## Examples
 

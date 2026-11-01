@@ -241,23 +241,61 @@ extension and are labelled as such in the returned equivalence metadata.
 Epskamp, S., Waldorp, L. J., Mottus, R., & Borsboom, D. (2018). The
 Gaussian Graphical Model in Cross-Sectional and Time-Series Data.
 *Multivariate Behavioral Research*, 53(4), 453-480.
+[doi:10.1080/00273171.2018.1454823](https://doi.org/10.1080/00273171.2018.1454823)
 
 Rothman, A. J., Levina, E., & Zhu, J. (2010). Sparse multivariate
-regression with covariance estimation. *JCGS*, 19(4), 947-962.
+regression with covariance estimation. *Journal of Computational and
+Graphical Statistics*, 19(4), 947-962.
+[doi:10.1198/jcgs.2010.09188](https://doi.org/10.1198/jcgs.2010.09188)
 
 ## Examples
 
 ``` r
-set.seed(1)
-d <- data.frame(A = rnorm(60), B = rnorm(60))
-fit <- fit_graphical_var(d, vars = c("A", "B"), n_lambda = 3,
-                         scale = FALSE)
-fit$temporal
-#>   A B
-#> A 0 0
-#> B 0 0
-fit$contemporaneous
-#>   A B
-#> A 0 0
-#> B 0 0
+# One learner's daily self-regulation network.
+fit <- fit_graphical_var(srl, vars = c("efficacy", "planning", "monitoring",
+                                       "effort"),
+                         id = "name", subject = "Aisha", n_lambda = 10)
+edges(fit)
+#>           network       from         to      weight
+#> 1 contemporaneous   efficacy   planning 0.248870238
+#> 2 contemporaneous   efficacy monitoring 0.114706104
+#> 3 contemporaneous   planning     effort 0.065597001
+#> 4 contemporaneous   efficacy     effort 0.047567122
+#> 5 contemporaneous monitoring     effort 0.001382161
+matrices(fit)
+#> 
+#> $beta
+#>            (Intercept) efficacy planning monitoring effort
+#> efficacy         0.006        0        0          0      0
+#> planning         0.018        0        0          0      0
+#> monitoring      -0.002        0        0          0      0
+#> effort           0.008        0        0          0      0
+#> 
+#> $temporal
+#>            efficacy planning monitoring effort
+#> efficacy          0        0          0      0
+#> planning          0        0          0      0
+#> monitoring        0        0          0      0
+#> effort            0        0          0      0
+#> 
+#> $kappa
+#>            efficacy planning monitoring effort
+#> efficacy      1.092   -0.277     -0.121 -0.050
+#> planning     -0.277    1.134      0.000 -0.071
+#> monitoring   -0.121    0.000      1.015 -0.001
+#> effort       -0.050   -0.071     -0.001  1.020
+#> 
+#> $PCC
+#>            efficacy planning monitoring effort
+#> efficacy      0.000    0.249      0.115  0.048
+#> planning      0.249    0.000      0.000  0.066
+#> monitoring    0.115    0.000      0.000  0.001
+#> effort        0.048    0.066      0.001  0.000
+#> 
+#> $PDC
+#>            efficacy planning monitoring effort
+#> efficacy          0        0          0      0
+#> planning          0        0          0      0
+#> monitoring        0        0          0      0
+#> effort            0        0          0      0
 ```

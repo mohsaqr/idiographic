@@ -69,7 +69,7 @@ preprocess(srl, vars = vars, id = "name", subject = "Grace")
 #>   Drift flags:    0
 #>   Unit-root risk: 0
 #>   Zero variance:  0
-#>   Tables:         x$pairs | x$counts | x$diagnostics
+#>   Tables:         as.data.frame(x) | summary(x) | matrices(x)
 ```
 
 Grace’s 156 ordered occasions yield 155 complete current/lagged pairs,
@@ -103,8 +103,8 @@ rolling_ols
 #>   Windows:    6
 #>   Variables:  5 (efficacy, value, planning, monitoring, effort)
 #>   Tables:     as.data.frame(x) | as.data.frame(x, what = "windows") | failures(x)
-#>   Cograph:    cograph::splot(x$fits[[1]])
-#>   Matrices:   matrices(x$fits[[1]])
+#>   Plot:       plot(x, fit = 1)
+#>   Matrices:   matrices(x, fit = 1)
 ```
 
 The ordinary rolling fit returns six windows for Grace, each holding a
@@ -134,8 +134,8 @@ rolling_gvar
 #>   Windows:    4
 #>   Variables:  5 (efficacy, value, planning, monitoring, effort)
 #>   Tables:     as.data.frame(x) | as.data.frame(x, what = "windows") | failures(x)
-#>   Cograph:    cograph::splot(x$fits[[1]])
-#>   Matrices:   matrices(x$fits[[1]])
+#>   Plot:       plot(x, fit = 1)
+#>   Matrices:   matrices(x, fit = 1)
 ```
 
 The graphical rolling fit returns four windows, starting at occasions 1,
@@ -251,35 +251,29 @@ window-one contemporaneous layer is dominated by efficacy–monitoring
 contemporaneous pattern: in this series the within-occasion structure is
 more stable than the temporal coefficients.
 
+The number of retained edges per window and layer counts the non-zero
+weights in the same flattened table, and the first window’s retained
+edges are its non-zero rows.
+
 ``` r
 
-edge_counts <- do.call(rbind, lapply(seq_along(rolling_gvar$fits), function(i) {
-  data.frame(window = i, summary(rolling_gvar$fits[[i]]))
-}))
-edge_counts
-#>   window         network n_nodes n_edges density mean_abs_weight n_positive
-#> 1      1        temporal       5       0     0.0       0.0000000          0
-#> 2      1 contemporaneous       5       3     0.3       0.1939779          3
-#> 3      2        temporal       5       0     0.0       0.0000000          0
-#> 4      2 contemporaneous       5       2     0.2       0.1114952          2
-#> 5      3        temporal       5       0     0.0       0.0000000          0
-#> 6      3 contemporaneous       5       3     0.3       0.1774513          3
-#> 7      4        temporal       5       0     0.0       0.0000000          0
-#> 8      4 contemporaneous       5       5     0.5       0.1471085          5
-#>   n_negative
-#> 1          0
-#> 2          0
-#> 3          0
-#> 4          0
-#> 5          0
-#> 6          0
-#> 7          0
-#> 8          0
-edges(rolling_gvar$fits[[1]])
-#>           network       from         to     weight
-#> 1 contemporaneous monitoring     effort 0.26380483
-#> 2 contemporaneous   efficacy monitoring 0.24664052
-#> 3 contemporaneous   planning     effort 0.07148822
+aggregate(cbind(n_edges = weight != 0) ~ window + network,
+          data = as.data.frame(rolling_gvar), FUN = sum)
+#>   window         network n_edges
+#> 1      1 contemporaneous       3
+#> 2      2 contemporaneous       2
+#> 3      3 contemporaneous       3
+#> 4      4 contemporaneous       5
+#> 5      1        temporal       0
+#> 6      2        temporal       0
+#> 7      3        temporal       0
+#> 8      4        temporal       0
+subset(as.data.frame(rolling_gvar), window == 1 & weight != 0,
+       select = c(window, network, from, to, weight))
+#>    window         network       from         to     weight
+#> 29      1 contemporaneous   efficacy monitoring 0.24664052
+#> 34      1 contemporaneous   planning     effort 0.07148822
+#> 35      1 contemporaneous monitoring     effort 0.26380483
 matrices(rolling_gvar, fit = 1)
 #> 
 #> $beta
