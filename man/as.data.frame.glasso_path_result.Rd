@@ -20,3 +20,8 @@ columns \code{rho}, \code{from}, \code{to}, \code{precision} and \code{weight}.
 \description{
 Tidy a graphical-lasso path
 }
+\examples{
+set.seed(1)
+x <- matrix(rnorm(200 * 3), ncol = 3, dimnames = list(NULL, c("A", "B", "C")))
+as.data.frame(glasso_path(cov(x), rho = c(0.01, 0.2)))
+}

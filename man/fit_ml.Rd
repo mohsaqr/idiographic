@@ -118,17 +118,65 @@ arguments.}
 
 \item{keep_fits}{Retain fitted backend objects?}
 
-\item{...}{Arguments passed to the selected implementation.}
+\item{...}{Arguments passed to the selected implementation; in the
+consolidated interface, the controls listed in Details.}
 
 \item{y, x}{Consolidated outcome and predictor selectors. Supply both.}
 }
 \value{
-An \code{idioml_result} for historical calls or an \code{idiographic_fit} for
-consolidated \code{y}/\code{x} calls.
+For consolidated calls, an \code{idiographic_fit} (also of class
+\code{idiostats_fit}). Its tables are read with accessors: \code{\link[=metrics]{metrics()}} (one
+row per scope, model, estimator and person, plus \code{.overall} rows, with
+\code{rmse}, \code{mae}, \code{bias} and \code{r_squared} for regression), \code{\link[=predictions]{predictions()}}
+(one row per held-out occasion and model), \code{\link[=coefs]{coefs()}}, \code{\link[=importance]{importance()}},
+\code{\link[=tuning]{tuning()}} and \code{\link[=failures]{failures()}}.
+
+For historical calls, an \code{idioml_result}. \code{as.data.frame()} returns its
+held-out predictions, \code{summary()} its metrics (one row per
+\code{model_scope}, model, estimator and person), \code{\link[=coefs]{coefs()}} its coefficients
+(one row per \code{model_scope}, model, person and term) and \code{\link[=predict]{predict()}}
+predictions for new rows.
 }
 \description{
 \code{fit_ml()} supports both historical \code{idiographic} calls using
 \code{outcome}/\code{predictors} and the consolidated panel-model API using \code{y}/\code{x}.
-Calls that name \code{y} or \code{x} use the consolidated result contract; existing
-positional and \code{outcome}/\code{predictors} calls retain their original behavior.
+Calls that name \code{y} or \code{x}, or that pass a consolidated control such as
+\code{time}, \code{scope}, \code{subgroup} or \code{tune}, use the consolidated result
+contract; existing positional and \code{outcome}/\code{predictors} calls retain their
+original behaviour.
+}
+\details{
+Both interfaces evaluate prediction on an ordered hold-out: the last
+\code{ceiling(test_prop * n)} rows of each person are the test set and are never
+used for estimation. In the consolidated interface, \code{tune = TRUE} carves a
+further validation block (\code{valid_prop}) from the tail of the training rows,
+scores the candidate settings on it, and refits the winning setting on the
+training and validation rows before predicting the test rows.
+
+Consolidated controls passed through \code{...} are \code{time} (ordering column),
+\code{scope} (\code{"pooled"}, \code{"subgroup"}, \code{"individual"}, \code{"both"} or \code{"all"}),
+\code{subgroup} (as in \code{\link[=fit_lm]{fit_lm()}}), \code{valid_prop}, \code{ncomp} (\code{pcr}), \code{mtry} and
+\code{num_trees} (\code{forest}), \code{cost} (\code{svm}), \code{tune} and \code{grid} (a named list of
+tuning grids, e.g. \code{list(knn = list(k = c(3, 5)))}). \code{\link[=models]{models()}} lists every
+model name with its estimator, package and tuned parameter. Native models
+need only base R. When an optional backend package is missing, an
+interactive session offers to install it after confirmation; otherwise the
+call stops with an error that names the package.
+}
+\examples{
+# Consolidated interface: pooled and person-specific models, tidy results.
+fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day", scope = "both", model = c("mean", "ridge"))
+metrics(fit, overall = TRUE)
+best_model(fit)
+
+# Tune the number of neighbours on a validation block before testing.
+tuned <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+                time = "day", scope = "pooled", model = "knn", tune = TRUE)
+tuning(tuned)
+
+# Historical interface (outcome, predictors, id).
+legacy <- fit_ml(srl, "effort", c("efficacy", "planning"), "name",
+                 model = "ridge")
+legacy
 }

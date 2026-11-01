@@ -55,7 +55,12 @@ grouping column in \code{data}, or a named vector of labels per person.}
 \item{...}{Passed to the underlying fitter.}
 }
 \value{
-An \code{idiographic_fit}.
+An \code{idiographic_fit} (also of class \code{idiostats_fit}). Read it with
+\code{\link[=coefs]{coefs()}} (one row per scope, model, person and term: \code{estimate},
+\code{std_error}, \code{statistic}, \code{p_value}), \code{\link[=metrics]{metrics()}} (held-out prediction
+error, one row per scope, model and person plus \code{.overall} rows),
+\code{\link[=predictions]{predictions()}} (one row per held-out occasion) and \code{\link[=failures]{failures()}} (persons
+or scopes that could not be fitted).
 }
 \description{
 Fit pooled, subgroup and person-specific generalized linear models
@@ -69,10 +74,9 @@ persons, cluster-robust inference is imprecise. Person-specific models
 report the model-based standard errors of the fitted model.
 }
 \examples{
-# `srl` carries some missing values, so na.rm is needed to derive an outcome.
-srl$high <- ifelse(srl$effort > median(srl$effort, na.rm = TRUE),
-                   "yes", "no")
-fit <- fit_glm(srl, y = "high", x = c("efficacy", "planning"), id = "name",
-               family = "binomial", time = "day")
+# Daily submission (0/1) of 40 simulated learners, predicted by motivation.
+fit <- fit_glm(submissions, y = "submitted", x = "motivation",
+               id = "learner", family = "binomial", time = "day")
+coefs(fit, scope = "pooled")
 metrics(fit, overall = TRUE)
 }

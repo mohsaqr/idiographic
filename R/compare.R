@@ -21,9 +21,11 @@
 #'   `list(graphical_var = list(n_lambda = 8), usem = list(temporal = "ar"))`.
 #' @param keep_fits Logical. Store fitted model objects? Default `FALSE`.
 #'
-#' @return A `model_comparison` object with `$comparison`, `$failures`, and
-#'   optionally `$fits`. `$comparison` is a tidy `data.frame` with one row per
-#'   method/network.
+#' @return A `model_comparison` object. `as.data.frame()` (or `summary()`)
+#'   returns the comparison table, a tidy `data.frame` with one row per
+#'   method and network; [failures()] returns the estimators that failed.
+#'   With `keep_fits = TRUE`, `matrices(x, fit = 1)` prints the matrices of
+#'   one stored fit.
 #' @examples
 #' set.seed(1)
 #' d <- data.frame(id = 1, day = rep(1:4, each = 15),
@@ -34,7 +36,7 @@
 #'   estimators = c("var", "graphical_var"),
 #'   estimator_args = list(graphical_var = list(n_lambda = 5))
 #' )
-#' cmp$comparison
+#' as.data.frame(cmp)
 #' @export
 compare_idiographic <- function(data, vars,
                                 estimators = c("var", "graphical_var"),
@@ -153,10 +155,9 @@ print.model_comparison <- function(x, ...) {
   cat(sprintf("  Failures:   %d\n", nrow(x$failures)))
   cat("  Tables:     as.data.frame(x) | failures(x)\n")
   if (!is.null(x$fits) && length(x$fits) > 0L) {
-    cat("  Cograph:    cograph::splot(x$fits[[1]])\n")
-    cat("  Matrices:   matrices(x$fits[[1]])\n")
+    cat("  Matrices:   matrices(x, fit = 1)\n")
   } else {
-    cat("  Fits:       rerun with keep_fits = TRUE for cograph plots\n")
+    cat("  Fits:       rerun with keep_fits = TRUE for matrices(x, fit = 1)\n")
   }
   invisible(x)
 }

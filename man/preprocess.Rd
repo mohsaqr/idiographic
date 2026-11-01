@@ -92,7 +92,9 @@ t-statistic. Values greater than this cutoff are flagged as unit-root risk.
 Default \code{-2.86}, a common large-sample intercept-only screening cutoff.}
 }
 \value{
-A \code{preprocess_result} object with:
+A \code{preprocess_result} object. \code{as.data.frame()} returns the
+per-subject, per-variable diagnostics; \code{summary()} rolls them up to one
+row per variable; \code{\link[=matrices]{matrices()}} returns the design matrices. It holds:
 \describe{
 \item{\code{pairs}}{The ordered current/lagged design table, including
 \code{intercept} and \verb{L1_*} columns.}
@@ -118,9 +120,10 @@ set.seed(1)
 d <- data.frame(id = 1, day = 1, beep = 1:40,
                 A = cumsum(rnorm(40)), B = rnorm(40))
 pp <- preprocess(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep")
-pp$counts
-pp$diagnostics
+pp
+summary(pp)
+as.data.frame(pp)
 # Difference the trending series and recheck the flags:
 preprocess(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
-           detrend = "difference")$diagnostics
+           detrend = "difference") |> summary()
 }

@@ -29,9 +29,14 @@
 #' @param keep_fits Logical. Store successful `var_result` fits? Default
 #'   `FALSE`.
 #'
-#' @return A `rolling_var_result` with `$estimates`, `$windows`, `$failures`,
-#'   and optionally `$fits`. `$estimates` is a tidy coefficient table with
-#'   subject/window metadata plus `network`, `from`, `to`, and `weight`.
+#' @return A `rolling_var_result`. `as.data.frame()` (or `summary()` and [coefs()])
+#'   returns the estimates, one row per subject, window, network and edge:
+#'   `subject`, `window`, the window bounds (`start_row`, `end_row`,
+#'   `start_day`, `end_day`, `start_beep`, `end_beep`), `network`, `from`,
+#'   `to` and `weight`. `as.data.frame(x, what = "windows")` returns one row
+#'   per window and [failures()] the windows that could not be fit. With
+#'   `keep_fits = TRUE`, `plot(x, fit = )` and `matrices(x, fit = )` show one
+#'   window's network.
 #' @examples
 #' set.seed(1)
 #' d <- data.frame(id = 1, day = rep(1:5, each = 20),
@@ -40,7 +45,8 @@
 #' tv <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
 #'                   day = "day", beep = "beep",
 #'                   window_size = 40, step = 20, scale = FALSE)
-#' head(tv$estimates)
+#' head(as.data.frame(tv))
+#' as.data.frame(tv, what = "windows")
 #' @export
 fit_rolling_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
                         window_size,
@@ -196,8 +202,8 @@ print.rolling_var_result <- function(x, ...) {
               length(x$labels), paste(x$labels, collapse = ", ")))
   cat("  Tables:     as.data.frame(x) | as.data.frame(x, what = \"windows\") | failures(x)\n")
   if (!is.null(x$fits) && length(x$fits) > 0L) {
-    cat("  Cograph:    cograph::splot(x$fits[[1]])\n")
-    cat("  Matrices:   matrices(x$fits[[1]])\n")
+    cat("  Plot:       plot(x, fit = 1)\n")
+    cat("  Matrices:   matrices(x, fit = 1)\n")
   } else {
     cat("  Fits:       rerun with keep_fits = TRUE for cograph plots\n")
   }
@@ -211,8 +217,19 @@ print.rolling_var_result <- function(x, ...) {
 #' @param what `"estimates"` (default) for one row per window and edge, or
 #'   `"windows"` for one row per window with its subject, start and end.
 #' @param ... Ignored.
-#' @return A base `data.frame`. The failures of individual windows are returned
-#'   by [failures()].
+#' @return A base `data.frame`. For `"estimates"`, one row per subject,
+#'   window, network and edge: `subject`, `window`, the window bounds
+#'   (`start_row`, `end_row`, `start_day`, `end_day`, `start_beep`,
+#'   `end_beep`), `network`, `from`, `to` and `weight`. For `"windows"`, one
+#'   row per window with its subject and bounds. The failures of individual
+#'   windows are returned by [failures()].
+#' @examples
+#' set.seed(1)
+#' d <- data.frame(id = 1, A = rnorm(100), B = rnorm(100))
+#' tv <- fit_rolling_var(d, vars = c("A", "B"), id = "id",
+#'                       window_size = 50, step = 25, scale = FALSE)
+#' head(as.data.frame(tv))
+#' as.data.frame(tv, what = "windows")
 #' @export
 as.data.frame.rolling_var_result <- function(x, row.names = NULL,
                                              optional = FALSE,

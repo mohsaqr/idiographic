@@ -15,7 +15,7 @@
 \alias{coefs.net_gimme}
 \alias{coefs.var_list}
 \alias{coefs.gvar_list}
-\title{Tidy coefficients from a fitted mlvar model}
+\title{Tidy coefficients of a fitted model}
 \usage{
 \method{coefs}{idioml_result}(x, ...)
 
@@ -55,9 +55,9 @@ coefs(x, ...)
 \method{coefs}{gvar_list}(x, ...)
 }
 \arguments{
-\item{x}{A fitted model object — currently only \code{net_mlvar} is supported.}
+\item{x}{A fitted model object.}
 
-\item{...}{Unused.}
+\item{...}{Passed to methods.}
 
 \item{model, scope, subject}{Optional filters for consolidated model fits.}
 
@@ -72,36 +72,38 @@ coefs(x, ...)
 \item{term}{Optional filter: only these coefficient terms.}
 }
 \value{
-A tidy \code{data.frame} of coefficient estimates.
+A tidy \code{data.frame} with one row per coefficient. Statistical fits
+return one row per scope, model, person and term (\code{scope}, \code{model},
+\code{estimator}, \code{subject}, \code{subgroup}, \code{term}, \code{estimate}, \code{std_error},
+\code{statistic}, \code{p_value}). \code{\link[=fit_mlvar]{fit_mlvar()}} returns one row per outcome and
+predictor (\code{outcome}, \code{predictor}, \code{beta}, \code{se}, \code{t}, \code{p}, \code{ci_lower},
+\code{ci_upper}, \code{significant}); the Bayesian estimators report posterior
+summaries (\code{estimate}, \code{posterior_sd}, \code{ci_lower}, \code{ci_upper}, \code{p},
+\code{significant}); the ordinary and graphical VARs return their edges
+(\code{network}, \code{from}, \code{to}, \code{weight}). Per-person lists add a \code{subject}
+column.
 }
 \description{
-Generic accessor for the tidy coefficient table stored on a
-\code{\link[=fit_mlvar]{fit_mlvar()}} result. Returns a \code{data.frame} with one row per
-\verb{(outcome, predictor)} pair and columns \code{outcome}, \code{predictor},
-\code{beta}, \code{se}, \code{t}, \code{p}, \code{ci_lower}, \code{ci_upper}, \code{significant}.
+Generic accessor for the coefficient table of a fitted model. Methods exist
+for the statistical fits (\code{\link[=fit_lm]{fit_lm()}}, \code{\link[=fit_glm]{fit_glm()}}, \code{\link[=fit_ml]{fit_ml()}},
+\code{\link[=fit_within_between]{fit_within_between()}}, \code{\link[=fit_subgroups]{fit_subgroups()}}), the network estimators
+(\code{\link[=fit_var]{fit_var()}}, \code{\link[=fit_graphical_var]{fit_graphical_var()}}, \code{\link[=fit_mlvar]{fit_mlvar()}}, \code{\link[=fit_mlvar_bayes]{fit_mlvar_bayes()}},
+\code{\link[=fit_mlvar_mplus]{fit_mlvar_mplus()}}, \code{\link[=fit_var_bayes]{fit_var_bayes()}}, \code{\link[=fit_usem]{fit_usem()}}, \code{\link[=fit_gimme]{fit_gimme()}}), their
+per-person lists (\code{\link[=fit_var_each]{fit_var_each()}}, \code{\link[=fit_graphical_var_each]{fit_graphical_var_each()}}) and the
+rolling network results.
 }
 \details{
-Only the within-person (temporal) coefficients are tabulated —
-these are the lagged fixed effects that populate \code{fit$temporal}.
-The between-subjects effects that go into \code{fit$between} are handled
-via the \code{D (I - Gamma)} transformation and are not exposed as a
-separate tidy table.
+For \code{\link[=fit_mlvar]{fit_mlvar()}} only the within-person (temporal) coefficients are
+tabulated: the lagged fixed effects of the temporal network. The
+between-person network is derived through the \code{D (I - Gamma)}
+transformation and has no coefficient table of its own.
 }
 \examples{
-\dontshow{if (requireNamespace("lme4", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-\donttest{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+coefs(fit, scope = "pooled")
+coefs(fit, term = "efficacy", sort_by = "estimate", n = 5)
+
 set.seed(1)
-n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")
-rows <- lapply(seq_len(n_id), function(i) {
-  m <- as.data.frame(matrix(rnorm(n_t * 3), ncol = 3))
-  names(m) <- vars
-  m$id <- i; m$day <- 1L; m$beep <- seq_len(n_t)
-  m
-})
-d <- do.call(rbind, rows)
-fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
-print(fit)
-summary(fit)
-}
-\dontshow{\}) # examplesIf}
+d <- data.frame(A = rnorm(80), B = rnorm(80))
+coefs(fit_var(d, vars = c("A", "B")))
 }

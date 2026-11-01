@@ -10,7 +10,11 @@
 #' @param row.names Ignored.
 #' @param optional Ignored.
 #' @param ... Filters passed to [predictions()].
-#' @return A prediction `data.frame`.
+#' @return The `data.frame` of [predictions()]: one row per held-out occasion
+#'   and model.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' head(as.data.frame(fit, scope = "pooled"))
 #' @export
 as.data.frame.idiographic_fit <- function(x, row.names = NULL,
                                           optional = FALSE, ...) {
@@ -25,7 +29,11 @@ as.data.frame.idiostats_fit <- as.data.frame.idiographic_fit
 #'
 #' @param object A consolidated `idiographic_fit`.
 #' @param ... Filters passed to [metrics()].
-#' @return A model-metrics `data.frame`.
+#' @return The `data.frame` of [metrics()]: one row per scope, model,
+#'   estimator and person, plus `.overall` rows.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' summary(fit, overall = TRUE)
 #' @export
 summary.idiographic_fit <- function(object, ...) metrics(object, ...)
 

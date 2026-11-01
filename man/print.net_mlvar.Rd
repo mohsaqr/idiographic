@@ -22,18 +22,12 @@ Print method for net_mlvar
 \examples{
 \dontshow{if (requireNamespace("lme4", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \donttest{
-set.seed(1)
-n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")
-rows <- lapply(seq_len(n_id), function(i) {
-  m <- as.data.frame(matrix(rnorm(n_t * 3), ncol = 3))
-  names(m) <- vars
-  m$id <- i; m$day <- 1L; m$beep <- seq_len(n_t)
-  m
-})
-d <- do.call(rbind, rows)
-fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+# Temporal, contemporaneous and between-person networks of 36 learners.
+fit <- fit_mlvar(srl, vars = c("efficacy", "planning", "effort"),
+                 id = "name", beep = "day")
 print(fit)
 summary(fit)
+coefs(fit)
 }
 \dontshow{\}) # examplesIf}
 }

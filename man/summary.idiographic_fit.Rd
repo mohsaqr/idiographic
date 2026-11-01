@@ -15,8 +15,13 @@
 \item{...}{Filters passed to \code{\link[=metrics]{metrics()}}.}
 }
 \value{
-A model-metrics \code{data.frame}.
+The \code{data.frame} of \code{\link[=metrics]{metrics()}}: one row per scope, model,
+estimator and person, plus \code{.overall} rows.
 }
 \description{
 Summarise a consolidated fit
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+summary(fit, overall = TRUE)
 }

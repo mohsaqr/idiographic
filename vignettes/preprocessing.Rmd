@@ -107,7 +107,7 @@ retains fewer.
 
 # What the flags mean
 
-Each row of `pp$diagnostics` is one subject-series, and each flag marks a
+Each row of `as.data.frame(pp)` is one subject-series, and each flag marks a
 different way stationarity can fail:
 
 - **`flag_trend`** — a significant linear slope over time; the mean is not
@@ -163,8 +163,8 @@ clean2 <- preprocess(srl, vars = vars, id = "name",
 summary(clean2)
 ```
 
-The transformed lag-pair design is available in `clean$pairs` and its current
-and lagged matrices in `matrices(clean)`. The model-fitting functions take long
+The current and lagged matrices of the transformed lag-pair design are
+returned by `matrices(clean)`. The model-fitting functions take long
 data rather than a `preprocess_result`, so an applied analysis must make the
 same documented transformation to its long input before fitting; the audit does
 not silently alter `srl` or any later model call.

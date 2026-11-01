@@ -37,9 +37,11 @@ fit. Built-in values are \code{"var"}, \code{"var_bayes"}, \code{"graphical_var"
 \item{keep_fits}{Logical. Store fitted model objects? Default \code{FALSE}.}
 }
 \value{
-A \code{model_comparison} object with \verb{$comparison}, \verb{$failures}, and
-optionally \verb{$fits}. \verb{$comparison} is a tidy \code{data.frame} with one row per
-method/network.
+A \code{model_comparison} object. \code{as.data.frame()} (or \code{summary()})
+returns the comparison table, a tidy \code{data.frame} with one row per
+method and network; \code{\link[=failures]{failures()}} returns the estimators that failed.
+With \code{keep_fits = TRUE}, \code{matrices(x, fit = 1)} prints the matrices of
+one stored fit.
 }
 \description{
 Fits one or more idiographic estimators to the same data and returns a tidy
@@ -57,5 +59,5 @@ cmp <- compare_idiographic(
   estimators = c("var", "graphical_var"),
   estimator_args = list(graphical_var = list(n_lambda = 5))
 )
-cmp$comparison
+as.data.frame(cmp)
 }

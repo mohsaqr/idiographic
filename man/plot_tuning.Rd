@@ -17,8 +17,14 @@ plot_tuning(x, model = NULL, scope = NULL, subject = NULL, metric = NULL, ...)
 \item{...}{Passed to base plotting functions.}
 }
 \value{
-Invisibly, the tuning table.
+Invisibly, the \code{data.frame} of \code{\link[=tuning]{tuning()}} that was plotted, one row
+per candidate setting.
 }
 \description{
 Plot tuning results
+}
+\examples{
+fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day", scope = "pooled", model = "knn", tune = TRUE)
+plot_tuning(fit)
 }

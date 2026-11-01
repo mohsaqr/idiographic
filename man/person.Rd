@@ -14,8 +14,14 @@ person(x, id, ...)
 \item{...}{Ignored.}
 }
 \value{
-An idiographic fit view.
+An \code{idiographic_fit} of the same structure as \code{x} whose metric,
+prediction, coefficient and tuning tables are restricted to the person-specific models of \code{id}, so
+that \code{\link[=metrics]{metrics()}}, \code{\link[=predictions]{predictions()}} and \code{\link[=coefs]{coefs()}} report only those rows.
 }
 \description{
 Focus an idiographic fit on one person
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+person(fit, "Aisha") |> coefs()
 }

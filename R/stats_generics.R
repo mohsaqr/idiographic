@@ -8,7 +8,19 @@
 #' @param n Optional number of rows to return.
 #' @param by Summarise by person (default) or separately within each rolling fold.
 #' @param ... Ignored.
-#' @return A data frame.
+#' @return A `data.frame` with one row per scope, model, estimator and person
+#'   (columns `scope`, `model`, `estimator`, `subject`, `subgroup`, `n`), plus
+#'   one `.overall` row per model that pools all held-out occasions. Regression
+#'   fits report `rmse`, `mae`, `bias` and `r_squared`; classification fits
+#'   report `accuracy`, `brier` and `log_loss`. With `by = "fold"`, rolling fits add a
+#'   `fold` column and report each fold separately.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' metrics(fit, overall = TRUE)
+#'
+#' # The five learners the person-specific model predicts worst.
+#' metrics(fit, scope = "individual", sort_by = "rmse", decreasing = TRUE,
+#'         n = 5)
 #' @export
 metrics <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
                     overall = FALSE, sort_by = NULL, decreasing = FALSE,
@@ -35,7 +47,13 @@ metrics.idiostats_fit <- function(x, model = NULL, scope = NULL,
 #' @param decreasing Sort order when `sort_by` is supplied.
 #' @param n Optional number of rows to return.
 #' @param ... Ignored.
-#' @return A data frame.
+#' @return A `data.frame` with one row per held-out occasion and model:
+#'   `scope`, `model`, `estimator`, `subject`, `subgroup`, `row` (row of the
+#'   input data), `observed`, `predicted` and, for regression, `residual`.
+#'   Classification fits also report the predicted `probability`.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' predictions(fit, scope = "individual", subject = "Aisha", n = 5)
 #' @export
 predictions <- function(x, model = NULL, scope = NULL, subject = NULL,
                         n = NULL, overall = FALSE, sort_by = NULL,
@@ -82,7 +100,14 @@ coefs.idiostats_fit <- function(x, model = NULL, scope = NULL,
 #' @param x An idiographic fit.
 #' @param scope Optional scope filter.
 #' @param ... Ignored.
-#' @return One-row data frame with the best `.overall` metric row.
+#' @return A one-row `data.frame` with the columns of [metrics()]: the
+#'   `.overall` row with the lowest `rmse` (regression) or the highest
+#'   `accuracy` (classification).
+#' @examples
+#' fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'               time = "day", model = c("mean", "ridge"))
+#' best_model(fit)
+#' best_model(fit, scope = "pooled")
 #' @export
 best_model <- function(x, scope = NULL, ...) UseMethod("best_model")
 
@@ -174,8 +199,17 @@ print.idiostats_fit <- function(x, ...) {
 
 #' Compare idiographic fits
 #'
-#' @param ... One or more idiographic fits.
-#' @return A tidy data frame formed from each fit's overall metrics.
+#' @param ... One or more consolidated idiographic fits (from [fit_lm()],
+#'   [fit_glm()], [fit_ml()], [fit_subgroups()] or [fit_rolling()]).
+#' @return A `data.frame` with one row per fit, scope and model: `fit` (the
+#'   position of the fit in `...`), `method`, and the `.overall` columns of
+#'   [metrics()]. An empty `data.frame` when no fit is supplied.
+#' @examples
+#' linear <- fit_lm(srl, y = "effort", x = "efficacy", id = "name",
+#'                  time = "day")
+#' ridge <- fit_ml(srl, y = "effort", x = "efficacy", id = "name",
+#'                 time = "day", model = "ridge")
+#' compare(linear, ridge)
 #' @export
 compare <- function(...) {
   fits <- list(...)

@@ -23,8 +23,18 @@
 \item{...}{Ignored.}
 }
 \value{
-A \code{data.frame}.
+A \code{data.frame}: for \code{"correlations"}, one row per level, unit and
+pair of variables (\code{level}, \code{unit}, \code{x}, \code{y}, \code{n}, \code{r}, ...), where the
+unit is a person for \code{level = "within"} and an occasion for
+\code{level = "between"}; for \code{"summary"}, one row per pair of variables
+comparing the levels.
 }
 \description{
 Tidy tables from a within/between correlation comparison
+}
+\examples{
+lv <- correlate_levels(srl, id = "name", vars = c("efficacy", "effort"),
+                       time = "day")
+as.data.frame(lv)
+as.data.frame(lv, what = "summary")
 }

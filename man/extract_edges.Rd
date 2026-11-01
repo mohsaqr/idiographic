@@ -9,8 +9,8 @@ extract_edges(model, sort_by = "weight", include_self = FALSE)
 \arguments{
 \item{model}{A \code{netobject} or \code{cograph_network}. Multi-network results
 (a \code{gvar_result}, \code{net_mlvar}, or any \code{netobject_group}) hold more than one
-network, so pass a single constituent — e.g.
-\code{extract_edges(as_netobject(x)$temporal)}.}
+network; for those, \code{edges(x, network = "temporal")} returns the edges of
+one layer.}
 
 \item{sort_by}{Either \code{"weight"} (descending by absolute weight) or \code{NULL}.}
 

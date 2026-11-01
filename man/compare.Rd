@@ -7,11 +7,21 @@
 compare(...)
 }
 \arguments{
-\item{...}{One or more idiographic fits.}
+\item{...}{One or more consolidated idiographic fits (from \code{\link[=fit_lm]{fit_lm()}},
+\code{\link[=fit_glm]{fit_glm()}}, \code{\link[=fit_ml]{fit_ml()}}, \code{\link[=fit_subgroups]{fit_subgroups()}} or \code{\link[=fit_rolling]{fit_rolling()}}).}
 }
 \value{
-A tidy data frame formed from each fit's overall metrics.
+A \code{data.frame} with one row per fit, scope and model: \code{fit} (the
+position of the fit in \code{...}), \code{method}, and the \code{.overall} columns of
+\code{\link[=metrics]{metrics()}}. An empty \code{data.frame} when no fit is supplied.
 }
 \description{
 Compare idiographic fits
+}
+\examples{
+linear <- fit_lm(srl, y = "effort", x = "efficacy", id = "name",
+                 time = "day")
+ridge <- fit_ml(srl, y = "effort", x = "efficacy", id = "name",
+                time = "day", model = "ridge")
+compare(linear, ridge)
 }

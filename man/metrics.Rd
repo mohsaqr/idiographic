@@ -35,8 +35,21 @@ metrics(
 \item{...}{Ignored.}
 }
 \value{
-A data frame.
+A \code{data.frame} with one row per scope, model, estimator and person
+(columns \code{scope}, \code{model}, \code{estimator}, \code{subject}, \code{subgroup}, \code{n}), plus
+one \code{.overall} row per model that pools all held-out occasions. Regression
+fits report \code{rmse}, \code{mae}, \code{bias} and \code{r_squared}; classification fits
+report \code{accuracy}, \code{brier} and \code{log_loss}. With \code{by = "fold"}, rolling fits add a
+\code{fold} column and report each fold separately.
 }
 \description{
 Tidy model metrics
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+metrics(fit, overall = TRUE)
+
+# The five learners the person-specific model predicts worst.
+metrics(fit, scope = "individual", sort_by = "rmse", decreasing = TRUE,
+        n = 5)
 }

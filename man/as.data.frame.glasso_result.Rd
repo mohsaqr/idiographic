@@ -21,3 +21,8 @@ partial correlation implied by \eqn{\Theta}).
 \description{
 Tidy a graphical-lasso fit
 }
+\examples{
+set.seed(1)
+x <- matrix(rnorm(200 * 3), ncol = 3, dimnames = list(NULL, c("A", "B", "C")))
+as.data.frame(glasso_fit(cov(x), rho = 0.05))
+}

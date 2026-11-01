@@ -55,9 +55,14 @@ observations before rolling.}
 \code{FALSE}.}
 }
 \value{
-A \code{rolling_var_result} with \verb{$estimates}, \verb{$windows}, \verb{$failures},
-and optionally \verb{$fits}. \verb{$estimates} is a tidy coefficient table with
-subject/window metadata plus \code{network}, \code{from}, \code{to}, and \code{weight}.
+A \code{rolling_var_result}. \code{as.data.frame()} (or \code{summary()} and \code{\link[=coefs]{coefs()}})
+returns the estimates, one row per subject, window, network and edge:
+\code{subject}, \code{window}, the window bounds (\code{start_row}, \code{end_row},
+\code{start_day}, \code{end_day}, \code{start_beep}, \code{end_beep}), \code{network}, \code{from},
+\code{to} and \code{weight}. \code{as.data.frame(x, what = "windows")} returns one row
+per window and \code{\link[=failures]{failures()}} the windows that could not be fit. With
+\code{keep_fits = TRUE}, \code{plot(x, fit = )} and \code{matrices(x, fit = )} show one
+window's network.
 }
 \description{
 Fits \code{\link[=fit_var]{fit_var()}} over ordered, overlapping windows within each subject.
@@ -73,5 +78,6 @@ d <- data.frame(id = 1, day = rep(1:5, each = 20),
 tv <- fit_rolling_var(d, vars = c("A", "B", "C"), id = "id",
                   day = "day", beep = "beep",
                   window_size = 40, step = 20, scale = FALSE)
-head(tv$estimates)
+head(as.data.frame(tv))
+as.data.frame(tv, what = "windows")
 }

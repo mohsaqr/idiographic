@@ -65,8 +65,14 @@ rows. Default \code{TRUE}.}
 \item{...}{Further arguments passed to the estimator.}
 }
 \value{
-A \code{forecast_result} with \verb{$predictions}, \verb{$metrics}, \verb{$splits},
-\verb{$failures}, and optionally \verb{$fits}.
+A \code{forecast_result}. \code{summary()} returns the forecast metrics, one
+row per variable plus an \code{.overall} row (\code{variable}, \code{n}, \code{mae}, \code{rmse},
+\code{bias}); \code{as.data.frame()} returns the out-of-sample predictions, one row
+per split, occasion and variable (\code{split}, \code{original_row}, \code{subject},
+\code{day}, \code{beep}, \code{variable}, \code{observed}, \code{predicted}, \code{residual},
+\code{abs_error}, \code{squared_error}); \code{\link[=failures]{failures()}} returns the splits that could
+not be fit. The split boundaries and, with \code{keep_fits = TRUE}, the fitted
+split models are stored in the object.
 }
 \description{
 \strong{Experimental.} The rolling-origin design follows standard time-series
@@ -88,5 +94,6 @@ d <- data.frame(id = 1, day = rep(1:5, each = 12),
 fc <- validate_forecast(d, vars = c("A", "B", "C"), id = "id",
                         day = "day", beep = "beep",
                         initial = 3, n_splits = 2, scale = FALSE)
-fc$metrics
+summary(fc)
+head(as.data.frame(fc))
 }

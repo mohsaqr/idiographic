@@ -597,8 +597,8 @@ plot_gimme <- function(x, weight = c("prop", "coef"),
 #'
 #' @param model A `netobject` or `cograph_network`. Multi-network results
 #'   (a `gvar_result`, `net_mlvar`, or any `netobject_group`) hold more than one
-#'   network, so pass a single constituent — e.g.
-#'   `extract_edges(as_netobject(x)$temporal)`.
+#'   network; for those, `edges(x, network = "temporal")` returns the edges of
+#'   one layer.
 #' @param sort_by Either `"weight"` (descending by absolute weight) or `NULL`.
 #' @param include_self Keep autoregressive self-loops? Default `FALSE`.
 #' @return A `data.frame` with columns `from`, `to`, `weight`.
@@ -664,14 +664,15 @@ extract_edges <- function(model, sort_by = "weight", include_self = FALSE) {
 #'   strongest by absolute weight when `sort_by = "weight"`. Default `NULL`
 #'   returns all edges.
 #' @param ... Passed to methods.
-#' @return A tidy `data.frame`, one row per edge.
+#' @return A tidy `data.frame` with one row per edge: `network` (layer),
+#'   `from`, `to` and `weight`; results for several persons (`var_list`,
+#'   `gvar_list`) add a leading `subject` column.
 #' @examples
-#' \donttest{
 #' set.seed(1)
 #' d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-#' fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
-#' edges(fit)            # tidy: network / from / to / weight
-#' }
+#' fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
+#' edges(fit)
+#' edges(fit, network = "temporal", n = 3)
 #' @export
 edges <- function(x, ...) UseMethod("edges")
 

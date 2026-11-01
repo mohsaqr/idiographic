@@ -59,9 +59,14 @@ observations before rolling.}
 \code{n_lambda}, \code{gamma}, \code{lambda_beta}, or \code{lambda_kappa}.}
 }
 \value{
-A \code{rolling_gvar_result} with \verb{$estimates}, \verb{$windows}, \verb{$failures},
-and optionally \verb{$fits}. \verb{$estimates} is a tidy coefficient table with
-subject/window metadata plus \code{network}, \code{from}, \code{to}, and \code{weight}.
+A \code{rolling_gvar_result}. \code{as.data.frame()} (or \code{summary()} and \code{\link[=coefs]{coefs()}})
+returns the estimates, one row per subject, window, network and edge:
+\code{subject}, \code{window}, the window bounds (\code{start_row}, \code{end_row},
+\code{start_day}, \code{end_day}, \code{start_beep}, \code{end_beep}), \code{network}, \code{from},
+\code{to} and \code{weight}. \code{as.data.frame(x, what = "windows")} returns one row
+per window and \code{\link[=failures]{failures()}} the windows that could not be fit. With
+\code{keep_fits = TRUE}, \code{plot(x, fit = )} and \code{matrices(x, fit = )} show one
+window's network.
 }
 \description{
 Fits \code{\link[=fit_graphical_var]{fit_graphical_var()}} over ordered, overlapping windows within each subject.
@@ -78,5 +83,6 @@ tv <- fit_rolling_graphical_var(d, vars = c("A", "B", "C"), id = "id",
                             day = "day", beep = "beep",
                             window_size = 50, step = 25,
                             scale = FALSE, n_lambda = 5)
-head(tv$estimates)
+head(as.data.frame(tv))
+as.data.frame(tv, what = "windows")
 }

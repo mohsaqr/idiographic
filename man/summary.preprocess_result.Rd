@@ -12,10 +12,12 @@
 \item{...}{Ignored.}
 }
 \value{
-A tidy per-variable \code{data.frame}.
+A \code{data.frame} with one row per variable: \code{variable}, \code{n_series}
+(subject-series), \code{mean_sd}, and the counts \code{n_trend}, \code{n_high_ar},
+\code{n_unit_root} and \code{n_flagged} (series with any stationarity risk).
 }
 \description{
 Compact per-variable roll-up of the diagnostics: one row per variable with
 its mean spread and the number of subject-series that tripped each
-stationarity flag. Use \code{x$diagnostics} for the full per-subject table.
+stationarity flag. \code{as.data.frame(x)} returns the full per-subject table.
 }

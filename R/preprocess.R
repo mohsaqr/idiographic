@@ -62,7 +62,9 @@
 #'   t-statistic. Values greater than this cutoff are flagged as unit-root risk.
 #'   Default `-2.86`, a common large-sample intercept-only screening cutoff.
 #'
-#' @return A `preprocess_result` object with:
+#' @return A `preprocess_result` object. `as.data.frame()` returns the
+#'   per-subject, per-variable diagnostics; `summary()` rolls them up to one
+#'   row per variable; [matrices()] returns the design matrices. It holds:
 #' \describe{
 #'   \item{`pairs`}{The ordered current/lagged design table, including
 #'     `intercept` and `L1_*` columns.}
@@ -77,11 +79,12 @@
 #' d <- data.frame(id = 1, day = 1, beep = 1:40,
 #'                 A = cumsum(rnorm(40)), B = rnorm(40))
 #' pp <- preprocess(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep")
-#' pp$counts
-#' pp$diagnostics
+#' pp
+#' summary(pp)
+#' as.data.frame(pp)
 #' # Difference the trending series and recheck the flags:
 #' preprocess(d, vars = c("A", "B"), id = "id", day = "day", beep = "beep",
-#'            detrend = "difference")$diagnostics
+#'            detrend = "difference") |> summary()
 #' @export
 preprocess <- function(data, vars, id = NULL, day = NULL, beep = NULL,
                        scale = TRUE,
@@ -653,7 +656,7 @@ print.preprocess_result <- function(x, ...) {
               sum(diag$flag_unit_root, na.rm = TRUE)))
   cat(sprintf("  Zero variance:  %d\n",
               sum(diag$flag_zero_variance, na.rm = TRUE)))
-  cat("  Tables:         x$pairs | x$counts | x$diagnostics\n")
+  cat("  Tables:         as.data.frame(x) | summary(x) | matrices(x)\n")
   if (!is.null(x$advice)) cat("\n", x$advice, "\n", sep = "")
   invisible(x)
 }
@@ -668,11 +671,13 @@ as.data.frame.preprocess_result <- function(x, row.names = NULL,
 #'
 #' Compact per-variable roll-up of the diagnostics: one row per variable with
 #' its mean spread and the number of subject-series that tripped each
-#' stationarity flag. Use `x$diagnostics` for the full per-subject table.
+#' stationarity flag. `as.data.frame(x)` returns the full per-subject table.
 #'
 #' @param object A `preprocess_result` object.
 #' @param ... Ignored.
-#' @return A tidy per-variable `data.frame`.
+#' @return A `data.frame` with one row per variable: `variable`, `n_series`
+#'   (subject-series), `mean_sd`, and the counts `n_trend`, `n_high_ar`,
+#'   `n_unit_root` and `n_flagged` (series with any stationarity risk).
 #' @export
 summary.preprocess_result <- function(object, ...) {
   d <- object$diagnostics

@@ -4,7 +4,15 @@
 #' @param model,scope,subject Optional filters.
 #' @param n Optional number of rows.
 #' @param ... Ignored.
-#' @return A tidy tuning table.
+#' @return A `data.frame` with one row per scope, model, person and candidate
+#'   setting: `scope`, `model`, `estimator`, `subject`, `subgroup`,
+#'   `parameter`, `value`, `n` (validation rows), the validation metrics
+#'   `rmse`, `mae`, `accuracy` and `brier`, and `rank` (1 = selected). It has
+#'   no rows when the fit was not tuned.
+#' @examples
+#' fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'               time = "day", scope = "pooled", model = "knn", tune = TRUE)
+#' tuning(fit)
 #' @export
 tuning <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
                    ...) {
@@ -42,7 +50,12 @@ tuning.idiostats_fit <- function(x, model = NULL, scope = NULL,
 #' @param metric Metric to plot. Defaults to `rmse` when present, otherwise
 #'   `accuracy`.
 #' @param ... Passed to base plotting functions.
-#' @return Invisibly, the tuning table.
+#' @return Invisibly, the `data.frame` of [tuning()] that was plotted, one row
+#'   per candidate setting.
+#' @examples
+#' fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'               time = "day", scope = "pooled", model = "knn", tune = TRUE)
+#' plot_tuning(fit)
 #' @export
 plot_tuning <- function(x, model = NULL, scope = NULL, subject = NULL,
                         metric = NULL, ...) {

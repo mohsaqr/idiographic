@@ -15,7 +15,17 @@
 #'   otherwise return nothing at all; `repeats` is the number of shuffles.
 #' @param n Optional number of rows.
 #' @param ... Ignored.
-#' @return A tidy data frame.
+#' @return A `data.frame` with one row per scope, model, estimator, person and
+#'   predictor: `scope`, `model`, `estimator`, `subject`, `subgroup`,
+#'   `variable` and `importance`, largest first. Models without coefficients
+#'   return no rows under `method = "coefficient"`.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'               time = "day")
+#' importance(fit, scope = "pooled")
+#'
+#' # Which predictor matters most for each of three learners?
+#' importance(fit, scope = "individual", subject = c("Aisha", "Alice", "Bob"))
 #' @export
 importance <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
                        method = c("coefficient", "permutation"), repeats = 5L,
@@ -164,7 +174,14 @@ importance.idiostats_fit <- function(x, model = NULL, scope = NULL,
 #' @param model,scope,subject Optional filters.
 #' @param n Optional number of rows.
 #' @param ... Ignored.
-#' @return A tidy row-level diagnostic table.
+#' @return A `data.frame` with one row per held-out occasion and model: the
+#'   columns of [predictions()] plus, for regression, `abs_error`,
+#'   `squared_error` and `std_residual` (the residual divided by the residual
+#'   standard deviation of its scope, model and person), and, for
+#'   classification, `correct` and `brier`.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' diagnostics(fit, scope = "individual", subject = "Aisha", n = 5)
 #' @export
 diagnostics <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
                         ...) UseMethod("diagnostics")

@@ -104,20 +104,19 @@
 #'   and the max Gelman-Rubin PSR are kept in attributes.
 #'
 #' @examples
-#' \donttest{
+#' # Ten persons, two AR(1) series with autoregressions of 0.3 and 0.15.
 #' set.seed(1)
-#' n_id <- 10; n_t <- 40; vars <- c("A", "B")
-#' rows <- lapply(seq_len(n_id), function(i) {
-#'   y <- matrix(0, n_t, 2)
-#'   for (t in 2:n_t) y[t, ] <- c(0.3, 0.15) * y[t - 1, ] + rnorm(2)
-#'   data.frame(id = i, beep = seq_len(n_t), A = y[, 1], B = y[, 2])
-#' })
-#' d <- do.call(rbind, rows)
-#' fit <- fit_mlvar_bayes(d, vars = vars, id = "id", beep = "beep",
-#'                          n_iter = 500, seed = 1)
+#' n_id <- 10; n_t <- 40
+#' ar1 <- \(phi) unlist(lapply(seq_len(n_id), \(i) {
+#'   as.numeric(stats::filter(rnorm(n_t), phi, method = "recursive"))
+#' }))
+#' d <- data.frame(id = rep(seq_len(n_id), each = n_t),
+#'                 beep = rep(seq_len(n_t), n_id),
+#'                 A = ar1(0.3), B = ar1(0.15))
+#' fit <- fit_mlvar_bayes(d, vars = c("A", "B"), id = "id", beep = "beep",
+#'                        n_iter = 500, seed = 1)
 #' print(fit)
 #' coefs(fit)
-#' }
 #' @seealso [fit_mlvar()] (frequentist lmer path), [fit_mlvar_mplus()]
 #'   (true-Mplus wrapper).
 #' @export

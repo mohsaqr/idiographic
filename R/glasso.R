@@ -334,6 +334,10 @@ print.glasso_result <- function(x, digits = 3, ...) {
 #' @return A `data.frame` with one row per unique variable pair and columns
 #'   `from`, `to`, `precision` (the \eqn{\Theta} entry) and `weight` (the
 #'   partial correlation implied by \eqn{\Theta}).
+#' @examples
+#' set.seed(1)
+#' x <- matrix(rnorm(200 * 3), ncol = 3, dimnames = list(NULL, c("A", "B", "C")))
+#' as.data.frame(glasso_fit(cov(x), rho = 0.05))
 #' @export
 as.data.frame.glasso_result <- function(x, row.names = NULL, optional = FALSE,
                                         ...) {
@@ -367,6 +371,10 @@ print.glasso_path_result <- function(x, ...) {
 #' @param ... Ignored.
 #' @return A `data.frame` with one row per variable pair per penalty and
 #'   columns `rho`, `from`, `to`, `precision` and `weight`.
+#' @examples
+#' set.seed(1)
+#' x <- matrix(rnorm(200 * 3), ncol = 3, dimnames = list(NULL, c("A", "B", "C")))
+#' as.data.frame(glasso_path(cov(x), rho = c(0.01, 0.2)))
 #' @export
 as.data.frame.glasso_path_result <- function(x, row.names = NULL,
                                              optional = FALSE, ...) {

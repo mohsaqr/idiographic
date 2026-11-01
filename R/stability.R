@@ -37,8 +37,12 @@
 #'   object? Default `FALSE`.
 #' @param ... Further arguments passed to the estimator.
 #'
-#' @return A `stability_result` with `$stability` edge statistics, `$original`
-#'   fit, `$resample_edges`, `$failures`, and `$config`.
+#' @return A `stability_result`. `as.data.frame()` (or `summary()`) returns
+#'   the edge-stability table, one row per network and edge: `network`, `from`,
+#'   `to`, the `original` weight, the resampled `mean`, `sd`, `q05`, `q50` and
+#'   `q95`, `selection_prop`, `positive_prop`, `negative_prop` and
+#'   `n_success`. [matrices()] and `plot()` show the original fit and
+#'   [failures()] the resamples that could not be fit.
 #' @examples
 #' set.seed(1)
 #' d <- data.frame(id = 1, day = rep(1:4, each = 12),
@@ -47,7 +51,7 @@
 #' st <- estimate_stability(d, vars = c("A", "B", "C"), id = "id",
 #'                          day = "day", beep = "beep",
 #'                          n_resamples = 5, seed = 1)
-#' head(st$stability)
+#' head(as.data.frame(st))
 #' @export
 estimate_stability <- function(data, vars,
                                estimator = c("var", "graphical_var", "mlvar",
@@ -303,9 +307,9 @@ print.stability_result <- function(x, ...) {
   cat(sprintf("  Resampling:     %s\n", x$config$resample))
   cat(sprintf("  Successful:     %d / %d\n", x$n_success, x$n_resamples))
   cat(sprintf("  Edge rows:      %d\n", nrow(x$stability)))
-  cat("  Table:          x$stability\n")
-  cat("  Cograph:        cograph::splot(x$original)\n")
-  cat("  Matrices:       matrices(x$original)\n")
+  cat("  Table:          as.data.frame(x)\n")
+  cat("  Plot:           plot(x)\n")
+  cat("  Matrices:       matrices(x)\n")
   invisible(x)
 }
 

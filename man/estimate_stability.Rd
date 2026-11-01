@@ -55,8 +55,12 @@ object? Default \code{FALSE}.}
 \item{...}{Further arguments passed to the estimator.}
 }
 \value{
-A \code{stability_result} with \verb{$stability} edge statistics, \verb{$original}
-fit, \verb{$resample_edges}, \verb{$failures}, and \verb{$config}.
+A \code{stability_result}. \code{as.data.frame()} (or \code{summary()}) returns
+the edge-stability table, one row per network and edge: \code{network}, \code{from},
+\code{to}, the \code{original} weight, the resampled \code{mean}, \code{sd}, \code{q05}, \code{q50} and
+\code{q95}, \code{selection_prop}, \code{positive_prop}, \code{negative_prop} and
+\code{n_success}. \code{\link[=matrices]{matrices()}} and \code{plot()} show the original fit and
+\code{\link[=failures]{failures()}} the resamples that could not be fit.
 }
 \description{
 \strong{Experimental.} The resampling design is methodologically grounded (block
@@ -80,5 +84,5 @@ d <- data.frame(id = 1, day = rep(1:4, each = 12),
 st <- estimate_stability(d, vars = c("A", "B", "C"), id = "id",
                          day = "day", beep = "beep",
                          n_resamples = 5, seed = 1)
-head(st$stability)
+head(as.data.frame(st))
 }

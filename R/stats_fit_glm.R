@@ -12,13 +12,17 @@
 #'   the same person are not treated as independent observations. With few
 #'   persons, cluster-robust inference is imprecise. Person-specific models
 #'   report the model-based standard errors of the fitted model.
-#' @return An `idiographic_fit`.
+#' @return An `idiographic_fit` (also of class `idiostats_fit`). Read it with
+#'   [coefs()] (one row per scope, model, person and term: `estimate`,
+#'   `std_error`, `statistic`, `p_value`), [metrics()] (held-out prediction
+#'   error, one row per scope, model and person plus `.overall` rows),
+#'   [predictions()] (one row per held-out occasion) and [failures()] (persons
+#'   or scopes that could not be fitted).
 #' @examples
-#' # `srl` carries some missing values, so na.rm is needed to derive an outcome.
-#' srl$high <- ifelse(srl$effort > median(srl$effort, na.rm = TRUE),
-#'                    "yes", "no")
-#' fit <- fit_glm(srl, y = "high", x = c("efficacy", "planning"), id = "name",
-#'                family = "binomial", time = "day")
+#' # Daily submission (0/1) of 40 simulated learners, predicted by motivation.
+#' fit <- fit_glm(submissions, y = "submitted", x = "motivation",
+#'                id = "learner", family = "binomial", time = "day")
+#' coefs(fit, scope = "pooled")
 #' metrics(fit, overall = TRUE)
 #' @export
 fit_glm <- function(data, y, x, id, family = "binomial", time = NULL,

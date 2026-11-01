@@ -24,15 +24,15 @@ question, not with the preferred algorithm.
 
 | Question | Primary function | Vignette section |
 |:--|:--|:--|
-| Is each person's series usable and sufficiently variable? | `describe_persons()` | [Describing persons](describing-persons.html#describe_persons) |
-| How are variables associated within each person? | `correlate_persons()` | [Describing persons](describing-persons.html#correlate_persons) |
-| How much variation lies within versus between people? | `variance_components()` | [Describing persons](describing-persons.html#variance_components) |
+| Is each person's series usable and sufficiently variable? | `describe_persons()` | [Describing persons](describing-persons.html#level-and-variability) |
+| How are variables associated within each person? | `correlate_persons()` | [Describing persons](describing-persons.html#within-person-correlations) |
+| How much variation lies within versus between people? | `variance_components()` | [Describing persons](describing-persons.html#between-person-and-within-person-variance) |
 | How should a panel be ordered, lagged, centred, and screened? | `preprocess_panel()` | [Panel preparation](preprocess-panel.html) |
-| What are the pooled and person-specific linear coefficients? | `fit_lm()` | [Regression models](regression-models.html#fit_lm) |
-| What are the pooled and person-specific binary or count associations? | `fit_glm()` | [Regression models](regression-models.html#fit_glm) |
+| What are the pooled and person-specific linear coefficients? | `fit_lm()` | [Regression models](regression-models.html#linear-models) |
+| What are the pooled and person-specific binary or count associations? | `fit_glm()` | [Regression models](regression-models.html#generalized-linear-models) |
 | How accurately do different algorithms predict each person's outcomes? | `fit_ml()` | [Prediction](prediction.html#fit_ml) |
 | How does predictive accuracy vary across evaluation periods? | `fit_rolling()` | [Prediction](prediction.html#fit_rolling) |
-| Do within-person and between-person effects differ? | `fit_within_between()` | [Regression models](regression-models.html#fit_within_between) |
+| Do within-person and between-person effects differ? | `fit_within_between()` | [Regression models](regression-models.html#within-person-and-between-person-effects) |
 | What is the uncertainty-weighted average of person-specific coefficients? | `pool_coefs()` | [Pooling and shrinkage](pooling-shrinkage.html#pool_coefs) |
 | How should noisy person-specific coefficients be stabilised? | `shrink_coefs()` | [Pooling and shrinkage](pooling-shrinkage.html#shrink_coefs) |
 | Is a discrete subgroup representation supported at all? | `test_subgroups()` | [Subgroups and effects](subgroups-effects.html#test_subgroups) |

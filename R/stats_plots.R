@@ -94,7 +94,14 @@ plot_metrics <- function(x, metric = NULL, model = NULL, scope = NULL,
 #'   learner distributions (`"boxplot"`, `"density"`), top-feature
 #'   frequencies (`"frequency"`), or pooled/individual means (`"comparison"`).
 #' @param ... Passed to base plotting functions.
-#' @return Invisibly, the plotted importance table.
+#' @return Invisibly, the plotted `data.frame` with the columns of
+#'   [importance()]; for `type = "overall"` across several persons, one row per
+#'   model and predictor averaged over persons (`subject = ".overall"`).
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'               time = "day", scope = "individual")
+#' plot_importance(fit)
+#' plot_importance(fit, type = "frequency", n = 1)
 #' @export
 plot_importance <- function(x, model = NULL, scope = NULL, subject = NULL,
                             n = 15, method = c("coefficient", "permutation"),
@@ -163,7 +170,12 @@ plot_importance <- function(x, model = NULL, scope = NULL, subject = NULL,
 #' @param type Diagnostic plot type: `"residuals"`, `"observed"`, or
 #'   `"calibration"`.
 #' @param ... Passed to base plotting functions.
-#' @return Invisibly, the diagnostic table.
+#' @return Invisibly, the `data.frame` of [diagnostics()] that was plotted, one
+#'   row per held-out occasion and model.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' plot_diagnostics(fit, scope = "individual")
+#' plot_diagnostics(fit, scope = "individual", type = "calibration")
 #' @export
 plot_diagnostics <- function(x, model = NULL, scope = NULL, subject = NULL,
                              type = c("residuals", "observed", "calibration"),

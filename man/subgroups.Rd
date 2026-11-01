@@ -12,7 +12,9 @@ subgroups(x, label = NULL)
 \item{label}{Optional subgroup label(s). Defaults to every subgroup.}
 }
 \value{
-An idiographic fit view.
+An \code{idiographic_fit} of the same structure as \code{x} whose metric,
+prediction, coefficient and tuning tables are restricted to the subgroup scope (and to \code{label} when given), so
+that \code{\link[=metrics]{metrics()}}, \code{\link[=predictions]{predictions()}} and \code{\link[=coefs]{coefs()}} report only those rows.
 }
 \description{
 Focus an idiographic fit on subgroup models

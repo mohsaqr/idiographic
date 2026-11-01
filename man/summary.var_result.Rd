@@ -12,8 +12,15 @@
 \item{...}{Ignored.}
 }
 \value{
-A tidy per-network metrics \code{data.frame}.
+A \code{data.frame} with one row per network layer (\code{temporal},
+\code{contemporaneous}): \code{network}, \code{n_nodes}, \code{n_edges}, \code{density},
+\code{mean_abs_weight}, \code{n_positive} and \code{n_negative}.
 }
 \description{
 Summary method for ordinary VAR fits
+}
+\examples{
+set.seed(1)
+d <- data.frame(A = rnorm(80), B = rnorm(80), C = rnorm(80))
+summary(fit_var(d, vars = c("A", "B", "C")))
 }

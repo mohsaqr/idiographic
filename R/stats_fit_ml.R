@@ -17,7 +17,8 @@
 #'   `"knn"`, `"tree"`.
 #' @param estimator Implementation backend: `"native"` (default, base R only),
 #'   `"glmnet"` (`ridge`/`lasso`/`elastic`), `"ranger"` (`forest`), or `"e1071"`
-#'   (`svm`, `bayes`). Non-native backends are installed on first use.
+#'   (`svm`, `bayes`). A missing backend can be installed after confirmation
+#'   in an interactive session; otherwise the call stops and names the package.
 #' @param valid_prop Proportion of the training rows reserved for tuning when
 #'   `tune = TRUE`.
 #' @param lambda Penalty for `ridge`, `lasso`, and `elastic`.

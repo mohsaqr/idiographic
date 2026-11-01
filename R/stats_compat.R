@@ -4,8 +4,28 @@
 #'
 #' `fit_ml()` supports both historical `idiographic` calls using
 #' `outcome`/`predictors` and the consolidated panel-model API using `y`/`x`.
-#' Calls that name `y` or `x` use the consolidated result contract; existing
-#' positional and `outcome`/`predictors` calls retain their original behavior.
+#' Calls that name `y` or `x`, or that pass a consolidated control such as
+#' `time`, `scope`, `subgroup` or `tune`, use the consolidated result
+#' contract; existing positional and `outcome`/`predictors` calls retain their
+#' original behaviour.
+#'
+#' @details
+#' Both interfaces evaluate prediction on an ordered hold-out: the last
+#' `ceiling(test_prop * n)` rows of each person are the test set and are never
+#' used for estimation. In the consolidated interface, `tune = TRUE` carves a
+#' further validation block (`valid_prop`) from the tail of the training rows,
+#' scores the candidate settings on it, and refits the winning setting on the
+#' training and validation rows before predicting the test rows.
+#'
+#' Consolidated controls passed through `...` are `time` (ordering column),
+#' `scope` (`"pooled"`, `"subgroup"`, `"individual"`, `"both"` or `"all"`),
+#' `subgroup` (as in [fit_lm()]), `valid_prop`, `ncomp` (`pcr`), `mtry` and
+#' `num_trees` (`forest`), `cost` (`svm`), `tune` and `grid` (a named list of
+#' tuning grids, e.g. `list(knn = list(k = c(3, 5)))`). [models()] lists every
+#' model name with its estimator, package and tuned parameter. Native models
+#' need only base R. When an optional backend package is missing, an
+#' interactive session offers to install it after confirmation; otherwise the
+#' call stops with an error that names the package.
 #'
 #' @param data A data frame or matrix.
 #' @param outcome,predictors Historical `idiographic` outcome and predictor
@@ -25,11 +45,38 @@
 #' @param max_iter,tol Iteration limit and convergence tolerance.
 #' @param standardize Use training-only predictor standardization?
 #' @param keep_fits Retain fitted backend objects?
-#' @param ... Arguments passed to the selected implementation.
+#' @param ... Arguments passed to the selected implementation; in the
+#'   consolidated interface, the controls listed in Details.
 #' @param y,x Consolidated outcome and predictor selectors. Supply both.
 #'
-#' @return An `idioml_result` for historical calls or an `idiographic_fit` for
-#'   consolidated `y`/`x` calls.
+#' @return For consolidated calls, an `idiographic_fit` (also of class
+#'   `idiostats_fit`). Its tables are read with accessors: [metrics()] (one
+#'   row per scope, model, estimator and person, plus `.overall` rows, with
+#'   `rmse`, `mae`, `bias` and `r_squared` for regression), [predictions()]
+#'   (one row per held-out occasion and model), [coefs()], [importance()],
+#'   [tuning()] and [failures()].
+#'
+#'   For historical calls, an `idioml_result`. `as.data.frame()` returns its
+#'   held-out predictions, `summary()` its metrics (one row per
+#'   `model_scope`, model, estimator and person), [coefs()] its coefficients
+#'   (one row per `model_scope`, model, person and term) and [predict()]
+#'   predictions for new rows.
+#' @examples
+#' # Consolidated interface: pooled and person-specific models, tidy results.
+#' fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'               time = "day", scope = "both", model = c("mean", "ridge"))
+#' metrics(fit, overall = TRUE)
+#' best_model(fit)
+#'
+#' # Tune the number of neighbours on a validation block before testing.
+#' tuned <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+#'                 time = "day", scope = "pooled", model = "knn", tune = TRUE)
+#' tuning(tuned)
+#'
+#' # Historical interface (outcome, predictors, id).
+#' legacy <- fit_ml(srl, "effort", c("efficacy", "planning"), "name",
+#'                  model = "ridge")
+#' legacy
 #' @export
 fit_ml <- function(data, outcome, predictors, id,
                    day = NULL, beep = NULL,

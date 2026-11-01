@@ -89,8 +89,9 @@ repeatable. Do not read a high stability as evidence that the groups exist.
 With \code{k = "auto"} the number of subgroups is chosen by \code{\link[=test_subgroups]{test_subgroups()}}, a
 Gaussian mixture on the person coefficients selected by BIC over both the
 number of components and the covariance structure. It may return \strong{one}, in
-which case a warning is raised and the partition should not be trusted. See
-\verb{$selection} for the BIC table and \verb{$shape} for the skewness diagnostic.
+which case a warning is raised and the partition should not be trusted. The
+printed result states this verdict; the BIC table (\code{selection}) and the
+skewness diagnostic (\code{shape}) are stored in the result.
 
 \code{method = "mixture_regression"} defers to the same test rather than to its
 own BIC, and the reason is worth knowing. On 30 simulated panels containing
@@ -111,5 +112,5 @@ groups(g)
 # Let the data choose how many subgroups there are.
 auto <- find_subgroups(srl, y = "effort", x = "efficacy:monitoring",
                        id = "name", k = "auto", k_max = 4, reps = 10)
-auto$selection
+auto
 }

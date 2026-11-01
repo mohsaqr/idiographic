@@ -61,8 +61,7 @@
 #'   tuning arguments (`lambda`, `alpha`, `k`, `n_components`, `max_iter`, or
 #'   `tol`). Unknown names are rejected.
 #'
-#' @return An `idioml_result` with `$predictions`, `$metrics`, `$coefficients`,
-#'   `$failures`, and optionally `$fits`.
+#' @return An `idioml_result`; see [fit_ml()].
 #' @examples
 #' set.seed(1)
 #' d <- data.frame(
@@ -76,7 +75,7 @@
 #' fit <- fit_ml(d, outcome = "y", predictors = c("x1", "x2"),
 #'               id = "id", beep = "beep",
 #'               model = c("linear", "ridge", "knn"))
-#' fit$metrics
+#' summary(fit)
 #' coefs(fit)
 #' @noRd
 .fit_ml_legacy <- function(data, outcome, predictors, id,
@@ -1067,7 +1066,7 @@ print.idioml_result <- function(x, ...) {
       }
     }
   }
-  cat("  Tables:        x$predictions | x$metrics | coefs(x)\n")
+  cat("  Tables:        as.data.frame(x) | summary(x) | coefs(x)\n")
   invisible(x)
 }
 
@@ -1075,7 +1074,9 @@ print.idioml_result <- function(x, ...) {
 #'
 #' @param object An `idioml_result`.
 #' @param ... Ignored.
-#' @return The metrics table.
+#' @return A `data.frame` of held-out metrics with one row per `model_scope`,
+#'   model, estimator and person: `n`, `mae`, `rmse`, `bias` and `r_squared`
+#'   for regression, accuracy-type metrics for classification.
 #' @export
 summary.idioml_result <- function(object, ...) {
   object$metrics
@@ -1105,7 +1106,14 @@ as.data.frame.idioml_result <- function(x, row.names = NULL,
 #' @param type `"response"` for numeric predictions/probabilities or `"class"`
 #'   for classification labels.
 #' @param ... Ignored.
-#' @return A data.frame of predictions.
+#' @return A `data.frame` of predictions. With `newdata = NULL`, the stored
+#'   held-out predictions of the chosen scope, model and estimator, one row per
+#'   test occasion; otherwise one row per row of `newdata`.
+#' @examples
+#' # Predicting new rows needs the fitted models, so keep them.
+#' fit <- fit_ml(srl, "effort", c("efficacy", "planning"), "name",
+#'               model = "ridge", keep_fits = TRUE)
+#' predict(fit, newdata = head(srl), scope = "pooled")
 #' @export
 predict.idioml_result <- function(object, newdata = NULL,
                                   scope = c("pooled", "individual"),

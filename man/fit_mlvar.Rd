@@ -122,8 +122,8 @@ A dual-class \code{c("net_mlvar", "netobject_group")} object — a
 named list of three full netobjects, one per network, plus
 model-level metadata stored as attributes. Each element is a
 standard \code{c("netobject", "cograph_network")} weight-matrix wrapper
-(no raw \verb{$data}), so \code{print()}, \code{summary()}, \code{\link[=coefs]{coefs()}}, and
-\code{cograph::splot(fit$temporal)} work directly. The three constituents
+(no raw \verb{$data}), so \code{print()}, \code{summary()}, \code{\link[=coefs]{coefs()}}, \code{\link[=edges]{edges()}} and
+\code{plot(fit, layer = "temporal")} work directly. The three constituents
 are matrix-wrapped and carry no underlying panel data, so any
 data-resampling workflow (bootstrap, reliability, stability) must start
 from the original panel rather than from these wrappers.
@@ -147,8 +147,7 @@ strict reference equivalence in the singular case.}
 \item{\code{attr(fit, "coefs")} / \code{\link[=coefs]{coefs()}}}{Tidy \code{data.frame} with one
 row per \verb{(outcome, predictor)} pair and columns \code{outcome},
 \code{predictor}, \code{beta}, \code{se}, \code{t}, \code{p}, \code{ci_lower}, \code{ci_upper},
-\code{significant}. Filter, sort, or plot with base R or the tidyverse.
-Retrieve with \code{coefs(fit)}.}
+\code{significant}. Retrieve with \code{coefs(fit)}.}
 \item{\code{attr(fit, "n_obs")}}{Number of rows in the augmented panel
 after na.omit.}
 \item{\code{attr(fit, "n_subjects")}}{Number of unique subjects remaining.}
@@ -203,18 +202,12 @@ errors and asks you to resolve or explicitly deduplicate the source data.
 \examples{
 \dontshow{if (requireNamespace("lme4", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \donttest{
-set.seed(1)
-n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")
-rows <- lapply(seq_len(n_id), function(i) {
-  m <- as.data.frame(matrix(rnorm(n_t * 3), ncol = 3))
-  names(m) <- vars
-  m$id <- i; m$day <- 1L; m$beep <- seq_len(n_t)
-  m
-})
-d <- do.call(rbind, rows)
-fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+# Temporal, contemporaneous and between-person networks of 36 learners.
+fit <- fit_mlvar(srl, vars = c("efficacy", "planning", "effort"),
+                 id = "name", beep = "day")
 print(fit)
 summary(fit)
+coefs(fit)
 }
 \dontshow{\}) # examplesIf}
 }

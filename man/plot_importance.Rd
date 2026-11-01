@@ -38,8 +38,16 @@ frequencies (\code{"frequency"}), or pooled/individual means (\code{"comparison"
 \item{...}{Passed to base plotting functions.}
 }
 \value{
-Invisibly, the plotted importance table.
+Invisibly, the plotted \code{data.frame} with the columns of
+\code{\link[=importance]{importance()}}; for \code{type = "overall"} across several persons, one row per
+model and predictor averaged over persons (\code{subject = ".overall"}).
 }
 \description{
 Plot feature importance
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day", scope = "individual")
+plot_importance(fit)
+plot_importance(fit, type = "frequency", n = 1)
 }

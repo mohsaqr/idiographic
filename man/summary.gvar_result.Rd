@@ -21,3 +21,9 @@ estimates and \code{nodes(object)} for node strengths.
 \description{
 Summary Method for gvar_result
 }
+\examples{
+fit <- fit_graphical_var(srl, vars = c("efficacy", "planning", "effort"),
+                         id = "name", subject = "Aisha", n_lambda = 5)
+summary(fit)
+
+}

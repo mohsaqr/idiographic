@@ -10,8 +10,14 @@ individuals(x)
 \item{x}{An idiographic fit.}
 }
 \value{
-An idiographic fit view.
+An \code{idiographic_fit} of the same structure as \code{x} whose metric,
+prediction, coefficient and tuning tables are restricted to the person-specific (\code{"individual"}) scope, so
+that \code{\link[=metrics]{metrics()}}, \code{\link[=predictions]{predictions()}} and \code{\link[=coefs]{coefs()}} report only those rows.
 }
 \description{
 Focus an idiographic fit on all individual models
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+individuals(fit) |> coefs(term = "efficacy", n = 5)
 }

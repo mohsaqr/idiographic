@@ -48,6 +48,7 @@
 #'   table.
 #' @references Bauer, D. J., & Curran, P. J. (2003). Distributional assumptions
 #'   of growth mixture models. *Psychological Methods*, 8(3), 338-363.
+#'   \doi{10.1037/1082-989X.8.3.338}
 #' @examples
 #' test_subgroups(srl, y = "effort", x = "efficacy:monitoring", id = "name")
 #' @export

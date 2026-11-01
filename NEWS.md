@@ -1,5 +1,4 @@
-# idiographic 0.4.0.9005
-
+# idiographic 0.4.0.9006
 ## Unified idiographic statistics
 
 * New `failures()` accessor returns the failure table of any result as a
@@ -76,6 +75,28 @@
   binned calibration, direct labels, temporal trajectories, and consistent
   colour-accessible styling. Plots now foreground uncertainty, reference
   values, and person-level failures instead of relying on default bar charts.
+
+## Documentation
+
+* Documentation revision. `fit_ml()` now documents both interfaces, the
+  consolidated controls passed through `...` and the structure of each
+  result, with runnable examples. Every exported accessor and view
+  (`metrics()`, `predictions()`, `coefs()`, `importance()`, `diagnostics()`,
+  `tuning()`, `best_model()`, `compare()`, `person()`, `people()`,
+  `individuals()`, `pooled()`, `overall()`, `plot_diagnostics()`,
+  `plot_importance()`, `plot_tuning()`) has an example and a return value that
+  names its columns. The `coefs()` help page no longer claims that only
+  multilevel VAR fits are supported.
+
+* Examples and print methods no longer reach into results with `$` or `[[`.
+  They use `as.data.frame()`, `summary()`, `edges()`, `matrices(x, fit = )`,
+  `matrices(x, subject = )` and `plot(x, fit = )` instead. The multilevel VAR
+  examples use the bundled `srl` data rather than white noise, which removes
+  28 singular-fit warnings, and the Bayesian VAR and `edges()` examples now run
+  under `R CMD check` instead of sitting entirely in `\donttest{}`.
+
+* The DESCRIPTION gives author and year for both method references, and the
+  graphical VAR, subgroup-test and heterogeneity references carry DOIs.
 
 # idiographic 0.3.4
 

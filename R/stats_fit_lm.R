@@ -27,7 +27,12 @@
 #'   the same person are not treated as independent observations. With few
 #'   persons, cluster-robust inference is imprecise. Person-specific models
 #'   report the model-based standard errors of the fitted model.
-#' @return An `idiographic_fit`.
+#' @return An `idiographic_fit` (also of class `idiostats_fit`). Read it with
+#'   [coefs()] (one row per scope, model, person and term: `estimate`,
+#'   `std_error`, `statistic`, `p_value`), [metrics()] (held-out prediction
+#'   error, one row per scope, model and person plus `.overall` rows),
+#'   [predictions()] (one row per held-out occasion) and [failures()] (persons
+#'   or scopes that could not be fitted).
 #' @examples
 #' fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",
 #'               time = "day")

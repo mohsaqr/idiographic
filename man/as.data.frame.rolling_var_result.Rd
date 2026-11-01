@@ -23,9 +23,21 @@
 \item{...}{Ignored.}
 }
 \value{
-A base \code{data.frame}. The failures of individual windows are returned
-by \code{\link[=failures]{failures()}}.
+A base \code{data.frame}. For \code{"estimates"}, one row per subject,
+window, network and edge: \code{subject}, \code{window}, the window bounds
+(\code{start_row}, \code{end_row}, \code{start_day}, \code{end_day}, \code{start_beep},
+\code{end_beep}), \code{network}, \code{from}, \code{to} and \code{weight}. For \code{"windows"}, one
+row per window with its subject and bounds. The failures of individual
+windows are returned by \code{\link[=failures]{failures()}}.
 }
 \description{
 Tidy tables of a rolling network result
+}
+\examples{
+set.seed(1)
+d <- data.frame(id = 1, A = rnorm(100), B = rnorm(100))
+tv <- fit_rolling_var(d, vars = c("A", "B"), id = "id",
+                      window_size = 50, step = 25, scale = FALSE)
+head(as.data.frame(tv))
+as.data.frame(tv, what = "windows")
 }

@@ -32,8 +32,15 @@ predictions(
 \item{...}{Ignored.}
 }
 \value{
-A data frame.
+A \code{data.frame} with one row per held-out occasion and model:
+\code{scope}, \code{model}, \code{estimator}, \code{subject}, \code{subgroup}, \code{row} (row of the
+input data), \code{observed}, \code{predicted} and, for regression, \code{residual}.
+Classification fits also report the predicted \code{probability}.
 }
 \description{
 Tidy held-out predictions
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+predictions(fit, scope = "individual", subject = "Aisha", n = 5)
 }

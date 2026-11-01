@@ -16,8 +16,17 @@ tuning(x, model = NULL, scope = NULL, subject = NULL, n = NULL, ...)
 \item{...}{Ignored.}
 }
 \value{
-A tidy tuning table.
+A \code{data.frame} with one row per scope, model, person and candidate
+setting: \code{scope}, \code{model}, \code{estimator}, \code{subject}, \code{subgroup},
+\code{parameter}, \code{value}, \code{n} (validation rows), the validation metrics
+\code{rmse}, \code{mae}, \code{accuracy} and \code{brier}, and \code{rank} (1 = selected). It has
+no rows when the fit was not tuned.
 }
 \description{
 Tuning results
+}
+\examples{
+fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day", scope = "pooled", model = "knn", tune = TRUE)
+tuning(fit)
 }

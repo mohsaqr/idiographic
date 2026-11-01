@@ -70,19 +70,27 @@ without hand-picking people for their fitted networks, the example uses the
 four students with the most complete five-indicator occasions, breaking ties
 alphabetically.
 
-```{r vars-audit}
-vars <- c("efficacy", "value", "planning", "monitoring", "effort")
-complete_n <- tapply(complete.cases(esm_srl[vars]), esm_srl$name, sum)
-selection <- data.frame(subject = names(complete_n),
-                        complete = as.integer(complete_n))
-selection <- selection[order(-selection$complete, selection$subject), ]
-selected_ids <- head(selection$subject, 4)
-head(selection, 4)
-preprocess(esm_srl[esm_srl$name %in% selected_ids, ],
-           vars = vars, id = "name")
+```{r selection-rule, include=FALSE}
+# The selection rule, checked when the article is built: the four students
+# with the most complete five-indicator occasions, ties broken alphabetically.
+rule_vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+complete_n <- tapply(complete.cases(esm_srl[rule_vars]), esm_srl$name, sum)
+rule_ids <- head(names(complete_n)[order(-complete_n, names(complete_n))], 4)
+n_complete <- unique(as.integer(complete_n[rule_ids]))
 ```
 
-The transparent rule selects Hana, Iker, Jamal, and Omar, each with 79
+```{r vars-audit}
+vars <- c("efficacy", "value", "planning", "monitoring", "effort")
+selected_ids <- c("Hana", "Iker", "Jamal", "Omar")
+preprocess(esm_srl, vars = vars, id = "name", subject = selected_ids)
+```
+
+```{r selection-check, include=FALSE}
+stopifnot("the stated students must match the selection rule" =
+            identical(selected_ids, sort(rule_ids)))
+```
+
+The rule selects Hana, Iker, Jamal, and Omar, each with `r n_complete`
 complete five-indicator occasions. The audit is shown rather
 than silently assuming stationarity; these supplied series contain trend or
 shift flags, so the fit is a method demonstration and its paths should not be
@@ -99,9 +107,9 @@ the relevant subjects — here, three of the four — before it is promoted by
 the corresponding rule.
 
 ```{r fit}
-students <- esm_srl[esm_srl$name %in% selected_ids, ]
 gimme_fit <- fit_gimme(
-  students, vars = vars, id = "name", time = "occasion",
+  esm_srl, vars = vars, id = "name", time = "occasion",
+  subject = selected_ids,
   ar = TRUE, groupcutoff = 0.75, subcutoff = 0.75, seed = 1
 )
 gimme_fit

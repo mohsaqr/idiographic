@@ -158,12 +158,15 @@ monitoring–effort (0.440), close to Grace's full-series contemporaneous
 pattern: in this series the within-occasion structure is more stable than the
 temporal coefficients.
 
+The number of retained edges per window and layer counts the non-zero
+weights in the same flattened table, and the first window's retained edges are
+its non-zero rows.
+
 ```{r rolling-gvar-table}
-edge_counts <- do.call(rbind, lapply(seq_along(rolling_gvar$fits), function(i) {
-  data.frame(window = i, summary(rolling_gvar$fits[[i]]))
-}))
-edge_counts
-edges(rolling_gvar$fits[[1]])
+aggregate(cbind(n_edges = weight != 0) ~ window + network,
+          data = as.data.frame(rolling_gvar), FUN = sum)
+subset(as.data.frame(rolling_gvar), window == 1 & weight != 0,
+       select = c(window, network, from, to, weight))
 matrices(rolling_gvar, fit = 1)
 ```
 

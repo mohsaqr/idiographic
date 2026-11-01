@@ -14,8 +14,8 @@
 \value{
 A tidy \code{data.frame} of per-network metrics (one row per network:
 \code{temporal}, \code{contemporaneous}), with \code{n_edges}/\code{density}/etc. computed from
-the proportion-of-subjects networks. Per-subject fit indices are in
-\code{object$fit}; \code{coefs(object)} gives the per-person estimates,
+the proportion-of-subjects networks. \code{coefs(object)} gives the
+per-person estimates,
 \code{edges(object)} the tidy edge list, and \code{nodes(object)} node strengths.
 }
 \description{

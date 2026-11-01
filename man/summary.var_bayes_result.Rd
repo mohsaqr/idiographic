@@ -12,7 +12,9 @@
 \item{...}{Unused.}
 }
 \value{
-A tidy per-network metrics \code{data.frame}.
+A \code{data.frame} with one row per network layer (\code{temporal},
+\code{contemporaneous}): \code{network}, \code{n_nodes}, \code{n_edges}, \code{density},
+\code{mean_abs_weight}, \code{n_positive} and \code{n_negative}.
 }
 \description{
 Summary method for var_bayes_result

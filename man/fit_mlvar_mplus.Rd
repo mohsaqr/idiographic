@@ -79,7 +79,8 @@ uses the current working directory.}
 \value{
 A \code{net_mplus} object, also inheriting from \code{net_mlvar}, with temporal,
 contemporaneous, and between networks plus Mplus metadata in attributes.
-The original \code{mlVAR}/Mplus object is available as \code{attr(x, "mplus")}.
+\code{\link[=edges]{edges()}}, \code{\link[=coefs]{coefs()}} and \code{\link[=matrices]{matrices()}} read the networks; the original
+\code{mlVAR}/Mplus object is kept in the \code{"mplus"} attribute.
 }
 \description{
 Runs the Mplus Bayesian estimator exposed by \code{mlVAR::mlVAR(estimator = "Mplus")} and converts the returned posterior summaries into idiographic's
@@ -89,13 +90,14 @@ and discoverable by \code{MplusAutomation::detectMplus()}.
 \examples{
 \dontshow{if (requireNamespace("mlVAR", quietly = TRUE) && requireNamespace("MplusAutomation", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 \dontrun{
+# Not run: needs a licensed Mplus installation, which CRAN does not have.
 fit <- fit_mlvar_mplus(
-  data, vars = c("A", "B", "C"), id = "id", beep = "time",
-  temporal = "fixed", contemporaneous = "fixed",
-  MplusName = "my_mplus_mlvar"
+  srl, vars = c("efficacy", "planning", "effort"), id = "name",
+  beep = "day", temporal = "fixed", contemporaneous = "fixed",
+  MplusName = "srl_mlvar", workdir = tempdir()
 )
 edges(fit)
-attr(fit, "mplus")$output$summaries
+coefs(fit)
 }
 \dontshow{\}) # examplesIf}
 }

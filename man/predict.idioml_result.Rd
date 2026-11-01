@@ -33,8 +33,16 @@ for classification labels.}
 \item{...}{Ignored.}
 }
 \value{
-A data.frame of predictions.
+A \code{data.frame} of predictions. With \code{newdata = NULL}, the stored
+held-out predictions of the chosen scope, model and estimator, one row per
+test occasion; otherwise one row per row of \code{newdata}.
 }
 \description{
 Predict from an idiographic ML result
+}
+\examples{
+# Predicting new rows needs the fitted models, so keep them.
+fit <- fit_ml(srl, "effort", c("efficacy", "planning"), "name",
+              model = "ridge", keep_fits = TRUE)
+predict(fit, newdata = head(srl), scope = "pooled")
 }

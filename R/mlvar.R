@@ -101,8 +101,8 @@
 #'   named list of three full netobjects, one per network, plus
 #'   model-level metadata stored as attributes. Each element is a
 #'   standard `c("netobject", "cograph_network")` weight-matrix wrapper
-#'   (no raw `$data`), so `print()`, `summary()`, [coefs()], and
-#'   `cograph::splot(fit$temporal)` work directly. The three constituents
+#'   (no raw `$data`), so `print()`, `summary()`, [coefs()], [edges()] and
+#'   `plot(fit, layer = "temporal")` work directly. The three constituents
 #'   are matrix-wrapped and carry no underlying panel data, so any
 #'   data-resampling workflow (bootstrap, reliability, stability) must start
 #'   from the original panel rather than from these wrappers.
@@ -127,8 +127,7 @@
 #'     \item{`attr(fit, "coefs")` / [coefs()]}{Tidy `data.frame` with one
 #'       row per `(outcome, predictor)` pair and columns `outcome`,
 #'       `predictor`, `beta`, `se`, `t`, `p`, `ci_lower`, `ci_upper`,
-#'       `significant`. Filter, sort, or plot with base R or the tidyverse.
-#'       Retrieve with `coefs(fit)`.}
+#'       `significant`. Retrieve with `coefs(fit)`.}
 #'     \item{`attr(fit, "n_obs")`}{Number of rows in the augmented panel
 #'       after na.omit.}
 #'     \item{`attr(fit, "n_subjects")`}{Number of unique subjects remaining.}
@@ -139,18 +138,12 @@
 #'
 #' @examplesIf requireNamespace("lme4", quietly = TRUE)
 #' \donttest{
-#' set.seed(1)
-#' n_id <- 8; n_t <- 30; vars <- c("A", "B", "C")
-#' rows <- lapply(seq_len(n_id), function(i) {
-#'   m <- as.data.frame(matrix(rnorm(n_t * 3), ncol = 3))
-#'   names(m) <- vars
-#'   m$id <- i; m$day <- 1L; m$beep <- seq_len(n_t)
-#'   m
-#' })
-#' d <- do.call(rbind, rows)
-#' fit <- fit_mlvar(d, vars = vars, id = "id", day = "day", beep = "beep")
+#' # Temporal, contemporaneous and between-person networks of 36 learners.
+#' fit <- fit_mlvar(srl, vars = c("efficacy", "planning", "effort"),
+#'                  id = "name", beep = "day")
 #' print(fit)
 #' summary(fit)
+#' coefs(fit)
 #' }
 #'
 #' @param min_obs Integer or `NULL`. Keep only subjects with at least this many
@@ -639,23 +632,41 @@ fit_mlvar <- function(data, vars, id,
   networks
 }
 
-#' Tidy coefficients from a fitted mlvar model
+#' Tidy coefficients of a fitted model
 #'
-#' Generic accessor for the tidy coefficient table stored on a
-#' [fit_mlvar()] result. Returns a `data.frame` with one row per
-#' `(outcome, predictor)` pair and columns `outcome`, `predictor`,
-#' `beta`, `se`, `t`, `p`, `ci_lower`, `ci_upper`, `significant`.
+#' Generic accessor for the coefficient table of a fitted model. Methods exist
+#' for the statistical fits ([fit_lm()], [fit_glm()], [fit_ml()],
+#' [fit_within_between()], [fit_subgroups()]), the network estimators
+#' ([fit_var()], [fit_graphical_var()], [fit_mlvar()], [fit_mlvar_bayes()],
+#' [fit_mlvar_mplus()], [fit_var_bayes()], [fit_usem()], [fit_gimme()]), their
+#' per-person lists ([fit_var_each()], [fit_graphical_var_each()]) and the
+#' rolling network results.
 #'
-#' Only the within-person (temporal) coefficients are tabulated —
-#' these are the lagged fixed effects that populate `fit$temporal`.
-#' The between-subjects effects that go into `fit$between` are handled
-#' via the `D (I - Gamma)` transformation and are not exposed as a
-#' separate tidy table.
+#' For [fit_mlvar()] only the within-person (temporal) coefficients are
+#' tabulated: the lagged fixed effects of the temporal network. The
+#' between-person network is derived through the `D (I - Gamma)`
+#' transformation and has no coefficient table of its own.
 #'
-#' @param x A fitted model object — currently only `net_mlvar` is supported.
-#' @param ... Unused.
-#' @return A tidy `data.frame` of coefficient estimates.
-#' @inherit fit_mlvar examples
+#' @param x A fitted model object.
+#' @param ... Passed to methods.
+#' @return A tidy `data.frame` with one row per coefficient. Statistical fits
+#'   return one row per scope, model, person and term (`scope`, `model`,
+#'   `estimator`, `subject`, `subgroup`, `term`, `estimate`, `std_error`,
+#'   `statistic`, `p_value`). [fit_mlvar()] returns one row per outcome and
+#'   predictor (`outcome`, `predictor`, `beta`, `se`, `t`, `p`, `ci_lower`,
+#'   `ci_upper`, `significant`); the Bayesian estimators report posterior
+#'   summaries (`estimate`, `posterior_sd`, `ci_lower`, `ci_upper`, `p`,
+#'   `significant`); the ordinary and graphical VARs return their edges
+#'   (`network`, `from`, `to`, `weight`). Per-person lists add a `subject`
+#'   column.
+#' @examples
+#' fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+#' coefs(fit, scope = "pooled")
+#' coefs(fit, term = "efficacy", sort_by = "estimate", n = 5)
+#'
+#' set.seed(1)
+#' d <- data.frame(A = rnorm(80), B = rnorm(80))
+#' coefs(fit_var(d, vars = c("A", "B")))
 #' @export
 coefs <- function(x, ...) {
   UseMethod("coefs")

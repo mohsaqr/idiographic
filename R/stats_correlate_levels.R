@@ -157,7 +157,16 @@ summary.idiographic_level_correlations <- function(object, ...) {
 #' @param what `"correlations"` (one row per correlation) or `"summary"`
 #'   (one row per pair of variables, as [summary()]).
 #' @param ... Ignored.
-#' @return A `data.frame`.
+#' @return A `data.frame`: for `"correlations"`, one row per level, unit and
+#'   pair of variables (`level`, `unit`, `x`, `y`, `n`, `r`, ...), where the
+#'   unit is a person for `level = "within"` and an occasion for
+#'   `level = "between"`; for `"summary"`, one row per pair of variables
+#'   comparing the levels.
+#' @examples
+#' lv <- correlate_levels(srl, id = "name", vars = c("efficacy", "effort"),
+#'                        time = "day")
+#' as.data.frame(lv)
+#' as.data.frame(lv, what = "summary")
 #' @export
 as.data.frame.idiographic_level_correlations <- function(
     x, row.names = NULL, optional = FALSE,

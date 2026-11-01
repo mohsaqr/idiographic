@@ -19,8 +19,13 @@
 \item{...}{Filters passed to \code{\link[=predictions]{predictions()}}.}
 }
 \value{
-A prediction \code{data.frame}.
+The \code{data.frame} of \code{\link[=predictions]{predictions()}}: one row per held-out occasion
+and model.
 }
 \description{
 Convert a consolidated fit to its prediction table
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+head(as.data.frame(fit, scope = "pooled"))
 }

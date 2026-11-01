@@ -44,5 +44,7 @@ d <- data.frame(
 )
 fits <- fit_var_each(d, vars = c("A", "B", "C"), id = "id",
                        day = "day", beep = "beep")
-fits[["1"]]
+fits
+edges(fits)
+matrices(fits, subject = "1")
 }

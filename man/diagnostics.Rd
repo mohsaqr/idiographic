@@ -16,8 +16,16 @@ diagnostics(x, model = NULL, scope = NULL, subject = NULL, n = NULL, ...)
 \item{...}{Ignored.}
 }
 \value{
-A tidy row-level diagnostic table.
+A \code{data.frame} with one row per held-out occasion and model: the
+columns of \code{\link[=predictions]{predictions()}} plus, for regression, \code{abs_error},
+\code{squared_error} and \code{std_residual} (the residual divided by the residual
+standard deviation of its scope, model and person), and, for
+classification, \code{correct} and \code{brier}.
 }
 \description{
 Model diagnostics
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+diagnostics(fit, scope = "individual", subject = "Aisha", n = 5)
 }

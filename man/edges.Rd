@@ -107,7 +107,9 @@ returns all edges.}
 \code{"coef"} (group-average coefficient) for the edge weight.}
 }
 \value{
-A tidy \code{data.frame}, one row per edge.
+A tidy \code{data.frame} with one row per edge: \code{network} (layer),
+\code{from}, \code{to} and \code{weight}; results for several persons (\code{var_list},
+\code{gvar_list}) add a leading \code{subject} column.
 }
 \description{
 A single tidy verb for every network idiographic produces. Returns one row per
@@ -117,10 +119,9 @@ edge with columns \code{network} (e.g. \code{"temporal"}, \code{"contemporaneous
 undirected networks (contemporaneous, between) report each pair once.
 }
 \examples{
-\donttest{
 set.seed(1)
 d <- data.frame(id = 1, A = rnorm(80), B = rnorm(80), C = rnorm(80))
-fit <- fit_graphical_var(d, vars = c("A", "B", "C"), id = "id", n_lambda = 8)
-edges(fit)            # tidy: network / from / to / weight
-}
+fit <- fit_var(d, vars = c("A", "B", "C"), id = "id")
+edges(fit)
+edges(fit, network = "temporal", n = 3)
 }

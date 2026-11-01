@@ -107,11 +107,17 @@ stabilised person-specific coefficients.
 
 ```{r pooling}
 pooled_coefs <- pool_coefs(fit)
-shrunk_coefs <- shrink_coefs(fit)
+shrunk_coefs <- shrink_coefs(fit, term = "efficacy")
 
 pooled_coefs
 head(shrunk_coefs)
 ```
+
+The pooled efficacy slope is the uncertainty-weighted mean of the 36
+person-specific slopes, and $\tau$ is the spread of the true slopes around it.
+The shrinkage weight states how much of each learner's own efficacy slope is
+kept; a learner with a large standard error is pulled further toward the
+pooled slope.
 
 Subgroup and treatment-effect workflows follow the same principle: test what
 the data identify, retain person-level uncertainty and failures, and use pooled

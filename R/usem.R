@@ -594,7 +594,9 @@ as.data.frame.net_usem <- function(x, row.names = NULL, optional = FALSE, ...) {
 #'
 #' @param object A `net_usem` object.
 #' @param ... Ignored.
-#' @return A tidy per-network metrics `data.frame`.
+#' @return A `data.frame` with one row per network layer (`temporal`,
+#'   `contemporaneous`): `network`, `n_nodes`, `n_edges`, `density`,
+#'   `mean_abs_weight`, `n_positive` and `n_negative`.
 #' @export
 summary.net_usem <- function(object, ...) {
   .tidy_over_group(as_netobject(object), .net_metrics)

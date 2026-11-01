@@ -32,11 +32,22 @@ otherwise return nothing at all; \code{repeats} is the number of shuffles.}
 \item{...}{Ignored.}
 }
 \value{
-A tidy data frame.
+A \code{data.frame} with one row per scope, model, estimator, person and
+predictor: \code{scope}, \code{model}, \code{estimator}, \code{subject}, \code{subgroup},
+\code{variable} and \code{importance}, largest first. Models without coefficients
+return no rows under \code{method = "coefficient"}.
 }
 \description{
 Returns a tidy feature-importance table. For coefficient-based native models,
 importance is the absolute coefficient magnitude after the model's internal
 scaling. For simple tree models, the selected split variable receives the
 split contrast magnitude.
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day")
+importance(fit, scope = "pooled")
+
+# Which predictor matters most for each of three learners?
+importance(fit, scope = "individual", subject = c("Aisha", "Alice", "Bob"))
 }

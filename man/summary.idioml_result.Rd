@@ -12,7 +12,9 @@
 \item{...}{Ignored.}
 }
 \value{
-The metrics table.
+A \code{data.frame} of held-out metrics with one row per \code{model_scope},
+model, estimator and person: \code{n}, \code{mae}, \code{rmse}, \code{bias} and \code{r_squared}
+for regression, accuracy-type metrics for classification.
 }
 \description{
 Summary method for idiographic ML fits

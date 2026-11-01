@@ -144,7 +144,9 @@ fit_var <- function(data, vars, id = NULL, day = NULL, beep = NULL,
 #' )
 #' fits <- fit_var_each(d, vars = c("A", "B", "C"), id = "id",
 #'                        day = "day", beep = "beep")
-#' fits[["1"]]
+#' fits
+#' edges(fits)
+#' matrices(fits, subject = "1")
 #' @export
 fit_var_each <- function(data, vars, id, day = NULL, beep = NULL,
                            min_obs = NULL, ...) {
@@ -219,7 +221,13 @@ as.data.frame.var_result <- function(x, row.names = NULL, optional = FALSE,
 #'
 #' @param object A `var_result` object.
 #' @param ... Ignored.
-#' @return A tidy per-network metrics `data.frame`.
+#' @return A `data.frame` with one row per network layer (`temporal`,
+#'   `contemporaneous`): `network`, `n_nodes`, `n_edges`, `density`,
+#'   `mean_abs_weight`, `n_positive` and `n_negative`.
+#' @examples
+#' set.seed(1)
+#' d <- data.frame(A = rnorm(80), B = rnorm(80), C = rnorm(80))
+#' summary(fit_var(d, vars = c("A", "B", "C")))
 #' @export
 summary.var_result <- function(object, ...) {
   .tidy_over_group(as_netobject(object), .net_metrics)
@@ -270,7 +278,7 @@ print.var_list <- function(x, ...) {
   cat(sprintf("  Temporal edges: median %g (range %d-%d)\n",
               stats::median(temporal_edges), min(temporal_edges),
               max(temporal_edges)))
-  cat(sprintf("  Access:         x[[\"%s\"]] | cograph::splot(x[[\"%s\"]])\n",
+  cat(sprintf("  Access:         edges(x) | matrices(x, subject = \"%s\") | plot(x, subject = \"%s\")\n",
               names(x)[1L], names(x)[1L]))
   invisible(x)
 }

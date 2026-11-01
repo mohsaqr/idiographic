@@ -10,8 +10,14 @@ overall(x)
 \item{x}{An idiographic fit.}
 }
 \value{
-An idiographic fit view.
+An \code{idiographic_fit} of the same structure as \code{x} whose metric and
+tuning tables keep only the \code{.overall} rows; predictions and coefficients
+are unchanged.
 }
 \description{
 Focus an idiographic fit on overall metric rows
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+overall(fit) |> metrics()
 }

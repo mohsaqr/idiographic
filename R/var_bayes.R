@@ -49,15 +49,15 @@
 #'   95% CI, one-tailed p, significance by CI excluding 0).
 #'
 #' @examples
-#' \donttest{
+#' # Two independent AR(1) series with autoregressions of 0.4 and 0.3.
 #' set.seed(1)
-#' y <- matrix(0, 200, 2)
-#' for (t in 2:200) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
-#' d <- data.frame(A = y[, 1], B = y[, 2])
+#' d <- data.frame(
+#'   A = as.numeric(stats::filter(rnorm(200), 0.4, method = "recursive")),
+#'   B = as.numeric(stats::filter(rnorm(200), 0.3, method = "recursive"))
+#' )
 #' fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 500, seed = 1)
 #' print(fit)
 #' coefs(fit)
-#' }
 #' @seealso [fit_graphical_var()] (regularized GLASSO/EBIC), [fit_var()] (OLS),
 #'   [fit_mlvar_bayes()] (multilevel Bayesian VAR).
 #' @export
@@ -269,7 +269,9 @@ print.var_bayes_result <- function(x, digits = 2, ...) {
 #' Summary method for var_bayes_result
 #' @param object A `var_bayes_result`.
 #' @param ... Unused.
-#' @return A tidy per-network metrics `data.frame`.
+#' @return A `data.frame` with one row per network layer (`temporal`,
+#'   `contemporaneous`): `network`, `n_nodes`, `n_edges`, `density`,
+#'   `mean_abs_weight`, `n_positive` and `n_negative`.
 #' @export
 summary.var_bayes_result <- function(object, ...) {
   .tidy_over_group(as_netobject(object), .net_metrics)

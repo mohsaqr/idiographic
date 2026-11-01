@@ -71,15 +71,15 @@ than one subject the data are within-person centred and pooled (as in
 \code{\link[=fit_graphical_var]{fit_graphical_var()}}).
 }
 \examples{
-\donttest{
+# Two independent AR(1) series with autoregressions of 0.4 and 0.3.
 set.seed(1)
-y <- matrix(0, 200, 2)
-for (t in 2:200) y[t, ] <- c(0.4, 0.3) * y[t - 1, ] + rnorm(2)
-d <- data.frame(A = y[, 1], B = y[, 2])
+d <- data.frame(
+  A = as.numeric(stats::filter(rnorm(200), 0.4, method = "recursive")),
+  B = as.numeric(stats::filter(rnorm(200), 0.3, method = "recursive"))
+)
 fit <- fit_var_bayes(d, vars = c("A", "B"), n_iter = 500, seed = 1)
 print(fit)
 coefs(fit)
-}
 }
 \seealso{
 \code{\link[=fit_graphical_var]{fit_graphical_var()}} (regularized GLASSO/EBIC), \code{\link[=fit_var]{fit_var()}} (OLS),

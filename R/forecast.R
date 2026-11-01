@@ -39,8 +39,14 @@
 #' @param keep_fits Logical. Store fitted split models? Default `FALSE`.
 #' @param ... Further arguments passed to the estimator.
 #'
-#' @return A `forecast_result` with `$predictions`, `$metrics`, `$splits`,
-#'   `$failures`, and optionally `$fits`.
+#' @return A `forecast_result`. `summary()` returns the forecast metrics, one
+#'   row per variable plus an `.overall` row (`variable`, `n`, `mae`, `rmse`,
+#'   `bias`); `as.data.frame()` returns the out-of-sample predictions, one row
+#'   per split, occasion and variable (`split`, `original_row`, `subject`,
+#'   `day`, `beep`, `variable`, `observed`, `predicted`, `residual`,
+#'   `abs_error`, `squared_error`); [failures()] returns the splits that could
+#'   not be fit. The split boundaries and, with `keep_fits = TRUE`, the fitted
+#'   split models are stored in the object.
 #' @examples
 #' set.seed(1)
 #' d <- data.frame(id = 1, day = rep(1:5, each = 12),
@@ -49,7 +55,8 @@
 #' fc <- validate_forecast(d, vars = c("A", "B", "C"), id = "id",
 #'                         day = "day", beep = "beep",
 #'                         initial = 3, n_splits = 2, scale = FALSE)
-#' fc$metrics
+#' summary(fc)
+#' head(as.data.frame(fc))
 #' @export
 validate_forecast <- function(data, vars,
                               estimator = c("var", "graphical_var"),
@@ -362,7 +369,7 @@ print.forecast_result <- function(x, ...) {
   cat(sprintf("  Predictions:    %d\n", nrow(x$predictions)))
   overall <- x$metrics[x$metrics$variable == ".overall", , drop = FALSE]
   cat(sprintf("  RMSE:           %.4f\n", overall$rmse))
-  cat("  Tables:         x$predictions | x$metrics | x$splits\n")
+  cat("  Tables:         as.data.frame(x) | summary(x) | failures(x)\n")
   invisible(x)
 }
 

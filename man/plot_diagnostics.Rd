@@ -24,8 +24,14 @@ plot_diagnostics(
 \item{...}{Passed to base plotting functions.}
 }
 \value{
-Invisibly, the diagnostic table.
+Invisibly, the \code{data.frame} of \code{\link[=diagnostics]{diagnostics()}} that was plotted, one
+row per held-out occasion and model.
 }
 \description{
 Plot model diagnostics
+}
+\examples{
+fit <- fit_lm(srl, y = "effort", x = "efficacy", id = "name", time = "day")
+plot_diagnostics(fit, scope = "individual")
+plot_diagnostics(fit, scope = "individual", type = "calibration")
 }

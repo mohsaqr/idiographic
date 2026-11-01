@@ -97,17 +97,19 @@
 #' Epskamp, S., Waldorp, L. J., Mottus, R., & Borsboom, D. (2018).
 #' The Gaussian Graphical Model in Cross-Sectional and Time-Series Data.
 #' \emph{Multivariate Behavioral Research}, 53(4), 453-480.
+#' \doi{10.1080/00273171.2018.1454823}
 #'
 #' Rothman, A. J., Levina, E., & Zhu, J. (2010). Sparse multivariate regression
-#' with covariance estimation. \emph{JCGS}, 19(4), 947-962.
+#' with covariance estimation. \emph{Journal of Computational and Graphical
+#' Statistics}, 19(4), 947-962. \doi{10.1198/jcgs.2010.09188}
 #'
 #' @examples
-#' set.seed(1)
-#' d <- data.frame(A = rnorm(60), B = rnorm(60))
-#' fit <- fit_graphical_var(d, vars = c("A", "B"), n_lambda = 3,
-#'                          scale = FALSE)
-#' fit$temporal
-#' fit$contemporaneous
+#' # One learner's daily self-regulation network.
+#' fit <- fit_graphical_var(srl, vars = c("efficacy", "planning", "monitoring",
+#'                                        "effort"),
+#'                          id = "name", subject = "Aisha", n_lambda = 10)
+#' edges(fit)
+#' matrices(fit)
 #'
 #' @importFrom stats cov2cor sd
 #' @export
@@ -960,6 +962,10 @@ as_netobject.gvar_result <- function(x, ...) {
 #'   \code{n_edges}, \code{density}, \code{mean_abs_weight}, \code{n_positive},
 #'   \code{n_negative}. Use \code{edges(object)} / \code{coefs(object)} for the
 #'   estimates and \code{nodes(object)} for node strengths.
+#' @examples
+#' fit <- fit_graphical_var(srl, vars = c("efficacy", "planning", "effort"),
+#'                          id = "name", subject = "Aisha", n_lambda = 5)
+#' summary(fit)
 #'
 #' @export
 summary.gvar_result <- function(object, ...) {

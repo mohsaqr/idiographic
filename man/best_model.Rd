@@ -14,8 +14,16 @@ best_model(x, scope = NULL, ...)
 \item{...}{Ignored.}
 }
 \value{
-One-row data frame with the best \code{.overall} metric row.
+A one-row \code{data.frame} with the columns of \code{\link[=metrics]{metrics()}}: the
+\code{.overall} row with the lowest \code{rmse} (regression) or the highest
+\code{accuracy} (classification).
 }
 \description{
 Best overall model row
+}
+\examples{
+fit <- fit_ml(srl, y = "effort", x = "efficacy:monitoring", id = "name",
+              time = "day", model = c("mean", "ridge"))
+best_model(fit)
+best_model(fit, scope = "pooled")
 }

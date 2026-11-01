@@ -118,4 +118,5 @@ clan(het)
 Chernozhukov, V., Demirer, M., Duflo, E., & Fernandez-Val, I.
 (2020). Generic Machine Learning Inference on Heterogeneous Treatment
 Effects in Randomized Experiments. arXiv:1712.04802.
+\doi{10.48550/arXiv.1712.04802}
 }

@@ -53,7 +53,12 @@ M-estimator (\code{MASS::rlm()}) that is not dragged around by outliers.}
 \item{...}{Passed to the underlying fitter.}
 }
 \value{
-An \code{idiographic_fit}.
+An \code{idiographic_fit} (also of class \code{idiostats_fit}). Read it with
+\code{\link[=coefs]{coefs()}} (one row per scope, model, person and term: \code{estimate},
+\code{std_error}, \code{statistic}, \code{p_value}), \code{\link[=metrics]{metrics()}} (held-out prediction
+error, one row per scope, model and person plus \code{.overall} rows),
+\code{\link[=predictions]{predictions()}} (one row per held-out occasion) and \code{\link[=failures]{failures()}} (persons
+or scopes that could not be fitted).
 }
 \description{
 Fits a linear model at every requested scope and returns them in one tidy
