@@ -1,0 +1,3111 @@
+{
+  "schema": "prova.verification-case/1",
+  "title": "Person-specific regressions and their random-effects pooling",
+  "description": "A separate regression of effort on efficacy and planning for each of 36 learners, estimated on the first 80% of each learner's days (the last ceiling(0.2 n) days are held out), and the pooling of the 36 coefficients per term: DerSimonian-Laird between-person variance, Q and I2, with the Hartung-Knapp standard error floored at the usual random-effects standard error.",
+  "covers": [
+    "fit_lm()",
+    "coefs()",
+    "pool_coefs()"
+  ],
+  "generator": "idiographic equivalence/verify/export-bundles.R",
+  "created_at": "2026-11-18",
+  "sides": [
+    {
+      "id": "idiographic",
+      "name": "idiographic",
+      "version": "0.4.0.9006",
+      "primary": true,
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    },
+    {
+      "id": "stats",
+      "name": "stats::lm and base R, from the definition",
+      "version": "4.6.2",
+      "authority": "open-source",
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    }
+  ],
+  "sections": [
+    {
+      "id": "code",
+      "title": "Code",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/script.R",
+          "bytes": 1063,
+          "sha256": "9214f3b1521b37232bac171c87a9bdc0b32332b603b8667ff9b5423924d9feec",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "reads": [
+              "data/srl.csv"
+            ]
+          }
+        },
+        {
+          "side": "stats",
+          "path": "stats/script.R",
+          "bytes": 1767,
+          "sha256": "399833b5e1ce4ad48b7fe401bac374a36b1231e12d4e681cc1ddb9867ab31a76",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "reads": [
+              "data/srl.csv"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "title": "Raw output",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/console.txt",
+          "bytes": 2734,
+          "sha256": "799908d445756901d61857b2298723c7b6cdf5411d87c4620e53cac8d5a4a54f",
+          "label": "R console",
+          "type": "text"
+        },
+        {
+          "side": "stats",
+          "path": "stats/console.txt",
+          "bytes": 2546,
+          "sha256": "6417f2dfb78e214e1ae5c968a6e19e1c29dad1523b06a5852e8518f41d16efe9",
+          "label": "R console",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "items": [
+        {
+          "path": "data/srl.csv",
+          "bytes": 299757,
+          "sha256": "1301fc7bf6086ade30d38dce4a9c609cdfad0e76ca796e96466b4d6434dc92ce",
+          "label": "36 learners, 156 days"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "quantity": "Aisha (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 54.7967509612503,
+        "stats": 54.7967509612503
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Aisha efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.170720230292195,
+        "stats": 0.170720230292195
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Aisha planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.217481958497222,
+        "stats": 0.217481958497222
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Alice (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 31.5335349311569,
+        "stats": 31.5335349311569
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Alice efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.289182724777081,
+        "stats": 0.289182724777081
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Alice planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.405949251570255,
+        "stats": 0.405949251570255
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Anika (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 16.0419458951376,
+        "stats": 16.0419458951376
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Anika efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.122190945568608,
+        "stats": 0.122190945568608
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Anika planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.560375941605006,
+        "stats": 0.560375941605006
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Astrid (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 54.9376810635461,
+        "stats": 54.9376810635461
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Astrid efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0534501631338202,
+        "stats": 0.0534501631338202
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Astrid planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.193813763712788,
+        "stats": 0.193813763712788
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bjorn (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 24.4114518301707,
+        "stats": 24.4114518301707
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bjorn efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.186998975268027,
+        "stats": 0.186998975268027
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bjorn planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.345617439803834,
+        "stats": 0.345617439803834
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bob (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 35.822518126487,
+        "stats": 35.822518126487
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bob efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.492691175253242,
+        "stats": 0.492691175253242
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bob planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.0245506957042245,
+        "stats": -0.0245506957042245
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Charlie (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 11.3817980025678,
+        "stats": 11.3817980025678
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Charlie efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.119981236874859,
+        "stats": 0.119981236874859
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Charlie planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.670006429923248,
+        "stats": 0.670006429923248
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Diana (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 17.4316616869097,
+        "stats": 17.4316616869097
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Diana efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.106019839705967,
+        "stats": -0.106019839705967
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Diana planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.871793173745498,
+        "stats": 0.871793173745498
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Erik (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.979023429175189,
+        "stats": 0.979023429175189
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Erik efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.123110000599504,
+        "stats": -0.123110000599504
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Erik planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 1.0372647890139,
+        "stats": 1.0372647890139
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Eve (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 16.6394868116544,
+        "stats": 16.6394868116544
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Eve efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.446563906054577,
+        "stats": 0.446563906054577
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Eve planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.250373551978454,
+        "stats": 0.250373551978454
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Fatima (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 27.1079054297849,
+        "stats": 27.1079054297849
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Fatima efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.206671920731212,
+        "stats": -0.206671920731212
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Fatima planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.53633896103409,
+        "stats": 0.53633896103409
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Frank (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -6.14369736937808,
+        "stats": -6.14369736937808
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Frank efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.112314888449542,
+        "stats": 0.112314888449542
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Frank planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.706443864382809,
+        "stats": 0.706443864382809
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Freja (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 43.8852513403646,
+        "stats": 43.8852513403646
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Freja efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.0270011867516853,
+        "stats": -0.0270011867516853
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Freja planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.406511411263492,
+        "stats": 0.406511411263492
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Grace (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 20.6742429970188,
+        "stats": 20.6742429970188
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Grace efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.196528376617783,
+        "stats": 0.196528376617783
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Grace planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.310489539400758,
+        "stats": 0.310489539400758
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hassan (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 40.2808337585909,
+        "stats": 40.2808337585909
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hassan efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0701987501187471,
+        "stats": 0.0701987501187471
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hassan planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.183845865433253,
+        "stats": 0.183845865433253
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Heidi (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 32.3541222147122,
+        "stats": 32.3541222147122
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Heidi efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.243615624294785,
+        "stats": 0.243615624294785
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Heidi planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.27183564974223,
+        "stats": 0.27183564974223
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hiroshi (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 3.58047381404879,
+        "stats": 3.58047381404879
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hiroshi efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.405264505937128,
+        "stats": 0.405264505937128
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hiroshi planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.339249100206093,
+        "stats": 0.339249100206093
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ingrid (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 76.699054167345,
+        "stats": 76.699054167345
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ingrid efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0482236713465582,
+        "stats": 0.0482236713465582
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ingrid planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0634661768827277,
+        "stats": 0.0634661768827277
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ivan (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 48.1586030223556,
+        "stats": 48.1586030223556
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ivan efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.693501445070376,
+        "stats": 0.693501445070376
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ivan planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.286713576699535,
+        "stats": -0.286713576699535
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Judy (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 28.1795284657385,
+        "stats": 28.1795284657385
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Judy efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.404662889950683,
+        "stats": 0.404662889950683
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Judy planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.0334457343402643,
+        "stats": -0.0334457343402643
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Karin (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -8.25998762639826,
+        "stats": -8.25998762639826
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Karin efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.384121656883305,
+        "stats": 0.384121656883305
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Karin planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.652463693926437,
+        "stats": 0.652463693926437
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Lars (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -13.4710087558593,
+        "stats": -13.4710087558593
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Lars efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 1.05172318146806,
+        "stats": 1.05172318146806
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Lars planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.323386620549215,
+        "stats": 0.323386620549215
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Layla (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 11.7357404984213,
+        "stats": 11.7357404984213
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Layla efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.355477041012827,
+        "stats": 0.355477041012827
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Layla planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.309739161841872,
+        "stats": 0.309739161841872
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Li (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 67.1484580011567,
+        "stats": 67.1484580011567
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Li efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.495976200554814,
+        "stats": 0.495976200554814
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Li planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.298563680618703,
+        "stats": -0.298563680618703
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Liv (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -20.9027904640243,
+        "stats": -20.9027904640243
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Liv efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.774878472833206,
+        "stats": 0.774878472833206
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Liv planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.437036877679031,
+        "stats": 0.437036877679031
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Mei (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 50.3704509196118,
+        "stats": 50.3704509196118
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Mei efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.134911994338838,
+        "stats": 0.134911994338838
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Mei planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.227845626239047,
+        "stats": 0.227845626239047
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Nils (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 45.8484234826531,
+        "stats": 45.8484234826531
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Nils efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.0409300786075623,
+        "stats": -0.0409300786075623
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Nils planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.513496899423474,
+        "stats": 0.513496899423474
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Noor (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 57.703564925605,
+        "stats": 57.703564925605
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Noor efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.257514911962345,
+        "stats": 0.257514911962345
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Noor planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0927182110425446,
+        "stats": 0.0927182110425446
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Omar (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 7.00112404470059,
+        "stats": 7.00112404470059
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Omar efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.36232374487733,
+        "stats": 0.36232374487733
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Omar planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.534272961724039,
+        "stats": 0.534272961724039
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ravi (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 53.0957352163937,
+        "stats": 53.0957352163937
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ravi efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": -0.236585885857801,
+        "stats": -0.236585885857801
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ravi planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.21881769956196,
+        "stats": 0.21881769956196
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Saanvi (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 33.2801308199622,
+        "stats": 33.2801308199622
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Saanvi efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0238226135044016,
+        "stats": 0.0238226135044016
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Saanvi planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.416030506885989,
+        "stats": 0.416030506885989
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sakura (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 40.0833358614199,
+        "stats": 40.0833358614199
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sakura efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.315764499604685,
+        "stats": 0.315764499604685
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sakura planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0301945643669763,
+        "stats": 0.0301945643669763
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sven (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 21.619710094752,
+        "stats": 21.619710094752
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sven efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.400364120130987,
+        "stats": 0.400364120130987
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sven planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.17913605816191,
+        "stats": 0.17913605816191
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Takumi (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 40.2837346846651,
+        "stats": 40.2837346846651
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Takumi efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0274971749102666,
+        "stats": 0.0274971749102666
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Takumi planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.365451787914725,
+        "stats": 0.365451787914725
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Yuki (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 30.8336121666585,
+        "stats": 30.8336121666585
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Yuki efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.181727375933839,
+        "stats": 0.181727375933839
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Yuki planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.244102293013294,
+        "stats": 0.244102293013294
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Zain (Intercept) estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 21.8813832570415,
+        "stats": 21.8813832570415
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Zain efficacy estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.534703253451281,
+        "stats": 0.534703253451281
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Zain planning estimate",
+      "kind": "person estimate",
+      "values": {
+        "idiographic": 0.0798147237622574,
+        "stats": 0.0798147237622574
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Aisha (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.96829173635954,
+        "stats": 4.96829173635954
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Aisha efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0902195610295689,
+        "stats": 0.0902195610295689
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Aisha planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0882585339372504,
+        "stats": 0.0882585339372504
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Alice (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 3.46441193535077,
+        "stats": 3.46441193535077
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Alice efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0836584555583146,
+        "stats": 0.0836584555583146
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Alice planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.074413654474765,
+        "stats": 0.074413654474765
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Anika (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.62704888844837,
+        "stats": 4.62704888844837
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Anika efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.105678929441685,
+        "stats": 0.105678929441685
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Anika planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0943392175966029,
+        "stats": 0.0943392175966029
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Astrid (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 6.26941030769669,
+        "stats": 6.26941030769669
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Astrid efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.090215067088132,
+        "stats": 0.090215067088132
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Astrid planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0702558236226406,
+        "stats": 0.0702558236226406
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bjorn (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.613312286997,
+        "stats": 4.613312286997
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bjorn efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0752518341043338,
+        "stats": 0.0752518341043338
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bjorn planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0682849749367746,
+        "stats": 0.0682849749367746
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bob (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 8.62601193990115,
+        "stats": 8.62601193990115
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bob efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.123781996625162,
+        "stats": 0.123781996625162
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Bob planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0671551950494265,
+        "stats": 0.0671551950494265
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Charlie (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 5.8715600659185,
+        "stats": 5.8715600659185
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Charlie efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.112215505067353,
+        "stats": 0.112215505067353
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Charlie planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.105246453140248,
+        "stats": 0.105246453140248
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Diana (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 8.53052639051649,
+        "stats": 8.53052639051649
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Diana efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0832899470346362,
+        "stats": 0.0832899470346362
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Diana planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0696683021780092,
+        "stats": 0.0696683021780092
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Erik (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 3.93100799989856,
+        "stats": 3.93100799989856
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Erik efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.105979206041385,
+        "stats": 0.105979206041385
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Erik planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.10641775237691,
+        "stats": 0.10641775237691
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Eve (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 6.04245519240691,
+        "stats": 6.04245519240691
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Eve efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0660857049610094,
+        "stats": 0.0660857049610094
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Eve planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.097681856574181,
+        "stats": 0.097681856574181
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Fatima (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 8.03484868222096,
+        "stats": 8.03484868222096
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Fatima efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.130692744319669,
+        "stats": 0.130692744319669
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Fatima planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.116347981921089,
+        "stats": 0.116347981921089
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Frank (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 9.84382286143826,
+        "stats": 9.84382286143826
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Frank efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.13946930102361,
+        "stats": 0.13946930102361
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Frank planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.106825151276208,
+        "stats": 0.106825151276208
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Freja (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 5.78018942339057,
+        "stats": 5.78018942339057
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Freja efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0839662076809021,
+        "stats": 0.0839662076809021
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Freja planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0961095556364304,
+        "stats": 0.0961095556364304
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Grace (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 7.85146993781075,
+        "stats": 7.85146993781075
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Grace efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0924764107997836,
+        "stats": 0.0924764107997836
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Grace planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0905592852525035,
+        "stats": 0.0905592852525035
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hassan (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.74831072748053,
+        "stats": 4.74831072748053
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hassan efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0872445086583507,
+        "stats": 0.0872445086583507
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hassan planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0850063128474868,
+        "stats": 0.0850063128474868
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Heidi (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 6.77412391475555,
+        "stats": 6.77412391475555
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Heidi efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.103756248584559,
+        "stats": 0.103756248584559
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Heidi planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.089458737516485,
+        "stats": 0.089458737516485
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hiroshi (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 1.61186354498257,
+        "stats": 1.61186354498257
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hiroshi efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0494966212609027,
+        "stats": 0.0494966212609027
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Hiroshi planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0573483181507425,
+        "stats": 0.0573483181507425
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ingrid (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 2.61427399771559,
+        "stats": 2.61427399771559
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ingrid efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.03806393776458,
+        "stats": 0.03806393776458
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ingrid planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0386022852550123,
+        "stats": 0.0386022852550123
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ivan (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 6.8453225309207,
+        "stats": 6.8453225309207
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ivan efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0819339782920473,
+        "stats": 0.0819339782920473
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ivan planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0967035761732561,
+        "stats": 0.0967035761732561
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Judy (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 5.16540329014212,
+        "stats": 5.16540329014212
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Judy efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.107878385053616,
+        "stats": 0.107878385053616
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Judy planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0763219637629648,
+        "stats": 0.0763219637629648
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Karin (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 3.70533157665455,
+        "stats": 3.70533157665455
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Karin efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.136870140953846,
+        "stats": 0.136870140953846
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Karin planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.140210499245984,
+        "stats": 0.140210499245984
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Lars (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.09998536376321,
+        "stats": 4.09998536376321
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Lars efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.123057260258602,
+        "stats": 0.123057260258602
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Lars planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.130744218135435,
+        "stats": 0.130744218135435
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Layla (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.99816796473309,
+        "stats": 4.99816796473309
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Layla efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.112242199768382,
+        "stats": 0.112242199768382
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Layla planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.105211687908652,
+        "stats": 0.105211687908652
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Li (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.14156606312778,
+        "stats": 4.14156606312778
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Li efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0919623262972114,
+        "stats": 0.0919623262972114
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Li planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0884253103577801,
+        "stats": 0.0884253103577801
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Liv (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 6.52579541888013,
+        "stats": 6.52579541888013
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Liv efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0691060846103901,
+        "stats": 0.0691060846103901
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Liv planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0732041172205547,
+        "stats": 0.0732041172205547
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Mei (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 5.19765721023696,
+        "stats": 5.19765721023696
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Mei efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.123076809020859,
+        "stats": 0.123076809020859
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Mei planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.114314084966218,
+        "stats": 0.114314084966218
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Nils (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 2.57375102839492,
+        "stats": 2.57375102839492
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Nils efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0602223336161237,
+        "stats": 0.0602223336161237
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Nils planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0564617994475854,
+        "stats": 0.0564617994475854
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Noor (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 6.42513170655287,
+        "stats": 6.42513170655287
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Noor efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0872389768086002,
+        "stats": 0.0872389768086002
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Noor planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0646248497351517,
+        "stats": 0.0646248497351517
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Omar (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 1.90642913061475,
+        "stats": 1.90642913061475
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Omar efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0925523341287192,
+        "stats": 0.0925523341287192
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Omar planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.066713947137278,
+        "stats": 0.066713947137278
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ravi (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 4.77494516832025,
+        "stats": 4.77494516832025
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ravi efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0610731712804336,
+        "stats": 0.0610731712804336
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Ravi planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0603937073020838,
+        "stats": 0.0603937073020838
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Saanvi (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 8.79396793224848,
+        "stats": 8.79396793224848
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Saanvi efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.120042792660424,
+        "stats": 0.120042792660424
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Saanvi planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.137191834986667,
+        "stats": 0.137191834986667
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sakura (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 7.22028411172656,
+        "stats": 7.22028411172656
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sakura efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0915356416423764,
+        "stats": 0.0915356416423764
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sakura planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.104965607225994,
+        "stats": 0.104965607225994
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sven (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 10.7670027200371,
+        "stats": 10.7670027200371
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sven efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0949332274471385,
+        "stats": 0.0949332274471385
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Sven planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.128380483192252,
+        "stats": 0.128380483192252
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Takumi (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 3.87373472644091,
+        "stats": 3.87373472644091
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Takumi efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0469019966442663,
+        "stats": 0.0469019966442663
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Takumi planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0547405301375192,
+        "stats": 0.0547405301375192
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Yuki (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 8.30838793446135,
+        "stats": 8.30838793446135
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Yuki efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.11607234904096,
+        "stats": 0.11607234904096
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Yuki planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0884623871296541,
+        "stats": 0.0884623871296541
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Zain (Intercept) std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 9.66917779180067,
+        "stats": 9.66917779180067
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Zain efficacy std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.0939892363146207,
+        "stats": 0.0939892363146207
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Zain planning std_error",
+      "kind": "person std_error",
+      "values": {
+        "idiographic": 0.147971039697948,
+        "stats": 0.147971039697948
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled (Intercept) estimate",
+      "kind": "pooled estimate",
+      "values": {
+        "idiographic": 28.3400662394085,
+        "stats": 28.3400662394085
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled efficacy estimate",
+      "kind": "pooled estimate",
+      "values": {
+        "idiographic": 0.237949248007918,
+        "stats": 0.237949248007918
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled planning estimate",
+      "kind": "pooled estimate",
+      "values": {
+        "idiographic": 0.31312329723309,
+        "stats": 0.31312329723309
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled (Intercept) std_error",
+      "kind": "pooled std_error",
+      "values": {
+        "idiographic": 4.46530182394233,
+        "stats": 4.46530182394233
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled efficacy std_error",
+      "kind": "pooled std_error",
+      "values": {
+        "idiographic": 0.0455930365760795,
+        "stats": 0.0455930365760795
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled planning std_error",
+      "kind": "pooled std_error",
+      "values": {
+        "idiographic": 0.0468314427168705,
+        "stats": 0.0468314427168705
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled (Intercept) tau",
+      "kind": "tau",
+      "values": {
+        "idiographic": 26.0764948452002,
+        "stats": 26.0764948452002
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled efficacy tau",
+      "kind": "tau",
+      "values": {
+        "idiographic": 0.254898546925499,
+        "stats": 0.254898546925499
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled planning tau",
+      "kind": "tau",
+      "values": {
+        "idiographic": 0.251302982383599,
+        "stats": 0.251302982383599
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled (Intercept) i2",
+      "kind": "i2",
+      "values": {
+        "idiographic": 0.973372571166958,
+        "stats": 0.973372571166958
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled efficacy i2",
+      "kind": "i2",
+      "values": {
+        "idiographic": 0.907014384278844,
+        "stats": 0.907014384278844
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled planning i2",
+      "kind": "i2",
+      "values": {
+        "idiographic": 0.909476339166026,
+        "stats": 0.909476339166026
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled (Intercept) q",
+      "kind": "q",
+      "values": {
+        "idiographic": 1314.43408296966,
+        "stats": 1314.43408296966
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled efficacy q",
+      "kind": "q",
+      "values": {
+        "idiographic": 376.402304039774,
+        "stats": 376.402304039774
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pooled planning q",
+      "kind": "q",
+      "values": {
+        "idiographic": 386.639246331321,
+        "stats": 386.639246331321
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    }
+  ]
+}

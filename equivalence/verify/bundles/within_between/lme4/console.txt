@@ -1,0 +1,68 @@
+
+> options(width = 120)
+
+> library(lme4)
+Loading required package: Matrix
+
+> srl <- read.csv("../data/srl.csv")
+
+> # All but the last ceiling(0.2 n) days of each learner, then the complete rows.
+> first_days <- function(d) head(d, nrow(d) - ceiling(0.2 * nrow(d)))
+
+> train <- do.call(rbind, lapply(split(srl, srl$name), first_days))
+
+> train <- train[complete.cases(train[c("effort", "efficacy")]), ]
+
+> train$efficacy_between <- ave(train$efficacy, train$name)
+
+> train$efficacy_within <- train$efficacy - train$efficacy_between
+
+> fit <- lmer(effort ~ efficacy_within + efficacy_between + (1 | name), data = train, REML = TRUE)
+
+> summary(fit)
+Linear mixed model fit by REML ['lmerMod']
+Formula: effort ~ efficacy_within + efficacy_between + (1 | name)
+   Data: train
+
+REML criterion at convergence: 39931.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.1614 -0.6077  0.0580  0.6392  3.1581 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ name     (Intercept) 110.0    10.49   
+ Residual             443.6    21.06   
+Number of obs: 4456, groups:  name, 36
+
+Fixed effects:
+                 Estimate Std. Error t value
+(Intercept)      25.00316    6.37526   3.922
+efficacy_within   0.41639    0.01449  28.742
+efficacy_between  0.62694    0.11362   5.518
+
+Correlation of Fixed Effects:
+            (Intr) effccy_w
+effccy_wthn  0.000         
+effccy_btwn -0.960  0.000  
+
+> fixed <- coef(summary(fit))
+
+> random <- as.data.frame(VarCorr(fit))
+
+> result <- data.frame(
++   quantity = c(paste(rownames(fixed), "estimate"), paste(rownames(fixed), "std_error"),
++                paste(random$grp, "variance")),
++   value = c(fixed[, "Estimate"], fixed[, "Std. Error"], random$vcov))
+
+> result
+                    quantity        value
+1       (Intercept) estimate  25.00315560
+2   efficacy_within estimate   0.41638906
+3  efficacy_between estimate   0.62694189
+4      (Intercept) std_error   6.37525875
+5  efficacy_within std_error   0.01448728
+6 efficacy_between std_error   0.11361849
+7              name variance 109.99859769
+8          Residual variance 443.57354766

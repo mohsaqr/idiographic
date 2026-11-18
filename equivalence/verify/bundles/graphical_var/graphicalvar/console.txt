@@ -1,0 +1,55 @@
+
+> options(width = 120)
+
+> library(graphicalVAR)
+
+> learner <- read.csv("../data/esm_learner.csv")
+
+> items <- c("efficacy", "planning", "effort")
+
+> fit <- graphicalVAR(learner, vars = items, beepvar = "occasion", nLambda = 15, gamma = 0,
++                     verbose = FALSE)
+Minimal tuning parameter for beta selected.
+
+> summary(fit)
+=== graphicalVAR results ===
+Number of nodes: 3 
+Number of tuning parameters tested: 225 
+EBIC hyperparameter: 0 
+Optimal EBIC: 67.48985 
+
+Number of non-zero Partial Contemporaneous Correlations (PCC): 2 
+PCC Sparsity: 0.3333333 
+Number of PCC tuning parameters tested: 15 
+PCC network stored in object$PCC 
+
+Number of non-zero Partial Directed Correlations (PDC): 3 
+PDC Sparsity: 0 
+Number of PDC tuning parameters tested: 15 
+PDC network stored in object$PDC 
+
+Use plot(object) to plot the estimated networks.
+> # fit$beta: one row per outcome, an intercept column, then one column per lagged predictor.
+> beta <- fit$beta[, -1]
+
+> pair <- which(upper.tri(fit$PCC), arr.ind = TRUE)
+
+> result <- data.frame(
++   edge = c(paste("temporal", rep(items, each = 3), rep(items, times = 3)),
++            paste("contemporaneous", items[pair[, "row"]], items[pair[, "col"]])),
++   weight = c(as.vector(beta), fit$PCC[pair]))
+
+> result
+                                edge     weight
+1         temporal efficacy efficacy 0.32846436
+2         temporal efficacy planning 0.20606932
+3           temporal efficacy effort 0.22216694
+4         temporal planning efficacy 0.28038393
+5         temporal planning planning 0.36287147
+6           temporal planning effort 0.14665977
+7           temporal effort efficacy 0.19064490
+8           temporal effort planning 0.23443404
+9             temporal effort effort 0.30710814
+10 contemporaneous efficacy planning 0.01492784
+11   contemporaneous efficacy effort 0.00000000
+12   contemporaneous planning effort 0.28741316

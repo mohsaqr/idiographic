@@ -1,0 +1,40 @@
+
+> options(width = 120)
+
+> srl <- read.csv("../data/srl_pair.csv")
+
+> # The residual of the learner's own regression on day, as a z-score within the learner.
+> standardised_residual <- function(v, day) {
++   residual <- residuals(lm(v ~ day, na.action = na.exclude))
++   (residual - mean(residual, na.rm = TRUE)) / sd(residual, na.rm = TRUE)
++ }
+
+> prepare <- function(d) {
++   efficacy <- standardised_residual(d$efficacy, d$day)
++   effort <- standardised_residual(d$effort, d$day)
++   yesterday <- match(d$day - 1, d$day)
++   data.frame(efficacy = efficacy, effort = effort, efficacy_lag1 = efficacy[yesterday],
++              effort_lag1 = effort[yesterday], occasion = paste(d$name, d$day))
++ }
+
+> prepared <- do.call(rbind, lapply(split(srl, srl$name), prepare))
+
+> head(prepared)
+          efficacy     effort efficacy_lag1 effort_lag1 occasion
+Aisha.1 -0.6953295 -1.2735304            NA          NA  Aisha 1
+Aisha.2 -1.8240144  0.1310065    -0.6953295  -1.2735304  Aisha 2
+Aisha.3  0.7071862  0.0427247    -1.8240144   0.1310065  Aisha 3
+Aisha.4  0.1415606  0.9203844     0.7071862   0.0427247  Aisha 4
+Aisha.5  0.1389943 -0.3094647     0.1415606   0.9203844  Aisha 5
+Aisha.6 -0.4266313  0.3047564     0.1389943  -0.3094647  Aisha 6
+
+> result <- na.omit(prepared)
+
+> summary(result)
+    efficacy             effort         efficacy_lag1        effort_lag1             occasion  
+ Min.   :-4.673580   Min.   :-4.30044   Min.   :-4.673580   Min.   :-4.300437   Length   :306  
+ 1st Qu.:-0.349556   1st Qu.:-0.38433   1st Qu.:-0.395033   1st Qu.:-0.396273   N.unique :306  
+ Median : 0.070927   Median : 0.18763   Median : 0.070414   Median : 0.187633   N.blank  :  0  
+ Mean   : 0.009846   Mean   : 0.01439   Mean   : 0.008136   Mean   : 0.003708   Min.nchar:  5  
+ 3rd Qu.: 0.657822   3rd Qu.: 0.65537   3rd Qu.: 0.654905   3rd Qu.: 0.654015   Max.nchar:  9  
+ Max.   : 2.019500   Max.   : 1.44076   Max.   : 2.019500   Max.   : 1.440762                  

@@ -1,0 +1,47 @@
+
+> options(width = 120)
+
+> srl <- read.csv("../data/srl.csv")
+
+> fit <- fit_lm(srl, y = "effort", x = c("efficacy", "planning"), id = "name", time = "day",
++               scope = "individual", test_prop = 0.2)
+
+> person <- coefs(fit)
+
+> head(person, 9)
+       scope model estimator subject subgroup        term   estimate  std_error statistic      p_value
+1 individual    lm    native   Aisha    .none (Intercept) 54.7967510 4.96829174 11.029294 5.294880e-20
+2 individual    lm    native   Aisha    .none    efficacy  0.1707202 0.09021956  1.892275 6.084390e-02
+3 individual    lm    native   Aisha    .none    planning  0.2174820 0.08825853  2.464147 1.513877e-02
+4 individual    lm    native   Alice    .none (Intercept) 31.5335349 3.46441194  9.102132 2.215730e-15
+5 individual    lm    native   Alice    .none    efficacy  0.2891827 0.08365846  3.456706 7.551311e-04
+6 individual    lm    native   Alice    .none    planning  0.4059493 0.07441365  5.455306 2.634950e-07
+7 individual    lm    native   Anika    .none (Intercept) 16.0419459 4.62704889  3.466993 7.293446e-04
+8 individual    lm    native   Anika    .none    efficacy  0.1221909 0.10567893  1.156247 2.498579e-01
+9 individual    lm    native   Anika    .none    planning  0.5603759 0.09433922  5.940010 2.806590e-08
+
+> pooled <- pool_coefs(fit)
+
+> pooled
+POOLED PERSON EFFECTS
+  Method   random effects (DerSimonian-Laird)
+  People   36
+  Terms    3
+
+  term           k    pooled           95% CI   sd_obs      tau      I2      Q p
+--------------------------------------------------------------------------------
+  (Intercept)   36   28.3401   [19.28, 37.41]   22.892   26.076   0.973   <1e-04
+  efficacy      36    0.2379     [0.15, 0.33]    0.274    0.255   0.907   <1e-04
+  planning      36    0.3131     [0.22, 0.41]    0.282    0.251   0.909   <1e-04
+
+  sd_obs = observed spread;  tau = spread of the true coefficients
+  I2     = share of the observed spread that is real
+
+> result <- rbind(
++   with(person, data.frame(quantity = paste(subject, term, "estimate"), kind = "person estimate", value = estimate)),
++   with(person, data.frame(quantity = paste(subject, term, "std_error"), kind = "person std_error", value = std_error)),
++   with(pooled, data.frame(quantity = paste("pooled", term, "estimate"), kind = "pooled estimate", value = estimate)),
++   with(pooled, data.frame(quantity = paste("pooled", term, "std_error"), kind = "pooled std_error", value = std_error)),
++   with(pooled, data.frame(quantity = paste("pooled", term, "tau"), kind = "tau", value = tau)),
++   with(pooled, data.frame(quantity = paste("pooled", term, "i2"), kind = "i2", value = i2)),
++   with(pooled, data.frame(quantity = paste("pooled", term, "q"), kind = "q", value = q)))

@@ -1,0 +1,51 @@
+
+> options(width = 120)
+
+> learner <- read.csv("../data/esm_learner.csv")
+
+> fit <- fit_graphical_var(learner, vars = c("efficacy", "planning", "effort"), beep = "occasion",
++                          n_lambda = 15, gamma = 0)
+
+> fit
+Graphical VAR Result
+  Variables:      3 (efficacy, planning, effort)
+  Lags:           1
+  Observations:   77
+  Temporal edges: 9 / 9
+  Contemp edges:  2 / 3
+  EBIC:           67.49 (gamma=0.00)
+  Lambda:         beta=0.0240, kappa=0.1746
+
+  Temporal [directed]
+    weights [0.147, 0.363]  |  +9 / -0 edges
+             efficacy planning effort
+    efficacy     0.33     0.21   0.22
+    planning     0.28     0.36   0.15
+    effort       0.19     0.23   0.31
+
+  Contemporaneous [undirected]
+    weights [0.015, 0.287]  |  +2 / -0 edges
+             efficacy planning effort
+    efficacy     0.00     0.01   0.00
+    planning     0.01     0.00   0.29
+    effort       0.00     0.29   0.00
+
+  plot(x) | plot(x, layer = "temporal") 
+  edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)
+
+> result <- subset(transform(coefs(fit), edge = paste(network, from, to)), select = c(edge, weight))
+
+> result
+                                edge     weight
+1         temporal efficacy efficacy 0.32847045
+2         temporal planning efficacy 0.28037817
+3           temporal effort efficacy 0.19064601
+4         temporal efficacy planning 0.20609062
+5         temporal planning planning 0.36285685
+6           temporal effort planning 0.23443589
+7           temporal efficacy effort 0.22217058
+8           temporal planning effort 0.14667142
+9             temporal effort effort 0.30709795
+10 contemporaneous efficacy planning 0.01492754
+11   contemporaneous efficacy effort 0.00000000
+12   contemporaneous planning effort 0.28741278

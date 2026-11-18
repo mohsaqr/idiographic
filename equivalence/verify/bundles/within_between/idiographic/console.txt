@@ -1,0 +1,63 @@
+
+> options(width = 120)
+
+> srl <- read.csv("../data/srl.csv")
+
+> fit <- fit_within_between(srl, y = "effort", x = "efficacy", id = "name", time = "day",
++                           model = "within_between", estimator = "reml", test_prop = 0.2)
+
+> fit
+MODEL INFO
+  Outcome         effort
+  Predictors      efficacy
+  Person ID       name (36 people)
+  Specification   within-between
+  Estimator       REML mixed model, (1 | name)
+  Scope           pooled
+
+MODEL FIT (held out)
+  Rows        1,150
+  RMSE        20.0457
+  R-squared   0.4432
+
+WITHIN EFFECTS
+               Est.     S.E.   t val.        p
+----------------------------------------------
+  efficacy   0.4164   0.0145    28.74   <1e-04
+
+BETWEEN EFFECTS
+               Est.     S.E.   t val.        p
+----------------------------------------------
+  efficacy   0.6269   0.1136     5.52   <1e-04
+
+CONTEXTUAL EFFECTS (between - within)
+               Est.     S.E.            95% CI        p
+-------------------------------------------------------
+  efficacy   0.2106   0.1145   [-0.022, 0.443]   0.0745
+  An interval excluding zero means the two processes differ.
+
+RANDOM EFFECTS
+  Group      Variance   Std. Dev.     ICC
+-----------------------------------------
+  name       109.9986     10.4880   0.199
+  Residual   443.5735     21.0612   0.801
+
+> fixed <- coefs(fit)
+
+> random <- as.data.frame(variance_components(fit))
+
+> result <- rbind(
++   with(fixed, data.frame(quantity = paste(term, "estimate"), kind = "fixed effect", value = estimate)),
++   with(fixed, data.frame(quantity = paste(term, "std_error"), kind = "standard error", value = std_error)),
++   with(random, data.frame(quantity = paste(level, "variance"), kind = "variance component", value = variance)))
+
+> result
+                    quantity               kind        value
+1       (Intercept) estimate       fixed effect  25.00315560
+2   efficacy_within estimate       fixed effect   0.41638906
+3  efficacy_between estimate       fixed effect   0.62694189
+4      (Intercept) std_error     standard error   6.37525875
+5  efficacy_within std_error     standard error   0.01448728
+6 efficacy_between std_error     standard error   0.11361849
+7              name variance variance component 109.99859769
+8          Residual variance variance component 443.57354766

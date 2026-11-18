@@ -1,0 +1,499 @@
+{
+  "schema": "prova.verification-case/1",
+  "title": "Graphical lasso at a fixed penalty",
+  "description": "The graphical lasso of the correlation matrix of six diary items (2,790 complete rows) at rho = 0.1 with the diagonal unpenalised: the off-diagonal precision entries and the partial correlations they imply.",
+  "covers": [
+    "glasso_fit()",
+    "as.data.frame.glasso_result()"
+  ],
+  "generator": "idiographic equivalence/verify/export-bundles.R",
+  "created_at": "2026-11-18",
+  "sides": [
+    {
+      "id": "idiographic",
+      "name": "idiographic",
+      "version": "0.4.0.9006",
+      "primary": true,
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    },
+    {
+      "id": "glasso",
+      "name": "glasso",
+      "version": "1.11",
+      "authority": "open-source",
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    }
+  ],
+  "sections": [
+    {
+      "id": "code",
+      "title": "Code",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/script.R",
+          "bytes": 332,
+          "sha256": "2c1f44a2c4e0033e9d1abaec799c4bd90510a87df8daaf9d1ae7f64b30d4e42b",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "edge",
+            "reads": [
+              "data/esm_srl.csv"
+            ]
+          }
+        },
+        {
+          "side": "glasso",
+          "path": "glasso/script.R",
+          "bytes": 551,
+          "sha256": "2ba88cc42dcae4b20ff4afe213caa773abeff3a1d6c54b1231a6f43a40dd59cb",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "edge",
+            "reads": [
+              "data/esm_srl.csv"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "title": "Raw output",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/console.txt",
+          "bytes": 1254,
+          "sha256": "fe8e3a9eaf84d0da1c8d08d628657024665e023fe31fb2b6f73889a4bd44299c",
+          "label": "R console",
+          "type": "text"
+        },
+        {
+          "side": "glasso",
+          "path": "glasso/console.txt",
+          "bytes": 1354,
+          "sha256": "2f7b0a73186a4274ecd02902ce6f6846cc3635f4399b90da9700292ef4aae70f",
+          "label": "R console",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "items": [
+        {
+          "path": "data/esm_srl.csv",
+          "bytes": 267625,
+          "sha256": "0339b203c86f79f0680dccaad866fe189d35ef81674c5262e975b06a209079d7",
+          "label": "Daily diary, 41 learners"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "quantity": "precision: efficacy planning",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.355256092056906,
+        "glasso": -0.355256092073098
+      },
+      "difference": 1.61916036134357e-11,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: efficacy value",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.313068207035513,
+        "glasso": -0.313068207025032
+      },
+      "difference": 1.04808939305201e-11,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: monitoring regulation",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.251124921344598,
+        "glasso": -0.251124921344803
+      },
+      "difference": 2.04447569984723e-13,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: planning effort",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.290994372060682,
+        "glasso": -0.290994372058536
+      },
+      "difference": 2.14561701739058e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: effort regulation",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.27033570248237,
+        "glasso": -0.270335702485099
+      },
+      "difference": 2.72881717222617e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: efficacy effort",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.250261739602265,
+        "glasso": -0.250261739596979
+      },
+      "difference": 5.28632693175268e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: value effort",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.20728156221961,
+        "glasso": -0.207281562217376
+      },
+      "difference": 2.23379648112143e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: value planning",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.174888534138006,
+        "glasso": -0.174888534136638
+      },
+      "difference": 1.3685164113042e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: efficacy regulation",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.155742966097425,
+        "glasso": -0.155742966091619
+      },
+      "difference": 5.80591130727726e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: planning regulation",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.145052231139607,
+        "glasso": -0.145052231140539
+      },
+      "difference": 9.31948962445972e-13,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: monitoring effort",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.0744729971845586,
+        "glasso": -0.0744729971854037
+      },
+      "difference": 8.45060132981246e-13,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: efficacy monitoring",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.0694884652077146,
+        "glasso": -0.0694884652172235
+      },
+      "difference": 9.50890755024858e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: value regulation",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.0258892564016833,
+        "glasso": -0.0258892563997604
+      },
+      "difference": 1.92285770639344e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: planning monitoring",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0.0239936976251276,
+        "glasso": -0.0239936976202713
+      },
+      "difference": 4.85624734869461e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "precision: value monitoring",
+      "kind": "precision",
+      "values": {
+        "idiographic": -0,
+        "glasso": -0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: efficacy planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.25417657757571,
+        "glasso": 0.254176577586496
+      },
+      "difference": 1.07851505504186e-11,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: efficacy value",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.234497517923651,
+        "glasso": 0.234497517915514
+      },
+      "difference": 8.1377682370487e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: monitoring regulation",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.213608632633462,
+        "glasso": 0.213608632633901
+      },
+      "difference": 4.38871161634324e-13,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: planning effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.210956923369802,
+        "glasso": 0.210956923368546
+      },
+      "difference": 1.25618959678775e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: effort regulation",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.204353925855593,
+        "glasso": 0.204353925858456
+      },
+      "difference": 2.86329293608389e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: efficacy effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.177601053837021,
+        "glasso": 0.177601053833439
+      },
+      "difference": 3.58224561125553e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: value effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.157316819295168,
+        "glasso": 0.157316819293998
+      },
+      "difference": 1.17009180122807e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: value planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.133819294471533,
+        "glasso": 0.133819294470384
+      },
+      "difference": 1.14880327473088e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: efficacy regulation",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.116191088858123,
+        "glasso": 0.116191088853716
+      },
+      "difference": 4.40660008482752e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: planning regulation",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.110546986299105,
+        "glasso": 0.110546986299795
+      },
+      "difference": 6.90239532197268e-13,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: monitoring effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.0602579729322799,
+        "glasso": 0.0602579729331348
+      },
+      "difference": 8.54899484536986e-13,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: efficacy monitoring",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.0554898058517462,
+        "glasso": 0.0554898058592439
+      },
+      "difference": 7.49764833551936e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: value regulation",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.0206560540517314,
+        "glasso": 0.0206560540502331
+      },
+      "difference": 1.4982494411786e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: planning monitoring",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.0195729272208363,
+        "glasso": 0.0195729272168502
+      },
+      "difference": 3.98613086982635e-12,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: value monitoring",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0,
+        "glasso": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    }
+  ]
+}

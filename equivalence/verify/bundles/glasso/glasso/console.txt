@@ -1,0 +1,39 @@
+
+> options(width = 120)
+
+> library(glasso)
+
+> diary <- read.csv("../data/esm_srl.csv")
+
+> correlations <- cor(subset(diary, select = -c(name, occasion)), use = "complete.obs")
+
+> fit <- glasso(correlations, rho = 0.1, penalize.diagonal = FALSE, thr = 1e-12, maxit = 1e4)
+
+> items <- colnames(correlations)
+
+> precision <- fit$wi
+
+> partial <- -cov2cor(precision)
+
+> pair <- which(upper.tri(precision), arr.ind = TRUE)
+
+> result <- data.frame(edge = paste(items[pair[, "row"]], items[pair[, "col"]]),
++                      precision = precision[pair], weight = partial[pair])
+
+> result
+                    edge   precision     weight
+1         efficacy value -0.31306821 0.23449752
+2      efficacy planning -0.35525609 0.25417658
+3         value planning -0.17488853 0.13381929
+4    efficacy monitoring -0.06948847 0.05548981
+5       value monitoring  0.00000000 0.00000000
+6    planning monitoring -0.02399370 0.01957293
+7        efficacy effort -0.25026174 0.17760105
+8           value effort -0.20728156 0.15731682
+9        planning effort -0.29099437 0.21095692
+10     monitoring effort -0.07447300 0.06025797
+11   efficacy regulation -0.15574297 0.11619109
+12      value regulation -0.02588926 0.02065605
+13   planning regulation -0.14505223 0.11054699
+14 monitoring regulation -0.25112492 0.21360863
+15     effort regulation -0.27033570 0.20435393

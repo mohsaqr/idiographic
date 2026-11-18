@@ -1,0 +1,3228 @@
+{
+  "schema": "prova.verification-case/1",
+  "title": "Within-person descriptive dynamics",
+  "description": "Per-learner descriptives of two daily items for six learners over 156 days: level and spread, the root mean square successive difference, the lag-1 autocorrelation (inertia) over adjacent pairs, the probability of acute change against the sample's 90th percentile of absolute changes, floor and ceiling shares, moment skewness and excess kurtosis, the linear time trend and the longest run of repeated values.",
+  "covers": [
+    "describe_persons()"
+  ],
+  "generator": "idiographic equivalence/verify/export-bundles.R",
+  "created_at": "2026-11-18",
+  "sides": [
+    {
+      "id": "idiographic",
+      "name": "idiographic",
+      "version": "0.4.0.9006",
+      "primary": true,
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    },
+    {
+      "id": "base",
+      "name": "Base R, from the definition",
+      "version": "4.6.2",
+      "authority": "independent",
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    }
+  ],
+  "sections": [
+    {
+      "id": "code",
+      "title": "Code",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/script.R",
+          "bytes": 358,
+          "sha256": "95068f09f2d21290af9eb5353b77c3a44910260443e5036b46c926720b7df555",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "series",
+            "reads": [
+              "data/srl_learners.csv"
+            ]
+          }
+        },
+        {
+          "side": "base",
+          "path": "base/script.R",
+          "bytes": 1810,
+          "sha256": "d765ec762f0fcfd47ab5af69267a50bfd6b3505d6664d40842e94ea8af864684",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "series",
+            "reads": [
+              "data/srl_learners.csv"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "title": "Raw output",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/console.txt",
+          "bytes": 3162,
+          "sha256": "d216995c622f0a308454ab9dda47a15240db5855fad62170760f671893d6df66",
+          "label": "R console",
+          "type": "text"
+        },
+        {
+          "side": "base",
+          "path": "base/console.txt",
+          "bytes": 4631,
+          "sha256": "1dd7a8e41d292328ffd50759bd4364412bca2d4615a096858f7d8643fde82733",
+          "label": "R console",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "items": [
+        {
+          "path": "data/srl_learners.csv",
+          "bytes": 37646,
+          "sha256": "2916e28352a2a92914281126eaaf672ecfa3b7b4addc1482acc7754d12784099",
+          "label": "Six learners, 156 days"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "quantity": "n: Aisha efficacy",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Alice efficacy",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Anika efficacy",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Astrid efficacy",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Bjorn efficacy",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Bob efficacy",
+      "kind": "n",
+      "values": {
+        "idiographic": 154,
+        "base": 154
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Aisha effort",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Alice effort",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Anika effort",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Astrid effort",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Bjorn effort",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "n: Bob effort",
+      "kind": "n",
+      "values": {
+        "idiographic": 156,
+        "base": 156
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Aisha efficacy",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Alice efficacy",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Anika efficacy",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Astrid efficacy",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Bjorn efficacy",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Bob efficacy",
+      "kind": "missing",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Aisha effort",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Alice effort",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Anika effort",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Astrid effort",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Bjorn effort",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "missing: Bob effort",
+      "kind": "missing",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Aisha efficacy",
+      "kind": "mean",
+      "values": {
+        "idiographic": 56.9193061840121,
+        "base": 56.9193061840121
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Alice efficacy",
+      "kind": "mean",
+      "values": {
+        "idiographic": 35.7614607614608,
+        "base": 35.7614607614608
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Anika efficacy",
+      "kind": "mean",
+      "values": {
+        "idiographic": 50.0986193293886,
+        "base": 50.0986193293886
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Astrid efficacy",
+      "kind": "mean",
+      "values": {
+        "idiographic": 72.4012474012474,
+        "base": 72.4012474012474
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Bjorn efficacy",
+      "kind": "mean",
+      "values": {
+        "idiographic": 52.7065527065527,
+        "base": 52.7065527065527
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Bob efficacy",
+      "kind": "mean",
+      "values": {
+        "idiographic": 78.2193709904553,
+        "base": 78.2193709904553
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Aisha effort",
+      "kind": "mean",
+      "values": {
+        "idiographic": 77.6455026455026,
+        "base": 77.6455026455026
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Alice effort",
+      "kind": "mean",
+      "values": {
+        "idiographic": 59.8752598752599,
+        "base": 59.8752598752599
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Anika effort",
+      "kind": "mean",
+      "values": {
+        "idiographic": 46.9896137617657,
+        "base": 46.9896137617657
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Astrid effort",
+      "kind": "mean",
+      "values": {
+        "idiographic": 68.4561965811966,
+        "base": 68.4561965811966
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Bjorn effort",
+      "kind": "mean",
+      "values": {
+        "idiographic": 52.2051282051282,
+        "base": 52.2051282051282
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "mean: Bob effort",
+      "kind": "mean",
+      "values": {
+        "idiographic": 73.7869822485207,
+        "base": 73.7869822485207
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Aisha efficacy",
+      "kind": "median",
+      "values": {
+        "idiographic": 61.7647058823529,
+        "base": 61.7647058823529
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Alice efficacy",
+      "kind": "median",
+      "values": {
+        "idiographic": 36.3636363636364,
+        "base": 36.3636363636364
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Anika efficacy",
+      "kind": "median",
+      "values": {
+        "idiographic": 47.6923076923077,
+        "base": 47.6923076923077
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Astrid efficacy",
+      "kind": "median",
+      "values": {
+        "idiographic": 78.3783783783784,
+        "base": 78.3783783783784
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Bjorn efficacy",
+      "kind": "median",
+      "values": {
+        "idiographic": 51.8518518518518,
+        "base": 51.8518518518518
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Bob efficacy",
+      "kind": "median",
+      "values": {
+        "idiographic": 77.1084337349398,
+        "base": 77.1084337349398
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Aisha effort",
+      "kind": "median",
+      "values": {
+        "idiographic": 82.5396825396825,
+        "base": 82.5396825396825
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Alice effort",
+      "kind": "median",
+      "values": {
+        "idiographic": 60.8108108108108,
+        "base": 60.8108108108108
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Anika effort",
+      "kind": "median",
+      "values": {
+        "idiographic": 43.0379746835443,
+        "base": 43.0379746835443
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Astrid effort",
+      "kind": "median",
+      "values": {
+        "idiographic": 72.9166666666667,
+        "base": 72.9166666666667
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Bjorn effort",
+      "kind": "median",
+      "values": {
+        "idiographic": 53,
+        "base": 53
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "median: Bob effort",
+      "kind": "median",
+      "values": {
+        "idiographic": 75.3846153846154,
+        "base": 75.3846153846154
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Aisha efficacy",
+      "kind": "sd",
+      "values": {
+        "idiographic": 21.0342167177663,
+        "base": 21.0342167177663
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Alice efficacy",
+      "kind": "sd",
+      "values": {
+        "idiographic": 20.6141662851076,
+        "base": 20.6141662851076
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Anika efficacy",
+      "kind": "sd",
+      "values": {
+        "idiographic": 19.3730159372959,
+        "base": 19.3730159372959
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Astrid efficacy",
+      "kind": "sd",
+      "values": {
+        "idiographic": 20.0778653792196,
+        "base": 20.0778653792196
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Bjorn efficacy",
+      "kind": "sd",
+      "values": {
+        "idiographic": 21.803486779104,
+        "base": 21.803486779104
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Bob efficacy",
+      "kind": "sd",
+      "values": {
+        "idiographic": 16.7174844638942,
+        "base": 16.7174844638942
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Aisha effort",
+      "kind": "sd",
+      "values": {
+        "idiographic": 18.0800129383109,
+        "base": 18.0800129383109
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Alice effort",
+      "kind": "sd",
+      "values": {
+        "idiographic": 21.1080100871101,
+        "base": 21.1080100871101
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Anika effort",
+      "kind": "sd",
+      "values": {
+        "idiographic": 22.3881552582372,
+        "base": 22.3881552582372
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Astrid effort",
+      "kind": "sd",
+      "values": {
+        "idiographic": 18.8348568436927,
+        "base": 18.8348568436927
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Bjorn effort",
+      "kind": "sd",
+      "values": {
+        "idiographic": 19.5737539705491,
+        "base": 19.5737539705491
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "sd: Bob effort",
+      "kind": "sd",
+      "values": {
+        "idiographic": 20.4517670023434,
+        "base": 20.4517670023434
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Aisha efficacy",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Alice efficacy",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Anika efficacy",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Astrid efficacy",
+      "kind": "min",
+      "values": {
+        "idiographic": 10.8108108108108,
+        "base": 10.8108108108108
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Bjorn efficacy",
+      "kind": "min",
+      "values": {
+        "idiographic": 3.7037037037037,
+        "base": 3.7037037037037
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Bob efficacy",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Aisha effort",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Alice effort",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Anika effort",
+      "kind": "min",
+      "values": {
+        "idiographic": 7.59493670886076,
+        "base": 7.59493670886076
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Astrid effort",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Bjorn effort",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "min: Bob effort",
+      "kind": "min",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Aisha efficacy",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Alice efficacy",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Anika efficacy",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Astrid efficacy",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Bjorn efficacy",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Bob efficacy",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Aisha effort",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Alice effort",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Anika effort",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Astrid effort",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Bjorn effort",
+      "kind": "max",
+      "values": {
+        "idiographic": 92,
+        "base": 92
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "max: Bob effort",
+      "kind": "max",
+      "values": {
+        "idiographic": 100,
+        "base": 100
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Aisha efficacy",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 26.8806525813874,
+        "base": 26.8806525813874
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Alice efficacy",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 28.7901938668856,
+        "base": 28.7901938668856
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Anika efficacy",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 28.6556988093261,
+        "base": 28.6556988093261
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Astrid efficacy",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 28.4962471015276,
+        "base": 28.4962471015276
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Bjorn efficacy",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 30.4428426907154,
+        "base": 30.4428426907154
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Bob efficacy",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 23.2091506146434,
+        "base": 23.2091506146434
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Aisha effort",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 23.7236889392033,
+        "base": 23.7236889392033
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Alice effort",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 30.3191161508046,
+        "base": 30.3191161508046
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Anika effort",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 31.8766572770439,
+        "base": 31.8766572770439
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Astrid effort",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 27.3840828371436,
+        "base": 27.3840828371436
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Bjorn effort",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 27.6536178581603,
+        "base": 27.6536178581603
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "rmssd: Bob effort",
+      "kind": "rmssd",
+      "values": {
+        "idiographic": 28.6730122254722,
+        "base": 28.6730122254722
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Aisha efficacy",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.16890598347857,
+        "base": 0.16890598347857
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Alice efficacy",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.0239647153409106,
+        "base": 0.0239647153409106
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Anika efficacy",
+      "kind": "autocor",
+      "values": {
+        "idiographic": -0.124182151477875,
+        "base": -0.124182151477875
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Astrid efficacy",
+      "kind": "autocor",
+      "values": {
+        "idiographic": -0.00826688811516884,
+        "base": -0.00826688811516884
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Bjorn efficacy",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.0230619680104134,
+        "base": 0.0230619680104134
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Bob efficacy",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.0278429505984727,
+        "base": 0.0278429505984727
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Aisha effort",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.13171020848373,
+        "base": 0.13171020848373
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Alice effort",
+      "kind": "autocor",
+      "values": {
+        "idiographic": -0.032211526751879,
+        "base": -0.032211526751879
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Anika effort",
+      "kind": "autocor",
+      "values": {
+        "idiographic": -0.0177476007575606,
+        "base": -0.0177476007575606
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Astrid effort",
+      "kind": "autocor",
+      "values": {
+        "idiographic": -0.0621862476217342,
+        "base": -0.0621862476217342
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Bjorn effort",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.00153602687505255,
+        "base": 0.00153602687505255
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "autocor: Bob effort",
+      "kind": "autocor",
+      "values": {
+        "idiographic": 0.0119641886860641,
+        "base": 0.0119641886860641
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Aisha efficacy",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Alice efficacy",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Anika efficacy",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Astrid efficacy",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Bjorn efficacy",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Bob efficacy",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Aisha effort",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Alice effort",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Anika effort",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Astrid effort",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Bjorn effort",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "span: Bob effort",
+      "kind": "span",
+      "values": {
+        "idiographic": 155,
+        "base": 155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Aisha efficacy",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Alice efficacy",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Anika efficacy",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Astrid efficacy",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Bjorn efficacy",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Bob efficacy",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Aisha effort",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Alice effort",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Anika effort",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Astrid effort",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Bjorn effort",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_median: Bob effort",
+      "kind": "gap_median",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Aisha efficacy",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Alice efficacy",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Anika efficacy",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Astrid efficacy",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Bjorn efficacy",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Bob efficacy",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Aisha effort",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Alice effort",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Anika effort",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Astrid effort",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Bjorn effort",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "gap_max: Bob effort",
+      "kind": "gap_max",
+      "values": {
+        "idiographic": 1,
+        "base": 1
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Aisha efficacy",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.00641025641025641,
+        "base": 0.00641025641025641
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Alice efficacy",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.0256410256410256,
+        "base": 0.0256410256410256
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Anika efficacy",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.00641025641025641,
+        "base": 0.00641025641025641
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Astrid efficacy",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Bjorn efficacy",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Bob efficacy",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.012987012987013,
+        "base": 0.012987012987013
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Aisha effort",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.0192307692307692,
+        "base": 0.0192307692307692
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Alice effort",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.0192307692307692,
+        "base": 0.0192307692307692
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Anika effort",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Astrid effort",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.032051282051282,
+        "base": 0.032051282051282
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Bjorn effort",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.0256410256410256,
+        "base": 0.0256410256410256
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_floor: Bob effort",
+      "kind": "p_floor",
+      "values": {
+        "idiographic": 0.0128205128205128,
+        "base": 0.0128205128205128
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Aisha efficacy",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0192307692307692,
+        "base": 0.0192307692307692
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Alice efficacy",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0128205128205128,
+        "base": 0.0128205128205128
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Anika efficacy",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0128205128205128,
+        "base": 0.0128205128205128
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Astrid efficacy",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0769230769230769,
+        "base": 0.0769230769230769
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Bjorn efficacy",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0384615384615385,
+        "base": 0.0384615384615385
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Bob efficacy",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.168831168831169,
+        "base": 0.168831168831169
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Aisha effort",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0256410256410256,
+        "base": 0.0256410256410256
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Alice effort",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0192307692307692,
+        "base": 0.0192307692307692
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Anika effort",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0192307692307692,
+        "base": 0.0192307692307692
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Astrid effort",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.0384615384615385,
+        "base": 0.0384615384615385
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Bjorn effort",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0,
+        "base": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "p_ceiling: Bob effort",
+      "kind": "p_ceiling",
+      "values": {
+        "idiographic": 0.192307692307692,
+        "base": 0.192307692307692
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Aisha efficacy",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.0774193548387097,
+        "base": 0.0774193548387097
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Alice efficacy",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.135483870967742,
+        "base": 0.135483870967742
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Anika efficacy",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.12258064516129,
+        "base": 0.12258064516129
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Astrid efficacy",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.0838709677419355,
+        "base": 0.0838709677419355
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Bjorn efficacy",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.141935483870968,
+        "base": 0.141935483870968
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Bob efficacy",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.0529801324503311,
+        "base": 0.0529801324503311
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Aisha effort",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.0451612903225806,
+        "base": 0.0451612903225806
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Alice effort",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.129032258064516,
+        "base": 0.129032258064516
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Anika effort",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.154838709677419,
+        "base": 0.154838709677419
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Astrid effort",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.0709677419354839,
+        "base": 0.0709677419354839
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Bjorn effort",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.0903225806451613,
+        "base": 0.0903225806451613
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "pac: Bob effort",
+      "kind": "pac",
+      "values": {
+        "idiographic": 0.12258064516129,
+        "base": 0.12258064516129
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Aisha efficacy",
+      "kind": "skew",
+      "values": {
+        "idiographic": -0.668812048597317,
+        "base": -0.668812048597318
+      },
+      "difference": 7.7715611723761e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Alice efficacy",
+      "kind": "skew",
+      "values": {
+        "idiographic": 0.394720143057157,
+        "base": 0.394720143057156
+      },
+      "difference": 6.10622663543836e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Anika efficacy",
+      "kind": "skew",
+      "values": {
+        "idiographic": 0.378848170258982,
+        "base": 0.378848170258982
+      },
+      "difference": 5.55111512312578e-17,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Astrid efficacy",
+      "kind": "skew",
+      "values": {
+        "idiographic": -1.09202125042156,
+        "base": -1.09202125042156
+      },
+      "difference": 6.66133814775094e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Bjorn efficacy",
+      "kind": "skew",
+      "values": {
+        "idiographic": -0.0103035363743462,
+        "base": -0.0103035363743464
+      },
+      "difference": 1.66533453693773e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Bob efficacy",
+      "kind": "skew",
+      "values": {
+        "idiographic": -1.43738844730155,
+        "base": -1.43738844730155
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Aisha effort",
+      "kind": "skew",
+      "values": {
+        "idiographic": -2.01957653273694,
+        "base": -2.01957653273693
+      },
+      "difference": 3.5527136788005e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Alice effort",
+      "kind": "skew",
+      "values": {
+        "idiographic": -0.467958410099198,
+        "base": -0.467958410099197
+      },
+      "difference": 4.44089209850063e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Anika effort",
+      "kind": "skew",
+      "values": {
+        "idiographic": 0.433199009098838,
+        "base": 0.433199009098837
+      },
+      "difference": 2.22044604925031e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Astrid effort",
+      "kind": "skew",
+      "values": {
+        "idiographic": -1.31438855791508,
+        "base": -1.31438855791507
+      },
+      "difference": 3.5527136788005e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Bjorn effort",
+      "kind": "skew",
+      "values": {
+        "idiographic": -0.263091071064382,
+        "base": -0.263091071064382
+      },
+      "difference": 3.33066907387547e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "skew: Bob effort",
+      "kind": "skew",
+      "values": {
+        "idiographic": -0.846195157685975,
+        "base": -0.846195157685974
+      },
+      "difference": 2.22044604925031e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Aisha efficacy",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 0.284967353145122,
+        "base": 0.284967353145123
+      },
+      "difference": 1.33226762955019e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Alice efficacy",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": -0.192660528866498,
+        "base": -0.192660528866498
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Anika efficacy",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 0.113260652876543,
+        "base": 0.113260652876545
+      },
+      "difference": 2.22044604925031e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Astrid efficacy",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 1.35028711069878,
+        "base": 1.35028711069877
+      },
+      "difference": 2.66453525910038e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Bjorn efficacy",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": -0.119233275387183,
+        "base": -0.119233275387179
+      },
+      "difference": 3.99680288865056e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Bob efficacy",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 4.90582840398855,
+        "base": 4.90582840398856
+      },
+      "difference": 1.77635683940025e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Aisha effort",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 5.48880039333526,
+        "base": 5.48880039333525
+      },
+      "difference": 1.59872115546023e-14,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Alice effort",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 0.08352320183146,
+        "base": 0.0835232018314591
+      },
+      "difference": 8.88178419700125e-16,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Anika effort",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": -0.478625408621806,
+        "base": -0.478625408621806
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Astrid effort",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 3.46266316906419,
+        "base": 3.46266316906417
+      },
+      "difference": 2.04281036531029e-14,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Bjorn effort",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": -0.0203002765918838,
+        "base": -0.0203002765918807
+      },
+      "difference": 3.10862446895044e-15,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "kurtosis: Bob effort",
+      "kind": "kurtosis",
+      "values": {
+        "idiographic": 1.09230970022332,
+        "base": 1.09230970022332
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Aisha efficacy",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.0536208856952399,
+        "base": 0.0536208856952399
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Alice efficacy",
+      "kind": "trend",
+      "values": {
+        "idiographic": -0.0125147094532753,
+        "base": -0.0125147094532753
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Anika efficacy",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.0714970888352058,
+        "base": 0.0714970888352058
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Astrid efficacy",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.00835957893693656,
+        "base": 0.00835957893693656
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Bjorn efficacy",
+      "kind": "trend",
+      "values": {
+        "idiographic": -0.039887210628941,
+        "base": -0.039887210628941
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Bob efficacy",
+      "kind": "trend",
+      "values": {
+        "idiographic": -0.00285619313177719,
+        "base": -0.00285619313177719
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Aisha effort",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.00847701484644158,
+        "base": 0.00847701484644158
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Alice effort",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.0246900185260571,
+        "base": 0.0246900185260571
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Anika effort",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.0401027606984544,
+        "base": 0.0401027606984544
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Astrid effort",
+      "kind": "trend",
+      "values": {
+        "idiographic": -0.0155284411499739,
+        "base": -0.0155284411499739
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Bjorn effort",
+      "kind": "trend",
+      "values": {
+        "idiographic": -0.00936922128621307,
+        "base": -0.00936922128621307
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend: Bob effort",
+      "kind": "trend",
+      "values": {
+        "idiographic": 0.0453288236316796,
+        "base": 0.0453288236316796
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Aisha efficacy",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.15224731448562,
+        "base": 0.15224731448562
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Alice efficacy",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.733953986687836,
+        "base": 0.733953986687836
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Anika efficacy",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.0374991555419179,
+        "base": 0.0374991555419179
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Astrid efficacy",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.815708810762564,
+        "base": 0.815708810762564
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Bjorn efficacy",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.30502371587759,
+        "base": 0.30502371587759
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Bob efficacy",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.924317218328176,
+        "base": 0.924317218328176
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Aisha effort",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.792963709738997,
+        "base": 0.792963709738997
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Alice effort",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.512357653973069,
+        "base": 0.512357653973069
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Anika effort",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.315253318697568,
+        "base": 0.315253318697568
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Astrid effort",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.644347324534835,
+        "base": 0.644347324534835
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Bjorn effort",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.788736255951249,
+        "base": 0.788736255951249
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "trend_p: Bob effort",
+      "kind": "trend_p",
+      "values": {
+        "idiographic": 0.213611518063368,
+        "base": 0.213611518063368
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Aisha efficacy",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Alice efficacy",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Anika efficacy",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Astrid efficacy",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Bjorn efficacy",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 3,
+        "base": 3
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Bob efficacy",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 4,
+        "base": 4
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Aisha effort",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Alice effort",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 3,
+        "base": 3
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Anika effort",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Astrid effort",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Bjorn effort",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 2,
+        "base": 2
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "longest_run: Bob effort",
+      "kind": "longest_run",
+      "values": {
+        "idiographic": 3,
+        "base": 3
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-10,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    }
+  ]
+}

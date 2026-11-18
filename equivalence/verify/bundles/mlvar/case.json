@@ -1,0 +1,304 @@
+{
+  "schema": "prova.verification-case/1",
+  "title": "Multilevel VAR with fixed effects",
+  "description": "A two-step multilevel VAR(1) of three diary items across 41 learners, with fixed temporal and contemporaneous effects: the temporal fixed effects, the contemporaneous partial correlations of the residuals and the between-learner partial correlations of the means.",
+  "covers": [
+    "fit_mlvar()",
+    "edges()"
+  ],
+  "generator": "idiographic equivalence/verify/export-bundles.R",
+  "created_at": "2026-11-18",
+  "sides": [
+    {
+      "id": "idiographic",
+      "name": "idiographic",
+      "version": "0.4.0.9006",
+      "primary": true,
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    },
+    {
+      "id": "mlvar",
+      "name": "mlVAR",
+      "version": "0.7.3",
+      "authority": "open-source",
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    }
+  ],
+  "sections": [
+    {
+      "id": "code",
+      "title": "Code",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/script.R",
+          "bytes": 331,
+          "sha256": "0f1ef9f505d6a25440d2b5ca538baf689a0d05f1f0abb9238406171f2027336a",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "edge",
+            "reads": [
+              "data/esm_srl.csv"
+            ]
+          }
+        },
+        {
+          "side": "mlvar",
+          "path": "mlvar/script.R",
+          "bytes": 874,
+          "sha256": "79e23606bb1e636659d2713b059a06206473d684b720bd808a90a29f404adec9",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "edge",
+            "reads": [
+              "data/esm_srl.csv"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "title": "Raw output",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/console.txt",
+          "bytes": 2012,
+          "sha256": "ffe20369f9d95b0b4813e7822dd80e8bff0cd811641436f902d88f8a96e311a9",
+          "label": "R console",
+          "type": "text"
+        },
+        {
+          "side": "mlvar",
+          "path": "mlvar/console.txt",
+          "bytes": 2946,
+          "sha256": "bc77d29f30715990e87c1d3108390148a0770c3b2d569893c48a3bc9e8b416c5",
+          "label": "R console",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "items": [
+        {
+          "path": "data/esm_srl.csv",
+          "bytes": 267625,
+          "sha256": "0339b203c86f79f0680dccaad866fe189d35ef81674c5262e975b06a209079d7",
+          "label": "Daily diary, 41 learners"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "quantity": "weight: temporal effort effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.261121876797899,
+        "mlvar": 0.261121876797899
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal planning planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.231601793845231,
+        "mlvar": 0.231601793845231
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal efficacy efficacy",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.216930858985074,
+        "mlvar": 0.216930858985074
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal planning efficacy",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.140197823729073,
+        "mlvar": 0.140197823729073
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal efficacy planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.138385197056579,
+        "mlvar": 0.138385197056579
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal effort efficacy",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.119771191495436,
+        "mlvar": 0.119771191495436
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal effort planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.107755156941245,
+        "mlvar": 0.107755156941245
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal planning effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.106026069744906,
+        "mlvar": 0.106026069744906
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal efficacy effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.0854967725261947,
+        "mlvar": 0.0854967725261947
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: contemporaneous planning effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.269642639583824,
+        "mlvar": 0.269642639583824
+      },
+      "difference": 2.77555756156289e-16,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: contemporaneous efficacy planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.255706172146574,
+        "mlvar": 0.255706172146575
+      },
+      "difference": 2.77555756156289e-16,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: contemporaneous efficacy effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.188833386905441,
+        "mlvar": 0.188833386905441
+      },
+      "difference": 3.05311331771918e-16,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: between efficacy effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.511056754778573,
+        "mlvar": 0.511056754778573
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: between efficacy planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.485896953662566,
+        "mlvar": 0.485896953662566
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: between planning effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.280208208237457,
+        "mlvar": 0.280208208237457
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-08,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "schema": "prova.verification-case/1",
+  "title": "Within-person and between-person effects, REML mixed model",
+  "description": "Effort regressed on the within-person and between-person components of efficacy with a random intercept per learner, by REML, on the first 80% of each learner's days (36 learners). Person means are taken over those estimation rows. Compared: the fixed effects with their standard errors and the two variance components.",
+  "covers": [
+    "fit_within_between()",
+    "coefs()",
+    "variance_components()"
+  ],
+  "generator": "idiographic equivalence/verify/export-bundles.R",
+  "created_at": "2026-11-18",
+  "sides": [
+    {
+      "id": "idiographic",
+      "name": "idiographic",
+      "version": "0.4.0.9006",
+      "primary": true,
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    },
+    {
+      "id": "lme4",
+      "name": "lme4",
+      "version": "2.1.0",
+      "authority": "open-source",
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    }
+  ],
+  "sections": [
+    {
+      "id": "code",
+      "title": "Code",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/script.R",
+          "bytes": 676,
+          "sha256": "79fe0fd8565cb80ce5837379157ca3b96d595b00e98edd1d87ae9c1fbac3cfae",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "reads": [
+              "data/srl.csv"
+            ]
+          }
+        },
+        {
+          "side": "lme4",
+          "path": "lme4/script.R",
+          "bytes": 882,
+          "sha256": "52c6c54b48f8c518e8b99f604d4888d63cb0b8d82697f6ca6996cee654ad5ab2",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "reads": [
+              "data/srl.csv"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "title": "Raw output",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/console.txt",
+          "bytes": 2291,
+          "sha256": "b8e2c6a51666d073df5d71cd85006df3ba0b8f7345720e0ef135a8952ae62898",
+          "label": "R console",
+          "type": "text"
+        },
+        {
+          "side": "lme4",
+          "path": "lme4/console.txt",
+          "bytes": 2096,
+          "sha256": "0a922ba00a0d43f3c9882f2343700633aa38ab601d24f79ecf1e0503431c8462",
+          "label": "R console",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "items": [
+        {
+          "path": "data/srl.csv",
+          "bytes": 299757,
+          "sha256": "1301fc7bf6086ade30d38dce4a9c609cdfad0e76ca796e96466b4d6434dc92ce",
+          "label": "36 learners, 156 days"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "quantity": "(Intercept) estimate",
+      "kind": "fixed effect",
+      "values": {
+        "idiographic": 25.0031555989565,
+        "lme4": 25.0031555989565
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "efficacy_within estimate",
+      "kind": "fixed effect",
+      "values": {
+        "idiographic": 0.416389064641253,
+        "lme4": 0.416389064641253
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "efficacy_between estimate",
+      "kind": "fixed effect",
+      "values": {
+        "idiographic": 0.6269418906872,
+        "lme4": 0.6269418906872
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "(Intercept) std_error",
+      "kind": "standard error",
+      "values": {
+        "idiographic": 6.37525875277218,
+        "lme4": 6.37525875277218
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "efficacy_within std_error",
+      "kind": "standard error",
+      "values": {
+        "idiographic": 0.0144872825460236,
+        "lme4": 0.0144872825460236
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "efficacy_between std_error",
+      "kind": "standard error",
+      "values": {
+        "idiographic": 0.11361848680701,
+        "lme4": 0.11361848680701
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "name variance",
+      "kind": "variance component",
+      "values": {
+        "idiographic": 109.998597692269,
+        "lme4": 109.998597692269
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "Residual variance",
+      "kind": "variance component",
+      "values": {
+        "idiographic": 443.573547656683,
+        "lme4": 443.573547656683
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 1e-06,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    }
+  ]
+}

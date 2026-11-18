@@ -1,0 +1,37 @@
+
+> options(width = 120)
+
+> diary <- read.csv("../data/esm_srl.csv")
+
+> correlations <- cor(subset(diary, select = -c(name, occasion)), use = "complete.obs")
+
+> fit <- glasso_fit(correlations, rho = 0.1)
+
+> fit
+Graphical Lasso Fit
+  Variables:      6
+  Penalty (rho):  0.1
+  Diagonal:       unpenalised
+  Nonzero edges:  14 / 15
+
+  as.data.frame(x) | glasso_kkt(x)
+
+> result <- subset(transform(as.data.frame(fit), edge = paste(from, to)), select = c(edge, precision, weight))
+
+> result
+                    edge   precision     weight
+1      efficacy planning -0.35525609 0.25417658
+2         efficacy value -0.31306821 0.23449752
+3  monitoring regulation -0.25112492 0.21360863
+4        planning effort -0.29099437 0.21095692
+5      effort regulation -0.27033570 0.20435393
+6        efficacy effort -0.25026174 0.17760105
+7           value effort -0.20728156 0.15731682
+8         value planning -0.17488853 0.13381929
+9    efficacy regulation -0.15574297 0.11619109
+10   planning regulation -0.14505223 0.11054699
+11     monitoring effort -0.07447300 0.06025797
+12   efficacy monitoring -0.06948847 0.05548981
+13      value regulation -0.02588926 0.02065605
+14   planning monitoring -0.02399370 0.01957293
+15      value monitoring  0.00000000 0.00000000

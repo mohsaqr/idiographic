@@ -1,0 +1,55 @@
+
+> options(width = 120)
+
+> diary <- read.csv("../data/esm_srl.csv")
+
+> fit <- fit_mlvar(diary, vars = c("efficacy", "planning", "effort"), id = "name", beep = "occasion")
+
+> fit
+mlVAR result: 41 subjects, 2771 observations, 3 variables (lags 1)
+  Temporal edges significant at p<0.05: 9 / 9
+
+  Temporal [directed]
+    weights [0.085, 0.261]  |  +9 / -0 edges
+             efficacy planning effort
+    efficacy     0.22     0.14   0.09
+    planning     0.14     0.23   0.11
+    effort       0.12     0.11   0.26
+
+  Contemporaneous [undirected]
+    weights [0.189, 0.270]  |  +3 / -0 edges
+             efficacy planning effort
+    efficacy     0.00     0.26   0.19
+    planning     0.26     0.00   0.27
+    effort       0.19     0.27   0.00
+
+  Between [undirected]
+    weights [0.280, 0.511]  |  +3 / -0 edges
+             efficacy planning effort
+    efficacy     0.00     0.49   0.51
+    planning     0.49     0.00   0.28
+    effort       0.51     0.28   0.00
+
+  plot(x) | plot(x, layer = "temporal") | plot(x, layer = "between") 
+  edges(x) | nodes(x) | summary(x) | coefs(x) | matrices(x)
+
+> result <- subset(transform(edges(fit, include_self = TRUE), edge = paste(network, from, to)),
++                  select = c(edge, weight))
+
+> result
+                                edge     weight
+1             temporal effort effort 0.26112188
+2         temporal planning planning 0.23160179
+3         temporal efficacy efficacy 0.21693086
+4         temporal planning efficacy 0.14019782
+5         temporal efficacy planning 0.13838520
+6           temporal effort efficacy 0.11977119
+7           temporal effort planning 0.10775516
+8           temporal planning effort 0.10602607
+9           temporal efficacy effort 0.08549677
+10   contemporaneous planning effort 0.26964264
+11 contemporaneous efficacy planning 0.25570617
+12   contemporaneous efficacy effort 0.18883339
+13           between efficacy effort 0.51105675
+14         between efficacy planning 0.48589695
+15           between planning effort 0.28020821

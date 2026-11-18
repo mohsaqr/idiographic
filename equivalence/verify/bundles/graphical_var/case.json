@@ -1,0 +1,265 @@
+{
+  "schema": "prova.verification-case/1",
+  "title": "Regularised graphical VAR",
+  "description": "The same learner and items, estimated as a graphical VAR: lasso-penalised temporal coefficients and a graphical-lasso contemporaneous network, with both penalties chosen by BIC (EBIC with gamma = 0) over a 15 x 15 grid. Both sides get the same grid size, gamma and data.",
+  "covers": [
+    "fit_graphical_var()",
+    "coefs()"
+  ],
+  "generator": "idiographic equivalence/verify/export-bundles.R",
+  "created_at": "2026-11-18",
+  "sides": [
+    {
+      "id": "idiographic",
+      "name": "idiographic",
+      "version": "0.4.0.9006",
+      "primary": true,
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    },
+    {
+      "id": "graphicalvar",
+      "name": "graphicalVAR",
+      "version": "0.4.1",
+      "authority": "open-source",
+      "source": "live",
+      "run_at": "2026-11-18",
+      "platform": "R version 4.6.2 (2026-10-29), aarch64-apple-darwin23"
+    }
+  ],
+  "sections": [
+    {
+      "id": "code",
+      "title": "Code",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/script.R",
+          "bytes": 347,
+          "sha256": "bd0a12917549d81ac3a01c69b92af9b3285713c59650ba1f75625983454ef5de",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "edge",
+            "reads": [
+              "data/esm_learner.csv"
+            ]
+          }
+        },
+        {
+          "side": "graphicalvar",
+          "path": "graphicalvar/script.R",
+          "bytes": 672,
+          "sha256": "6a3c89c166849dcbc3361f84da54a83a094bf0ccb14258f0c2d85a52863db034",
+          "label": "Script",
+          "type": "code",
+          "language": "r",
+          "run": {
+            "engine": "r",
+            "result": "result",
+            "key": "edge",
+            "reads": [
+              "data/esm_learner.csv"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "title": "Raw output",
+      "items": [
+        {
+          "side": "idiographic",
+          "path": "idiographic/console.txt",
+          "bytes": 1761,
+          "sha256": "0a20e3925f34774e8458559ae67906a8c018c3d56295ce25feacad2622a6c6a3",
+          "label": "R console",
+          "type": "text"
+        },
+        {
+          "side": "graphicalvar",
+          "path": "graphicalvar/console.txt",
+          "bytes": 1892,
+          "sha256": "ae6e9437bc91e0176ba4664440939041dd2d4923260fd411788552658453f59d",
+          "label": "R console",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "items": [
+        {
+          "path": "data/esm_learner.csv",
+          "bytes": 4136,
+          "sha256": "c29ef11b935c9884aff2e0132a2527b8970dd991bd9e1fd476b99641b8ab50fb",
+          "label": "One learner, daily diary"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "quantity": "weight: temporal efficacy efficacy",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.328470450849528,
+        "graphicalvar": 0.328464355792566
+      },
+      "difference": 6.09505696169688e-06,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal planning efficacy",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.280378165312782,
+        "graphicalvar": 0.280383932721888
+      },
+      "difference": 5.76740910562812e-06,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal effort efficacy",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.190646012934858,
+        "graphicalvar": 0.190644896902144
+      },
+      "difference": 1.11603271440996e-06,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal efficacy planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.206090618480201,
+        "graphicalvar": 0.206069318090518
+      },
+      "difference": 2.13003896824548e-05,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal planning planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.362856849422545,
+        "graphicalvar": 0.362871467730366
+      },
+      "difference": 1.46183078209572e-05,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal effort planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.234435888462639,
+        "graphicalvar": 0.234434040460946
+      },
+      "difference": 1.84800169261701e-06,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal efficacy effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.222170582608195,
+        "graphicalvar": 0.222166944477209
+      },
+      "difference": 3.63813098572252e-06,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal planning effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.146671419487242,
+        "graphicalvar": 0.146659768980555
+      },
+      "difference": 1.16505066867223e-05,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: temporal effort effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.30709795193009,
+        "graphicalvar": 0.307108141265647
+      },
+      "difference": 1.01893355564653e-05,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: contemporaneous efficacy planning",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.0149275426447166,
+        "graphicalvar": 0.0149278358065391
+      },
+      "difference": 2.93161822506952e-07,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: contemporaneous efficacy effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0,
+        "graphicalvar": 0
+      },
+      "difference": 0,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    },
+    {
+      "quantity": "weight: contemporaneous planning effort",
+      "kind": "weight",
+      "values": {
+        "idiographic": 0.287412779576888,
+        "graphicalvar": 0.287413162930957
+      },
+      "difference": 3.83354069211084e-07,
+      "measure": "absolute",
+      "tolerance": 0.0001,
+      "rule": "largest difference between any two sides",
+      "status": "agree"
+    }
+  ]
+}

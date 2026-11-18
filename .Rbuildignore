@@ -34,3 +34,4 @@
 ^OFFLOAD\.md$
 ^tests/testthat/test-offload-parity\.R$
 ^vignettes/articles$
+^equivalence$

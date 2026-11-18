@@ -1,0 +1,58 @@
+
+> options(width = 120)
+
+> learner <- read.csv("../data/esm_learner.csv")
+
+> items <- c("efficacy", "planning", "effort")
+
+> stopifnot(diff(learner$occasion) == 1)
+
+> z <- as.data.frame(scale(learner[items]))
+
+> today <- z[-1, ]
+
+> yesterday <- setNames(z[-nrow(z), ], paste0(items, "_lag"))
+
+> fit <- lm(cbind(efficacy, planning, effort) ~ efficacy_lag + planning_lag + effort_lag,
++           data = cbind(today, yesterday))
+
+> fit
+
+Call:
+lm(formula = cbind(efficacy, planning, effort) ~ efficacy_lag + 
+    planning_lag + effort_lag, data = cbind(today, yesterday))
+
+Coefficients:
+              efficacy  planning  effort  
+(Intercept)   -0.02930  -0.03964  -0.02523
+efficacy_lag   0.33436   0.21334   0.23167
+planning_lag   0.28275   0.36575   0.15048
+effort_lag     0.19756   0.24296   0.31824
+
+
+> # coef(): one row per predictor, one column per outcome.
+> beta <- coef(fit)[-1, ]
+
+> partial <- -cov2cor(solve(cov(residuals(fit))))
+
+> pair <- which(upper.tri(partial), arr.ind = TRUE)
+
+> result <- data.frame(
++   edge = c(paste("temporal", rep(items, times = 3), rep(items, each = 3)),
++            paste("contemporaneous", items[pair[, "row"]], items[pair[, "col"]])),
++   weight = c(as.vector(beta), partial[pair]))
+
+> result
+                                edge     weight
+1         temporal efficacy efficacy 0.33436251
+2         temporal planning efficacy 0.28274751
+3           temporal effort efficacy 0.19756189
+4         temporal efficacy planning 0.21334389
+5         temporal planning planning 0.36575254
+6           temporal effort planning 0.24295949
+7           temporal efficacy effort 0.23167040
+8           temporal planning effort 0.15048422
+9             temporal effort effort 0.31824165
+10 contemporaneous efficacy planning 0.30481767
+11   contemporaneous efficacy effort 0.03828949
+12   contemporaneous planning effort 0.58242537
