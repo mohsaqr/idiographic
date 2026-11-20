@@ -116,11 +116,11 @@ usem_fit
 #>   Contemporaneous [directed]
 #>     weights [0.348, 0.456]  |  +3 / -0 edges
 #>                efficacy value planning monitoring effort
-#>     efficacy          0     0     0.00       0.42   0.00
-#>     value             0     0     0.00       0.00   0.00
-#>     planning          0     0     0.00       0.00   0.00
-#>     monitoring        0     0     0.00       0.00   0.46
-#>     effort            0     0     0.35       0.00   0.00
+#>     efficacy       0.00     0     0.00       0.00      0
+#>     value          0.00     0     0.00       0.00      0
+#>     planning       0.00     0     0.00       0.00      0
+#>     monitoring     0.42     0     0.00       0.00      0
+#>     effort         0.00     0     0.35       0.46      0
 #> 
 #>   Residual_cov [undirected]
 #>     no non-zero edges
@@ -175,8 +175,8 @@ rule, or person can give a different selected model.
 
 edges(usem_fit, network = "contemporaneous", n = 5)
 #>           network       from         to    weight
-#> 1 contemporaneous monitoring     effort 0.4560847
-#> 2 contemporaneous   efficacy monitoring 0.4237397
+#> 1 contemporaneous     effort monitoring 0.4560847
+#> 2 contemporaneous monitoring   efficacy 0.4237398
 #> 3 contemporaneous     effort   planning 0.3475233
 ```
 
@@ -195,11 +195,11 @@ nodes(usem_fit)
 #> 3         temporal   planning 0.0000000    0.0000000   0.0000000    0
 #> 4         temporal monitoring 0.0000000    0.0000000   0.0000000    0
 #> 5         temporal     effort 0.0000000    0.0000000   0.0000000    0
-#> 6  contemporaneous   efficacy 0.4237397    0.4237397   0.0000000    0
+#> 6  contemporaneous   efficacy 0.4237398    0.0000000   0.4237398    0
 #> 7  contemporaneous      value 0.0000000    0.0000000   0.0000000    0
 #> 8  contemporaneous   planning 0.3475233    0.0000000   0.3475233    0
-#> 9  contemporaneous monitoring 0.8798244    0.4560847   0.4237397    0
-#> 10 contemporaneous     effort 0.8036080    0.3475233   0.4560847    0
+#> 9  contemporaneous monitoring 0.8798245    0.4237398   0.4560847    0
+#> 10 contemporaneous     effort 0.8036080    0.8036080   0.0000000    0
 #> 11    residual_cov   efficacy 0.0000000           NA          NA    0
 #> 12    residual_cov      value 0.0000000           NA          NA    0
 #> 13    residual_cov   planning 0.0000000           NA          NA    0
@@ -230,11 +230,11 @@ matrices(usem_fit)
 #> 
 #> $contemporaneous
 #>            efficacy value planning monitoring effort
-#> efficacy      0.000     0        0      0.000  0.000
-#> value         0.000     0        0      0.000  0.000
-#> planning      0.000     0        0      0.000  0.348
-#> monitoring    0.424     0        0      0.000  0.000
-#> effort        0.000     0        0      0.456  0.000
+#> efficacy          0     0        0      0.424  0.000
+#> value             0     0        0      0.000  0.000
+#> planning          0     0        0      0.000  0.348
+#> monitoring        0     0        0      0.000  0.456
+#> effort            0     0        0      0.000  0.000
 #> 
 #> $residual_cov
 #>            efficacy value planning monitoring effort
