@@ -18,8 +18,6 @@
 ^REAL-DATA-VALIDATION\.md$
 ^METHOD_COVERAGE_REPORT\.md$
 ^tests/testthat/test-expanded-equivalence\.R$
-^tests/testthat/test-mlvar-real20-equivalence\.R$
-^tests/testthat/test-usem-equivalence\.R$
 ^validation$
 ^LICENSE\.md$
 ^\.github$
@@ -33,6 +31,8 @@
 ^tests/testthat/fixtures/mplus/validate-.*\.R$
 ^OFFLOAD\.md$
 ^IDIOGRAPHIC_PACKAGE_PLAN\.md$
-^tests/testthat/test-offload-parity\.R$
 ^vignettes/articles$
 ^data-raw$
+^tests/equivalence$
+^\.ci$
+^\.mini-ci$

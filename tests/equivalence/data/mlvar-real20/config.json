@@ -1,0 +1,109 @@
+{
+  "sharedParams": {
+    "standardize": true,
+    "gamma": 0.5,
+    "lag": 1
+  },
+  "datasets": [
+    {
+      "id": "0003",
+      "vars": ["nervous", "afraid", "enthusiastic", "distressed", "excited", "scared", "upset", "alert"],
+      "notes": "PANAS, ~122 subj"
+    },
+    {
+      "id": "0006",
+      "vars": ["happy", "excited", "relaxed", "satisfied", "angry", "anxious", "depressed", "sad"],
+      "notes": "Mindfulness/affect, ~125 subj"
+    },
+    {
+      "id": "0008",
+      "vars": ["affect_valence", "affect_arousal", "depressed", "anxious", "stressed", "angry", "lacking_support", "life_satisfaction"],
+      "notes": "Psych flexibility, ~113 subj"
+    },
+    {
+      "id": "0012",
+      "vars": ["happy", "relaxed", "sad", "angry", "stressed"],
+      "notes": "Rumination/emotion, ~100 subj"
+    },
+    {
+      "id": "0055",
+      "vars": ["sad", "anxious", "angry", "family_cohesion", "family_conflict"],
+      "notes": "Family/affect, ~72 subj"
+    },
+    {
+      "id": "0022",
+      "vars": ["well", "discontent", "state", "tense", "calm", "placid", "awake", "energyless", "rested"],
+      "notes": "Mood states, ~211 subj"
+    },
+    {
+      "id": "0027",
+      "vars": ["reappraisal", "distraction", "suppression", "rumination", "appreciation", "sharing_affect", "problem_coping", "pa", "na"],
+      "notes": "Affect regulation, ~78 subj"
+    },
+    {
+      "id": "0029",
+      "vars": ["enthusiastic", "down", "irritated", "rushed", "happy", "cheerful", "phy_bloating", "phy_abd"],
+      "notes": "IBS/GI/mood, ~24 subj"
+    },
+    {
+      "id": "0031",
+      "vars": ["happy", "relaxed", "sad", "angry", "stressed"],
+      "notes": "Affect dynamics, ~100 subj"
+    },
+    {
+      "id": "0032",
+      "vars": ["happy", "relaxed", "confident", "sad", "stressed", "angry", "reappraisal", "acceptance", "rumination", "suppression"],
+      "notes": "Emotion regulation, ~179 subj, beep from counter"
+    },
+    {
+      "id": "0035",
+      "vars": ["comfortable", "stressed", "depressed", "calm", "enthusiastic", "happy", "craving", "impulsive", "angry", "want_to_drink"],
+      "notes": "Alcohol/craving (Soyster), ~31 subj, beep from creation_time"
+    },
+    {
+      "id": "0036",
+      "vars": ["happy", "content", "excited", "sad", "depressed", "nervous", "worry_frequent", "worry_hard_to_control"],
+      "notes": "GAD/dampening, ~96 subj, beep from creation_time"
+    },
+    {
+      "id": "0037",
+      "vars": ["angry", "hungry", "down", "bored", "stressed", "motivated_quit_smoking", "want_quit", "impulsive", "cigs"],
+      "notes": "Smoking/mood, ~52 subj"
+    },
+    {
+      "id": "0042",
+      "vars": ["happy", "ashamed", "proud", "nervous", "confident", "hostile", "sad", "excited"],
+      "notes": "Personality/affect, ~317 subj, beep from begin_time_ema"
+    },
+    {
+      "id": "0045",
+      "vars": ["angry", "enthusiastic", "happy", "irritated", "mind_wandering", "nervous", "pleased", "relaxed", "sad", "stressed"],
+      "notes": "Affect chronometry, ~105 subj"
+    },
+    {
+      "id": "0052",
+      "vars": ["worry", "difficulty_control_worry", "restless", "irritable", "anhedonia", "depressed", "tired", "worthlessness", "concentration_trouble", "sleep_difficulty"],
+      "notes": "Depression/anxiety COVID, ~145 subj"
+    },
+    {
+      "id": "0058",
+      "vars": ["active", "excited", "irritable", "upset", "afraid_anxious", "sad", "depressed", "anhedonia"],
+      "notes": "Mindfulness/PANAS, ~354 subj"
+    },
+    {
+      "id": "0059",
+      "vars": ["attention_present", "opened_up", "concentrated_present", "happy", "content", "relaxed", "downhearted", "distressed", "nervous", "ruminate_feelings"],
+      "notes": "Mindfulness/affect, ~70 subj"
+    },
+    {
+      "id": "0064",
+      "vars": ["afraid", "ashamed", "distressed", "guilty", "hostile", "irritable", "jittery", "nervous", "scared", "upset"],
+      "notes": "Negative affect dyads, ~245 subj"
+    },
+    {
+      "id": "0070",
+      "vars": ["enthusiastic", "relaxed", "satisfied", "irritable", "energetic", "calm", "cheerful", "nervous", "sad", "happy"],
+      "notes": "Skin conductance/affect, ~82 subj"
+    }
+  ]
+}

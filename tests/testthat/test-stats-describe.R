@@ -29,20 +29,6 @@ test_that("sd and rmssd measure different things", {
   expect_lt(osc$autocor, -0.9)
 })
 
-test_that("every statistic matches an independent computation", {
-  d <- drift_vs_oscillate()
-  out <- describe_persons(d, "id", vars = "v", time = "day")
-  for (who in c("drifter", "oscillator")) {
-    v <- d$v[d$id == who]
-    row <- out[out$subject == who, ]
-    expect_equal(row$mean, mean(v))
-    expect_equal(row$sd, stats::sd(v))
-    expect_equal(row$rmssd, sqrt(mean(diff(v)^2)))
-    expect_equal(row$autocor, stats::cor(v[-length(v)], v[-1L]))
-    expect_equal(row$n, length(v))
-  }
-})
-
 test_that("successive differences respect time order and person boundaries", {
   # Rows deliberately shuffled: the statistics must be identical either way,
   # because `time` says what "successive" means, not row position.
@@ -93,28 +79,6 @@ test_that("spacing is reported so irregular occasions are visible", {
   # Without `time` there is nothing to say about spacing, so those columns go.
   no_time <- describe_persons(d, "id", vars = "v")
   expect_false(any(c("span", "gap_median", "gap_max") %in% names(no_time)))
-})
-
-test_that("correlate_persons matches cor.test person by person", {
-  set.seed(2)
-  n <- 30L
-  d <- data.frame(id = rep(c("p1", "p2"), each = n), a = stats::rnorm(2 * n),
-                  stringsAsFactors = FALSE)
-  d$b <- ifelse(d$id == "p1", 0.8, -0.6) * d$a + stats::rnorm(2 * n, sd = 0.6)
-
-  out <- correlate_persons(d, "id", vars = c("a", "b"))
-  expect_equal(nrow(out), 2L)
-  for (who in c("p1", "p2")) {
-    truth <- stats::cor.test(d$a[d$id == who], d$b[d$id == who])
-    row <- out[out$subject == who, ]
-    expect_equal(row$r, unname(truth$estimate))
-    expect_equal(row$p_value, truth$p.value)
-    expect_equal(row$conf_low, truth$conf.int[1L], tolerance = 1e-6)
-    expect_equal(row$conf_high, truth$conf.int[2L], tolerance = 1e-6)
-  }
-  # The two people genuinely disagree in sign.
-  expect_gt(out$r[out$subject == "p1"], 0)
-  expect_lt(out$r[out$subject == "p2"], 0)
 })
 
 test_that("a person-specific correlation is already a within-person one", {

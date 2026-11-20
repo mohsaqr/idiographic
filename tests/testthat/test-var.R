@@ -22,30 +22,6 @@ test_that("fit_var returns a tidy OLS VAR result", {
                      "in_strength", "self"))
 })
 
-test_that("fit_var is cell-equivalent to stats::lm.fit", {
-  d <- synth_single(n_t = 120, vars = c("A", "B", "C"), seed = 202)
-  vars <- c("A", "B", "C")
-  fit <- fit_var(d, vars = vars, id = "id", day = "day", beep = "beep",
-                   scale = FALSE, center_within = FALSE)
-  ts <- idiographic:::.gvar_tsdata(
-    d, vars = vars, id = "id", day = "day", beep = "beep",
-    scale = FALSE, center_within = FALSE, delete_missings = TRUE
-  )
-  ref <- stats::lm.fit(x = ts$data_l, y = ts$data_c)
-  beta <- t(ref$coefficients)
-  rownames(beta) <- vars
-  colnames(beta) <- colnames(ts$data_l)
-  residuals <- ts$data_c - ts$data_l %*% ref$coefficients
-  residual_cov <- stats::cov(residuals)
-  dimnames(residual_cov) <- list(vars, vars)
-
-  expect_equal(fit$beta, beta, tolerance = 1e-12, ignore_attr = TRUE)
-  expect_equal(fit$temporal, beta[, -1L], tolerance = 1e-12,
-               ignore_attr = TRUE)
-  expect_equal(fit$residual_cov, residual_cov, tolerance = 1e-12,
-               ignore_attr = TRUE)
-})
-
 test_that("fit_var respects subject filtering and rejects unsupported lags", {
   d <- synth_panel(n_id = 4, days = 2, beeps = 10, vars = c("A", "B"),
                    seed = 203)
