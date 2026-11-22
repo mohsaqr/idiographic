@@ -157,11 +157,35 @@ test_that("compare() of a regression and a classification fit", {
   binary <- transform(srl, high_effort = as.integer(effort > 60))
   logistic <- fit_glm(binary, y = "high_effort", x = "efficacy", id = "name", family = "binomial", time = "day",
                       scope = "individual", test_prop = held_out)
-  # Documented to accept fits of fit_lm() and fit_glm(); it should return one row per fit with the metric columns
-  # each has.
-  expect_defect_error(compare(linear, logistic),
-                      defect = "compare() stops ('numbers of columns of arguments do not match') when a regression and a classification fit are compared: rbind() of metric tables with different columns; FINDINGS.md",
-                      covers = "compare()", quantity = "fit_lm() and a logistic fit_glm()")
+  # Documented to accept fits of fit_lm() and fit_glm(): one row per fit, the union of the metric columns, NA where
+  # a fit does not report a metric (NA on both sides is not compared). The logistic row is written out: one
+  # stats::glm() per person on the estimation rows, P(high effort) on the complete held-out rows, a label by
+  # P >= 0.5, the Brier score, and the log loss with P clipped to [eps, 1 - eps], eps = sqrt(machine epsilon).
+  binary_people <- lapply(people, \(person) transform(person, high_effort = as.integer(effort > 60)))
+  logistic_predictions <- do.call(rbind, lapply(binary_people, \(person) {
+    model <- stats::glm(high_effort ~ efficacy, family = stats::binomial(), data = first_rows(person))
+    rows <- last_rows(person)
+    rows <- rows[stats::complete.cases(rows[c("high_effort", "efficacy")]), ]
+    data.frame(observed = rows$high_effort,
+               probability = as.vector(stats::predict(model, newdata = rows, type = "response")))
+  }))
+  eps <- sqrt(.Machine$double.eps)
+  clipped <- pmin(pmax(logistic_predictions$probability, eps), 1 - eps)
+  classification <- data.frame(n = nrow(logistic_predictions),
+                               accuracy = mean(as.integer(logistic_predictions$probability >= 0.5) ==
+                                                 logistic_predictions$observed),
+                               brier = mean((logistic_predictions$observed - logistic_predictions$probability)^2),
+                               log_loss = -mean(ifelse(logistic_predictions$observed == 1L, log(clipped),
+                                                       log(1 - clipped))))
+  regression <- prediction_errors(individual, ".overall")
+  expected <- data.frame(fit = 1:2, model = c("lm", "binomial"), n = c(regression$n, classification$n),
+                         rmse = c(regression$rmse, NA), mae = c(regression$mae, NA), bias = c(regression$bias, NA),
+                         r_squared = c(regression$r_squared, NA), accuracy = c(NA, classification$accuracy),
+                         brier = c(NA, classification$brier), log_loss = c(NA, classification$log_loss))
+  expect_reference(compare(linear, logistic), expected,
+                   reference = "independent: errors of the stats::lm and stats::glm predictions",
+                   covers = "compare()", quantity = "fit_lm() and a logistic fit_glm(), individual models",
+                   tolerance = 1e-10, key = c("fit", "model"))
 })
 
 test_that("fit_ml_panel(): the linear learner, and ridge tuned on the validation block", {
@@ -229,15 +253,4 @@ test_that("fit_ml_panel(): the linear learner, and ridge tuned on the validation
                    covers = c("tuning()", "tuning.idiographic_fit()", "tuning.idiostats_fit()", "fit_ml_panel()"),
                    quantity = "three learners, validation errors per lambda, MASS::lm.ridge()", tolerance = 1e-10,
                    key = c("subject", "value"))
-})
-
-test_that("permutation importance of a fit_lm() fit", {
-  fit <- fit_lm(srl, y = "effort", x = predictors, id = "name", time = "day", scope = "individual",
-                test_prop = held_out)
-  # Documented for any idiographic fit ("model-agnostic"); it works on fit_ml() fits
-  # (test-importance-permutation.R). On a fit_lm() fit it should return one row per learner and predictor.
-  set.seed(1)
-  expect_defect_error(importance(fit, method = "permutation", repeats = 5L),
-                      defect = "importance(method = 'permutation') stops ('argument is of length zero') on a fit_lm() fit: the stored lm objects are passed to the machine-learning predictor, which expects a fit with a `type`; FINDINGS.md",
-                      covers = 'importance(method = "permutation")', quantity = "36 learners, fit_lm() individual models")
 })

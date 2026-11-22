@@ -13,6 +13,8 @@
 #'   and reports how much worse the model gets -- model-agnostic, so it also
 #'   explains `knn`, forests, kernel machines and boosted ensembles, which
 #'   otherwise return nothing at all; `repeats` is the number of shuffles.
+#'   It works on fits of [fit_lm()] and [fit_glm()] (whose stored `lm` /
+#'   `glm` models are predicted on the response scale) as well as [fit_ml()].
 #' @param n Optional number of rows.
 #' @param ... Ignored.
 #' @return A `data.frame` with one row per scope, model, estimator, person and
@@ -77,7 +79,7 @@ importance <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
       losses <- vapply(seq_len(repeats), function(r) {
         shuffled <- newx
         shuffled[[v]] <- sample(shuffled[[v]])
-        scrambled <- .idio_ml_predict(fit, shuffled)
+        scrambled <- .idio_unit_predict(fit, shuffled)
         .idio_importance_loss(part$observed, scrambled, x$spec$task,
                               x$y_info)
       }, numeric(1))
@@ -98,6 +100,26 @@ importance <- function(x, model = NULL, scope = NULL, subject = NULL, n = NULL,
   }
   rownames(out) <- NULL
   out
+}
+
+#' Predict one stored unit model on new rows
+#'
+#' `fit_ml()` stores its own model lists (with a `type`); `fit_lm()` and
+#' `fit_glm()` store the `lm` / `glm` / `rlm` / `negbin` objects themselves,
+#' which are predicted on the response scale exactly as they were scored
+#' (the conditional mean, or P(positive class) for a binomial glm).
+#' @noRd
+.idio_unit_predict <- function(fit, newx) {
+  if (inherits(fit, "lm")) {
+    return(as.numeric(stats::predict(fit, newdata = newx, type = "response")))
+  }
+  if (is.list(fit) && is.character(fit$type)) {
+    return(.idio_ml_predict(fit, newx))
+  }
+  stop(errorCondition(
+    sprintf("Permutation importance cannot predict from a stored model of class \"%s\".",
+            class(fit)[[1L]]),
+    class = "idiographic_unsupported_model", call = NULL))
 }
 
 #' Error of the model as fitted, on the same rows

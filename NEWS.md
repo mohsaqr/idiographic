@@ -1,3 +1,18 @@
+# idiographic 0.4.0.9008
+
+* `compare()` of a regression and a classification fit (e.g. `fit_lm()` and a
+  logistic `fit_glm()`) now returns one row per fit with the union of the
+  metric columns, `NA` where a fit has no such metric. It stopped with
+  "numbers of columns of arguments do not match".
+* `edges()` of a `fit_graphical_var_each()` result no longer stops ("differing
+  number of rows: 1, 0") when a person's network has no edge besides its
+  self-loops; that person contributes no rows.
+* `importance(method = "permutation")` now works on `fit_lm()` and `fit_glm()`
+  fits (its own documented use); it stopped with "argument is of length zero"
+  because the stored `lm`/`glm` models were passed to the machine-learning
+  predictor. A stored model it cannot predict raises
+  `idiographic_unsupported_model`.
+
 # idiographic 0.4.0.9006
 ## Unified idiographic statistics
 

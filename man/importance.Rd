@@ -27,7 +27,9 @@ standardized coefficient, which only describes models that have
 coefficients. \code{"permutation"} shuffles each predictor in the held-out rows
 and reports how much worse the model gets -- model-agnostic, so it also
 explains \code{knn}, forests, kernel machines and boosted ensembles, which
-otherwise return nothing at all; \code{repeats} is the number of shuffles.}
+otherwise return nothing at all; \code{repeats} is the number of shuffles.
+It works on fits of \code{\link[=fit_lm]{fit_lm()}} and \code{\link[=fit_glm]{fit_glm()}} (whose stored \code{lm} /
+\code{glm} models are predicted on the response scale) as well as \code{\link[=fit_ml]{fit_ml()}}.}
 
 \item{...}{Ignored.}
 }

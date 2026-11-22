@@ -13,7 +13,10 @@ compare(...)
 \value{
 A \code{data.frame} with one row per fit, scope and model: \code{fit} (the
 position of the fit in \code{...}), \code{method}, and the \code{.overall} columns of
-\code{\link[=metrics]{metrics()}}. An empty \code{data.frame} when no fit is supplied.
+\code{\link[=metrics]{metrics()}}. Fits of different tasks can be compared: the table has the
+union of their metric columns, \code{NA} where a fit does not report that
+metric (a regression fit has no \code{accuracy}, a classification fit no
+\code{rmse}). An empty \code{data.frame} when no fit is supplied.
 }
 \description{
 Compare idiographic fits

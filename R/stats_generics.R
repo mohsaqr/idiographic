@@ -203,7 +203,10 @@ print.idiostats_fit <- function(x, ...) {
 #'   [fit_glm()], [fit_ml()], [fit_subgroups()] or [fit_rolling()]).
 #' @return A `data.frame` with one row per fit, scope and model: `fit` (the
 #'   position of the fit in `...`), `method`, and the `.overall` columns of
-#'   [metrics()]. An empty `data.frame` when no fit is supplied.
+#'   [metrics()]. Fits of different tasks can be compared: the table has the
+#'   union of their metric columns, `NA` where a fit does not report that
+#'   metric (a regression fit has no `accuracy`, a classification fit no
+#'   `rmse`). An empty `data.frame` when no fit is supplied.
 #' @examples
 #' linear <- fit_lm(srl, y = "effort", x = "efficacy", id = "name",
 #'                  time = "day")
@@ -227,7 +230,17 @@ compare <- function(...) {
     if (!nrow(m)) return(NULL)
     data.frame(fit = i, method = fit$spec$method, m, row.names = NULL)
   })
-  out <- do.call(rbind, rows[!vapply(rows, is.null, logical(1))])
+  rows <- rows[!vapply(rows, is.null, logical(1))]
+  # Regression and classification fits report different metrics: give every
+  # table the union of the columns (NA where a fit has no such metric) so
+  # rbind() can stack them.
+  columns <- unique(unlist(lapply(rows, names), use.names = FALSE))
+  rows <- lapply(rows, function(r) {
+    missing <- setdiff(columns, names(r))
+    r[missing] <- rep(list(NA), length(missing))
+    r[columns]
+  })
+  out <- do.call(rbind, rows)
   rownames(out) <- NULL
   out
 }

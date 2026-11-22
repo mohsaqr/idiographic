@@ -101,3 +101,22 @@ test_that("permutation importance agrees with DALEX::model_parts() on each learn
                      note = "Statistical evidence: tolerance 4 Monte Carlo standard errors of one learner's mean, so conservative for the mean of three.")
   }))
 })
+
+test_that("permutation importance of a fit_lm() fit agrees with an independent run of the procedure (Monte Carlo summary)", {
+  # fit_lm() stores the stats::lm objects themselves; permutation importance predicts them on the shuffled held-out
+  # rows. Same reference, repeats and tolerance rule as the fit_ml_panel() test above, fixed before the run.
+  three <- subset(srl, name %in% c("Aisha", "Alice", "Anika"))
+  fit <- fit_lm(three, y = "effort", x = predictors, id = "name", time = "day", scope = "individual",
+                test_prop = 0.2)
+  invisible(lapply(1:3, \(seed) {
+    reference <- permutation_reference(three, seed = 2000L + seed)
+    tolerance <- 4 * max(reference$sd) * sqrt(2 / repeats)
+    set.seed(seed)
+    expect_reference(importance(fit, method = "permutation", repeats = repeats), subset(reference, select = -sd),
+                     reference = "independent: permutation importance written in the test",
+                     covers = c('importance(method = "permutation")', "importance.idiographic_fit()"),
+                     quantity = sprintf("Monte Carlo summary: RMSE increase per learner and predictor, fit_lm(), seed %d", seed),
+                     tolerance = tolerance, key = c("subject", "variable"),
+                     note = "Statistical evidence: two independent runs of 500 shuffles; tolerance 4 Monte Carlo standard errors.")
+  }))
+})

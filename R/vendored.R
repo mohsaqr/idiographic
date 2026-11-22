@@ -951,8 +951,10 @@ coefs.gvar_list <- function(x, ...) .ido_stack_subject_tables(x, coefs, ...)
 .ido_stack_subject_tables <- function(x, fun, ...) {
   out <- lapply(seq_along(x), function(i) {
     tab <- fun(x[[i]], ...)
-    data.frame(subject = names(x)[i] %||% as.character(i), tab,
-               stringsAsFactors = FALSE)
+    # rep() keeps a person whose table has no rows (a network with no edge
+    # besides its self-loops) from breaking data.frame()'s recycling.
+    data.frame(subject = rep(names(x)[i] %||% as.character(i), nrow(tab)),
+               tab, stringsAsFactors = FALSE)
   })
   ans <- do.call(rbind, out)
   rownames(ans) <- NULL

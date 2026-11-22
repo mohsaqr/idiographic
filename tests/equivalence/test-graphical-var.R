@@ -182,8 +182,7 @@ gvar_converged <- function(data, vars, ...) {
 
 test_that("the edge tables of per-person graphical VARs", {
   skip_without_reference("graphicalVAR")
-  # edges() of a gvar_list stops when one person's network has no edge besides self-loops: declared in the next
-  # test; here the edges are compared on three learners whose networks all have edges.
+  # Three learners whose networks all have edges (a person without edges: the test after next).
   three <- subset(srl, name %in% c("Aisha", "Alice", "Anika"), select = c(name, day, efficacy, planning, effort))
   ours <- fit_graphical_var_each(three, vars = items, id = "name", beep = "day", n_lambda = 8, verbose = FALSE)
   by_learner <- split(three, three$name)
@@ -232,16 +231,22 @@ test_that("node strengths and network summaries follow from graphicalVAR's netwo
                    tolerance = 1e-6, key = c("subject", "network"))
 })
 
-test_that("edges() of per-person graphical VARs when one person has no edge", {
+test_that("edges() of per-person graphical VARs when a person has no edge", {
+  skip_without_reference("graphicalVAR")
   panel <- ref_panel(n_id = 3L, days = 1L, beeps = 55L, vars = abc, seed = 904L)
   each <- fit_graphical_var_each(panel, vars = abc, id = "id", day = "day", beep = "beep", n_lambda = 8,
                                  verbose = FALSE)
-  # Person 2's estimated network has no edge besides its self-loops; the others have edges. edges() should return
-  # the edges of persons 1 and 3 (coefs() of the same object works).
-  expect_defect_error(edges(each),
-                      defect = "edges() of a fit_graphical_var_each() result stops ('arguments imply differing number of rows: 1, 0') when one person's network has no edge besides self-loops; FINDINGS.md",
-                      covers = c("edges.gvar_list()", "fit_graphical_var_each()"),
-                      quantity = "three people, person 2 without edges")
+  # Persons 2 and 3 have no edge besides their self-loops; edges() returns the edges of the others. graphicalVAR's
+  # networks of each person, non-zero cells without the temporal self-loops. 1e-6, the bound of the per-person
+  # coefficient comparison on this panel.
+  theirs <- do.call(rbind, lapply(split(panel, panel$id), \(person) {
+    cbind(subject = as.character(person$id[[1L]]),
+          gvar_reference(person, abc, idvar = "id", dayvar = "day", beepvar = "beep", nLambda = 8))
+  }))
+  expect_reference(edges(each), subset(theirs, weight != 0 & !(network == "temporal" & from == to)),
+                   reference = "graphicalVAR", covers = "edges.gvar_list()",
+                   quantity = "three people, two without edges besides self-loops", tolerance = 1e-6,
+                   key = c("subject", "network", "from", "to"))
 })
 
 test_that("one person's matrices of per-person graphical VARs equal graphicalVAR on that person", {
