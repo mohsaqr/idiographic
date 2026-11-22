@@ -45,11 +45,11 @@ test_that("the mixture log-likelihoods of one and two groups equal mclust's", {
                    covers = "test_subgroups()", quantity = "36 learners, two groups, diagonal covariance models",
                    tolerance = 1e-5, key = c("k", "model"))
   full <- do.call(rbind, lapply(c("EEE", "VVV"), \(model) mclust_fit(coefficients, 1L, model)))
-  expect_known_difference(subset(as.data.frame(test), k == 1L & model %in% c("EEE", "VVV"), select = c(k, model, loglik)),
-                          subset(full, select = c(k, model, loglik)), reference = "mclust",
-                          covers = "test_subgroups()", quantity = "36 learners, one group, full covariance models",
-                          tolerance = 1e-10, key = c("k", "model"),
-                          reason = "test_subgroups() adds a ridge of 1e-4 times the mean coefficient variance to a full covariance matrix (EEE, VVV); mclust estimates it without one. The log-likelihood is 3.5e-7 lower here.")
+  # One group, full covariances: the unpenalised Gaussian maximum likelihood on both sides (no ridge since 0.4.0.9009).
+  expect_reference(subset(as.data.frame(test), k == 1L & model %in% c("EEE", "VVV"), select = c(k, model, loglik)),
+                   subset(full, select = c(k, model, loglik)), reference = "mclust",
+                   covers = "test_subgroups()", quantity = "36 learners, one group, full covariance models",
+                   tolerance = 1e-10, key = c("k", "model"))
 })
 
 #' A panel of 20 people, 40 days: people 1-10 have slope +1 of y on x, people 11-20 slope -1

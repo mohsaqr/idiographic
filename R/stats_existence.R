@@ -44,11 +44,23 @@
 #'
 #' @inheritParams find_subgroups
 #' @param k_max Largest number of subgroups considered.
+#' @details The mixtures are fitted by maximum likelihood with EM, under the six
+#' covariance structures EII, VII, EEI, VVI, EEE and VVV of Fraley and Raftery
+#' (2002). Every covariance is the unpenalised maximum-likelihood estimate, as
+#' in `mclust::mclustBIC()`; no ridge is added. A solution with a component
+#' smaller than 5% of the people (at least 2) or with a singular covariance
+#' (reciprocal condition number below machine epsilon) is discarded, so that
+#' model does not appear in the BIC table for that `k`.
+#'
 #' @return An `idiostats_subgroup_test`. Use [as.data.frame()] for the tidy BIC
 #'   table.
 #' @references Bauer, D. J., & Curran, P. J. (2003). Distributional assumptions
 #'   of growth mixture models. *Psychological Methods*, 8(3), 338-363.
 #'   \doi{10.1037/1082-989X.8.3.338}
+#'
+#'   Fraley, C., & Raftery, A. E. (2002). Model-based clustering, discriminant
+#'   analysis, and density estimation. *Journal of the American Statistical
+#'   Association*, 97(458), 611-631. \doi{10.1198/016214502760047131}
 #' @examples
 #' test_subgroups(srl, y = "effort", x = "efficacy:monitoring", id = "name")
 #' @export
@@ -296,9 +308,10 @@ as.data.frame.idiostats_subgroup_test <- function(x, ...) {
   n <- nrow(B)
   p <- ncol(B)
   k <- nrow(mu)
-  # Regularise on the scale of the data, not absolutely: a fixed tiny ridge does
-  # not stop a component from collapsing.
-  ridge <- diag(1e-4 * mean(apply(B, 2L, stats::var)), p)
+  # Full covariances are the unpenalised maximum-likelihood estimates (Fraley &
+  # Raftery 2002), as in mclust. A collapsing component is stopped by the
+  # minimum component size in .idio_gmm(), and a singular estimate rejects the
+  # fit below, as mclust returns NA for it.
   ng <- pmax(colSums(z), 1e-10)
 
   scatter <- lapply(seq_len(k), function(g) {
@@ -322,13 +335,17 @@ as.data.frame.idiostats_subgroup_test <- function(x, ...) {
       diag(pmax(diag(scatter[[g]]) / ng[g], 1e-8), p)
     }),
     EEE = {
-      S <- Reduce(`+`, scatter) / n + ridge
+      S <- Reduce(`+`, scatter) / n
       rep(list(S), k)
     },
-    VVV = lapply(seq_len(k), function(g) scatter[[g]] / ng[g] + ridge),
+    VVV = lapply(seq_len(k), function(g) scatter[[g]] / ng[g]),
     stop("Unknown covariance model: ", model, call. = FALSE)
   )
   if (any(vapply(out, function(S) any(!is.finite(S)), logical(1)))) return(NULL)
+  # mclust's singularity rule: a covariance whose reciprocal condition number is
+  # below machine epsilon has no usable likelihood, so the fit is rejected.
+  singular <- vapply(out, function(S) rcond(S) < .Machine$double.eps, logical(1))
+  if (any(singular)) return(NULL)
   out
 }
 
