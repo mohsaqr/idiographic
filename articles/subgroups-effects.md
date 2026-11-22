@@ -59,7 +59,7 @@ subgroup_test
 #>   Coefficients: efficacy, monitoring
 #>   Searched:    k = 1..3, covariance models VVV/EEE/EEI/EII/VII/VVI
 #> 
-#>   VERDICT:     3 subgroups (BIC beats one group by 8.9: strong evidence)
+#>   VERDICT:     3 subgroups (BIC beats one group by 20.2: very strong evidence)
 #> 
 #>   Use as.data.frame() for the BIC table.
 ```
@@ -80,11 +80,11 @@ row.
 
 as.data.frame(subgroup_test)
 #>    k model     loglik npar      bic selected
-#> 1  3   VVV  -9.453076   17 61.14956     TRUE
-#> 2  2   VVV -19.136141   11 65.60625    FALSE
+#> 1  3   VVV  -3.805208   17 49.85383     TRUE
+#> 2  2   VVV -19.134358   11 65.60269    FALSE
 #> 3  1   EEE -28.824924    5 70.07438    FALSE
 #> 4  1   VVV -28.824924    5 70.07438    FALSE
-#> 5  2   EEE -25.619379    8 71.11801    FALSE
+#> 5  2   EEE -25.619360    8 71.11797    FALSE
 #> 6  2   EEI -27.543610    7 72.48157    FALSE
 #> 7  2   EII -28.803440    6 72.51632    FALSE
 #> 8  1   EII -33.010388    3 73.47550    FALSE
@@ -94,7 +94,7 @@ as.data.frame(subgroup_test)
 #> 12 2   VII -28.463607    7 74.32156    FALSE
 #> 13 1   EEI -33.010388    4 75.96040    FALSE
 #> 14 1   VVI -33.010388    4 75.96040    FALSE
-#> 15 3   EEE -25.619384   11 78.57274    FALSE
+#> 15 3   EEE -25.619365   11 78.57270    FALSE
 #> 16 3   VVI -23.226589   14 81.24187    FALSE
 ```
 

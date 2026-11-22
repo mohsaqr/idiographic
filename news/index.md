@@ -1,5 +1,16 @@
 # Changelog
 
+## idiographic 0.4.0.9009
+
+- [`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md)
+  fits the full covariance models (EEE, VVV) by unpenalised Gaussian
+  maximum likelihood (Fraley & Raftery 2002), as `mclust` does. It used
+  to add an undocumented ridge of 1e-4 times the mean coefficient
+  variance, which left the log-likelihood below the maximum (one group
+  on `srl`: 3.5e-7 lower than `mclust::mclustBIC()`). Collapse is still
+  prevented by the minimum component size; a fit with a singular
+  covariance is now discarded, as `mclust` returns `NA` for it.
+
 ## idiographic 0.4.0.9008
 
 - [`compare()`](https://pak.dynasite.org/idiographic/reference/compare.md)

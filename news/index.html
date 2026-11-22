@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,11 @@
       <small>Source: <a href="https://github.com/mohsaqr/idiographic/blob/merged/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0.9009" id="idiographic-0409009">idiographic 0.4.0.9009<a class="anchor" aria-label="anchor" href="#idiographic-0409009"></a></h2>
+<ul><li>
+<code><a href="../reference/test_subgroups.html">test_subgroups()</a></code> fits the full covariance models (EEE, VVV) by unpenalised Gaussian maximum likelihood (Fraley &amp; Raftery 2002), as <code>mclust</code> does. It used to add an undocumented ridge of 1e-4 times the mean coefficient variance, which left the log-likelihood below the maximum (one group on <code>srl</code>: 3.5e-7 lower than <code>mclust::mclustBIC()</code>). Collapse is still prevented by the minimum component size; a fit with a singular covariance is now discarded, as <code>mclust</code> returns <code>NA</code> for it.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0.9008" id="idiographic-0409008">idiographic 0.4.0.9008<a class="anchor" aria-label="anchor" href="#idiographic-0409008"></a></h2>
 <ul><li>

@@ -9,7 +9,7 @@ when there are none to find. This is the verb that can say no."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,12 +114,22 @@ because distributional shape is what makes this test lie. In simulation, a
 single skewed population produced spurious subgroups in 35-47% of runs, versus
 5-8% under normality. <strong>A significant-looking subgroup solution on visibly
 skewed coefficients is not trustworthy.</strong></p>
+<p>The mixtures are fitted by maximum likelihood with EM, under the six
+covariance structures EII, VII, EEI, VVI, EEE and VVV of Fraley and Raftery
+(2002). Every covariance is the unpenalised maximum-likelihood estimate, as
+in <code>mclust::mclustBIC()</code>; no ridge is added. A solution with a component
+smaller than 5% of the people (at least 2) or with a singular covariance
+(reciprocal condition number below machine epsilon) is discarded, so that
+model does not appear in the BIC table for that <code>k</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Bauer, D. J., &amp; Curran, P. J. (2003). Distributional assumptions
 of growth mixture models. <em>Psychological Methods</em>, 8(3), 338-363.
 <a href="https://doi.org/10.1037/1082-989X.8.3.338" class="external-link">doi:10.1037/1082-989X.8.3.338</a></p>
+<p>Fraley, C., &amp; Raftery, A. E. (2002). Model-based clustering, discriminant
+analysis, and density estimation. <em>Journal of the American Statistical
+Association</em>, 97(458), 611-631. <a href="https://doi.org/10.1198/016214502760047131" class="external-link">doi:10.1198/016214502760047131</a></p>
     </div>
 
     <div class="section level2">

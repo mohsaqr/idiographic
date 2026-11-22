@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,7 +162,7 @@ and evidence relative to one group.</p>
 <span><span class="co">#&gt;   Coefficients: efficacy, monitoring</span></span>
 <span><span class="co">#&gt;   Searched:    k = 1..3, covariance models VVV/EEE/EEI/EII/VII/VVI</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   VERDICT:     3 subgroups (BIC beats one group by 8.9: strong evidence)</span></span>
+<span><span class="co">#&gt;   VERDICT:     3 subgroups (BIC beats one group by 20.2: very strong evidence)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Use as.data.frame() for the BIC table.</span></span></code></pre></div>
 <p><code><a href="../reference/test_subgroups.html">test_subgroups()</a></code> selects three groups for this
@@ -179,11 +179,11 @@ fitted mixture. Table 1 marks the selected row.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">subgroup_test</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    k model     loglik npar      bic selected</span></span>
-<span><span class="co">#&gt; 1  3   VVV  -9.453076   17 61.14956     TRUE</span></span>
-<span><span class="co">#&gt; 2  2   VVV -19.136141   11 65.60625    FALSE</span></span>
+<span><span class="co">#&gt; 1  3   VVV  -3.805208   17 49.85383     TRUE</span></span>
+<span><span class="co">#&gt; 2  2   VVV -19.134358   11 65.60269    FALSE</span></span>
 <span><span class="co">#&gt; 3  1   EEE -28.824924    5 70.07438    FALSE</span></span>
 <span><span class="co">#&gt; 4  1   VVV -28.824924    5 70.07438    FALSE</span></span>
-<span><span class="co">#&gt; 5  2   EEE -25.619379    8 71.11801    FALSE</span></span>
+<span><span class="co">#&gt; 5  2   EEE -25.619360    8 71.11797    FALSE</span></span>
 <span><span class="co">#&gt; 6  2   EEI -27.543610    7 72.48157    FALSE</span></span>
 <span><span class="co">#&gt; 7  2   EII -28.803440    6 72.51632    FALSE</span></span>
 <span><span class="co">#&gt; 8  1   EII -33.010388    3 73.47550    FALSE</span></span>
@@ -193,7 +193,7 @@ fitted mixture. Table 1 marks the selected row.</p>
 <span><span class="co">#&gt; 12 2   VII -28.463607    7 74.32156    FALSE</span></span>
 <span><span class="co">#&gt; 13 1   EEI -33.010388    4 75.96040    FALSE</span></span>
 <span><span class="co">#&gt; 14 1   VVI -33.010388    4 75.96040    FALSE</span></span>
-<span><span class="co">#&gt; 15 3   EEE -25.619384   11 78.57274    FALSE</span></span>
+<span><span class="co">#&gt; 15 3   EEE -25.619365   11 78.57270    FALSE</span></span>
 <span><span class="co">#&gt; 16 3   VVI -23.226589   14 81.24187    FALSE</span></span></code></pre></div>
 <p><code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> reports a minimum BIC of about 61.1 for
 the selected three-component model in Table 1. The best one-component

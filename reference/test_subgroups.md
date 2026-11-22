@@ -62,11 +62,25 @@ a single skewed population produced spurious subgroups in 35-47% of
 runs, versus 5-8% under normality. **A significant-looking subgroup
 solution on visibly skewed coefficients is not trustworthy.**
 
+The mixtures are fitted by maximum likelihood with EM, under the six
+covariance structures EII, VII, EEI, VVI, EEE and VVV of Fraley and
+Raftery (2002). Every covariance is the unpenalised maximum-likelihood
+estimate, as in `mclust::mclustBIC()`; no ridge is added. A solution
+with a component smaller than 5% of the people (at least 2) or with a
+singular covariance (reciprocal condition number below machine epsilon)
+is discarded, so that model does not appear in the BIC table for that
+`k`.
+
 ## References
 
 Bauer, D. J., & Curran, P. J. (2003). Distributional assumptions of
 growth mixture models. *Psychological Methods*, 8(3), 338-363.
 [doi:10.1037/1082-989X.8.3.338](https://doi.org/10.1037/1082-989X.8.3.338)
+
+Fraley, C., & Raftery, A. E. (2002). Model-based clustering,
+discriminant analysis, and density estimation. *Journal of the American
+Statistical Association*, 97(458), 611-631.
+[doi:10.1198/016214502760047131](https://doi.org/10.1198/016214502760047131)
 
 ## Examples
 
