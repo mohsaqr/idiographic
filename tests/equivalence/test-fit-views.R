@@ -54,6 +54,12 @@ test_that("best_model() is the overall row with the smallest held-out RMSE", {
                    reference = "independent: the smallest RMSE of the stats::lm predictions",
                    covers = "best_model.idiographic_fit()", quantity = "36 learners, pooled only", tolerance = 1e-10,
                    key = "scope")
+  # The same errors computed by forecast::accuracy() on the stats::lm predictions.
+  by_forecast <- rbind(cbind(scope = "pooled", forecast_errors(pooled$observed, pooled$predicted)),
+                       cbind(scope = "individual", forecast_errors(individual$observed, individual$predicted)))
+  expect_reference(best_model(fit), by_forecast[which.min(by_forecast$rmse), ], reference = "forecast",
+                   covers = c("best_model()", "best_model.idiographic_fit()", "best_model.idiostats_fit()"),
+                   quantity = "36 learners, the smallest RMSE by forecast::accuracy()", tolerance = 1e-10, key = "scope")
 })
 
 test_that("compare_predictions() is the per-person gain in RMSE over the pooled model", {
@@ -71,6 +77,19 @@ test_that("compare_predictions() is the per-person gain in RMSE over the pooled 
                    reference = "independent: RMSE of the stats::lm predictions, per person",
                    covers = "compare_predictions()", quantity = "36 learners, MAE gain over the pooled model",
                    tolerance = 1e-10, key = "subject")
+  per_person_forecast <- function(predicted) {
+    do.call(rbind, lapply(split(predicted, predicted$subject), \(part) {
+      cbind(subject = part$subject[[1L]], forecast_errors(part$observed, part$predicted))
+    }))
+  }
+  own_forecast <- per_person_forecast(individual)
+  pooled_forecast <- per_person_forecast(pooled)
+  expect_reference(compare_predictions(fit),
+                   data.frame(subject = own_forecast$subject, n = own_forecast$n, value = own_forecast$rmse,
+                              reference_value = pooled_forecast$rmse, gain = pooled_forecast$rmse - own_forecast$rmse),
+                   reference = "forecast", covers = "compare_predictions()",
+                   quantity = "36 learners, RMSE gain over the pooled model, forecast::accuracy()", tolerance = 1e-10,
+                   key = "subject")
 })
 
 test_that("diagnostics() are the residuals, their absolute and squared values and the residual over its SD", {
@@ -83,6 +102,11 @@ test_that("diagnostics() are the residuals, their absolute and squared values an
                    covers = c("diagnostics()", "diagnostics.idiographic_fit()", "diagnostics.idiostats_fit()"),
                    quantity = "36 learners, held-out residuals", tolerance = 1e-10, key = c("subject", "row"),
                    note = "std_residual divides by the SD of the person's held-out residuals without centring them.")
+  expect_reference(diagnostics(fit), subset(individual, select = c(subject, row, observed, predicted, residual)),
+                   reference = "stats",
+                   covers = c("diagnostics()", "diagnostics.idiographic_fit()", "diagnostics.idiostats_fit()"),
+                   quantity = "36 learners, held-out predictions and residuals of stats::predict()", tolerance = 1e-10,
+                   key = c("subject", "row"))
 })
 
 test_that("coefficient importance is the absolute coefficient, and its mean over people", {
@@ -100,6 +124,18 @@ test_that("coefficient importance is the absolute coefficient, and its mean over
   expect_reference(summarize_importance(fit), averaged, reference = "independent: absolute stats::lm coefficients",
                    covers = 'summarize_importance(method = "coefficient")',
                    quantity = "mean |coefficient| over 36 learners", tolerance = 1e-10, key = "variable")
+  signed <- do.call(rbind, Map(\(model, subject) {
+    data.frame(subject = subject, variable = predictors, importance = unname(stats::coef(model)[predictors]))
+  }, person_models, names(person_models)))
+  # importance() reports |b|: compared with the absolute value of each stats::lm() coefficient.
+  expect_reference(importance(fit), transform(signed, importance = abs(importance)), reference = "stats",
+                   covers = c('importance(method = "coefficient")', "importance.idiographic_fit()",
+                              "importance.idiostats_fit()"),
+                   quantity = "36 learners, |coefficient| of stats::lm()", tolerance = 1e-10, key = c("subject", "variable"))
+  expect_reference(summarize_importance(fit),
+                   stats::aggregate(importance ~ variable, data = transform(signed, importance = abs(importance)), FUN = mean),
+                   reference = "stats", covers = 'summarize_importance(method = "coefficient")',
+                   quantity = "mean |coefficient| of stats::lm() over 36 learners", tolerance = 1e-10, key = "variable")
 })
 
 test_that("compare() stacks the overall errors of each fit", {
@@ -169,6 +205,29 @@ test_that("fit_ml_panel(): the linear learner, and ridge tuned on the validation
   expect_reference(tuning(ridge), validation, reference = "independent: ridge regression written out (closed form)",
                    covers = c("tuning()", "tuning.idiographic_fit()", "tuning.idiostats_fit()", "fit_ml_panel()"),
                    quantity = "three learners, validation errors per lambda", tolerance = 1e-10,
+                   key = c("subject", "value"))
+  # MASS::lm.ridge() centres the predictors and scales them by their root mean square (divisor m), so on
+  # predictors already standardised with the divisor m - 1 its penalty lambda_MASS equals lambda m / (m - 1);
+  # it leaves the intercept unpenalised. The validation errors by forecast::accuracy().
+  by_mass <- do.call(rbind, lapply(by_person, \(person) {
+    estimation <- first_rows(person)
+    n_valid <- ceiling(held_out * nrow(estimation))
+    train <- utils::head(estimation, nrow(estimation) - n_valid)
+    valid <- utils::tail(estimation, n_valid)
+    X <- standardised(train, train)[, predictors]
+    m <- nrow(X)
+    do.call(rbind, lapply(grid, \(lambda) {
+      ridge_fit <- MASS::lm.ridge(train$effort ~ X, lambda = lambda * m / (m - 1))
+      predicted <- as.vector(standardised(train, valid) %*% stats::coef(ridge_fit))
+      errors <- forecast_errors(valid$effort, predicted)
+      data.frame(subject = person$name[[1L]], value = as.character(lambda), n = errors$n, rmse = errors$rmse,
+                 mae = errors$mae)
+    }))
+  }))
+  # lm.ridge() solves by the singular value decomposition: rounding only, 1e-10.
+  expect_reference(tuning(ridge), by_mass, reference = "MASS",
+                   covers = c("tuning()", "tuning.idiographic_fit()", "tuning.idiostats_fit()", "fit_ml_panel()"),
+                   quantity = "three learners, validation errors per lambda, MASS::lm.ridge()", tolerance = 1e-10,
                    key = c("subject", "value"))
 })
 

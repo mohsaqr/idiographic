@@ -90,3 +90,45 @@ test_that("find_subgroups() recovers a planted partition for any draw (Monte Car
                      tolerance = 0, key = "subject")
   }))
 })
+
+test_that("the partitions equal stats::kmeans() on the person slopes and flexmix's mixture of regressions", {
+  data <- planted_panel()
+  slopes <- vapply(split(data, data$id), \(person) stats::coef(stats::lm(y ~ x, data = person))[["x"]], numeric(1))
+  invisible(lapply(1:3, \(seed) {
+    set.seed(seed)
+    clustered <- find_subgroups(data, y = "y", x = "x", id = "id", k = 2, reps = 20)
+    set.seed(1000 + seed)
+    # effect_clustering: k-means (10 starts) on the standardised person slopes, as documented.
+    by_kmeans <- stats::kmeans(scale(slopes), centers = 2L, nstart = 10L, iter.max = 50L)$cluster
+    kmeans_table <- data.frame(subject = names(slopes), subgroup = as.character(by_kmeans), stability = 1)
+    expect_reference(with_first(groups(clustered)), with_first(kmeans_table), reference = "stats",
+                     covers = c("find_subgroups()", "groups()", "groups.idiographic_groups()",
+                                "groups.idiostats_groups()"),
+                     quantity = sprintf("effect clustering against stats::kmeans(), membership, seed %d", seed),
+                     tolerance = 0, key = "subject",
+                     note = "Membership is compared as 'in the same subgroup as person 1', so the labels may differ; stability 1 is the planted partition's (test above).")
+    # fit_subgroups() with the partition found: groups() of the fit is that partition.
+    fit <- fit_subgroups(data, y = "y", x = "x", id = "id", subgroup = clustered, time = "day")
+    expect_reference(with_first(transform(groups(fit), stability = 1)), with_first(kmeans_table), reference = "stats",
+                     covers = c("groups()", "groups.idiographic_fit()", "groups.idiostats_fit()", "fit_subgroups()"),
+                     quantity = sprintf("fit_subgroups() on the partition found, against stats::kmeans(), seed %d", seed),
+                     tolerance = 0, key = "subject")
+    set.seed(seed)
+    mixture <- find_subgroups(data, y = "y", x = "x", id = "id", method = "mixture_regression", k = 2, reps = 10)
+    set.seed(1000 + seed)
+    # flexmix: a mixture of two linear regressions with the person as the grouping (y ~ x | id), best of 5 EM runs.
+    reference <- flexmix::stepFlexmix(y ~ x | id, data = data, k = 2, nrep = 5, verbose = FALSE)
+    posterior <- flexmix::posterior(reference)
+    first_row <- !duplicated(data$id)
+    flexmix_table <- data.frame(subject = as.character(data$id[first_row]),
+                                subgroup = as.character(flexmix::clusters(reference)[first_row]),
+                                posterior = apply(posterior[first_row, , drop = FALSE], 1L, max))
+    expect_reference(with_first(transform(as.data.frame(mixture), stability = posterior)),
+                     with_first(transform(flexmix_table, stability = posterior)), reference = "flexmix",
+                     covers = c("find_subgroups()", "as.data.frame.idiographic_groups()",
+                                "as.data.frame.idiostats_groups()"),
+                     quantity = sprintf("mixture regression against flexmix, membership and posterior, seed %d", seed),
+                     tolerance = 1e-8, key = "subject",
+                     note = "The posterior of the assigned component is put in the stability column of both sides for the comparison.")
+  }))
+})

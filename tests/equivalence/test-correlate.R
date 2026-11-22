@@ -77,3 +77,36 @@ test_that("lag-adjusted within-person correlations correlate the residuals of th
                    covers = "correlate_levels()", quantity = "36 learners, lag-adjusted within-person correlations",
                    tolerance = 1e-10, key = c("level", "unit", "x", "y"))
 })
+
+test_that("within- and between-person correlations by psych::statsBy(), summarised by psych::describeBy()", {
+  ours <- correlate_levels(srl, id = "name", vars = three, time = "day")
+  position <- stats::ave(seq_len(nrow(ordered)), ordered$name, FUN = seq_along)
+  # The correlation of each pair within each group, from psych::statsBy()'s per-group correlation matrices
+  by_group <- function(frame, group, level) {
+    groups <- psych::statsBy(frame, group = group, cors = TRUE, use = "pairwise")$r
+    do.call(rbind, Map(\(cells, unit) {
+      do.call(rbind, lapply(pairs, \(pair) {
+        data.frame(level = level, unit = unit, x = pair[[1L]], y = pair[[2L]], r = cells[pair[[1L]], pair[[2L]]])
+      }))
+    }, groups, names(groups)))
+  }
+  within <- by_group(ordered[c("name", three)], "name", "within")
+  between <- by_group(data.frame(occasion = position, ordered[three]), "occasion", "between")
+  theirs <- rbind(within, between)
+  expect_reference(as.data.frame(ours), theirs, reference = "psych",
+                   covers = c("correlate_levels()", "as.data.frame.idiographic_level_correlations()"),
+                   quantity = "36 learners, 156 occasions, psych::statsBy()", tolerance = 1e-10,
+                   key = c("level", "unit", "x", "y"))
+  described <- do.call(rbind, lapply(pairs, \(pair) {
+    rows <- theirs[theirs$x == pair[[1L]] & theirs$y == pair[[2L]], ]
+    levels <- psych::describeBy(rows$r, group = rows$level, mat = TRUE)
+    w <- levels[levels$group1 == "within", ]
+    b <- levels[levels$group1 == "between", ]
+    data.frame(x = pair[[1L]], y = pair[[2L]], n_within = w$n, mean_within = w$mean, median_within = w$median,
+               sd_within = w$sd, n_between = b$n, mean_between = b$mean, median_between = b$median, sd_between = b$sd,
+               mean_difference = w$mean - b$mean, sd_ratio = w$sd / b$sd)
+  }))
+  expect_reference(summary(ours), described, reference = "psych",
+                   covers = c("correlate_levels()", "summary.idiographic_level_correlations()"),
+                   quantity = "36 learners, summary per pair, psych::describeBy()", tolerance = 1e-10, key = c("x", "y"))
+})

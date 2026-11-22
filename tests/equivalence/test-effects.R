@@ -64,6 +64,33 @@ split_rows <- function(d) {
        test = do.call(rbind, lapply(by_person, \(p) utils::tail(p, ceiling(0.3 * nrow(p))))))
 }
 
+#' The same ATE, GATES, top-bottom and BLP rows from stats::lm() and sandwich::vcovCL() (type "HC0" with the
+#' factor G / (G - 1)), t on G - 1 degrees of freedom by lmtest::coeftest(); the scores are given
+sandwich_table <- function(score, cate, cluster, label) {
+  rank <- rank(cate, ties.method = "first")
+  bin <- pmin(4L, pmax(1L, ceiling(rank / (length(rank) / 4))))
+  row_of <- function(effect, model, term, groups) {
+    G <- length(unique(groups))
+    table <- lmtest::coeftest(model, vcov. = sandwich::vcovCL(model, cluster = groups, type = "HC0", cadjust = TRUE),
+                              df = G - 1L)
+    crit <- stats::qt(0.975, df = G - 1)
+    data.frame(effect = effect, n = stats::nobs(model), n_people = G, estimate = table[term, 1L],
+               std_error = table[term, 2L], conf_low = table[term, 1L] - crit * table[term, 2L],
+               conf_high = table[term, 1L] + crit * table[term, 2L], statistic = table[term, 3L],
+               p_value = table[term, 4L])
+  }
+  gates <- lapply(1:4, \(g) {
+    inside <- bin == g
+    row_of(sprintf("GATES:g%d", g), stats::lm(score[inside] ~ 1), "(Intercept)", cluster[inside])
+  })
+  ends <- bin %in% c(1L, 4L)
+  top <- bin[ends] == 4L
+  centred <- cate - mean(cate)
+  rbind(row_of(label, stats::lm(score ~ 1), "(Intercept)", cluster), do.call(rbind, gates),
+        row_of("GATES:top-bottom", stats::lm(score[ends] ~ top), "topTRUE", cluster[ends]),
+        row_of("BLP:heterogeneity", stats::lm(score ~ centred), "centred", cluster))
+}
+
 test_that("a binary treatment: AIPW scores, the average effect and its heterogeneity", {
   d <- effects_panel()
   fit <- fit_effects(d, y = "mood", treatment = "drug", x = predictors, id = "id", time = "day", scope = "pooled")
@@ -82,6 +109,12 @@ test_that("a binary treatment: AIPW scores, the average effect and its heterogen
                    covers = c("fit_effects()", "effects.idiographic_effects()", "effects.idiostats_effects()"),
                    quantity = "six people, drug on mood", tolerance = 1e-8, key = "effect",
                    note = "effects.idiostats_effects() is the same function object as effects.idiographic_effects().")
+  expect_reference(effects(fit), sandwich_table(score, m1 - m0, test$id, "ATE"), reference = "sandwich",
+                   covers = c("fit_effects()", "effects.idiographic_effects()", "effects.idiostats_effects()"),
+                   quantity = "six people, drug on mood: inference on the AIPW scores by sandwich::vcovCL()",
+                   tolerance = 1e-8,
+                   note = "The scores are written from their definition (no AIPW implementation on the ci machine); their means, GATES, BLP and clustered standard errors are computed by stats::lm(), sandwich and lmtest.",
+                   key = "effect")
 })
 
 test_that("a dose: the partially linear score and the per-unit effect", {
@@ -104,4 +137,8 @@ test_that("a dose: the partially linear score and the per-unit effect", {
                    reference = "independent: partially linear scores from stats::lm(), CR1 sandwich",
                    covers = c("fit_effects()", "effects.idiographic_effects()"),
                    quantity = "six people, dose on sleep", tolerance = 1e-10, key = "effect")
+  expect_reference(effects(fit), sandwich_table(score, cate, test$id, "APE"), reference = "sandwich",
+                   covers = c("fit_effects()", "effects.idiographic_effects()"),
+                   quantity = "six people, dose on sleep: inference on the partially linear scores by sandwich::vcovCL()",
+                   tolerance = 1e-10, key = "effect")
 })

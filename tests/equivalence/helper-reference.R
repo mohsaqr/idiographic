@@ -159,3 +159,59 @@ ref_network_summary <- function(edges, vars) {
   })
   do.call(rbind, rows)
 }
+
+#' One network layer of an edge table as an igraph graph: the non-zero cells between two different nodes
+#'
+#' @param net The rows of one network of an edge table (`network`, `from`, `to`, `weight`).
+#' @param vars The node names.
+#' @param directed Whether the layer is directed (from row to column).
+#' @return An igraph graph with the signed weights as `weight`.
+igraph_layer <- function(net, vars, directed) {
+  kept <- net[net$from != net$to & net$weight != 0, c("from", "to", "weight")]
+  igraph::graph_from_data_frame(kept, directed = directed, vertices = data.frame(name = vars))
+}
+
+#' Node strengths of an edge table computed by igraph::strength() on the absolute weights
+#'
+#' The same layout as ref_nodes(); `self` is the signed weight of the node's self-loop, read off the table.
+#' @inheritParams ref_nodes
+igraph_nodes <- function(edges, vars) {
+  rows <- lapply(split(edges, factor(edges$network, unique(edges$network))), \(net) {
+    directed <- startsWith(net$network[[1L]], "temporal")
+    graph <- igraph_layer(net, vars, directed)
+    strength <- \(mode) unname(igraph::strength(graph, vids = vars, mode = mode, loops = FALSE,
+                                                weights = abs(igraph::E(graph)$weight)))
+    loops <- net[net$from == net$to, ]
+    self <- vapply(vars, \(node) sum(loops$weight[loops$from == node]), numeric(1))
+    data.frame(network = net$network[[1L]], node = vars, strength = strength("all"),
+               out_strength = if (directed) strength("out") else NA_real_,
+               in_strength = if (directed) strength("in") else NA_real_, self = unname(self), row.names = NULL)
+  })
+  do.call(rbind, rows)
+}
+
+#' Per-network counts, density and mean weight of an edge table computed by igraph
+#'
+#' The same layout as ref_network_summary(): igraph::vcount(), igraph::ecount(), igraph::edge_density() and the
+#' edge weights igraph holds.
+#' @inheritParams ref_nodes
+igraph_summary <- function(edges, vars) {
+  rows <- lapply(split(edges, factor(edges$network, unique(edges$network))), \(net) {
+    graph <- igraph_layer(net, vars, startsWith(net$network[[1L]], "temporal"))
+    w <- igraph::E(graph)$weight
+    data.frame(network = net$network[[1L]], n_nodes = igraph::vcount(graph), n_edges = igraph::ecount(graph),
+               density = igraph::edge_density(graph, loops = FALSE),
+               mean_abs_weight = if (length(w)) mean(abs(w)) else 0, n_positive = sum(w > 0), n_negative = sum(w < 0))
+  })
+  do.call(rbind, rows)
+}
+
+#' Mean error, RMSE and MAE of predictions computed by forecast::accuracy()
+#'
+#' forecast::accuracy() defines the error as observed minus forecast, as idiographic does.
+#' @param observed,predicted The observed values and their predictions.
+#' @return A one-row data frame `n`, `bias`, `rmse`, `mae`.
+forecast_errors <- function(observed, predicted) {
+  measures <- forecast::accuracy(predicted, observed)
+  data.frame(n = length(observed), bias = measures[1L, "ME"], rmse = measures[1L, "RMSE"], mae = measures[1L, "MAE"])
+}

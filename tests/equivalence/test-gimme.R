@@ -171,4 +171,19 @@ test_that("node strengths and network summaries of the path-share networks of a 
   }, layers, names(layers)))
   expect_reference(summary(ours), counts, reference = "gimme", covers = "summary.net_gimme()",
                    quantity = "standard search: summary of the path-share networks", tolerance = 1e-12, key = "network")
+  # as_netobject(): the path shares as two networks read from predictor rows (style "pnode"), or one network of
+  # lagged and current nodes (style "unified").
+  group <- as_netobject(ours)
+  expect_reference(matrices(group[["temporal"]], print = FALSE)[["weights"]], layers$temporal, reference = "gimme",
+                   covers = c("as_netobject()", "as_netobject.net_gimme()"),
+                   quantity = "standard search: temporal path shares of as_netobject()", tolerance = 1e-12)
+  expect_reference(matrices(group[["contemporaneous"]], print = FALSE)[["weights"]], layers$contemporaneous,
+                   reference = "gimme", covers = "as_netobject.net_gimme()",
+                   quantity = "standard search: contemporaneous path shares of as_netobject()", tolerance = 1e-12)
+  unified <- matrix(0, 4L, 4L, dimnames = list(c(paste0(vars, "_lag"), vars), c(paste0(vars, "_lag"), vars)))
+  unified[paste0(vars, "_lag"), vars] <- layers$temporal
+  unified[vars, vars] <- layers$contemporaneous
+  expect_reference(matrices(as_netobject(ours, style = "unified"), print = FALSE)[["weights"]], unified,
+                   reference = "gimme", covers = "as_netobject.net_gimme()",
+                   quantity = "standard search: the unified network of lagged and current nodes", tolerance = 1e-12)
 })

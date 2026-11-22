@@ -45,6 +45,24 @@ test_that("one regression per supplied subgroup, with standard errors clustered 
                    reference = "independent: least squares with the CR1 cluster-robust sandwich",
                    covers = "fit_subgroups()", quantity = "the pooled model beside the subgroups", tolerance = 1e-10,
                    key = c("scope", "subgroup", "term"))
+  # The same estimates and standard errors by stats::lm() and sandwich::vcovCL(type = "HC0", cadjust = TRUE),
+  # which applies the factor G / (G - 1) alone, with lmtest::coeftest() on G - 1 degrees of freedom.
+  by_sandwich <- function(rows, scope, subgroup) {
+    rows <- rows[stats::complete.cases(rows[c("effort", predictors)]), ]
+    model <- stats::lm(effort ~ efficacy + planning, data = rows)
+    clusters <- length(unique(rows$name))
+    table <- lmtest::coeftest(model, vcov. = sandwich::vcovCL(model, cluster = rows$name, type = "HC0", cadjust = TRUE),
+                              df = clusters - 1L)
+    data.frame(scope = scope, subgroup = subgroup, term = rownames(table), estimate = table[, 1L],
+               std_error = table[, 2L], statistic = table[, 3L], p_value = table[, 4L], row.names = NULL)
+  }
+  expect_reference(subset(coefs(fit), scope %in% c("pooled", "subgroup")), rbind(by_sandwich(estimation, "pooled", ".all"),
+                                     do.call(rbind, lapply(c("early", "late"), \(cohort) {
+                                       by_sandwich(estimation[estimation$cohort == cohort, ], "subgroup", cohort)
+                                     }))),
+                   reference = "sandwich", covers = c("fit_subgroups()", "coefs.idiographic_fit()"),
+                   quantity = "pooled and cohort models, sandwich::vcovCL() and lmtest::coeftest()", tolerance = 1e-10,
+                   key = c("scope", "subgroup", "term"))
   membership <- unique(indexed[c("name", "cohort")])
   supplied <- data.frame(subject = membership$name, subgroup = membership$cohort)
   expect_reference(groups(fit), supplied, reference = "independent: the subgroup column of the data",

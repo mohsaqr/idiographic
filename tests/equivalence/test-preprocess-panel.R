@@ -44,3 +44,15 @@ test_that("a variable split into its person mean and the deviation from it", {
                    reference = "independent: person means and deviations from them", covers = "split_levels()",
                    quantity = "six learners, efficacy and effort, split_levels()", tolerance = 1e-10, key = c("name", "day"))
 })
+
+test_that("the split into between and within components equals datawizard::demean()", {
+  six <- subset(ordered, name %in% utils::head(unique(ordered$name), 6L), select = c(name, day, efficacy, effort))
+  theirs <- datawizard::demean(six, select = two_items, by = "name")
+  theirs <- theirs[c("name", "day", "efficacy_within", "effort_within", "efficacy_between", "effort_between")]
+  expect_reference(split_wb(six, id = "name", vars = two_items, time = "day"), theirs, reference = "datawizard",
+                   covers = "split_wb()", quantity = "six learners, efficacy and effort, datawizard::demean()",
+                   tolerance = 1e-10, key = c("name", "day"))
+  expect_reference(split_levels(six, id = "name", vars = two_items, time = "day"), theirs, reference = "datawizard",
+                   covers = "split_levels()", quantity = "six learners, split_levels(), datawizard::demean()",
+                   tolerance = 1e-10, key = c("name", "day"))
+})

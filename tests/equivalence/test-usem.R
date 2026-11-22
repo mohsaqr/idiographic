@@ -27,6 +27,51 @@ usem_definition <- function(series, contemporaneous, subject) {
   do.call(rbind, rows)
 }
 
+#' Each person's uSEM fitted by lavaan on a model written here (not the syntax fit_usem() builds)
+#'
+#' Each equation with its lagged and same-occasion predictors (B ~ A, C ~ B), the residuals of the three
+#' outcomes uncorrelated, maximum likelihood with the lagged variables fixed; the standardised (std.all)
+#' regression coefficients, as coefs() shapes them.
+usem_lavaan <- function(panel) {
+  syntax <- c("A ~ A_lag + B_lag + C_lag", "B ~ A + A_lag + B_lag + C_lag", "C ~ B + A_lag + B_lag + C_lag",
+              "A ~~ 0*B", "A ~~ 0*C", "B ~~ 0*C")
+  do.call(rbind, lapply(split(panel, panel$id), \(person) {
+    model <- lavaan::sem(paste(syntax, collapse = "\n"), data = ref_lagged(person[abc]), estimator = "ML",
+                         fixed.x = TRUE)
+    paths <- subset(lavaan::standardizedSolution(model, type = "std.all"), op == "~")
+    data.frame(subject = as.character(person$id[[1L]]),
+               network = ifelse(grepl("_lag$", paths$rhs), "temporal", "contemporaneous"),
+               from = sub("_lag$", "", paths$rhs), to = paths$lhs, weight = paths$est.std)
+  }))
+}
+
+#' The edges, node strengths and network summaries of the person-averaged temporal and contemporaneous layers
+#'
+#' Every person has every path of the model, so the averaged network is the mean over people. Both layers are
+#' directed (predictor to outcome).
+#' @param paths One row per person and path (`subject`, `network`, `from`, `to`, `weight`).
+averaged_layers <- function(paths) {
+  averaged <- stats::aggregate(weight ~ network + from + to, data = paths, FUN = mean)
+  weights <- lapply(c(temporal = "temporal", contemporaneous = "contemporaneous"), \(layer) {
+    cells <- matrix(0, 3L, 3L, dimnames = list(abc, abc))
+    part <- subset(averaged, network == layer)
+    cells[cbind(part$from, part$to)] <- part$weight
+    cells
+  })
+  strengths <- do.call(rbind, Map(\(cells, layer) {
+    off <- abs(cells)
+    diag(off) <- 0
+    data.frame(network = layer, node = abc, strength = rowSums(off) + colSums(off), out_strength = rowSums(off),
+               in_strength = colSums(off), self = diag(cells))
+  }, weights, names(weights)))
+  counts <- do.call(rbind, Map(\(cells, layer) {
+    w <- cells[row(cells) != col(cells) & cells != 0]
+    data.frame(network = layer, n_nodes = 3L, n_edges = length(w), density = length(w) / 6,
+               mean_abs_weight = mean(abs(w)), n_positive = sum(w > 0), n_negative = sum(w < 0))
+  }, weights, names(weights)))
+  list(edges = subset(averaged, weight != 0 & from != to), strengths = strengths, counts = counts)
+}
+
 test_that("standardised coefficients of each person equal the standardised least-squares coefficients", {
   panel <- ref_panel(n_id = 3L, days = 1L, beeps = 60L, vars = abc, seed = 101L)
   fit <- fit_usem(panel, vars = abc, id = "id", day = "day", beep = "beep", temporal = "all",
@@ -49,6 +94,24 @@ test_that("standardised coefficients of each person equal the standardised least
                    reference = "independent: standardised least squares of a recursive model (ML = OLS)",
                    covers = c("fit_usem()", "matrices.net_usem()"), quantity = "temporal network averaged over people",
                    tolerance = 1e-6, key = c("from", "to"))
+  by_lavaan <- usem_lavaan(panel)
+  # Two lavaan fits of the same likelihood, each to its optimiser's criterion: 1e-6, as above.
+  expect_reference(ours, by_lavaan, reference = "lavaan", covers = c("fit_usem()", "coefs.net_usem()"),
+                   quantity = "three people, lavaan on a model written here", tolerance = 1e-6,
+                   key = c("subject", "network", "from", "to"))
+  expect_reference(ref_directed(temporal),
+                   subset(stats::aggregate(weight ~ network + from + to, data = by_lavaan, FUN = mean),
+                          network == "temporal", select = -network),
+                   reference = "lavaan", covers = c("fit_usem()", "matrices.net_usem()"),
+                   quantity = "temporal network averaged over people, lavaan on a model written here",
+                   tolerance = 1e-6, key = c("from", "to"))
+  # as_netobject(): the averaged temporal layer as a network object, predictor rows.
+  lavaan_temporal <- matrix(0, 3L, 3L, dimnames = list(abc, abc))
+  averaged_lavaan <- subset(stats::aggregate(weight ~ network + from + to, data = by_lavaan, FUN = mean), network == "temporal")
+  lavaan_temporal[cbind(averaged_lavaan$from, averaged_lavaan$to)] <- averaged_lavaan$weight
+  expect_reference(matrices(as_netobject(fit)[["temporal"]], print = FALSE)[["weights"]], lavaan_temporal,
+                   reference = "lavaan", covers = c("as_netobject()", "as_netobject.net_usem()"),
+                   quantity = "temporal layer of as_netobject(), lavaan on a model written here", tolerance = 1e-6)
 })
 
 test_that("a standardised, robust model with residual covariances against lavaan (internal)", {
@@ -73,7 +136,8 @@ test_that("a standardised, robust model with residual covariances against lavaan
                weight = c(as.vector(beta[abc, lag_names]), as.vector(beta[abc, abc])))
   }))
   # The same lavaan model on both sides: 1e-10 as in the old test.
-  expect_reference(subset(coefs(fit), network != "residual_cov"), theirs, reference = "lavaan",
+  expect_reference(subset(coefs(fit), network != "residual_cov"), theirs,
+                   reference = "lavaan (called by the package)",
                    covers = "fit_usem()", quantity = "two people, standardised, MLR", tolerance = 1e-10,
                    key = c("subject", "network", "from", "to"),
                    note = "Internal: fit_usem() fits the same lavaan model. API gap: the model syntax is read from the result.")
@@ -83,45 +147,28 @@ test_that("edges, node strengths and network summaries of the averaged uSEM netw
   panel <- ref_panel(n_id = 3L, days = 1L, beeps = 60L, vars = abc, seed = 101L)
   fit <- fit_usem(panel, vars = abc, id = "id", day = "day", beep = "beep", temporal = "all",
                   contemporaneous = c("B ~ A", "C ~ B"), residual_cov = FALSE)
-  paths <- do.call(rbind, lapply(split(panel, panel$id), \(person) {
+  definition <- averaged_layers(do.call(rbind, lapply(split(panel, panel$id), \(person) {
     usem_definition(person, list(B = "A", C = "B"), as.character(person$id[[1L]]))
-  }))
-  # Every person has every path of the model, so the averaged network is the mean over people. Both networks
-  # are directed (from predictor to outcome); without residual covariances the third layer is empty.
-  averaged <- stats::aggregate(weight ~ network + from + to, data = paths, FUN = mean)
-  weights <- lapply(c(temporal = "temporal", contemporaneous = "contemporaneous"), \(layer) {
-    cells <- matrix(0, 3L, 3L, dimnames = list(abc, abc))
-    part <- subset(averaged, network == layer)
-    cells[cbind(part$from, part$to)] <- part$weight
-    cells
-  })
-  realised <- subset(averaged, weight != 0 & from != to)
+  })))
+  by_lavaan <- averaged_layers(usem_lavaan(panel))
   # Means of three least-squares coefficients, each within lavaan's 1e-6 of the optimum (above).
-  expect_reference(edges(fit), realised,
-                   reference = "independent: standardised least squares of a recursive model (ML = OLS)",
-                   covers = c("edges.net_usem()", "fit_usem()"), quantity = "averaged networks, edges",
-                   tolerance = 1e-6, key = c("network", "from", "to"))
-  expect_reference(as.data.frame(fit), realised,
-                   reference = "independent: standardised least squares of a recursive model (ML = OLS)",
-                   covers = "as.data.frame.net_usem()", quantity = "averaged networks, the data frame of the fit",
-                   tolerance = 1e-6, key = c("network", "from", "to"))
-  strengths <- do.call(rbind, Map(\(cells, layer) {
-    off <- abs(cells)
-    diag(off) <- 0
-    data.frame(network = layer, node = abc, strength = rowSums(off) + colSums(off), out_strength = rowSums(off),
-               in_strength = colSums(off), self = diag(cells))
-  }, weights, names(weights)))
-  expect_reference(subset(nodes(fit), network != "residual_cov"), strengths,
-                   reference = "independent: standardised least squares of a recursive model (ML = OLS)",
-                   covers = "nodes.net_usem()", quantity = "averaged networks, node strengths", tolerance = 1e-6,
-                   key = c("network", "node"))
-  counts <- do.call(rbind, Map(\(cells, layer) {
-    w <- cells[row(cells) != col(cells) & cells != 0]
-    data.frame(network = layer, n_nodes = 3L, n_edges = length(w), density = length(w) / 6,
-               mean_abs_weight = mean(abs(w)), n_positive = sum(w > 0), n_negative = sum(w < 0))
-  }, weights, names(weights)))
-  expect_reference(subset(summary(fit), network != "residual_cov"), counts,
-                   reference = "independent: standardised least squares of a recursive model (ML = OLS)",
-                   covers = "summary.net_usem()", quantity = "averaged networks, summary", tolerance = 1e-6,
-                   key = "network")
+  sides <- list(list(layers = definition,
+                     reference = "independent: standardised least squares of a recursive model (ML = OLS)",
+                     label = "least squares"),
+                list(layers = by_lavaan, reference = "lavaan", label = "lavaan on a model written here"))
+  invisible(lapply(sides, \(side) {
+    expect_reference(edges(fit), side$layers$edges, reference = side$reference,
+                     covers = c("edges.net_usem()", "fit_usem()"), quantity = sprintf("averaged networks, edges (%s)", side$label),
+                     tolerance = 1e-6, key = c("network", "from", "to"))
+    expect_reference(as.data.frame(fit), side$layers$edges, reference = side$reference,
+                     covers = "as.data.frame.net_usem()",
+                     quantity = sprintf("averaged networks, the data frame of the fit (%s)", side$label),
+                     tolerance = 1e-6, key = c("network", "from", "to"))
+    expect_reference(subset(nodes(fit), network != "residual_cov"), side$layers$strengths, reference = side$reference,
+                     covers = "nodes.net_usem()", quantity = sprintf("averaged networks, node strengths (%s)", side$label),
+                     tolerance = 1e-6, key = c("network", "node"))
+    expect_reference(subset(summary(fit), network != "residual_cov"), side$layers$counts, reference = side$reference,
+                     covers = "summary.net_usem()", quantity = sprintf("averaged networks, summary (%s)", side$label),
+                     tolerance = 1e-6, key = "network")
+  }))
 })

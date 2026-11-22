@@ -70,6 +70,16 @@ test_that("held-out predictions and their errors", {
                    reference = "independent: RMSE, MAE, mean error and 1 - SSE / SST",
                    covers = c("summary.idiographic_fit()", "summary.idiostats_fit()"),
                    quantity = "held-out prediction errors, the summary of the fit", tolerance = 1e-10, key = "subject")
+  by_forecast <- rbind(do.call(rbind, lapply(split(predicted, predicted$subject), \(part) {
+    cbind(subject = part$subject[[1L]], forecast_errors(part$observed, part$predicted))
+  })), cbind(subject = ".overall", forecast_errors(predicted$observed, predicted$predicted)))
+  expect_reference(metrics(fit), by_forecast, reference = "forecast",
+                   covers = c("metrics()", "metrics.idiographic_fit()", "metrics.idiostats_fit()"),
+                   quantity = "held-out ME, RMSE and MAE by forecast::accuracy()", tolerance = 1e-10, key = "subject")
+  expect_reference(summary(fit), by_forecast, reference = "forecast",
+                   covers = c("summary.idiographic_fit()", "summary.idiostats_fit()"),
+                   quantity = "held-out ME, RMSE and MAE by forecast::accuracy(), the summary of the fit",
+                   tolerance = 1e-10, key = "subject")
 })
 
 test_that("the pooled regression, with standard errors clustered on the person", {
@@ -93,6 +103,12 @@ test_that("the pooled regression, with standard errors clustered on the person",
                    reference = "independent: least squares with the CR1 cluster-robust sandwich",
                    covers = c("fit_lm()", "coefs.idiographic_fit()"), quantity = "pooled model, 36 learners",
                    tolerance = 1e-10, key = "term")
+  # sandwich::vcovCL() with type = "HC0" and cadjust = TRUE applies the factor G / (G - 1) alone.
+  by_sandwich <- sqrt(diag(sandwich::vcovCL(pooled, cluster = train$name, type = "HC0", cadjust = TRUE)))
+  expect_reference(coefs(fit), data.frame(term = names(by_sandwich), std_error = unname(by_sandwich)),
+                   reference = "sandwich", covers = c("fit_lm()", "coefs.idiographic_fit()"),
+                   quantity = "pooled model, clustered standard errors by sandwich::vcovCL()", tolerance = 1e-10,
+                   key = "term")
   # Stata's CR1, and sandwich::vcovCL(type = "HC1"), multiply also by (N - 1) / (N - K).
   observations <- nrow(X)
   stata <- transform(clustered, std_error = std_error * sqrt((observations - 1) / (observations - ncol(X))))

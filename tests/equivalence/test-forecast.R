@@ -48,4 +48,12 @@ test_that("one-step forecasts of one learner's diary from three origins", {
                    reference = "independent: RMSE, MAE and mean error of the stats::lm forecasts",
                    covers = c("validate_forecast()", "summary.forecast_result()"), quantity = "Tariq, forecast errors",
                    tolerance = 1e-10, key = "variable")
+  by_forecast <- rbind(do.call(rbind, lapply(items, \(v) {
+    part <- subset(expected, variable == v)
+    cbind(variable = v, forecast_errors(part$observed, part$predicted))
+  })), cbind(variable = ".overall", forecast_errors(expected$observed, expected$predicted)))
+  expect_reference(summary(forecast), by_forecast, reference = "forecast",
+                   covers = c("validate_forecast()", "summary.forecast_result()"),
+                   quantity = "Tariq, forecast ME, RMSE and MAE by forecast::accuracy()", tolerance = 1e-10,
+                   key = "variable")
 })

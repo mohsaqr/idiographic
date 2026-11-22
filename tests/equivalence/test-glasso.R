@@ -97,4 +97,11 @@ test_that("the optimality residual is the largest violation of the stationarity 
                    reference = "independent: graphical-lasso stationarity conditions (Friedman et al., 2008)",
                    covers = "glasso_kkt()", quantity = "residual of the rho = 0.1 solution in the rho = 0.25 problem",
                    tolerance = 1e-12)
+  # The invariant: at glasso's own solution of the rho = 0.25 problem the conditions hold, so the residual is
+  # zero up to the solver's convergence (thr = 1e-12 on the mean absolute change of the covariance).
+  optimum <- glasso::glasso(diary_correlations, rho = 0.25, penalize.diagonal = FALSE, thr = 1e-12, maxit = 1e4)$wi
+  expect_reference(glasso_kkt(optimum, S = diary_correlations, rho = 0.25), 0,
+                   reference = "independent: graphical-lasso stationarity conditions (Friedman et al., 2008)",
+                   covers = "glasso_kkt()", quantity = "residual of glasso's own rho = 0.25 solution (an optimum: zero)",
+                   tolerance = 1e-6)
 })

@@ -144,3 +144,69 @@ test_that("detrending by a linear fit and by differencing, then the diagnostics"
                    covers = c("preprocess()", "as.data.frame.preprocess_result()"),
                    quantity = "first differences", tolerance = 1e-10, key = c("subject", "variable"))
 })
+
+test_that("the unit-root screen by urca::ur.df(), and the flag counts that follow", {
+  panel <- preprocess_panel_data()
+  pp <- suppressMessages(preprocess(panel, vars = abc, id = "id", day = "day", beep = "beep"))
+  series <- prepared_series(panel, abc)
+  # The Dickey-Fuller regression with a drift and no augmentation lags, by urca (Pfaff, 2008): tau2 is the t of
+  # the lagged level.
+  dickey_fuller <- do.call(rbind, lapply(split(series, series$id), \(person) {
+    do.call(rbind, lapply(abc, \(v) {
+      observed <- person[[v]][!is.na(person[[v]])]
+      test <- urca::ur.df(observed, type = "drift", lags = 0L)
+      data.frame(subject = as.character(person$id[[1L]]), variable = v,
+                 unit_root_coef = unname(test@testreg$coefficients["z.lag.1", "Estimate"]),
+                 unit_root_t = unname(test@teststat[1L, "tau2"]))
+    }))
+  }))
+  expect_reference(as.data.frame(pp), dickey_fuller, reference = "urca",
+                   covers = c("preprocess()", "as.data.frame.preprocess_result()"),
+                   quantity = "three people, Dickey-Fuller coefficient and t by urca::ur.df()", tolerance = 1e-10,
+                   key = c("subject", "variable"))
+  # The flags from stats::lm() and stats::t.test() (all_diagnostics()) with the unit-root t of urca, counted.
+  flags <- merge(subset(all_diagnostics(series, abc), select = -unit_root_t), dickey_fuller[c("subject", "variable", "unit_root_t")],
+                 by = c("subject", "variable"))
+  flags$flag_unit_root <- flags$unit_root_t > -2.86
+  flags$flag_stationarity_risk <- flags$flag_trend | flags$flag_high_ar | flags$flag_mean_shift | flags$flag_sd_shift |
+    flags$flag_unit_root
+  counted <- do.call(rbind, lapply(abc, \(v) {
+    rows <- subset(flags, variable == v)
+    data.frame(variable = v, n_series = nrow(rows), mean_sd = round(mean(rows$sd), 3), n_trend = sum(rows$flag_trend),
+               n_high_ar = sum(rows$flag_high_ar), n_unit_root = sum(rows$flag_unit_root),
+               n_flagged = sum(rows$flag_stationarity_risk))
+  }))
+  expect_reference(summary(pp), counted, reference = "urca", covers = "summary.preprocess_result()",
+                   quantity = "flags per variable, the unit-root t by urca::ur.df() and the rest by stats",
+                   tolerance = 1e-10, key = "variable")
+})
+
+test_that("the lag-1 design by datawizard::demean() and dplyr::lag()", {
+  panel <- preprocess_panel_data()
+  pp <- suppressMessages(preprocess(panel, vars = abc, id = "id", day = "day", beep = "beep"))
+  standardised <- data.frame(panel[c("id", "day", "beep")], scale(panel[abc]))
+  # Centred within person by datawizard; each value's lag is the previous occasion of the same person and day.
+  centred <- datawizard::demean(standardised, select = abc, by = "id")
+  frame <- data.frame(standardised[c("id", "day", "beep")], centred[paste0(abc, "_within")])
+  names(frame) <- c("id", "day", "beep", abc)
+  lagged <- frame |>
+    dplyr::arrange(id, day, beep) |>
+    dplyr::group_by(id, day) |>
+    dplyr::mutate(dplyr::across(dplyr::all_of(abc), dplyr::lag, .names = "L1_{.col}")) |>
+    dplyr::ungroup() |>
+    as.data.frame()
+  complete <- lagged[stats::complete.cases(lagged[c(abc, paste0("L1_", abc))]), ]
+  current <- as.matrix(complete[abc])
+  previous <- cbind("(Intercept)" = 1, as.matrix(complete[paste0("L1_", abc)]))
+  colnames(previous) <- c("(Intercept)", abc)
+  rownames(current) <- rownames(previous) <- NULL
+  # API gap: matrices() returns a list of matrices, so each design matrix is reached by name.
+  expect_reference(matrices(pp, print = FALSE)[["data_c"]], current, reference = "dplyr",
+                   covers = c("preprocess()", "matrices.preprocess_result()"),
+                   quantity = "current values of the complete pairs (datawizard::demean(), dplyr::lag())",
+                   tolerance = 1e-12)
+  expect_reference(matrices(pp, print = FALSE)[["data_l"]], previous, reference = "dplyr",
+                   covers = c("preprocess()", "matrices.preprocess_result()"),
+                   quantity = "lagged values of the complete pairs (datawizard::demean(), dplyr::lag())",
+                   tolerance = 1e-12)
+})

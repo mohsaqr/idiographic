@@ -46,6 +46,12 @@ test_that("41 learners' diaries, fixed temporal and contemporaneous effects", {
   expect_reference(as.data.frame(fit), subset(mlvar_networks(reference), !(network == "temporal" & from == to)),
                    reference = "mlVAR", covers = c("fit_mlvar()", "as.data.frame.net_mlvar()"),
                    quantity = "esm_srl, the data frame of the fit", tolerance = 1e-8, key = c("network", "from", "to"))
+  # as_netobject(): mlVAR's temporal fixed effects (outcome rows) as a network read from predictor rows.
+  beta <- reference$results$Beta$mean[, , 1L]
+  dimnames(beta) <- list(items, items)
+  expect_reference(matrices(as_netobject(fit)[["temporal"]], print = FALSE)[["weights"]], t(beta),
+                   reference = "mlVAR", covers = c("as_netobject()", "as_netobject.net_mlvar()"),
+                   quantity = "esm_srl, temporal layer of as_netobject() (predictor rows)", tolerance = 1e-8)
 })
 
 test_that("node strengths and network summaries follow from mlVAR's networks", {
@@ -160,4 +166,27 @@ test_that("Nestimate::build_mlvar() calls fit_mlvar() and reads the temporal mat
                    covers = c("fit_mlvar()", "matrices.net_mlvar()"), quantity = "contemporaneous matrix", tolerance = 0)
   expect_reference(layers[["between"]], theirs$between$weights, reference = "Nestimate",
                    covers = c("fit_mlvar()", "matrices.net_mlvar()"), quantity = "between matrix", tolerance = 0)
+})
+
+test_that("parameter recovery: a simulab multilevel VAR(1) panel", {
+  truth <- matrix(c(0.4, 0.15, 0, 0.3), 2L, 2L, byrow = TRUE, dimnames = list(c("A", "B"), c("A", "B")))
+  invisible(lapply(1:3, \(seed) {
+    panel <- as.data.frame(simulab::simulate_longitudinal(n = 40, occasions = 80, transition = truth,
+                                                          between_covariance = diag(0.5, 2L), seed = seed))
+    # The sampling error: pooled least squares of the person-centred series on their lags (every person has the
+    # same transition matrix); the recovery tolerance is 4 of its standard errors.
+    centred <- do.call(rbind, lapply(split(panel, panel$id), \(person) {
+      ref_lagged(as.data.frame(scale(person[c("A", "B")], scale = FALSE)))
+    }))
+    se <- max(sqrt(diag(stats::vcov(stats::lm(cbind(A, B) ~ A_lag + B_lag, data = centred)))))
+    fit <- fit_mlvar(panel, vars = c("A", "B"), id = "id", beep = "occasion")
+    expect_reference(coefs(fit),
+                     data.frame(outcome = rep(c("A", "B"), 2L), predictor = rep(c("A", "B"), each = 2L),
+                                beta = as.vector(truth)),
+                     reference = "independent: recovery of the parameters of simulab simulate_longitudinal()",
+                     covers = c("fit_mlvar()", "coefs.net_mlvar()"),
+                     quantity = sprintf("40 people x 80 occasions, fixed temporal effects, seed %d", seed),
+                     tolerance = 4 * se, key = c("outcome", "predictor"),
+                     note = "Recovery: the generator's transition matrix; tolerance 4 standard errors of the pooled within-person estimate.")
+  }))
 })

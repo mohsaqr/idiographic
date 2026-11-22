@@ -60,3 +60,44 @@ test_that("permutation importance agrees with an independent run of the procedur
                      note = "Statistical evidence: tolerance 4 Monte Carlo standard errors of one learner's mean, so conservative for the mean of three.")
   }))
 })
+
+test_that("permutation importance agrees with DALEX::model_parts() on each learner's model (Monte Carlo summary)", {
+  three <- subset(srl, name %in% c("Aisha", "Alice", "Anika"))
+  fit <- fit_ml_panel(three, "effort", predictors, "name", time = "day", scope = "individual", model = "linear")
+  by_person <- split(three[order(three$name, three$day), ], three$name[order(three$name, three$day)])
+  # DALEX's feature importance (Biecek, 2018) of one learner's least-squares model on the held-out rows: the mean
+  # over `repeats` permutations of the RMSE with one predictor shuffled, minus the RMSE (type "difference")
+  dalex_reference <- function(seed) {
+    set.seed(seed)
+    do.call(rbind, lapply(by_person, \(person) {
+      estimation <- utils::head(person, nrow(person) - ceiling(0.2 * nrow(person)))
+      held_out <- utils::tail(person, ceiling(0.2 * nrow(person)))
+      model <- stats::lm(effort ~ efficacy + planning, data = estimation)
+      explainer <- DALEX::explain(model, data = held_out[predictors], y = held_out$effort, verbose = FALSE)
+      parts <- as.data.frame(DALEX::model_parts(explainer, B = repeats, N = NULL, type = "difference",
+                                                loss_function = DALEX::loss_root_mean_square))
+      mean_rows <- parts[parts$permutation == 0 & parts$variable %in% predictors, ]
+      draws <- parts[parts$permutation > 0 & parts$variable %in% predictors, ]
+      data.frame(subject = person$name[[1L]], variable = mean_rows$variable, importance = mean_rows$dropout_loss,
+                 sd = vapply(mean_rows$variable, \(v) stats::sd(draws$dropout_loss[draws$variable == v]), numeric(1)))
+    }))
+  }
+  invisible(lapply(1:3, \(seed) {
+    reference <- dalex_reference(3000L + seed)
+    # Fixed as in the test above: 4 Monte Carlo standard errors of the difference of two means of R shuffles.
+    tolerance <- 4 * max(reference$sd) * sqrt(2 / repeats)
+    set.seed(seed)
+    expect_reference(importance(fit, method = "permutation", repeats = repeats), subset(reference, select = -sd),
+                     reference = "DALEX", covers = c('importance(method = "permutation")', "importance.idiographic_fit()"),
+                     quantity = sprintf("Monte Carlo summary: RMSE increase per learner and predictor against DALEX, seed %d", seed),
+                     tolerance = tolerance, key = c("subject", "variable"),
+                     note = "Statistical evidence: 500 shuffles on each side; tolerance 4 Monte Carlo standard errors.")
+    averaged <- stats::aggregate(importance ~ variable, data = reference, FUN = mean)
+    set.seed(seed)
+    expect_reference(summarize_importance(fit, method = "permutation", repeats = repeats), averaged,
+                     reference = "DALEX", covers = 'summarize_importance(method = "permutation")',
+                     quantity = sprintf("Monte Carlo summary: mean RMSE increase over three learners against DALEX, seed %d", seed),
+                     tolerance = tolerance, key = "variable",
+                     note = "Statistical evidence: tolerance 4 Monte Carlo standard errors of one learner's mean, so conservative for the mean of three.")
+  }))
+})

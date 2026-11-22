@@ -58,6 +58,11 @@ test_that("the pooled linear learner is least squares on the estimation rows", {
                    reference = "independent: RMSE, MAE, mean error and 1 - SSE / SST",
                    covers = "summary.idioml_result()", quantity = "held-out prediction errors", tolerance = 1e-10,
                    key = "subject")
+  by_forecast <- rbind(do.call(rbind, lapply(split(predicted, predicted$subject), \(part) {
+    cbind(subject = part$subject[[1L]], forecast_errors(part$observed, part$predicted))
+  })), cbind(subject = ".overall", forecast_errors(predicted$observed, predicted$predicted)))
+  expect_reference(summary(fit), by_forecast, reference = "forecast", covers = "summary.idioml_result()",
+                   quantity = "held-out ME, RMSE and MAE by forecast::accuracy()", tolerance = 1e-10, key = "subject")
 })
 
 test_that("the pooled logistic learner is the maximum-likelihood logistic regression", {

@@ -24,7 +24,7 @@
       "authority": "open-source"
     },
     "lavaan": {
-      "authority": "internal"
+      "authority": "open-source"
     },
     "lme4": {
       "authority": "internal"
@@ -36,6 +36,53 @@
       "authority": "open-source"
     },
     "mclust": {
+      "authority": "open-source"
+    },
+    "lavaan (called by the package)": {
+      "authority": "internal",
+      "package": "lavaan",
+      "family": "lavaan"
+    },
+    "igraph": {
+      "authority": "open-source"
+    },
+    "forecast": {
+      "authority": "open-source"
+    },
+    "MASS": {
+      "authority": "open-source"
+    },
+    "sandwich": {
+      "authority": "open-source"
+    },
+    "psych": {
+      "authority": "open-source"
+    },
+    "e1071": {
+      "authority": "open-source"
+    },
+    "datawizard": {
+      "authority": "open-source"
+    },
+    "metafor": {
+      "authority": "open-source"
+    },
+    "flexmix": {
+      "authority": "open-source"
+    },
+    "boot": {
+      "authority": "open-source"
+    },
+    "urca": {
+      "authority": "open-source"
+    },
+    "dplyr": {
+      "authority": "open-source"
+    },
+    "tna": {
+      "authority": "open-source"
+    },
+    "DALEX": {
       "authority": "open-source"
     }
   },
@@ -213,7 +260,21 @@
       "as.data.frame.idiographic_groups()",
       "as.data.frame.idiostats_groups()",
       "importance(method = \"permutation\")",
-      "summarize_importance(method = \"permutation\")"
+      "summarize_importance(method = \"permutation\")",
+      "fit_mlvar_bayes()",
+      "fit_var_bayes()",
+      "coefs.net_mlvar_bayes()",
+      "coefs.var_bayes_result()",
+      "summary.var_bayes_result()",
+      "as_netobject()",
+      "as_netobject.cograph_network()",
+      "as_netobject.gvar_result()",
+      "as_netobject.net_gimme()",
+      "as_netobject.net_mlvar()",
+      "as_netobject.net_usem()",
+      "as_netobject.netobject()",
+      "as_netobject.var_bayes_result()",
+      "as_netobject.var_result()"
     ],
     "not_numeric": {
       "plot_coefs()": "draws a plot",
@@ -255,27 +316,13 @@
       "$.net_usem()": "reads a stored component by name; the numbers are compared through coefs()",
       "$.var_bayes_result()": "reads a stored component by name",
       "$.var_result()": "reads a stored component by name; the numbers are compared through coefs() and matrices()",
-      "as_netobject()": "wraps a result's weight matrices as a network object for plotting; the weights themselves are compared through coefs()",
-      "as_netobject.cograph_network()": "as as_netobject()",
-      "as_netobject.default()": "as as_netobject()",
-      "as_netobject.gvar_result()": "as as_netobject()",
-      "as_netobject.net_gimme()": "as as_netobject()",
-      "as_netobject.net_mlvar()": "as as_netobject()",
-      "as_netobject.net_usem()": "as as_netobject()",
-      "as_netobject.netobject()": "as as_netobject()",
-      "as_netobject.var_bayes_result()": "as as_netobject()",
-      "as_netobject.var_result()": "as as_netobject()",
+      "as_netobject.default()": "the fallback that refuses an unsupported object with an error; returns no network",
       "coefs.default()": "the fallback that refuses an unsupported object with an error; returns no estimate",
       "matrices.default()": "the fallback that refuses an unsupported object with an error; returns no estimate"
     },
     "not_yet": {
-      "fit_mlvar_bayes()": "the reference is Mplus (Bayesian mlVAR); the retained Mplus fixtures (tests/testthat/fixtures/mplus/mlvar_*.rds, randomar.rds) carry no generator-written provenance and Mplus is not installed here to regenerate them; a run of generate-mplus-mlvar.R on a machine with Mplus, writing the provenance header, would make them usable",
       "fit_mlvar_mplus()": "runs Mplus through mlVAR::mlVAR(estimator = 'Mplus'); Mplus is not installed on the ci machine",
-      "fit_var_bayes()": "the reference is Mplus (Bayesian VAR); the retained Mplus fixtures (tests/testthat/fixtures/mplus/var_*.rds) carry no generator-written provenance and Mplus is not installed here; the posterior is also a Monte Carlo estimate whose draws cannot be supplied",
-      "coefs.net_mlvar_bayes()": "as fit_mlvar_bayes()",
-      "coefs.net_mplus()": "as fit_mlvar_mplus()",
-      "coefs.var_bayes_result()": "as fit_var_bayes()",
-      "summary.var_bayes_result()": "as fit_var_bayes()"
+      "coefs.net_mplus()": "as fit_mlvar_mplus()"
     }
   }
 }

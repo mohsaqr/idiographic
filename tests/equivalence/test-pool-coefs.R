@@ -67,3 +67,27 @@ test_that("empirical-Bayes shrinkage of the person coefficients towards the pool
                    covers = "shrink_coefs()", quantity = "three terms over 36 learners", tolerance = 1e-8,
                    key = c("subject", "term"))
 })
+
+test_that("pooling and shrinkage equal metafor's DerSimonian-Laird model and its BLUPs", {
+  fit <- fit_lm(srl, y = "effort", x = predictors, id = "name", time = "day", scope = "individual",
+                test_prop = held_out)
+  by_term <- split(person_coefficients, person_coefficients$term)
+  # metafor::rma(method = "DL", test = "adhoc"): the Knapp-Hartung standard error with its multiplier floored at
+  # one (Viechtbauer, 2010; Knapp & Hartung, 2003), t on k - 1 degrees of freedom.
+  models <- lapply(by_term, \(part) metafor::rma(yi = part$estimate, sei = part$std_error, method = "DL", test = "adhoc"))
+  pooled <- do.call(rbind, Map(\(model, term) {
+    data.frame(term = term, k = model$k, estimate = as.numeric(model$b), std_error = model$se, conf_low = model$ci.lb,
+               conf_high = model$ci.ub, p_value = model$pval, tau = sqrt(model$tau2), i2 = model$I2 / 100,
+               q = model$QE, q_p = model$QEp)
+  }, models, names(models)))
+  # Closed-form weighted sums on both sides; Q reaches 1,000 (rounding of the order of 1e-12), as above: 1e-8.
+  expect_reference(pool_coefs(fit), pooled, reference = "metafor", covers = "pool_coefs()",
+                   quantity = "three terms over 36 learners, metafor::rma(method = 'DL', test = 'adhoc')",
+                   tolerance = 1e-8, key = "term")
+  shrunken <- do.call(rbind, Map(\(model, part) {
+    data.frame(subject = part$subject, term = part$term, shrunken = metafor::blup(model)$pred)
+  }, models, by_term))
+  expect_reference(shrink_coefs(fit), shrunken, reference = "metafor", covers = "shrink_coefs()",
+                   quantity = "three terms over 36 learners, metafor::blup()", tolerance = 1e-8,
+                   key = c("subject", "term"))
+})

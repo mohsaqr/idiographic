@@ -95,6 +95,13 @@ test_that("node strengths, network summaries, edges and residual covariance foll
   expect_reference(summary(fit), ref_network_summary(theirs, items),
                    reference = "independent: edge counts and mean weights of the stats::lm networks",
                    covers = "summary.var_result()", quantity = "Tariq, network summary", tolerance = 1e-10, key = "network")
+  # The same strengths and counts computed by igraph on the stats::lm networks.
+  expect_reference(nodes(fit), igraph_nodes(theirs, items), reference = "igraph",
+                   covers = c("nodes()", "nodes.var_result()"), quantity = "Tariq, node strengths by igraph::strength()",
+                   tolerance = 1e-10, key = c("network", "node"))
+  expect_reference(summary(fit), igraph_summary(theirs, items), reference = "igraph",
+                   covers = "summary.var_result()", quantity = "Tariq, network summary by igraph",
+                   tolerance = 1e-10, key = "network")
   values <- as.data.frame(scale(learner[items]))
   lagged <- ref_lagged(values)
   model <- stats::lm(stats::as.formula(sprintf("cbind(%s) ~ %s", toString(items), paste0(items, "_lag", collapse = " + "))),
@@ -119,6 +126,14 @@ test_that("node strengths, network summaries, edges and residual covariance foll
                    do.call(rbind, Map(\(table, subject) cbind(subject = subject, ref_network_summary(table, items)), per_person, names(per_person))),
                    reference = "independent: edge counts and mean weights of the stats::lm networks",
                    covers = "summary.var_list()", quantity = "three learners, network summaries", tolerance = 1e-10,
+                   key = c("subject", "network"))
+  by_igraph <- \(fun) do.call(rbind, Map(\(table, subject) cbind(subject = subject, fun(table, items)), per_person,
+                                         names(per_person)))
+  expect_reference(nodes(each), by_igraph(igraph_nodes), reference = "igraph", covers = "nodes.var_list()",
+                   quantity = "three learners, node strengths by igraph::strength()", tolerance = 1e-10,
+                   key = c("subject", "network", "node"))
+  expect_reference(summary(each), by_igraph(igraph_summary), reference = "igraph", covers = "summary.var_list()",
+                   quantity = "three learners, network summaries by igraph", tolerance = 1e-10,
                    key = c("subject", "network"))
 })
 

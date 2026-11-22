@@ -112,3 +112,68 @@ test_that("the summary across people", {
                    quantity = "srl, six learners, summary per variable", tolerance = 1e-10, key = "variable",
                    note = "summary.idiostats_descriptives() is the same function object as summary.idiographic_descriptives().")
 })
+
+test_that("level, spread, shape, successive differences and trend by psych, e1071 and stats", {
+  ours <- describe_persons(six_learners, id = "name", vars = two_items, time = "day", detail = "full")
+  people <- split(six_learners, six_learners$name)
+  by_packages <- do.call(rbind, lapply(two_items, \(variable) {
+    do.call(rbind, lapply(people, \(person) {
+      v <- person[[variable]]
+      trend <- stats::coef(summary(stats::lm(v ~ person$day)))
+      data.frame(subject = person$name[[1L]], variable = variable, n = sum(!is.na(v)),
+                 mean = mean(v, na.rm = TRUE), median = stats::median(v, na.rm = TRUE), sd = stats::sd(v, na.rm = TRUE),
+                 min = min(v, na.rm = TRUE), max = max(v, na.rm = TRUE),
+                 skew = e1071::skewness(v, na.rm = TRUE, type = 1), kurtosis = e1071::kurtosis(v, na.rm = TRUE, type = 1),
+                 trend = trend[2L, "Estimate"], trend_p = trend[2L, "Pr(>|t|)"])
+    }))
+  }))
+  expect_reference(as.data.frame(ours), by_packages, reference = "e1071", covers = "describe_persons()",
+                   quantity = "srl, six learners: level, spread, e1071 moment skewness and kurtosis (type 1), stats::lm trend",
+                   tolerance = 1e-10, key = c("subject", "variable"),
+                   note = "Means, quantiles, SDs and the trend by base R and stats::lm(); skewness and kurtosis by e1071 type 1 (g1, g2).")
+  shape <- do.call(rbind, lapply(two_items, \(variable) {
+    do.call(rbind, lapply(people, \(person) {
+      v <- person[[variable]]
+      data.frame(subject = person$name[[1L]], variable = variable, skew = psych::skew(v, type = 1),
+                 kurtosis = psych::kurtosi(v, type = 1))
+    }))
+  }))
+  expect_reference(as.data.frame(ours), shape, reference = "psych", covers = "describe_persons()",
+                   quantity = "srl, six learners: psych::skew() and psych::kurtosi(), type 1", tolerance = 1e-10,
+                   key = c("subject", "variable"))
+  # psych::rmssd() divides the sum of squared successive differences by the number of observed values minus one;
+  # describe_persons() by the number of observed differences. They agree on a series with no missing value.
+  complete_people <- Filter(\(person) !anyNA(person[two_items]), people)
+  successive <- \(group) do.call(rbind, lapply(two_items, \(variable) {
+    do.call(rbind, lapply(group, \(person) {
+      data.frame(subject = person$name[[1L]], variable = variable, rmssd = psych::rmssd(person[[variable]]))
+    }))
+  }))
+  expect_reference(subset(as.data.frame(ours), subject %in% names(complete_people)), successive(complete_people),
+                   reference = "psych", covers = "describe_persons()",
+                   quantity = "RMSSD by psych::rmssd(), the five learners with complete series", tolerance = 1e-10,
+                   key = c("subject", "variable"))
+  incomplete <- Filter(\(person) anyNA(person[two_items]), people)
+  expect_known_difference(subset(as.data.frame(ours), subject %in% names(incomplete) & variable == "efficacy",
+                                 select = c(subject, variable, rmssd)),
+                          subset(successive(incomplete), variable == "efficacy"), reference = "psych",
+                          covers = "describe_persons()", quantity = "RMSSD by psych::rmssd(), a series with missing values",
+                          tolerance = 1e-10, key = c("subject", "variable"),
+                          reason = "psych::rmssd() divides the sum of the squared successive differences by the number of observed values minus one; describe_persons() averages the squared differences that exist (both neighbours observed), the form of Jahng, Wood & Trull (2008).",
+                          agrees_with = "the mean of the observed squared successive differences (the first comparison of this file)")
+})
+
+test_that("the summary across people by psych::describe() of the person descriptives", {
+  ours <- describe_persons(six_learners, id = "name", vars = two_items, time = "day", detail = "full")
+  by_person <- psych::statsBy(six_learners[c("name", two_items)], group = "name")
+  by_psych <- do.call(rbind, lapply(two_items, \(variable) {
+    means <- psych::describe(by_person$mean[, variable])
+    spreads <- psych::describe(by_person$sd[, variable])
+    data.frame(variable = variable, persons = means$n, mean_of_means = means$mean, sd_of_means = means$sd,
+               mean_sd_within = spreads$mean)
+  }))
+  expect_reference(summary(ours), by_psych, reference = "psych",
+                   covers = c("summary.idiographic_descriptives()", "summary.idiostats_descriptives()"),
+                   quantity = "srl, six learners, the person means and SDs of psych::statsBy() described by psych::describe()",
+                   tolerance = 1e-10, key = "variable")
+})
