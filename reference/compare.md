@@ -25,7 +25,10 @@ compare(...)
 A `data.frame` with one row per fit, scope and model: `fit` (the
 position of the fit in `...`), `method`, and the `.overall` columns of
 [`metrics()`](https://pak.dynasite.org/idiographic/reference/metrics.md).
-An empty `data.frame` when no fit is supplied.
+Fits of different tasks can be compared: the table has the union of
+their metric columns, `NA` where a fit does not report that metric (a
+regression fit has no `accuracy`, a classification fit no `rmse`). An
+empty `data.frame` when no fit is supplied.
 
 ## Examples
 

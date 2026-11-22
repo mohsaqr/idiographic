@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,15 @@
       <small>Source: <a href="https://github.com/mohsaqr/idiographic/blob/merged/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0.9008" id="idiographic-0409008">idiographic 0.4.0.9008<a class="anchor" aria-label="anchor" href="#idiographic-0409008"></a></h2>
+<ul><li>
+<code><a href="../reference/compare.html">compare()</a></code> of a regression and a classification fit (e.g. <code><a href="../reference/fit_lm.html">fit_lm()</a></code> and a logistic <code><a href="../reference/fit_glm.html">fit_glm()</a></code>) now returns one row per fit with the union of the metric columns, <code>NA</code> where a fit has no such metric. It stopped with “numbers of columns of arguments do not match”.</li>
+<li>
+<code><a href="../reference/edges.html">edges()</a></code> of a <code><a href="../reference/fit_graphical_var_each.html">fit_graphical_var_each()</a></code> result no longer stops (“differing number of rows: 1, 0”) when a person’s network has no edge besides its self-loops; that person contributes no rows.</li>
+<li>
+<code>importance(method = "permutation")</code> now works on <code><a href="../reference/fit_lm.html">fit_lm()</a></code> and <code><a href="../reference/fit_glm.html">fit_glm()</a></code> fits (its own documented use); it stopped with “argument is of length zero” because the stored <code>lm</code>/<code>glm</code> models were passed to the machine-learning predictor. A stored model it cannot predict raises <code>idiographic_unsupported_model</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0.9006" id="idiographic-0409006">idiographic 0.4.0.9006<a class="anchor" aria-label="anchor" href="#idiographic-0409006"></a></h2>
 <div class="section level3">

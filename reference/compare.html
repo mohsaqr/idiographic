@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,10 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>data.frame</code> with one row per fit, scope and model: <code>fit</code> (the
 position of the fit in <code>...</code>), <code>method</code>, and the <code>.overall</code> columns of
-<code><a href="metrics.html">metrics()</a></code>. An empty <code>data.frame</code> when no fit is supplied.</p>
+<code><a href="metrics.html">metrics()</a></code>. Fits of different tasks can be compared: the table has the
+union of their metric columns, <code>NA</code> where a fit does not report that
+metric (a regression fit has no <code>accuracy</code>, a classification fit no
+<code>rmse</code>). An empty <code>data.frame</code> when no fit is supplied.</p>
     </div>
 
     <div class="section level2">

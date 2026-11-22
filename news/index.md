@@ -1,5 +1,30 @@
 # Changelog
 
+## idiographic 0.4.0.9008
+
+- [`compare()`](https://pak.dynasite.org/idiographic/reference/compare.md)
+  of a regression and a classification fit
+  (e.g. [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
+  and a logistic
+  [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md))
+  now returns one row per fit with the union of the metric columns, `NA`
+  where a fit has no such metric. It stopped with “numbers of columns of
+  arguments do not match”.
+- [`edges()`](https://pak.dynasite.org/idiographic/reference/edges.md)
+  of a
+  [`fit_graphical_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var_each.md)
+  result no longer stops (“differing number of rows: 1, 0”) when a
+  person’s network has no edge besides its self-loops; that person
+  contributes no rows.
+- `importance(method = "permutation")` now works on
+  [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
+  and
+  [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
+  fits (its own documented use); it stopped with “argument is of length
+  zero” because the stored `lm`/`glm` models were passed to the
+  machine-learning predictor. A stored model it cannot predict raises
+  `idiographic_unsupported_model`.
+
 ## idiographic 0.4.0.9006
 
 ### Unified idiographic statistics

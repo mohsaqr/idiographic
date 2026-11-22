@@ -42,7 +42,13 @@ importance(
   held-out rows and reports how much worse the model gets –
   model-agnostic, so it also explains `knn`, forests, kernel machines
   and boosted ensembles, which otherwise return nothing at all;
-  `repeats` is the number of shuffles.
+  `repeats` is the number of shuffles. It works on fits of
+  [`fit_lm()`](https://pak.dynasite.org/idiographic/reference/fit_lm.md)
+  and
+  [`fit_glm()`](https://pak.dynasite.org/idiographic/reference/fit_glm.md)
+  (whose stored `lm` / `glm` models are predicted on the response scale)
+  as well as
+  [`fit_ml()`](https://pak.dynasite.org/idiographic/reference/fit_ml.md).
 
 - ...:
 
