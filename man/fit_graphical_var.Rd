@@ -149,9 +149,11 @@ estimator that is \strong{numerically equivalent to}
 lag-1 construction within id/day blocks), identical lambda grids
 (\code{generate_lambdas}), the coupled MRCE beta-update / glasso kappa-update
 loop, the unpenalized-likelihood EBIC, and the same tie-broken model
-selection. The committed end-to-end regression tests use tolerance \code{1e-6}, covering
-both well-conditioned and numerically difficult fits. That equivalence claim
-is limited to
+selection. On simulated series the equivalence tests agree with graphicalVAR
+to \code{1e-6}; on real diaries graphicalVAR stops its graphical lasso at
+\code{glasso::glasso()}'s default \code{thr = 1e-4}, and the two agree to
+\code{1e-4} (largest difference seen 2.1e-5; about 1e-10 when graphicalVAR's glasso
+is run to convergence). That equivalence claim is limited to
 \code{mimic = "current"} and \code{lags = 1}; multiple lags are an idiographic
 extension and are labelled as such in the returned equivalence metadata.
 }

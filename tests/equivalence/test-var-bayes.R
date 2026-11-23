@@ -12,6 +12,9 @@
 # over the coefficients): a median, 1.2533 sd / sqrt(ESS); an SD, sd sqrt((kappa - 1) / (4 ESS)) with the
 # t kurtosis kappa = 3 + 6 / (nu - 4); a 2.5% or 97.5% quantile, sqrt(0.025 0.975 / ESS) / f(q) with f the
 # posterior density at the quantile; a tail probability, sqrt(P (1 - P) / ESS) at its largest, 0.5 / sqrt(ESS).
+#
+# The reference is the closed form (an independent computation): stats::lm() supplies the least-squares centre,
+# but no other software computes this posterior, so no row is labelled as stats' number.
 
 items <- c("efficacy", "planning", "effort")
 draws_per_chain <- 10000L
@@ -57,7 +60,8 @@ test_that("the posterior of one learner's VAR(1) is the closed-form matrix-t pos
     fit <- fit_var_bayes(learner, vars = items, beep = "occasion", n_iter = 2L * draws_per_chain, seed = seed)
     ess <- smallest_ess(fit, chains = 2L)
     sd_max <- max(exact$posterior_sd)
-    expect_reference(coefs(fit), exact[c("outcome", "predictor", "estimate")], reference = "stats",
+    expect_reference(coefs(fit), exact[c("outcome", "predictor", "estimate")],
+                     reference = "independent: the closed-form matrix-t posterior of the flat-prior VAR (Zellner, 1971)",
                      covers = c("fit_var_bayes()", "coefs.var_bayes_result()"),
                      quantity = sprintf("Monte Carlo summary: posterior medians against the stats::lm() coefficients, seed %d", seed),
                      tolerance = 4 * 1.2533 * sd_max / sqrt(ess), key = c("outcome", "predictor"),
@@ -84,13 +88,15 @@ test_that("the posterior of one learner's VAR(1) is the closed-form matrix-t pos
                            density = sum(off$estimate != 0) / 6, mean_abs_weight = mean(abs(off$estimate)),
                            n_positive = sum(off$estimate > 0), n_negative = sum(off$estimate < 0))
     # |a| - |b| <= |a - b|, so a mean of absolute medians is within the medians' tolerance.
-    expect_reference(subset(summary(fit), network == "temporal"), temporal, reference = "stats",
+    expect_reference(subset(summary(fit), network == "temporal"), temporal,
+                     reference = "independent: the closed-form matrix-t posterior of the flat-prior VAR (Zellner, 1971)",
                      covers = c("summary.var_bayes_result()", "fit_var_bayes()"),
                      quantity = sprintf("Monte Carlo summary: temporal layer against the stats::lm() coefficients, seed %d", seed),
                      tolerance = 4 * 1.2533 * sd_max / sqrt(ess), key = "network")
     ols <- matrix(0, 3L, 3L, dimnames = list(items, items))
     ols[cbind(exact$predictor, exact$outcome)] <- exact$estimate
-    expect_reference(matrices(as_netobject(fit)[["temporal"]], print = FALSE)[["weights"]], ols, reference = "stats",
+    expect_reference(matrices(as_netobject(fit)[["temporal"]], print = FALSE)[["weights"]], ols,
+                     reference = "independent: the closed-form matrix-t posterior of the flat-prior VAR (Zellner, 1971)",
                      covers = "as_netobject.var_bayes_result()",
                      quantity = sprintf("Monte Carlo summary: temporal layer of as_netobject() (predictor rows), seed %d", seed),
                      tolerance = 4 * 1.2533 * sd_max / sqrt(ess))

@@ -8,6 +8,9 @@
 # network are its non-zero cells off the diagonal, from row to column; of an undirected one, the non-zero cells
 # of the upper triangle. A node's out-strength sums the absolute weights of its row, its in-strength those of its
 # column (the diagonal apart, reported as `self`); undirected strength sums its row.
+# The group of fit_var() is compared with the numbers of other software: the temporal weights are stats::lm()'s
+# coefficients, the contemporaneous ones psych::partial.r() of the residual correlations, and the strengths
+# igraph::strength() on those two matrices.
 #
 # Copies and sums of a few numbers: 1e-12; 1e-10 where the weights come from least squares (as in test-var.R).
 
@@ -31,6 +34,24 @@ matrix_strengths <- function(weights, directed) {
   data.frame(node = rownames(weights), strength = if (directed) out + into else out,
              out_strength = if (directed) out else NA_real_, in_strength = if (directed) into else NA_real_,
              self = diag(weights))
+}
+
+#' The edge list igraph reads from a weight matrix: rows are sources in a directed network, the upper triangle
+#' in an undirected one; igraph keeps the non-zero cells only
+igraph_edges <- function(weights, directed, include_self = FALSE) {
+  graph <- igraph::graph_from_adjacency_matrix(weights, mode = if (directed) "directed" else "upper",
+                                               weighted = TRUE, diag = include_self)
+  stats::setNames(igraph::as_data_frame(graph, what = "edges")[c("from", "to", "weight")], c("from", "to", "weight"))
+}
+
+#' Node strengths of a weight matrix by igraph::strength() on the absolute weights (self-loops apart)
+igraph_strengths <- function(weights, directed) {
+  graph <- igraph::graph_from_adjacency_matrix(abs(weights), mode = if (directed) "directed" else "upper",
+                                               weighted = TRUE, diag = FALSE)
+  strength <- \(mode) unname(igraph::strength(graph, mode = mode, loops = FALSE))
+  data.frame(node = rownames(weights), strength = strength("all"),
+             out_strength = if (directed) strength("out") else NA_real_,
+             in_strength = if (directed) strength("in") else NA_real_, self = unname(diag(weights)))
 }
 
 test_that("a directed network given as a weight matrix", {
@@ -85,45 +106,43 @@ test_that("a group of networks: the temporal and contemporaneous networks of fit
                      data = lagged)
   # coef(): one row per lagged predictor, one column per outcome: the source-by-target weight matrix.
   temporal <- ref_named(stats::coef(model)[-1L, , drop = FALSE], items)
-  partial <- ref_named(ref_partial(solve(stats::cov(stats::residuals(model)))), items)
-  theirs <- rbind(cbind(network = "temporal", matrix_edges(temporal, TRUE)),
-                  cbind(network = "contemporaneous", matrix_edges(partial, FALSE)))
-  expect_reference(edges(group), theirs, reference = "stats",
+  # psych::partial.r() of the residual correlations: the contemporaneous partial correlations (diagonal set to 0,
+  # as the network keeps no self-loop there).
+  partial <- unclass(psych::partial.r(stats::cov2cor(stats::cov(stats::residuals(model)))))
+  partial <- ref_named(partial, items)
+  diag(partial) <- 0
+  temporal_edges <- cbind(network = "temporal", igraph_edges(temporal, TRUE))
+  contemporaneous_edges <- cbind(network = "contemporaneous", igraph_edges(partial, FALSE))
+  expect_reference(subset(edges(group), network == "temporal"), temporal_edges, reference = "stats",
                    covers = c("edges.netobject_group()", "as_netobject()", "as_netobject.var_result()"),
-                   quantity = "Tariq, both networks", tolerance = 1e-10, key = c("network", "from", "to"))
-  expect_reference(as.data.frame(group), theirs, reference = "stats", covers = "as.data.frame.netobject_group()",
-                   quantity = "Tariq, both networks, the data frame of the group", tolerance = 1e-10,
+                   quantity = "Tariq, temporal network (stats::lm() coefficients)", tolerance = 1e-10,
                    key = c("network", "from", "to"))
-  strengths <- rbind(cbind(network = "temporal", matrix_strengths(temporal, TRUE)),
-                     cbind(network = "contemporaneous", matrix_strengths(partial, FALSE)))
-  expect_reference(nodes(group), strengths, reference = "stats", covers = "nodes.netobject_group()",
-                   quantity = "Tariq, node strengths of both networks", tolerance = 1e-10, key = c("network", "node"))
+  expect_reference(subset(edges(group), network == "contemporaneous"), contemporaneous_edges, reference = "psych",
+                   covers = c("edges.netobject_group()", "as_netobject()", "as_netobject.var_result()"),
+                   quantity = "Tariq, contemporaneous network (psych::partial.r() of the lm residuals)",
+                   tolerance = 1e-10, key = c("network", "from", "to"))
+  expect_reference(subset(as.data.frame(group), network == "temporal"), temporal_edges, reference = "stats",
+                   covers = "as.data.frame.netobject_group()",
+                   quantity = "Tariq, the data frame of the group, temporal network", tolerance = 1e-10,
+                   key = c("network", "from", "to"))
+  expect_reference(subset(as.data.frame(group), network == "contemporaneous"), contemporaneous_edges,
+                   reference = "psych", covers = "as.data.frame.netobject_group()",
+                   quantity = "Tariq, the data frame of the group, contemporaneous network", tolerance = 1e-10,
+                   key = c("network", "from", "to"))
+  # Strengths by igraph::strength() on the two reference weight matrices (self-loops apart).
+  strengths <- rbind(cbind(network = "temporal", igraph_strengths(temporal, TRUE)),
+                     cbind(network = "contemporaneous", igraph_strengths(partial, FALSE)))
+  expect_reference(nodes(group), strengths, reference = "igraph", covers = "nodes.netobject_group()",
+                   quantity = "Tariq, node strengths of both networks (igraph on the stats/psych weights)",
+                   tolerance = 1e-10, key = c("network", "node"))
   # API gap: matrices() returns a list of matrices, so each network is reached by name.
   expect_reference(matrices(group, print = FALSE)[["temporal"]], temporal, reference = "stats",
                    covers = "matrices.netobject_group()", quantity = "Tariq, temporal weights (source rows)",
                    tolerance = 1e-10)
-  expect_reference(matrices(group, print = FALSE)[["contemporaneous"]], partial, reference = "stats",
+  expect_reference(matrices(group, print = FALSE)[["contemporaneous"]], partial, reference = "psych",
                    covers = "matrices.netobject_group()", quantity = "Tariq, contemporaneous partial correlations",
                    tolerance = 1e-10)
 })
-
-#' The edge list igraph reads from a weight matrix: rows are sources in a directed network, the upper triangle
-#' in an undirected one; igraph keeps the non-zero cells only
-igraph_edges <- function(weights, directed, include_self = FALSE) {
-  graph <- igraph::graph_from_adjacency_matrix(weights, mode = if (directed) "directed" else "upper",
-                                               weighted = TRUE, diag = include_self)
-  stats::setNames(igraph::as_data_frame(graph, what = "edges")[c("from", "to", "weight")], c("from", "to", "weight"))
-}
-
-#' Node strengths of a weight matrix by igraph::strength() on the absolute weights (self-loops apart)
-igraph_strengths <- function(weights, directed) {
-  graph <- igraph::graph_from_adjacency_matrix(abs(weights), mode = if (directed) "directed" else "upper",
-                                               weighted = TRUE, diag = FALSE)
-  strength <- \(mode) unname(igraph::strength(graph, mode = mode, loops = FALSE))
-  data.frame(node = rownames(weights), strength = strength("all"),
-             out_strength = if (directed) strength("out") else NA_real_,
-             in_strength = if (directed) strength("in") else NA_real_, self = unname(diag(weights)))
-}
 
 test_that("edge lists and strengths of the hand-built networks, by igraph", {
   directed <- structure(list(weights = directed_weights, nodes = data.frame(label = abc), method = "relative",

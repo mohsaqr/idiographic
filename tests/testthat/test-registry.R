@@ -46,6 +46,16 @@ test_that("package-wide equivalence ledger has no unassessed built-in methods", 
   expect_identical(equivalence_table("mplus")$evidence_status, "conditional")
 })
 
+test_that("graphical VAR claims state the scope of the 1e-6 bound", {
+  # Learner diaries agree with graphicalVAR to 2.1e-5 at its default glasso
+  # thr = 1e-4; 1e-6 holds on simulated series only (audit 2026-11-23).
+  ledger <- equivalence_table()
+  gvar <- subset(ledger, method %in% c("graphical_var", "graphical_var_each"),
+                 select = c(method, tolerance_min, scope))
+  expect_equal(gvar$tolerance_min, c(1e-6, 1e-6))
+  expect_true(all(grepl("thr = 1e-4", gvar$scope, fixed = TRUE)))
+})
+
 test_that("argument ledger classifies every current public formal exactly once", {
   ledger <- argument_coverage()
   expect_s3_class(ledger, "data.frame")

@@ -1098,9 +1098,17 @@ print.idiographic_equivalence <- function(x, ...) {
       result_class = "gvar_result",
       equivalence = list(
         status = "validated", reference = "graphicalVAR::graphicalVAR",
-        scope = "Supported lag-1 settings, including tested beta/kappa options.",
+        scope = paste0(
+          "Supported lag-1 settings, including tested beta/kappa options. ",
+          "1e-6 on simulated series; 1e-4 on real diaries, where graphicalVAR ",
+          "runs glasso::glasso() at its default thr = 1e-4 (largest difference ",
+          "observed 2.1e-5)."
+        ),
         tolerance = 1e-6,
-        notes = "The declared tolerance follows the expanded committed oracle matrix."
+        notes = paste0(
+          "Both estimators iterate to their own convergence thresholds, so the ",
+          "agreement is bounded by graphicalVAR's glasso threshold, not by rounding."
+        )
       ))
   add("graphical_var_each", "fit_graphical_var_each",
       c("fit_graphical_var_each", "gvar_each"),
@@ -1109,7 +1117,9 @@ print.idiographic_equivalence <- function(x, ...) {
         status = "validated", reference = "graphicalVAR::graphicalVAR",
         scope = paste0(
           "Every returned subject fit is compared directly with an upstream ",
-          "lag-1 graphicalVAR fit on the same subject panel."
+          "lag-1 graphicalVAR fit on the same subject panel. 1e-6 where ",
+          "graphicalVAR's glasso converges; up to 1e-4 at its default ",
+          "thr = 1e-4 (largest difference observed 2.3e-6)."
         ),
         tolerance = 1e-6
       ))

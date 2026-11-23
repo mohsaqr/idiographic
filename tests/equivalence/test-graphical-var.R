@@ -5,7 +5,7 @@
 # Both sides iterate (coordinate descent inside an alternating scheme) to their own convergence thresholds and
 # pick the penalties on the same grid, so they agree to those thresholds and not to rounding. The tolerances are
 # the ones the package's own oracle tests used: 1e-6 where the old test bounded the largest absolute
-# difference, 1e-4 and 1e-3 where it bounded testthat's mean relative difference (stated per test).
+# difference, 1e-4 on learner diaries, where graphicalVAR stops its glasso at thr = 1e-4 (stated per test).
 
 items <- c("efficacy", "planning", "effort")
 abc <- c("A", "B", "C")
@@ -110,10 +110,11 @@ test_that("penalty minima, a kappa mask and an unpenalised fixed lambda_beta", {
     theirs <- do.call(gvar_reference, c(list(data = series[abc], vars = abc, nLambda = 20), case$theirs))
     list(ours = cbind(case = label, coefs(ours)), theirs = cbind(case = label, theirs))
   }, cases, names(cases))
-  # 1e-3: the old test's bound for these options (testthat's mean relative difference).
+  # 1e-6: the same simulated series and solvers as the six option sets above, so the same bound (the old test's
+  # 1e-3 bounded testthat's mean relative difference, not the largest absolute one; tightened 2026-11-23).
   expect_reference(do.call(rbind, lapply(tables, \(t) t$ours)), do.call(rbind, lapply(tables, \(t) t$theirs)),
                    reference = "graphicalVAR", covers = c("fit_graphical_var()", "coefs.gvar_result()"),
-                   quantity = "simulated series, penalty options", tolerance = 1e-3,
+                   quantity = "simulated series, penalty options", tolerance = 1e-6,
                    key = c("case", "network", "from", "to"))
 })
 
