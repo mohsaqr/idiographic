@@ -13,7 +13,7 @@ residuals) using EBIC model selection over a lambda grid."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9009</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -284,9 +284,11 @@ estimator that is <strong>numerically equivalent to</strong>
 lag-1 construction within id/day blocks), identical lambda grids
 (<code>generate_lambdas</code>), the coupled MRCE beta-update / glasso kappa-update
 loop, the unpenalized-likelihood EBIC, and the same tie-broken model
-selection. The committed end-to-end regression tests use tolerance <code>1e-6</code>, covering
-both well-conditioned and numerically difficult fits. That equivalence claim
-is limited to
+selection. On simulated series the equivalence tests agree with graphicalVAR
+to <code>1e-6</code>; on real diaries graphicalVAR stops its graphical lasso at
+<code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso::glasso()</a></code>'s default <code>thr = 1e-4</code>, and the two agree to
+<code>1e-4</code> (largest difference seen 2.1e-5; about 1e-10 when graphicalVAR's glasso
+is run to convergence). That equivalence claim is limited to
 <code>mimic = "current"</code> and <code>lags = 1</code>; multiple lags are an idiographic
 extension and are labelled as such in the returned equivalence metadata.</p>
     </div>

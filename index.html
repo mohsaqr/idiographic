@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">idiographic</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9009</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -254,7 +254,7 @@
 <td><code><a href="reference/fit_graphical_var.html">fit_graphical_var()</a></code></td>
 <td>Graphical VAR with graphical lasso and EBIC</td>
 <td><code>graphicalVAR</code></td>
-<td>within 1e-6 over the supported lag-1 options</td>
+<td>within 1e-6 on simulated series over the supported lag-1 options; within 1e-4 on real diaries, where graphicalVAR stops its glasso at thr = 1e-4 (largest difference seen 2.1e-5)</td>
 </tr>
 <tr>
 <td><code><a href="reference/fit_mlvar.html">fit_mlvar()</a></code></td>
@@ -274,14 +274,14 @@
 <td><code><a href="reference/fit_mlvar_bayes.html">fit_mlvar_bayes()</a></code></td>
 <td>Bayesian multilevel VAR (DSEM)</td>
 <td>Mplus DSEM, Stan, JAGS</td>
-<td>within Monte Carlo error</td>
+<td>within Monte Carlo error (stored Mplus 9 DEMO output, compared by mean differences in the unit tests; the run that produced it is not recorded)</td>
 </tr>
 <tr>
 <td><code><a href="reference/fit_var_bayes.html">fit_var_bayes()</a></code></td>
 <td>Bayesian VAR(1)</td>
-<td>Mplus with <code>ESTIMATOR = BAYES</code>
+<td>closed-form flat-prior posterior (Zellner 1971); Mplus with <code>ESTIMATOR = BAYES</code>
 </td>
-<td>within 0.02 to 0.03</td>
+<td>within 4 Monte Carlo standard errors of the closed form; mean difference 0.02 to 0.03 from stored Mplus 9 DEMO output</td>
 </tr>
 </tbody>
 </table>

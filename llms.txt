@@ -171,11 +171,11 @@ the largest difference allowed in the tests.
 
 | Estimator | Method | Reference | Agreement |
 |----|----|----|----|
-| [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md) | Graphical VAR with graphical lasso and EBIC | `graphicalVAR` | within 1e-6 over the supported lag-1 options |
+| [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md) | Graphical VAR with graphical lasso and EBIC | `graphicalVAR` | within 1e-6 on simulated series over the supported lag-1 options; within 1e-4 on real diaries, where graphicalVAR stops its glasso at thr = 1e-4 (largest difference seen 2.1e-5) |
 | [`fit_mlvar()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar.md) | Multilevel and person-specific VAR | `mlVAR` 0.7.3 | within 1e-8 on 20 ESM panels |
 | [`fit_gimme()`](https://pak.dynasite.org/idiographic/reference/fit_gimme.md) | Group and individual uSEM path search | `gimme` 10.0 | identical paths and matrices on panels of two and three variables, fit indices within 5e-5 |
-| [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md) | Bayesian multilevel VAR (DSEM) | Mplus DSEM, Stan, JAGS | within Monte Carlo error |
-| [`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md) | Bayesian VAR(1) | Mplus with `ESTIMATOR = BAYES` | within 0.02 to 0.03 |
+| [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md) | Bayesian multilevel VAR (DSEM) | Mplus DSEM, Stan, JAGS | within Monte Carlo error (stored Mplus 9 DEMO output, compared by mean differences in the unit tests; the run that produced it is not recorded) |
+| [`fit_var_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_var_bayes.md) | Bayesian VAR(1) | closed-form flat-prior posterior (Zellner 1971); Mplus with `ESTIMATOR = BAYES` | within 4 Monte Carlo standard errors of the closed form; mean difference 0.02 to 0.03 from stored Mplus 9 DEMO output |
 
 [`fit_mlvar_bayes()`](https://pak.dynasite.org/idiographic/reference/fit_mlvar_bayes.md)
 estimates the two-level Bayesian VAR of Mplus, with latent centring of

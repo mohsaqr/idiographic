@@ -1,5 +1,34 @@
 # Changelog
 
+## idiographic 0.4.0.9010
+
+- [`equivalence_table()`](https://pak.dynasite.org/idiographic/reference/equivalence_table.md)
+  states the scope of its 1e-6 claim for
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
+  and
+  [`fit_graphical_var_each()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var_each.md)
+  against `graphicalVAR`: 1e-6 holds on simulated series; on real
+  diaries `graphicalVAR` stops its graphical lasso at `glasso`’s default
+  `thr = 1e-4`, and the two agree to 1e-4 (largest difference seen on a
+  learner’s diary: 2.1e-5). The numbers the ledger returns are
+  unchanged; the scope and notes text, the
+  [`fit_graphical_var()`](https://pak.dynasite.org/idiographic/reference/fit_graphical_var.md)
+  documentation and the README say the same.
+- README: the Bayesian VAR rows state what their evidence is (the
+  closed-form flat-prior posterior; stored Mplus 9 DEMO output whose
+  producing run is not recorded).
+- Equivalence tests (not part of the package build): the network group
+  of
+  [`fit_var()`](https://pak.dynasite.org/idiographic/reference/fit_var.md)
+  is compared with
+  [`psych::partial.r()`](https://rdrr.io/pkg/psych/man/partial.r.html)
+  (contemporaneous) and
+  [`igraph::strength()`](https://r.igraph.org/reference/strength.html);
+  the layer counts and density of
+  [`compare_idiographic()`](https://pak.dynasite.org/idiographic/reference/compare_idiographic.md)
+  with igraph; summaries the tests write from a definition are labelled
+  as independent computations, not as `stats` output.
+
 ## idiographic 0.4.0.9009
 
 - [`test_subgroups()`](https://pak.dynasite.org/idiographic/reference/test_subgroups.md)
