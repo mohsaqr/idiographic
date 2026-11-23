@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/mohsaqr/idiographic/blob/merged/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/mohsaqr/idiographic/blob/main/DESCRIPTION)
 
 Saqr M, López-Pernas S (2026). *idiographic: Person-Specific Statistics
 and Heterogeneous Dynamic Networks*. R package version 0.4.0.9010,
